@@ -1,0 +1,1 @@
+export default function M(){return <div style={{padding:32,textAlign:"center",color:"#6B7280"}}>cuidados-pele-rn — em breve</div>}
