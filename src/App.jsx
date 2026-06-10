@@ -1,119 +1,160 @@
-// App.jsx — PedHub
-// HashRouter declarado em main.jsx — NUNCA usar BrowserRouter aqui
+// src/App.jsx — PedHub · PedSuite
+
+
 import { lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import PedHub from "./PedHub";
+import { ArrowLeft } from "lucide-react";
+import PedHub from "./PedHub"; // importação direta — não lazy
 
-// ── Lazy imports — todos os módulos ───────────────────────────────────────────
-const Percentis       = lazy(() => import("./modulos/percentis"));
-const Urgencias       = lazy(() => import("./modulos/urgencias"));
-const Formulas        = lazy(() => import("./modulos/formulas"));
-const Gastropediatria = lazy(() => import("./modulos/gastropediatria"));
-const Pedfarma        = lazy(() => import("./modulos/pedfarma"));
-const Neonatologia1   = lazy(() => import("./modulos/neonatologia-1"));
-const Neonatologia2   = lazy(() => import("./modulos/neonatologia-2"));
-const Neonatologia3   = lazy(() => import("./modulos/neonatologia-3"));
-const Neonatologia4   = lazy(() => import("./modulos/neonatologia-4"));
-const Vacinal         = lazy(() => import("./modulos/vacinal"));
-const Hidratacao      = lazy(() => import("./modulos/hidratacao"));
-const Scores          = lazy(() => import("./modulos/scores"));
-const FebreSemFoco    = lazy(() => import("./modulos/febre-sem-foco"));
-const TceLeve         = lazy(() => import("./modulos/tce-leve"));
-const DilucaoBic      = lazy(() => import("./modulos/dilucao-bic"));
-const Dnpm            = lazy(() => import("./modulos/dnpm"));
-const Dermato         = lazy(() => import("./modulos/dermato"));
-const CuidadosPeleRn  = lazy(() => import("./modulos/cuidados-pele-rn"));
-const TigNeonatal     = lazy(() => import("./modulos/tig-neonatal"));
-const PrescricaoNeo   = lazy(() => import("./modulos/prescricao-neo"));
-const LeucocgramaNeo  = lazy(() => import("./modulos/leucograma-neo"));
+/* ─── Lazy imports — 19 módulos ─────────────────────────────────────────── */
+const Percentis        = lazy(() => import("./modulos/percentis"));
+const Urgencias        = lazy(() => import("./modulos/urgencias"));
+const Formulas         = lazy(() => import("./modulos/formulas"));
+const Gastropediatria  = lazy(() => import("./modulos/gastropediatria"));
+const Pedfarma         = lazy(() => import("./modulos/pedfarma"));
+const Vacinal          = lazy(() => import("./modulos/vacinal"));
+const Hidratacao       = lazy(() => import("./modulos/hidratacao"));
+const Scores           = lazy(() => import("./modulos/scores"));
+const FebreSemFoco     = lazy(() => import("./modulos/febre-sem-foco"));
+const TceLeve          = lazy(() => import("./modulos/tce-leve"));
+const Dnpm             = lazy(() => import("./modulos/dnpm"));
+const Dermato          = lazy(() => import("./modulos/dermato"));
+const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
+const Neonatologia1    = lazy(() => import("./modulos/neonatologia-1"));
+const Neonatologia2    = lazy(() => import("./modulos/neonatologia-2"));
+const Neonatologia3    = lazy(() => import("./modulos/neonatologia-3"));
+const Neonatologia4    = lazy(() => import("./modulos/neonatologia-4"));
+const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
+const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
 
-// ── Fallback de carregamento ──────────────────────────────────────────────────
-const Loading = () => (
-  <div style={{ textAlign: "center", padding: 40, color: "#6B7280" }}>
-    Carregando...
-  </div>
-);
+/* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
+const MODULO_MAP = {
+  "/percentis":         { label: "Percentis",          cor: "#3B82F6" },
+  "/urgencias":         { label: "Urgências",           cor: "#EF4444" },
+  "/formulas":          { label: "Fórmulas Infantis",   cor: "#10B981" },
+  "/gastropediatria":   { label: "Gastropediatria",     cor: "#F59E0B" },
+  "/pedfarma":          { label: "PedFarma",            cor: "#8B5CF6" },
+  "/vacinal":           { label: "Calendário Vacinal",  cor: "#06B6D4" },
+  "/hidratacao":        { label: "Hidratação",          cor: "#3B82F6" },
+  "/scores":            { label: "Scores Pediátricos",  cor: "#F97316" },
+  "/febre-sem-foco":    { label: "Febre Sem Foco",      cor: "#EF4444" },
+  "/tce-leve":          { label: "TCE Leve",            cor: "#7C3AED" },
+  "/dnpm":              { label: "DNPM",                cor: "#8B5CF6" },
+  "/dermato":           { label: "Dermatologia",        cor: "#EC4899" },
+  "/cuidados-pele-rn":  { label: "Pele do RN",          cor: "#0891B2" },
+  "/neonatologia-1":    { label: "Neonatologia I",      cor: "#0E7490" },
+  "/neonatologia-2":    { label: "Neonatologia II",     cor: "#0D9488" },
+  "/neonatologia-3":    { label: "Neonatologia III",    cor: "#D97706" },
+  "/neonatologia-4":    { label: "Neonatologia IV",     cor: "#7C3AED" },
+  "/dilucao-bic":       { label: "Diluição e BIC",      cor: "#F97316" },
+  "/tig-neonatal":      { label: "TIG Neonatal",        cor: "#0891B2" },
+};
 
-// ── Wrapper com Suspense ──────────────────────────────────────────────────────
-const S = ({ children }) => <Suspense fallback={<Loading />}>{children}</Suspense>;
-
-// ── Header — aparece em todas as telas exceto o hub ───────────────────────────
+/* ─── Header global ──────────────────────────────────────────────────────── */
 function Header() {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  if (pathname === "/") return null;
+  const location = useLocation();
+  const modulo   = MODULO_MAP[location.pathname];
+
+  // Tela inicial: sem header (PedHub tem o próprio)
+  if (!modulo) return null;
+
   return (
-    <header style={{
-      position: "sticky",
-      top: 0,
-      zIndex: 50,
-      background: "#FFFFFF",
-      borderBottom: "1px solid #E5E7EB",
-      padding: "12px 16px",
-      display: "flex",
-      alignItems: "center",
-      gap: 12,
+    <div style={{
+      position: "sticky", top: 0, zIndex: 100,
+      background: "#ffffff", borderBottom: "2px solid #F3F4F6",
+      width: "100%",
     }}>
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          background: "#F3F4F6",
-          border: "none",
-          borderRadius: 8,
-          padding: "6px 12px",
-          cursor: "pointer",
-          fontSize: 13,
-          fontWeight: 600,
-          color: "#374151",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-        }}
-      >
-        ← Voltar
-      </button>
-    </header>
+      <div style={{
+        maxWidth: 480, margin: "0 auto",
+        display: "flex", alignItems: "center",
+        padding: "11px 16px", gap: 12,
+      }}>
+        <button
+          onClick={() => navigate("/")}
+          aria-label="Voltar ao início"
+          style={{
+            background: "none", border: "none", cursor: "pointer",
+            padding: 4, display: "flex", alignItems: "center",
+            borderRadius: 8,
+          }}
+        >
+          <ArrowLeft size={22} color={modulo.cor} />
+        </button>
+        <span style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 700, fontSize: 16, color: "#111827",
+          flex: 1,
+        }}>
+          {modulo.label}
+        </span>
+        <div style={{
+          width: 8, height: 8, borderRadius: "50%",
+          background: modulo.cor, flexShrink: 0,
+        }} />
+      </div>
+    </div>
   );
 }
 
-// ── App ───────────────────────────────────────────────────────────────────────
+/* ─── Loading fallback ───────────────────────────────────────────────────── */
+function Loading() {
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      justifyContent: "center", alignItems: "center",
+      height: "60vh", gap: 12,
+      fontFamily: "'DM Sans', sans-serif",
+    }}>
+      <div style={{
+        width: 36, height: 36, borderRadius: "50%",
+        border: "3px solid #E5E7EB",
+        borderTopColor: "#3B82F6",
+        animation: "pedhub-spin 0.7s linear infinite",
+      }} />
+      <style>{`@keyframes pedhub-spin { to { transform: rotate(360deg); } }`}</style>
+      <p style={{ fontSize: 13, color: "#9CA3AF", margin: 0 }}>Carregando módulo…</p>
+    </div>
+  );
+}
+
+/* ─── App principal ──────────────────────────────────────────────────────── */
 export default function App() {
   return (
     <>
       <Header />
-      <Routes>
-        {/* Hub principal — importado direto (não lazy) */}
-        <Route path="/" element={<PedHub />} />
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          {/* Home */}
+          <Route path="/"                  element={<PedHub />} />
 
-        {/* ── Pediatria Geral ── */}
-        <Route path="/percentis"       element={<S><Percentis /></S>} />
-        <Route path="/urgencias"       element={<S><Urgencias /></S>} />
-        <Route path="/formulas"        element={<S><Formulas /></S>} />
-        <Route path="/gastropediatria" element={<S><Gastropediatria /></S>} />
-        <Route path="/pedfarma"        element={<S><Pedfarma /></S>} />
-        <Route path="/vacinal"         element={<S><Vacinal /></S>} />
-        <Route path="/hidratacao"      element={<S><Hidratacao /></S>} />
-        <Route path="/scores"          element={<S><Scores /></S>} />
-        <Route path="/febre-sem-foco"  element={<S><FebreSemFoco /></S>} />
-        <Route path="/tce-leve"        element={<S><TceLeve /></S>} />
-        <Route path="/dnpm"            element={<S><Dnpm /></S>} />
+          {/* Pediatria Geral */}
+          <Route path="/percentis"         element={<Percentis />} />
+          <Route path="/urgencias"         element={<Urgencias />} />
+          <Route path="/formulas"          element={<Formulas />} />
+          <Route path="/gastropediatria"   element={<Gastropediatria />} />
+          <Route path="/pedfarma"          element={<Pedfarma />} />
+          <Route path="/vacinal"           element={<Vacinal />} />
+          <Route path="/hidratacao"        element={<Hidratacao />} />
+          <Route path="/scores"            element={<Scores />} />
+          <Route path="/febre-sem-foco"    element={<FebreSemFoco />} />
+          <Route path="/tce-leve"          element={<TceLeve />} />
+          <Route path="/dnpm"              element={<Dnpm />} />
+          <Route path="/dermato"           element={<Dermato />} />
+          <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
 
-        {/* ── Dermatologia ── */}
-        <Route path="/dermato"         element={<S><Dermato /></S>} />
-        <Route path="/cuidados-pele-rn" element={<S><CuidadosPeleRn /></S>} />
+          {/* Neonatologia */}
+          <Route path="/neonatologia-1"    element={<Neonatologia1 />} />
+          <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
+          <Route path="/neonatologia-3"    element={<Neonatologia3 />} />
+          <Route path="/neonatologia-4"    element={<Neonatologia4 />} />
+          <Route path="/dilucao-bic"       element={<DilucaoBic />} />
+          <Route path="/tig-neonatal"      element={<TigNeonatal />} />
 
-        {/* ── Neonatologia ── */}
-        <Route path="/neonatologia-1"  element={<S><Neonatologia1 /></S>} />
-        <Route path="/neonatologia-2"  element={<S><Neonatologia2 /></S>} />
-        <Route path="/neonatologia-3"  element={<S><Neonatologia3 /></S>} />
-        <Route path="/neonatologia-4"  element={<S><Neonatologia4 /></S>} />
-
-        {/* ── Cálculos / Fármacos ── */}
-        <Route path="/dilucao-bic"     element={<S><DilucaoBic /></S>} />
-        <Route path="/tig-neonatal"    element={<S><TigNeonatal /></S>} />
-        <Route path="/prescricao-neo"  element={<S><PrescricaoNeo /></S>} />
-        <Route path="/leucograma-neo"  element={<S><LeucocgramaNeo /></S>} />
-      </Routes>
+          {/* Fallback — redireciona rotas desconhecidas para home */}
+          <Route path="*"                  element={<PedHub />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }
