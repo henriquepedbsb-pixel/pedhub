@@ -181,6 +181,14 @@ const MODULOS = [
     cor:   "#0891B2",
     grupo: "Neonatologia",
   },
+{
+  rota: "/canguru",
+  label: "Canguru",
+  desc: "Prescrição e Receituário Neonatal",
+  Icon: Heart,
+  cor: "#10B981",
+  grupo: "Neonatologia",
+},
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
