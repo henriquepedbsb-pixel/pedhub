@@ -197,6 +197,7 @@ const MODULOS = [
     cor:   "#6366F1",
     grupo: "Neonatologia",
   },
+  { rota: "/dexametasona-dbp", label: "Dexa DBP", desc: "DART · Protocolo HMIB · Dexametasona RNPT", Icon: Activity, cor: "#0891B2", grupo: "Neonatologia" },
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
