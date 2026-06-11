@@ -168,7 +168,7 @@ const MODULOS = [
   {
     rota:  "/dilucao-bic",
     label: "Diluição e BIC",
-    desc:  "BIC · Drogas vasoativas · Eletrólitos",
+    desc:  "Vasoativas · Sedoanalgesia · PGE1 · Insulina",
     Icon:  Activity,
     cor:   "#F97316",
     grupo: "Neonatologia",
