@@ -1,12 +1,11 @@
 // src/App.jsx — PedHub · PedSuite
 
-
 import { lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PedHub from "./PedHub"; // importação direta — não lazy
 
-/* ─── Lazy imports — 19 módulos ─────────────────────────────────────────── */
+/* ─── Lazy imports ───────────────────────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
 const Urgencias        = lazy(() => import("./modulos/urgencias"));
 const Formulas         = lazy(() => import("./modulos/formulas"));
@@ -26,10 +25,10 @@ const Neonatologia3    = lazy(() => import("./modulos/neonatologia-3"));
 const Neonatologia4    = lazy(() => import("./modulos/neonatologia-4"));
 const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
 const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
-const Canguru = lazy(() => import('./modulos/canguru'));
-const GuiaVacinal2026 = lazy(() => import("./modulos/guia-vacinal-2026"));
-const Neonatologia5 = lazy(() => import("./modulos/neonatologia-5"));
-const DexametasonaDbp = lazy(() => import("./modulos/dexametasona-dbp"));
+const Canguru          = lazy(() => import("./modulos/canguru"));
+const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
+const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
+const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -50,9 +49,11 @@ const MODULO_MAP = {
   "/neonatologia-2":    { label: "Neonatologia II",     cor: "#0D9488" },
   "/neonatologia-3":    { label: "Neonatologia III",    cor: "#D97706" },
   "/neonatologia-4":    { label: "Neonatologia IV",     cor: "#7C3AED" },
+  "/neonatologia-5":    { label: "Neonatologia V",      cor: "#6366F1" },
   "/dilucao-bic":       { label: "Diluição e BIC",      cor: "#F97316" },
   "/tig-neonatal":      { label: "TIG Neonatal",        cor: "#0891B2" },
-  "/canguru":      { label: "Canguru",      cor: "#10B981" },
+  "/canguru":           { label: "Canguru",             cor: "#10B981" },
+  "/dexametasona-dbp":  { label: "Dexa DBP",            cor: "#0891B2" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -61,7 +62,6 @@ function Header() {
   const location = useLocation();
   const modulo   = MODULO_MAP[location.pathname];
 
-  // Tela inicial: sem header (PedHub tem o próprio)
   if (!modulo) return null;
 
   return (
@@ -153,14 +153,14 @@ export default function App() {
           <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
           <Route path="/neonatologia-3"    element={<Neonatologia3 />} />
           <Route path="/neonatologia-4"    element={<Neonatologia4 />} />
+          <Route path="/neonatologia-5"    element={<Neonatologia5 />} />
           <Route path="/dilucao-bic"       element={<DilucaoBic />} />
           <Route path="/tig-neonatal"      element={<TigNeonatal />} />
-          <Route path="/canguru" element={<Canguru />} />
+          <Route path="/canguru"           element={<Canguru />} />
+          <Route path="/dexametasona-dbp"  element={<DexametasonaDbp />} />
           <Route path="/guia-vacinal-2026" element={<GuiaVacinal2026 />} />
-          <Route path="/neonatologia-5" element={<Neonatologia5 />} />
-          <Route path="/dexametasona-dbp" element={<DexametasonaDbp />} />
 
-          {/* Fallback — redireciona rotas desconhecidas para home */}
+          {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
         </Routes>
       </Suspense>
