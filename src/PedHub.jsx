@@ -144,7 +144,7 @@ const MODULOS = [
   {
     rota:  "/neonatologia-2",
     label: "Neo II — Hipoglicemia",
-    desc:  "Hipoglicemia · UCIN Canguru",
+    desc:  "Hipoglicemia Neonatal · Gel de Dextrose",
     Icon:  Heart,
     cor:   "#0D9488",
     grupo: "Neonatologia",
@@ -189,6 +189,14 @@ const MODULOS = [
   cor: "#10B981",
   grupo: "Neonatologia",
 },
+  {
+    rota:  "/neonatologia-5",
+    label: "Neo V — NPT",
+    desc:  "Nutrição Parenteral Total · Eletrólitos",
+    Icon:  Activity,
+    cor:   "#6366F1",
+    grupo: "Neonatologia",
+  },
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
