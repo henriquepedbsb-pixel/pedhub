@@ -1,34 +1,77 @@
 import { useState } from "react";
-import { Calendar, CheckCircle, Clock, Info, AlertTriangle } from "lucide-react";
+import { Calendar, CheckCircle, Info, AlertTriangle } from "lucide-react";
 
 const PRIMARY = "#06B6D4";
 
-/* ─── Calendário SBIm 2025/2026 ──────────────────────────────────────────── */
+/* ─── Calendário SBIm 2025/2026 + PNI/NT 77/2025 + Guia Técnico Pneumo 20 ──
+   Fontes:
+   • SBIm Calendário Criança 2025/2026
+   • Nota Técnica nº 77/2025 DPNI/SVSA/MS — MenACWY reforço 12m (jul/2025)
+   • Guia Técnico PNI — Pneumo 20 no SUS (jun/2026)
+   Esquema meningocócico PNI: MenC 1ª (3m) · MenC 2ª (5m) · MenACWY reforço (12m)
+   Visitas de 3m e 5m: somente vacina meningocócica — sem coadministração
+──────────────────────────────────────────────────────────────────────────── */
 const CALENDAR = [
   {
-    faixa: "Ao nascer (RN)",  minDias: 0, maxDias: 3,
+    faixa: "Ao nascer (RN)", minDias: 0, maxDias: 3,
     sus:     ["BCG-ID (dose única)", "Hepatite B (1ª dose)"],
     privado: ["BCG-ID (dose única)", "Hepatite B (1ª dose)"],
   },
   {
-    faixa: "2 meses",  minDias: 55, maxDias: 75,
-    sus:     ["Pentavalente DTP+Hib+HepB (1ª)", "VIP (1ª)", "Pneumo 10 (1ª)", "Rotavírus (1ª)"],
-    privado: ["Pentavalente (1ª)", "VIP (1ª)", "Pneumo 13 ou 15 (1ª)", "Rotavírus (1ª)", "MenB Bexsero (1ª)"],
+    faixa: "2 meses", minDias: 55, maxDias: 75,
+    sus:     [
+      "Pentavalente DTP+Hib+HepB (1ª)",
+      "VIP (1ª)",
+      "Pneumo 20 — VPC20 (1ª)",
+      "Rotavírus (1ª)",
+    ],
+    privado: [
+      "Pentavalente ou Hexavalente (1ª)",
+      "VIP (1ª)",
+      "Pneumo 13 ou 15 (1ª)",
+      "Rotavírus (1ª)",
+      "MenB Bexsero (1ª)",
+    ],
   },
   {
-    faixa: "3 meses", minDias: 85, maxDias: 105,
-    sus:     ["Pentavalente (2ª)", "VIP (2ª)", "MenC (1ª)", "Hepatite B (2ª se não recebeu ao nascer)"],
-    privado: ["Pentavalente (2ª)", "VIP (2ª)", "MenC conjugada (1ª)", "Pneumo 13/15 (2ª)"],
+    faixa: "3 meses — somente meningocócica", minDias: 85, maxDias: 105,
+    sus:     ["MenC conjugada (1ª)"],
+    privado: ["MenACWY ou MenC conjugada (1ª)"],
   },
   {
     faixa: "4 meses", minDias: 115, maxDias: 135,
-    sus:     ["Pentavalente (3ª)", "VIP (3ª)", "Pneumo 10 (2ª)", "MenC (2ª)", "Rotavírus (2ª)"],
-    privado: ["Pentavalente (3ª)", "VIP (3ª)", "Pneumo 13/15 (3ª)", "Rotavírus (2ª)", "MenB (2ª)"],
+    sus:     [
+      "Pentavalente (2ª)",
+      "VIP (2ª)",
+      "Pneumo 20 — VPC20 (2ª)",
+      "Rotavírus (2ª)",
+    ],
+    privado: [
+      "Pentavalente ou Hexavalente (2ª)",
+      "VIP (2ª)",
+      "Pneumo 13 ou 15 (2ª)",
+      "Rotavírus (2ª)",
+      "MenB (2ª)",
+    ],
+  },
+  {
+    faixa: "5 meses — somente meningocócica", minDias: 140, maxDias: 165,
+    sus:     ["MenC conjugada (2ª)"],
+    privado: ["MenACWY ou MenC conjugada (2ª)"],
   },
   {
     faixa: "6 meses", minDias: 175, maxDias: 200,
-    sus:     ["Hepatite B (3ª)", "Influenza (anual a partir de 6m — 2 doses na 1ª vez, intervalo 30 dias)"],
-    privado: ["Hepatite B (3ª se em atraso)", "Influenza (anual — 2 doses na 1ª vez)", "MenACWY (1ª — opcional)"],
+    sus:     [
+      "Pentavalente (3ª — DTP+Hib+HepB)",
+      "VIP (3ª)",
+      "Influenza (anual a partir de 6m — 2 doses na 1ª vez, intervalo 30 dias)",
+    ],
+    privado: [
+      "Pentavalente ou Hexavalente (3ª)",
+      "VIP (3ª)",
+      "Influenza (anual — 2 doses na 1ª vez)",
+      "MenACWY (opcional — se não iniciou aos 3m)",
+    ],
   },
   {
     faixa: "9 meses", minDias: 265, maxDias: 285,
@@ -37,8 +80,19 @@ const CALENDAR = [
   },
   {
     faixa: "12 meses", minDias: 350, maxDias: 380,
-    sus:     ["SCR Tríplice Viral (1ª)", "Pneumo 10 (1º reforço)", "MenC (1º reforço)", "Hepatite A (1ª — 1 dose no SUS)"],
-    privado: ["SCRV Tetraviral SCR+Varicela (1ª)", "Pneumo 13/15 (reforço)", "MenC (reforço)", "Hepatite A (1ª)", "MenACWY (reforço se iniciou em 6m)", "MenB (3ª — reforço)"],
+    sus:     [
+      "SCR Tríplice Viral (1ª)",
+      "Pneumo 20 — VPC20 (1º reforço)",
+      "MenACWY (1º reforço) ← substituiu MenC em jul/2025",
+      "Hepatite A (1ª — dose única no SUS)",
+    ],
+    privado: [
+      "SCRV Tetraviral SCR+Varicela (1ª)",
+      "Pneumo 13/15 (reforço)",
+      "MenACWY (reforço)",
+      "Hepatite A (1ª)",
+      "MenB (3ª — reforço)",
+    ],
   },
   {
     faixa: "15 meses", minDias: 440, maxDias: 470,
@@ -48,7 +102,7 @@ const CALENDAR = [
   {
     faixa: "4–5 anos", minDias: 1460, maxDias: 1825,
     sus:     ["DTP (2º reforço)", "VOP (2º reforço)", "SCR (2ª dose se não recebeu) ou SCRV"],
-    privado: ["DTP (2º reforço)", "VOP (2º reforço)", "SCRV (se necessário)", "Influenza (anual)"],
+    privado: ["DTP (2º reforço)", "VOP (2º reforço)", "SCRV (se necessário)", "Influenza (anual)", "MenACWY (reforço)"],
   },
   {
     faixa: "9–10 anos", minDias: 3285, maxDias: 3650,
@@ -56,8 +110,8 @@ const CALENDAR = [
     privado: ["HPV (2 doses, intervalo 6 meses)", "MenACWY (dose única ou reforço)", "dTpa (reforço)"],
   },
   {
-    faixa: "11–12 anos", minDias: 4015, maxDias: 4380,
-    sus:     ["HPV (2ª dose se iniciou esquema)", "dT ou dTpa"],
+    faixa: "11–14 anos", minDias: 4015, maxDias: 5110,
+    sus:     ["HPV (completar esquema)", "dT ou dTpa", "MenACWY (reforço — disponível no SUS)"],
     privado: ["HPV (completar esquema)", "dTpa", "MenACWY", "Influenza (anual)"],
   },
   {
@@ -67,41 +121,69 @@ const CALENDAR = [
   },
 ];
 
-function calcIdadeDias(dataNasc) {
-  if (!dataNasc) return null;
+// ─────────────────────────────────────────────────────────────────────────────
+// Máscara dd/mm/aaaa
+// ─────────────────────────────────────────────────────────────────────────────
+function maskDate(v) {
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return d.slice(0, 2) + "/" + d.slice(2);
+  return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
+}
+
+function calcIdadeDias(dataBR) {
+  if (!dataBR || dataBR.length < 10) return null;
+  const parts = dataBR.split("/");
+  if (parts.length !== 3) return null;
+  const dia = parseInt(parts[0], 10);
+  const mes = parseInt(parts[1], 10);
+  const ano = parseInt(parts[2], 10);
+  if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return null;
+  if (dia < 1 || dia > 31 || mes < 1 || mes > 12) return null;
+  const anoAtual = new Date().getFullYear();
+  if (ano < anoAtual - 15 || ano > anoAtual) return null;
+  const nasc = new Date(ano, mes - 1, dia);
+  if (isNaN(nasc.getTime())) return null;
   const hoje = new Date();
-  const nasc = new Date(dataNasc);
-  if (isNaN(nasc.getTime()) || nasc > hoje) return null;
+  nasc.setHours(0, 0, 0, 0);
+  hoje.setHours(0, 0, 0, 0);
+  if (nasc > hoje) return null;
   return Math.floor((hoje - nasc) / (1000 * 60 * 60 * 24));
 }
 
 function formatarIdade(dias) {
   if (dias === null) return "";
   if (dias < 30)  return dias + " dias";
-  if (dias < 365) return Math.floor(dias / 30.44) + " meses e " + (dias % 30 | 0) + " dias";
+  if (dias < 365) {
+    const m = Math.floor(dias / 30.44);
+    const d = dias - Math.floor(m * 30.44);
+    return m + " mês" + (m > 1 ? "es" : "") + (d > 0 ? " e " + d + " dias" : "");
+  }
   const anos = Math.floor(dias / 365.25);
   const resto = Math.floor((dias % 365.25) / 30.44);
   return anos + " ano" + (anos > 1 ? "s" : "") + (resto > 0 ? " e " + resto + " m" : "");
 }
 
+// Tolerância apenas no limite superior (atraso de até 30 dias)
 function getStatus(item, idadeDias) {
   if (idadeDias === null) return "none";
-  const tolerancia = 60;
-  if (idadeDias >= item.minDias - tolerancia && idadeDias <= item.maxDias + tolerancia) return "due";
+  const graceAtraso = 30;
+  if (idadeDias >= item.minDias && idadeDias <= item.maxDias + graceAtraso) return "due";
   if (idadeDias < item.minDias) return "upcoming";
   return "done";
 }
 
 const STATUS_STYLES = {
-  due:      { bg: "#ECFDF5", border: "#6EE7B7", dot: "#10B981", label: "Previsto agora" },
-  upcoming: { bg: "#EFF6FF", border: "#BFDBFE", dot: "#3B82F6", label: "Próximo" },
-  done:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#9CA3AF", label: "Fase anterior" },
-  none:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#D1D5DB", label: "" },
+  due:      { bg: "#ECFDF5", border: "#6EE7B7", dot: "#10B981" },
+  upcoming: { bg: "#EFF6FF", border: "#BFDBFE", dot: "#3B82F6" },
+  done:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#9CA3AF" },
+  none:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#D1D5DB" },
 };
 
 export default function Vacinal() {
   const [dataNasc, setDataNasc] = useState("");
   const [modo, setModo]         = useState("privado");
+
   const idadeDias = calcIdadeDias(dataNasc);
   const idadeStr  = formatarIdade(idadeDias);
 
@@ -114,22 +196,54 @@ export default function Vacinal() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+
+      {/* Header */}
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Calendário Vacinal</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2025/2026 · SUS / Privado</p>
+        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
+          Calendário Vacinal
+        </h1>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2025/2026 · PNI atualizado jun/2026</p>
       </div>
 
       {/* Controles */}
       <div style={{ padding: "12px 16px", background: "#ECFEFF", borderBottom: "1px solid #A5F3FC" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#0E7490", display: "block", marginBottom: 4 }}>DATA DE NASCIMENTO</label>
-        <input type="date" value={dataNasc} onChange={e => setDataNasc(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #67E8F9", outline: "none", background: "#fff", boxSizing: "border-box" }} />
-        {idadeStr && <p style={{ fontSize: 13, fontWeight: 700, color: PRIMARY, margin: "6px 0 0" }}>Idade: {idadeStr}</p>}
+        <label style={{ fontSize: 11, fontWeight: 700, color: "#0E7490", display: "block", marginBottom: 4 }}>
+          DATA DE NASCIMENTO
+        </label>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={dataNasc}
+          onChange={e => setDataNasc(maskDate(e.target.value))}
+          placeholder="dd/mm/aaaa"
+          maxLength={10}
+          autoComplete="off"
+          style={{
+            width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15,
+            border: "1.5px solid #67E8F9", outline: "none", background: "#fff",
+            boxSizing: "border-box", letterSpacing: "0.05em",
+          }}
+        />
+        {idadeStr && (
+          <p style={{ fontSize: 13, fontWeight: 700, color: PRIMARY, margin: "6px 0 0" }}>
+            Idade: {idadeStr}
+          </p>
+        )}
+        {dataNasc.length === 10 && idadeDias === null && (
+          <p style={{ fontSize: 12, color: "#EF4444", margin: "4px 0 0" }}>
+            Data inválida ou futura — verifique dia/mês/ano
+          </p>
+        )}
 
         <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
           {["sus", "privado"].map(m => (
             <button key={m} onClick={() => setModo(m)}
-              style={{ flex: 1, padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: modo === m ? 700 : 500, cursor: "pointer", border: "none", background: modo === m ? PRIMARY : "#F3F4F6", color: modo === m ? "#fff" : "#6B7280" }}>
+              style={{
+                flex: 1, padding: "8px", borderRadius: 8, fontSize: 12,
+                fontWeight: modo === m ? 700 : 500, cursor: "pointer", border: "none",
+                background: modo === m ? PRIMARY : "#F3F4F6",
+                color: modo === m ? "#fff" : "#6B7280",
+              }}>
               {m === "sus" ? "SUS" : "Privado (SBIm)"}
             </button>
           ))}
@@ -140,29 +254,41 @@ export default function Vacinal() {
         {idadeDias !== null && (
           <div style={{ background: "#FFF7ED", borderRadius: 10, padding: "10px 14px", marginBottom: 16, border: "1px solid #FED7AA", display: "flex", gap: 8 }}>
             <AlertTriangle size={15} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />
-            <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>Exibindo vacinas <strong>previstas agora</strong> e <strong>próximas</strong> para a idade calculada. Role para ver todas as faixas.</p>
+            <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
+              Exibindo vacinas <strong>previstas agora</strong> e <strong>próximas</strong> para a idade calculada.
+            </p>
           </div>
         )}
 
         {faixasVisiveis.map((item, i) => {
-          const status = getStatus(item, idadeDias);
-          const style  = STATUS_STYLES[status];
+          const status  = getStatus(item, idadeDias);
+          const st      = STATUS_STYLES[status];
           const vacinas = modo === "sus" ? item.sus : item.privado;
+          const isMenoOnly = item.faixa.includes("somente meningocócica");
 
           return (
-            <div key={i} style={{ borderRadius: 10, border: "1.5px solid " + style.border, background: style.bg, marginBottom: 10, padding: "10px 14px" }}>
+            <div key={i} style={{ borderRadius: 10, border: "1.5px solid " + st.border, background: st.bg, marginBottom: 10, padding: "10px 14px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: style.dot, flexShrink: 0 }} />
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: st.dot, flexShrink: 0 }} />
                   <span style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>{item.faixa}</span>
                 </div>
-                {status === "due" && (
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "#DCFCE7", padding: "2px 8px", borderRadius: 20 }}>PREVISTO AGORA</span>
-                )}
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  {isMenoOnly && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#7C3AED", background: "#EDE9FE", padding: "2px 7px", borderRadius: 20 }}>
+                      VISITA EXCLUSIVA
+                    </span>
+                  )}
+                  {status === "due" && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "#DCFCE7", padding: "2px 8px", borderRadius: 20 }}>
+                      PREVISTO AGORA
+                    </span>
+                  )}
+                </div>
               </div>
               {vacinas.map((v, j) => (
                 <div key={j} style={{ display: "flex", gap: 7, marginBottom: 4 }}>
-                  <CheckCircle size={13} color={style.dot} style={{ flexShrink: 0, marginTop: 2 }} />
+                  <CheckCircle size={13} color={st.dot} style={{ flexShrink: 0, marginTop: 2 }} />
                   <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.45 }}>{v}</span>
                 </div>
               ))}
@@ -177,16 +303,20 @@ export default function Vacinal() {
           </div>
         )}
 
-        {/* Notas importantes */}
+        {/* Notas */}
         <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid #E5E7EB" }}>
-          <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: "0 0 8px" }}>Notas SBIm 2025/2026</p>
+          <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: "0 0 8px" }}>
+            Notas SBIm 2025/2026 · PNI
+          </p>
           {[
-            "Influenza: anual a partir de 6 meses · 2 doses (intervalo 30 dias) na 1ª vacinação de vida · Dose única nos anos seguintes",
-            "HPV: esquema de 2 doses para imuncompetentes 9–14 anos (intervalo 6 meses) · 3 doses se imunocomprometidos ou ≥ 15 anos",
-            "MenB (Bexsero): 3 doses aos 2, 4 e 12 meses no esquema privado",
-            "Pneumo 13 e 15 são intercambiáveis no esquema privado; Pneumo 10 no SUS",
-            "Febre Amarela: dose única até 2 anos (esquema primário) · Reforço único após 10 anos se viagem para área de risco",
-            "Varicela: 2 doses recomendadas no calendário privado (tetraviral 12m + monocomponente 15m ou 4–5a)",
+            "Pneumo 20 (VPC20): substituiu a Pneumo 10 no SUS a partir de jun/2026 (Guia Técnico PNI/MS). Esquema mantido: 2m, 4m e reforço 12m. Durante transição, podem ocorrer esquemas mistos VPC10/VPC20",
+            "MenACWY no SUS: desde 1º/jul/2025 (NT nº 77/2025 DPNI), o reforço aos 12 meses passou de MenC para MenACWY — amplia proteção para sorogrupos A, C, W e Y",
+            "Visitas de 3 e 5 meses (SUS): exclusivas para vacina meningocócica C, sem coadministração com outras vacinas do esquema básico",
+            "Influenza: anual a partir de 6 meses · 2 doses (intervalo 30 dias) na 1ª vacinação · Dose única nos anos seguintes",
+            "HPV: 2 doses para imunocompetentes 9–14 anos (intervalo 6 meses) · 3 doses se imunocomprometidos ou ≥ 15 anos",
+            "MenB (Bexsero): esquema privado — 3 doses aos 2, 4 e 12 meses",
+            "Febre Amarela: dose única até 2 anos · Reforço único após 10 anos se viagem para área de risco",
+            "Varicela: 2 doses no esquema privado — tetraviral 12m + monocomponente 15m ou 4–5a",
           ].map((nota, i) => (
             <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
               <Info size={12} color="#06B6D4" style={{ flexShrink: 0, marginTop: 2 }} />
@@ -196,11 +326,12 @@ export default function Vacinal() {
         </div>
       </div>
 
+      {/* Disclaimer */}
       <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
         <div style={{ display: "flex", gap: 8 }}>
           <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Calendário baseado em SBIm 2025/2026. Confirmar com calendário vigente e CRIE para imunodeprimidos. Não substitui avaliação clínica individual.
+            <strong>Apoio à decisão clínica.</strong> Calendário baseado em SBIm 2025/2026, NT 77/2025 DPNI e Guia Técnico PNI jun/2026. Confirmar com CRIE para imunodeprimidos. Não substitui avaliação clínica individual.
           </p>
         </div>
       </div>
