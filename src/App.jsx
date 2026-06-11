@@ -26,6 +26,7 @@ const Neonatologia3    = lazy(() => import("./modulos/neonatologia-3"));
 const Neonatologia4    = lazy(() => import("./modulos/neonatologia-4"));
 const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
 const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
+const Canguru = lazy(() => import('./modulos/canguru'));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -48,6 +49,7 @@ const MODULO_MAP = {
   "/neonatologia-4":    { label: "Neonatologia IV",     cor: "#7C3AED" },
   "/dilucao-bic":       { label: "Diluição e BIC",      cor: "#F97316" },
   "/tig-neonatal":      { label: "TIG Neonatal",        cor: "#0891B2" },
+  "/canguru":      { label: "Canguru",      cor: "#10B981" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -150,6 +152,7 @@ export default function App() {
           <Route path="/neonatologia-4"    element={<Neonatologia4 />} />
           <Route path="/dilucao-bic"       element={<DilucaoBic />} />
           <Route path="/tig-neonatal"      element={<TigNeonatal />} />
+          <Route path="/canguru" element={<Canguru />} />
 
           {/* Fallback — redireciona rotas desconhecidas para home */}
           <Route path="*"                  element={<PedHub />} />
