@@ -166,11 +166,27 @@ const MODULOS = [
     grupo: "Neonatologia",
   },
   {
+    rota:  "/neonatologia-5",
+    label: "Neo V — NPT",
+    desc:  "Nutrição Parenteral Total · Eletrólitos",
+    Icon:  Droplets,
+    cor:   "#6366F1",
+    grupo: "Neonatologia",
+  },
+  {
     rota:  "/dilucao-bic",
     label: "Diluição e BIC",
     desc:  "Vasoativas · Sedoanalgesia · PGE1 · Insulina",
     Icon:  Activity,
     cor:   "#F97316",
+    grupo: "Neonatologia",
+  },
+  {
+    rota:  "/dexametasona-dbp",
+    label: "Dexa DBP",
+    desc:  "DART · Protocolo HMIB · Dexametasona RNPT",
+    Icon:  Pill,
+    cor:   "#0891B2",
     grupo: "Neonatologia",
   },
   {
@@ -181,23 +197,14 @@ const MODULOS = [
     cor:   "#0891B2",
     grupo: "Neonatologia",
   },
-{
-  rota: "/canguru",
-  label: "Canguru",
-  desc: "Prescrição e Receituário Neonatal",
-  Icon: Heart,
-  cor: "#10B981",
-  grupo: "Neonatologia",
-},
   {
-    rota:  "/neonatologia-5",
-    label: "Neo V — NPT",
-    desc:  "Nutrição Parenteral Total · Eletrólitos",
-    Icon:  Activity,
-    cor:   "#6366F1",
+    rota:  "/canguru",
+    label: "Canguru",
+    desc:  "Prescrição e Receituário Neonatal",
+    Icon:  Heart,
+    cor:   "#10B981",
     grupo: "Neonatologia",
   },
-  { rota: "/dexametasona-dbp", label: "Dexa DBP", desc: "DART · Protocolo HMIB · Dexametasona RNPT", Icon: Activity, cor: "#0891B2", grupo: "Neonatologia" },
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
