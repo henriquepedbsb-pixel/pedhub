@@ -39,8 +39,8 @@ const R = '12px', RS = '8px';
 /* ── Constantes clínicas ── */
 const LM_100 = { kcal: 67, prot: 1.2, p: 14,  zn: 0.15, vitD: 2  };
 const FM85   = { kcal: 4.3,prot: 0.36,p: 11,  zn: 0.24, vitD: 35 };
-const FOS_P_ML   = 25;   // Fosfato tricálcico 12,9%: 25 mg P/mL
-const POLIVIT_VD = 400;  // UI VitD/dia — Growvit BB / Pedianutri (dose fixa)
+const FOS_P_ML   = 25;
+const POLIVIT_VD = 400;
 
 const FORMULAS = {
   aptamil:     { nome: 'Aptamil Premium 1', kcal: 67, prot: 1.2, p: 38, zn: 0.59, vitD: 44 },
@@ -52,7 +52,6 @@ const FORMULAS = {
 
 const parseFld = v => parseFloat(String(v).replace(',', '.'));
 
-/* ── Calcula dias de vida a partir da data de nascimento ── */
 function calcDias(dnStr) {
   if (!dnStr) return null;
   const [y, m, d] = dnStr.split('-').map(Number);
@@ -64,7 +63,6 @@ function calcDias(dnStr) {
   return diff >= 0 ? diff : null;
 }
 
-/* ── Data máxima para o input (hoje) ── */
 const HOJE_ISO = new Date().toISOString().split('T')[0];
 
 /* ════════════════════════════════════════════
@@ -88,7 +86,6 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const menor32 = ig < 32;
   const preT    = ig < 37;
 
-  /* ── Dieta — nutrientes ── */
   let dKcal = 0, dProt = 0, dP = 0, dZn = 0, dVitD = 0;
   const volTotal = vol * pk;
   const volTom   = tom > 0 ? volTotal / tom : 0;
@@ -111,14 +108,10 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const kcalKg = pk > 0 ? dKcal / pk : 0;
   const protKg = pk > 0 ? dProt / pk : 0;
 
-  /* ── IG pós-menstrual (IGPM / IG corrigida) ── */
   const igCorrDias  = ig * 7 + igd + dias;
   const igCorrSem   = Math.floor(igCorrDias / 7);
   const igCorrResto = igCorrDias % 7;
 
-  /* ── Ferro (Sulfato ferroso) ──────────────────
-     RNPT (<37s): inicia no 30º dia de vida
-     RNT  (≥37s): sem restrição por dias           */
   const ferroAtivo    = preT ? dias >= 30 : true;
   const ferroRateBase = pesorn < 1000 ? 4 : pesorn < 1500 ? 3 : pesorn < 2500 ? 2 : 1;
   const ferroRate     = ferroAtivo ? ferroRateBase : 0;
@@ -126,21 +119,14 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const ferroGotas    = ferroAtivo ? Math.ceil(ferroDose / 1.25) : 0;
   const ferroDiasRest = (!ferroAtivo && preT) ? 30 - dias : 0;
 
-  /* ── Fósforo (Fosfato tricálcico 12,9%) ───────
-     Somente se: IG < 32s  OU  PN < 1500 g        */
   const fosIndicado  = ig < 32 || pesorn < 1500;
   const pAlvoMid     = 87.5 * pk;
   const pNecRaw      = fosIndicado ? Math.max(0, pAlvoMid - dP) : 0;
   const pVol         = pNecRaw / FOS_P_ML;
-  const pTom         = pVol / 4; // SEMPRE 4 tomadas (6/6h)
+  const pTom         = pVol / 4;
   const pSuficDieta  = fosIndicado && dP >= 75 * pk;
-  const pDoseMgKg    = pk > 0 ? pNecRaw / pk : 0; // mg P/kg/dia via suplemento
+  const pDoseMgKg    = pk > 0 ? pNecRaw / pk : 0;
 
-  /* ── Zinco (solução 5 mg/mL) ──────────────────
-     Indicado apenas para RNPT
-     - IG < 32s  OU  PN < 1500 g  →  2 mg/kg/dia
-     - IG 32–37s (e PN ≥ 1500 g)  →  1 mg/kg/dia
-     Inicia somente com IGPM ≥ 36 semanas          */
   const znHighCrit = ig < 32 || pesorn < 1500;
   const znMidCrit  = !znHighCrit && ig < 37;
   const znIndicado = znHighCrit || znMidCrit;
@@ -150,8 +136,6 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const znVol      = znNec / 5;
   const znSemRest  = (znIndicado && !znAtivo) ? 36 - igCorrSem : 0;
 
-  /* ── Vitamina D (colecalciferol) ──────────────
-     Alvo com desconto de dieta + polivitamínico   */
   const vitDAlvo  = ig < 32 ? 800 : ig < 37 ? 600 : 400;
   const vitDDieta = dVitD;
   const vitDTotal = vitDDieta + POLIVIT_VD;
@@ -159,7 +143,6 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const vitDG200  = Math.ceil(vitDNec / 200);
   const vitDG400  = Math.ceil(vitDNec / 400);
 
-  /* ── Alertas de rastreio ── */
   const alertUSG = dias >= 0 && dias <= 7;
   const alertEco = ig < 34;
   const labHoje  = dias > 0 && dias % 21 === 0;
@@ -188,6 +171,30 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   };
 }
 
+/* ── Impressão isolada: abre popup com apenas o bloco alvo ── */
+function printById(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const w = window.open('', '_blank', 'width=700,height=900');
+  if (!w) { window.print(); return; } // fallback se popup bloqueado
+  w.document.write(
+    '<!DOCTYPE html><html><head>' +
+    '<meta charset="UTF-8">' +
+    '<title>PedHub \u00B7 Canguru</title>' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+    '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">' +
+    '<style>' +
+    '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+    'body { font-family: "DM Sans", Arial, sans-serif; padding: 20px; background: #fff; color: #1A2332; }' +
+    '@media print { body { padding: 10mm; } button { display: none !important; } }' +
+    '</style>' +
+    '</head><body>' + el.innerHTML + '</body></html>'
+  );
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 800);
+}
+
 /* ════════════════════════════════════════════
    COMPONENTE PRINCIPAL
 ════════════════════════════════════════════ */
@@ -204,7 +211,6 @@ export default function Canguru() {
       color: COR.texto,
       paddingBottom: 60,
     }}>
-      {/* ── Header ── */}
       <header style={{
         background: `linear-gradient(135deg,${COR.dark},${COR.mid})`,
         padding: '28px 20px 20px',
@@ -228,7 +234,6 @@ export default function Canguru() {
         </p>
       </header>
 
-      {/* ── Tab bar ── */}
       <div style={{ display: 'flex', background: '#fff', borderBottom: `2px solid ${COR.lite}` }}>
         {['Prescrição', 'Receituário'].map((t, i) => (
           <button key={i} onClick={() => setTab(i)} style={{
@@ -247,7 +252,6 @@ export default function Canguru() {
       {tab === 0 && <TabPrescricao />}
       {tab === 1 && <TabReceituario />}
 
-      {/* ── Footer ── */}
       <footer style={{
         textAlign: 'center', padding: '20px 16px 8px',
         fontSize: 11, color: COR.muted, lineHeight: 1.9,
@@ -315,7 +319,6 @@ function TabPrescricao() {
 
   return (
     <div style={{ padding: '16px 16px 0' }}>
-      {/* Dados do paciente */}
       <Card>
         <CardHead Icon={Scale}>Dados do paciente</CardHead>
         <Fld label="Nome / Leito (opcional)">
@@ -345,7 +348,6 @@ function TabPrescricao() {
         </Fld>
       </Card>
 
-      {/* Dieta */}
       <Card>
         <CardHead Icon={Droplets}>Dieta prescrita</CardHead>
         <Fld label="Tipo de dieta *">
@@ -436,7 +438,6 @@ function TabReceituario() {
 
   return (
     <div style={{ padding: '16px 16px 0' }}>
-      {/* Identificação */}
       <Card>
         <CardHead Icon={ClipboardList}>Identificação</CardHead>
         <Fld label="Nome do paciente *">
@@ -447,7 +448,6 @@ function TabReceituario() {
         </Fld>
       </Card>
 
-      {/* Dados clínicos */}
       <Card>
         <CardHead Icon={Scale}>Dados clínicos</CardHead>
         <Grid2>
@@ -474,7 +474,6 @@ function TabReceituario() {
         </Fld>
       </Card>
 
-      {/* Dieta */}
       <Card>
         <CardHead Icon={Droplets}>Dieta (desconto de nutrientes)</CardHead>
         <Fld label="Tipo de dieta *">
@@ -514,203 +513,196 @@ function TabReceituario() {
 function ResultPrescricao({ res, nome }) {
   return (
     <>
-      {/* Cabeçalho resumo */}
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
-          <div>
-            {nome && <div style={{ fontWeight: 700, fontSize: 14 }}>{nome}</div>}
-            <div style={{ fontSize: 12, color: COR.muted, marginTop: 2 }}>
-              IG nasc. {res.ig}s{res.igd > 0 ? `+${res.igd}d` : ''} · PN {(res.pnk * 1000).toFixed(0)} g · Peso atual {(res.pk * 1000).toFixed(0)} g
+      {/* ── área imprimível (sem o botão) ── */}
+      <div id="ph-print-presc">
+        <Card>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
+            <div>
+              {nome && <div style={{ fontWeight: 700, fontSize: 14 }}>{nome}</div>}
+              <div style={{ fontSize: 12, color: COR.muted, marginTop: 2 }}>
+                IG nasc. {res.ig}s{res.igd > 0 ? `+${res.igd}d` : ''} · PN {(res.pnk * 1000).toFixed(0)} g · Peso atual {(res.pk * 1000).toFixed(0)} g
+              </div>
+            </div>
+            <div style={{
+              background: COR.lite, borderRadius: 8, padding: '5px 12px',
+              fontSize: 12, fontWeight: 700, color: COR.dark,
+            }}>
+              {res.dias} dias · IGPM {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''}
             </div>
           </div>
-          <div style={{
-            background: COR.lite, borderRadius: 8, padding: '5px 12px',
-            fontSize: 12, fontWeight: 700, color: COR.dark,
-          }}>
-            {res.dias} dias · IGPM {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''}
-          </div>
-        </div>
-      </Card>
+        </Card>
 
-      {/* Dieta */}
-      <Card>
-        <CardHead Icon={Droplets}>Dieta enteral</CardHead>
-        <RxRow label="Volume total">{res.volTotal.toFixed(1)} mL/dia</RxRow>
-        <RxRow label="Por tomada">{res.volTom.toFixed(1)} mL · {res.tom}× ao dia</RxRow>
-        <RxRow label="Calorias">{res.kcalKg.toFixed(1)} kcal/kg/dia</RxRow>
-        <RxRow label="Proteína">{res.protKg.toFixed(2)} g/kg/dia</RxRow>
-        <RxRow label="Fósforo">{(res.dP / res.pk).toFixed(1)} mg/kg/dia</RxRow>
-        <RxRow label="Zinco">{(res.dZn / res.pk).toFixed(2)} mg/kg/dia</RxRow>
-        {res.tipoDieta === 'lm_fm85' && (
-          <RxRow label="FM85">{res.sach} sachês/dia · 1 sachê/25 mL LM</RxRow>
-        )}
-        {res.tipoDieta === 'formula' && (
-          <RxRow label="Fórmula">{res.formulaNome}</RxRow>
-        )}
-      </Card>
-
-      {/* Suplementação */}
-      <Card>
-        <CardHead Icon={Pill}>Suplementação</CardHead>
-
-        {/* 1. Ferro */}
-        <RxItem n="1" label="Sulfato ferroso gotas" status={res.ferroAtivo ? 'ativo' : 'aguardo'}>
-          {!res.ferroAtivo && res.preT ? (
-            <AguardoBadge>
-              Iniciar no 30.º dia de vida
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
-              </span>
-            </AguardoBadge>
-          ) : (
-            <>
-              <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN)
-              </span>
-            </>
+        <Card>
+          <CardHead Icon={Droplets}>Dieta enteral</CardHead>
+          <RxRow label="Volume total">{res.volTotal.toFixed(1)} mL/dia</RxRow>
+          <RxRow label="Por tomada">{res.volTom.toFixed(1)} mL · {res.tom}× ao dia</RxRow>
+          <RxRow label="Calorias">{res.kcalKg.toFixed(1)} kcal/kg/dia</RxRow>
+          <RxRow label="Proteína">{res.protKg.toFixed(2)} g/kg/dia</RxRow>
+          <RxRow label="Fósforo">{(res.dP / res.pk).toFixed(1)} mg/kg/dia</RxRow>
+          <RxRow label="Zinco">{(res.dZn / res.pk).toFixed(2)} mg/kg/dia</RxRow>
+          {res.tipoDieta === 'lm_fm85' && (
+            <RxRow label="FM85">{res.sach} sachês/dia · 1 sachê/25 mL LM</RxRow>
           )}
-        </RxItem>
-
-        {/* 2. Fósforo */}
-        <RxItem n="2"
-          label={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
-          status={!res.fosIndicado ? 'nao-indicado' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
-          {!res.fosIndicado ? (
-            <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
-          ) : res.pSuficDieta ? (
-            <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
-          ) : (
-            <>
-              <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO — 4 tomadas de{' '}
-              <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
-              <div style={{ fontSize: 11, color: COR.warn, marginTop: 3 }}>
-                Distribuição 6/6h fixa — independente do horário das refeições
-              </div>
-            </>
+          {res.tipoDieta === 'formula' && (
+            <RxRow label="Fórmula">{res.formulaNome}</RxRow>
           )}
-        </RxItem>
+        </Card>
 
-        {/* 3. Zinco */}
-        <RxItem n="3" label="Zinco sol. 5 mg/mL"
-          status={!res.znIndicado ? 'nao-indicado' : !res.znAtivo ? 'aguardo' : res.znVol < 0.05 ? 'dieta-ok' : 'ativo'}>
-          {!res.znIndicado ? (
-            <NaoIndicadoBadge>Não indicado — IG ≥ 37 semanas</NaoIndicadoBadge>
-          ) : !res.znAtivo ? (
-            <AguardoBadge>
-              Iniciar com IGPM ≥ 36 semanas
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
-              </span>
-            </AguardoBadge>
-          ) : res.znVol < 0.05 ? (
-            <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
-          ) : (
-            <>
-              <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
-              </span>
-            </>
-          )}
-        </RxItem>
+        <Card>
+          <CardHead Icon={Pill}>Suplementação</CardHead>
 
-        {/* 4. Polivitamínico */}
-        <RxItem n="4" label="Polivitamínico (Growvit BB / Pedianutri ou equiv.)" status="ativo">
-          <strong>6 gotas</strong> VO 12/12h
-          <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
-        </RxItem>
+          <RxItem n="1" label="Sulfato ferroso gotas" status={res.ferroAtivo ? 'ativo' : 'aguardo'}>
+            {!res.ferroAtivo && res.preT ? (
+              <AguardoBadge>
+                Iniciar no 30.º dia de vida
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
+                </span>
+              </AguardoBadge>
+            ) : (
+              <>
+                <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN)
+                </span>
+              </>
+            )}
+          </RxItem>
 
-        {/* 5. Vitamina D */}
-        <RxItem n="5" label="Colecalciferol" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
-          {res.vitDNec <= 0 ? (
-            <OkBadge>
-              Não necessário — dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
-            </OkBadge>
-          ) : (
-            <>
-              <div>
-                <strong>{res.vitDG200} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
-              </div>
-              <div>
-                <strong>{res.vitDG400} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI/gota)</span>
-              </div>
-              <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
-                {' '}= {res.vitDNec.toFixed(0)} UI adicionais · ajustar conforme apresentação disponível
-              </div>
-            </>
-          )}
-        </RxItem>
+          <RxItem n="2"
+            label={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
+            status={!res.fosIndicado ? 'nao-indicado' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
+            {!res.fosIndicado ? (
+              <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
+            ) : res.pSuficDieta ? (
+              <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
+            ) : (
+              <>
+                <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO — 4 tomadas de{' '}
+                <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+                <div style={{ fontSize: 11, color: COR.warn, marginTop: 3 }}>
+                  Distribuição 6/6h fixa — independente do horário das refeições
+                </div>
+              </>
+            )}
+          </RxItem>
 
-        {/* Não farmacológico */}
-        <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 10, marginTop: 10 }}>
-          <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: COR.muted, marginBottom: 8 }}>
-            Não farmacológico
-          </div>
-          {['Seguimento com Fonoaudiologia e Fisioterapia',
-            'Posição Canguru — tão logo clinicamente estável'].map((item, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 5, fontSize: 12.5, color: COR.det }}>
-              <CheckCircle size={13} color={COR.prim} style={{ flexShrink: 0, marginTop: 1 }} />
-              <span>{item}</span>
+          <RxItem n="3" label="Zinco sol. 5 mg/mL"
+            status={!res.znIndicado ? 'nao-indicado' : !res.znAtivo ? 'aguardo' : res.znVol < 0.05 ? 'dieta-ok' : 'ativo'}>
+            {!res.znIndicado ? (
+              <NaoIndicadoBadge>Não indicado — IG ≥ 37 semanas</NaoIndicadoBadge>
+            ) : !res.znAtivo ? (
+              <AguardoBadge>
+                Iniciar com IGPM ≥ 36 semanas
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
+                </span>
+              </AguardoBadge>
+            ) : res.znVol < 0.05 ? (
+              <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
+            ) : (
+              <>
+                <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                </span>
+              </>
+            )}
+          </RxItem>
+
+          <RxItem n="4" label="Polivitamínico (Growvit BB / Pedianutri ou equiv.)" status="ativo">
+            <strong>6 gotas</strong> VO 12/12h
+            <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
+          </RxItem>
+
+          <RxItem n="5" label="Colecalciferol" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
+            {res.vitDNec <= 0 ? (
+              <OkBadge>
+                Não necessário — dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
+              </OkBadge>
+            ) : (
+              <>
+                <div>
+                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
+                </div>
+                <div>
+                  <strong>{res.vitDG400} gotas</strong> VO 1×/dia
+                  <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI/gota)</span>
+                </div>
+                <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
+                  Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  {' '}= {res.vitDNec.toFixed(0)} UI adicionais · ajustar conforme apresentação disponível
+                </div>
+              </>
+            )}
+          </RxItem>
+
+          <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 10, marginTop: 10 }}>
+            <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: COR.muted, marginBottom: 8 }}>
+              Não farmacológico
             </div>
-          ))}
-        </div>
-      </Card>
+            {['Seguimento com Fonoaudiologia e Fisioterapia',
+              'Posição Canguru — tão logo clinicamente estável'].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 5, fontSize: 12.5, color: COR.det }}>
+                <CheckCircle size={13} color={COR.prim} style={{ flexShrink: 0, marginTop: 1 }} />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
 
-      {/* Alertas de rastreio */}
-      <Card>
-        <CardHead Icon={AlertTriangle}>Alertas de rastreio</CardHead>
-        {res.alertUSG && (
-          <Alerta cor={COR.warn} bg={COR.warnL}>
-            <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>USG transfontanelar — janela 1–7 dias de vida (dia {res.dias})</span>
-          </Alerta>
-        )}
-        {res.alertEco && (
-          <Alerta cor={COR.warn} bg={COR.warnL}>
-            <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>Ecocardiograma — IG nascimento &lt;34 semanas (1× se não realizado)</span>
-          </Alerta>
-        )}
-        {res.labHoje ? (
-          <Alerta cor={COR.roxo} bg={COR.roxoL}>
-            <Info size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>Laboratório hoje — dia {res.dias} (múltiplo de 21)</span>
-          </Alerta>
-        ) : (
-          <Alerta cor={COR.slate} bg={COR.slateL}>
-            <Calendar size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>Próximo laboratório: dia {res.proxLab} de vida</span>
-          </Alerta>
-        )}
-        {res.alerta28apx && (
-          <Alerta cor={COR.warn} bg={COR.warnL}>
-            <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>Aproximando 28 dias de IC — preparar avaliação de alta</span>
-          </Alerta>
-        )}
-        {res.alerta28ating && (
-          <Alerta cor={COR.ok} bg={COR.okL}>
-            <CheckCircle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>≥ 28 dias de IC atingido — avaliar critérios de alta</span>
-          </Alerta>
-        )}
-        {res.alert44 && (
-          <Alerta cor={COR.ok} bg={COR.okL}>
-            <CheckCircle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span>IGPM ≥ 44 semanas — consulta de rotina pós-alta</span>
-          </Alerta>
-        )}
-        <div style={{ fontSize: 11, color: COR.muted, marginTop: 10, padding: '8px 10px', background: COR.fundo, borderRadius: RS, lineHeight: 1.6 }}>
-          <strong>Painel (a cada 21 dias):</strong> Hemograma · Ferro sérico · Ferritina ·
-          Reticulócitos · 25-OH Vit D · Ca · P · FAL · Ureia · Creatinina
-        </div>
-      </Card>
-
-      <PrintBtn />
+        <Card>
+          <CardHead Icon={AlertTriangle}>Alertas de rastreio</CardHead>
+          {res.alertUSG && (
+            <Alerta cor={COR.warn} bg={COR.warnL}>
+              <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>USG transfontanelar — janela 1–7 dias de vida (dia {res.dias})</span>
+            </Alerta>
+          )}
+          {res.alertEco && (
+            <Alerta cor={COR.warn} bg={COR.warnL}>
+              <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>Ecocardiograma — IG nascimento &lt;34 semanas (1× se não realizado)</span>
+            </Alerta>
+          )}
+          {res.labHoje ? (
+            <Alerta cor={COR.roxo} bg={COR.roxoL}>
+              <Info size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>Laboratório hoje — dia {res.dias} (múltiplo de 21)</span>
+            </Alerta>
+          ) : (
+            <Alerta cor={COR.slate} bg={COR.slateL}>
+              <Calendar size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>Próximo laboratório: dia {res.proxLab} de vida</span>
+            </Alerta>
+          )}
+          {res.alerta28apx && (
+            <Alerta cor={COR.warn} bg={COR.warnL}>
+              <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>Aproximando 28 dias de IC — preparar avaliação de alta</span>
+            </Alerta>
+          )}
+          {res.alerta28ating && (
+            <Alerta cor={COR.ok} bg={COR.okL}>
+              <CheckCircle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>≥ 28 dias de IC atingido — avaliar critérios de alta</span>
+            </Alerta>
+          )}
+          {res.alert44 && (
+            <Alerta cor={COR.ok} bg={COR.okL}>
+              <CheckCircle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span>IGPM ≥ 44 semanas — consulta de rotina pós-alta</span>
+            </Alerta>
+          )}
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 10, padding: '8px 10px', background: COR.fundo, borderRadius: RS, lineHeight: 1.6 }}>
+            <strong>Painel (a cada 21 dias):</strong> Hemograma · Ferro sérico · Ferritina ·
+            Reticulócitos · 25-OH Vit D · Ca · P · FAL · Ureia · Creatinina
+          </div>
+        </Card>
+      </div>
+      {/* ── botão fora da área imprimível ── */}
+      <PrintBtn targetId="ph-print-presc" />
     </>
   );
 }
@@ -722,146 +714,141 @@ function ResultReceituario({ res, nomePac, nrSES }) {
   const hoje = new Date().toLocaleDateString('pt-BR');
 
   return (
-    <div style={{
-      background: '#FFFEF8',
-      border: `1px solid ${COR.borda}`,
-      borderTop: `3px solid ${COR.dark}`,
-      borderRadius: R, overflow: 'hidden', marginBottom: 12,
-    }}>
-      {/* Header Rx */}
-      <div style={{
-        background: `linear-gradient(135deg,${COR.dark},${COR.mid})`,
-        padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    <>
+      {/* ── área imprimível (sem o botão) ── */}
+      <div id="ph-print-receit" style={{
+        background: '#FFFEF8',
+        border: `1px solid ${COR.borda}`,
+        borderTop: `3px solid ${COR.dark}`,
+        borderRadius: R, overflow: 'hidden', marginBottom: 12,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 20, fontWeight: 800, fontStyle: 'italic', color: '#fff' }}>Rx</span>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.85)' }}>
-            Receituário
+        <div style={{
+          background: `linear-gradient(135deg,${COR.dark},${COR.mid})`,
+          padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 20, fontWeight: 800, fontStyle: 'italic', color: '#fff' }}>Rx</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.85)' }}>
+              Receituário
+            </span>
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,.75)', background: 'rgba(255,255,255,.15)', padding: '3px 11px', borderRadius: 999 }}>
+            UCIN Canguru
           </span>
         </div>
-        <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,.75)', background: 'rgba(255,255,255,.15)', padding: '3px 11px', borderRadius: 999 }}>
-          UCIN Canguru
-        </span>
-      </div>
 
-      <div style={{ padding: '14px 16px' }}>
-        {/* Cabeçalho do paciente */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${COR.lite}` }}>
-          <InfoCell label="Paciente" value={nomePac || '—'} />
-          {nrSES && <InfoCell label="Nº SES" value={nrSES} />}
-          <InfoCell label="Data" value={hoje} />
-          <InfoCell
-            label="IG / Idade"
-            value={`${res.ig}s${res.igd > 0 ? `+${res.igd}d` : ''} · ${res.dias}d · IGPM ${res.igCorrSem}s`}
-          />
-          <InfoCell label="Peso nasc." value={`${(res.pnk * 1000).toFixed(0)} g`} />
-          <InfoCell label="Peso atual" value={`${(res.pk * 1000).toFixed(0)} g`} />
-        </div>
-
-        {/* 1. Ferro */}
-        <RxDocItem n="1" titulo="Sulfato ferroso gotas">
-          {!res.ferroAtivo && res.preT ? (
-            <span style={{ color: COR.warn }}>
-              Aguardar 30.º dia de vida
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
-              </span>
-            </span>
-          ) : (
-            <>
-              <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia)
-              </span>
-            </>
-          )}
-        </RxDocItem>
-
-        {/* 2. Fósforo */}
-        <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
-          {!res.fosIndicado ? (
-            <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
-          ) : res.pSuficDieta ? (
-            <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
-          ) : (
-            <>
-              <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO em 4 tomadas de{' '}
-              <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
-            </>
-          )}
-        </RxDocItem>
-
-        {/* 3. Zinco */}
-        <RxDocItem n="3" titulo="Zinco solução 5 mg/mL">
-          {!res.znIndicado ? (
-            <span style={{ color: COR.slate }}>Não indicado — IG ≥ 37 semanas</span>
-          ) : !res.znAtivo ? (
-            <span style={{ color: COR.warn }}>
-              Aguardar IGPM ≥ 36 semanas
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
-              </span>
-            </span>
-          ) : res.znVol < 0.05 ? (
-            <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
-          ) : (
-            <>
-              <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
-              </span>
-            </>
-          )}
-        </RxDocItem>
-
-        {/* 4. Polivitamínico */}
-        <RxDocItem n="4" titulo="Polivitamínico (Growvit BB / Pedianutri ou equiv.)">
-          <strong>6 gotas</strong> VO 12/12h
-        </RxDocItem>
-
-        {/* 5. Vitamina D */}
-        <RxDocItem n="5" titulo="Colecalciferol (Vitamina D)">
-          {res.vitDNec <= 0 ? (
-            <span style={{ color: COR.ok }}>
-              Não necessário — alvo {res.vitDAlvo} UI coberto
-              <span style={{ color: COR.muted, fontSize: 11 }}>
-                {' '}(dieta {res.vitDDieta.toFixed(0)} UI + polivit 400 UI)
-              </span>
-            </span>
-          ) : (
-            <>
-              <div>
-                <strong>{res.vitDG200} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
-              </div>
-              <div>
-                <strong>{res.vitDG400} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}> — 400 UI/gota</span>
-              </div>
-              <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
-                {' '}= {res.vitDNec.toFixed(0)} UI adicionais
-              </div>
-            </>
-          )}
-        </RxDocItem>
-
-        {/* Assinatura */}
-        <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 16, marginTop: 16 }}>
-          <div style={{ height: 44, borderBottom: `1.5px solid ${COR.borda}`, marginBottom: 6 }} />
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: COR.det }}>
-            Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
+        <div style={{ padding: '14px 16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${COR.lite}` }}>
+            <InfoCell label="Paciente" value={nomePac || '—'} />
+            {nrSES && <InfoCell label="Nº SES" value={nrSES} />}
+            <InfoCell label="Data" value={hoje} />
+            <InfoCell
+              label="IG / Idade"
+              value={`${res.ig}s${res.igd > 0 ? `+${res.igd}d` : ''} · ${res.dias}d · IGPM ${res.igCorrSem}s`}
+            />
+            <InfoCell label="Peso nasc." value={`${(res.pnk * 1000).toFixed(0)} g`} />
+            <InfoCell label="Peso atual" value={`${(res.pk * 1000).toFixed(0)} g`} />
           </div>
-          <div style={{ fontSize: 11, color: COR.muted }}>
-            Pediatra · Gastropediatra · Neonatologista
+
+          <RxDocItem n="1" titulo="Sulfato ferroso gotas">
+            {!res.ferroAtivo && res.preT ? (
+              <span style={{ color: COR.warn }}>
+                Aguardar 30.º dia de vida
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
+                </span>
+              </span>
+            ) : (
+              <>
+                <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia)
+                </span>
+              </>
+            )}
+          </RxDocItem>
+
+          <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
+            {!res.fosIndicado ? (
+              <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
+            ) : res.pSuficDieta ? (
+              <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
+            ) : (
+              <>
+                <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO em 4 tomadas de{' '}
+                <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+              </>
+            )}
+          </RxDocItem>
+
+          <RxDocItem n="3" titulo="Zinco solução 5 mg/mL">
+            {!res.znIndicado ? (
+              <span style={{ color: COR.slate }}>Não indicado — IG ≥ 37 semanas</span>
+            ) : !res.znAtivo ? (
+              <span style={{ color: COR.warn }}>
+                Aguardar IGPM ≥ 36 semanas
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
+                </span>
+              </span>
+            ) : res.znVol < 0.05 ? (
+              <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
+            ) : (
+              <>
+                <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                </span>
+              </>
+            )}
+          </RxDocItem>
+
+          <RxDocItem n="4" titulo="Polivitamínico (Growvit BB / Pedianutri ou equiv.)">
+            <strong>6 gotas</strong> VO 12/12h
+          </RxDocItem>
+
+          <RxDocItem n="5" titulo="Colecalciferol (Vitamina D)">
+            {res.vitDNec <= 0 ? (
+              <span style={{ color: COR.ok }}>
+                Não necessário — alvo {res.vitDAlvo} UI coberto
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(dieta {res.vitDDieta.toFixed(0)} UI + polivit 400 UI)
+                </span>
+              </span>
+            ) : (
+              <>
+                <div>
+                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
+                </div>
+                <div>
+                  <strong>{res.vitDG400} gotas</strong> VO 1×/dia
+                  <span style={{ color: COR.muted, fontSize: 11 }}> — 400 UI/gota</span>
+                </div>
+                <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
+                  Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  {' '}= {res.vitDNec.toFixed(0)} UI adicionais
+                </div>
+              </>
+            )}
+          </RxDocItem>
+
+          <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 16, marginTop: 16 }}>
+            <div style={{ height: 44, borderBottom: `1.5px solid ${COR.borda}`, marginBottom: 6 }} />
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: COR.det }}>
+              Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
+            </div>
+            <div style={{ fontSize: 11, color: COR.muted }}>
+              Pediatra · Gastropediatra · Neonatologista
+            </div>
           </div>
         </div>
       </div>
-
-      <div style={{ padding: '0 16px 14px' }}>
-        <PrintBtn />
+      {/* ── botão fora da área imprimível ── */}
+      <div style={{ padding: '0 0 14px' }}>
+        <PrintBtn targetId="ph-print-receit" />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -1018,9 +1005,7 @@ function AguardoBadge({ children }) {
 }
 
 function NaoIndicadoBadge({ children }) {
-  return (
-    <span style={{ color: COR.slate }}>{children}</span>
-  );
+  return <span style={{ color: COR.slate }}>{children}</span>;
 }
 
 function OkBadge({ children }) {
@@ -1060,9 +1045,18 @@ function InfoCell({ label, value }) {
   );
 }
 
-function PrintBtn() {
+function PrintBtn({ targetId }) {
   return (
-    <button onClick={() => window.print()} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '12px 0', border: `1.5px solid ${COR.borda}`, borderRadius: R, background: '#fff', color: COR.mid, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 4 }}>
+    <button
+      onClick={() => printById(targetId)}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        width: '100%', padding: '12px 0',
+        border: `1.5px solid ${COR.borda}`, borderRadius: R,
+        background: '#fff', color: COR.mid,
+        fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 4,
+      }}
+    >
       <Printer size={15} /> Imprimir / PDF
     </button>
   );
