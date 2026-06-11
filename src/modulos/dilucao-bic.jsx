@@ -1,181 +1,351 @@
+/**
+ * neonatologia-6.jsx — PedHub
+ * BIC Neonatal — Drogas de Infusão Contínua
+ * Ref: NeoFax 2023 · Harriet Lane · SBP
+ */
+
 import { useState } from "react";
-import { Activity, Info, AlertTriangle, CheckCircle } from "lucide-react";
+import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
 
-const PRIMARY = "#F97316";
-const KCL10_MEQ_ML  = 1.341;   // KCl 10% → mEq/mL  (100 mg/mL ÷ 74.55 g/mol)
-const NACL20_MEQ_ML = 3.423;   // NaCl 20% → mEq/mL  (200 mg/mL ÷ 58.44 g/mol)
+const PRIMARY = "#0D9488";
+const C = "#DC2626";
 
-function parsePeso(s) {
-  const v = parseFloat(String(s).replace(",", "."));
-  return !isNaN(v) && v > 0 && v <= 150 ? v : null;
-}
-function parseNum(s) {
-  const v = parseFloat(String(s).replace(",", "."));
-  return !isNaN(v) && v >= 0 ? v : null;
-}
+/* ── Utilidades ─────────────────────────────────────────────────────────── */
+const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !isNaN(v)&&v>0&&v<=10000?v:null; };
+const pN     = s => { const v = parseFloat(String(s).replace(",",".")); return isNaN(v)||v<0?0:v; };
+const f2     = n => (Math.round(n*100)/100).toFixed(2);
+const f1     = n => (Math.round(n*10)/10).toFixed(1);
 
-const DRUGS_BIC = [
-  { id:"dopamina",   nome:"Dopamina",   unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:2,    max:20,   conc_mg_ml:1,  diluente:"SG5% ou SF 0,9%",   preparo:"200 mg/250 mL → 0,8 mg/mL" },
-  { id:"dobutamina", nome:"Dobutamina", unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:5,    max:20,   conc_mg_ml:1,  diluente:"SG5% ou SF 0,9%",   preparo:"250 mg/250 mL → 1 mg/mL" },
-  { id:"norepin",    nome:"Norepinefrina", unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:0.05, max:2, conc_mg_ml:0.04, diluente:"SG5%",            preparo:"10 mg/250 mL → 0,04 mg/mL" },
-  { id:"adrenalina", nome:"Adrenalina", unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:0.05, max:1,   conc_mg_ml:0.04, diluente:"SG5%",            preparo:"10 mg/250 mL → 0,04 mg/mL" },
-  { id:"milrinona",  nome:"Milrinona",  unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:0.25, max:0.75, conc_mg_ml:0.1, diluente:"SG5% ou SF 0,9%", preparo:"25 mg/250 mL → 0,1 mg/mL" },
-  { id:"midazolam",  nome:"Midazolam",  unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:1,    max:5,    conc_mg_ml:0.5, diluente:"SG5% ou SF 0,9%", preparo:"50 mg/100 mL → 0,5 mg/mL" },
-  { id:"fentanil",   nome:"Fentanil",   unidade:"mcg/kg/h",   tipo:"mcg/kg/h",   min:1,    max:5,    conc_mg_ml:0.01,diluente:"SF 0,9%",          preparo:"500 mcg/50 mL → 10 mcg/mL (0,01 mg/mL)" },
-  { id:"morfina",    nome:"Morfina",    unidade:"mcg/kg/h",   tipo:"mcg/kg/h",   min:10,   max:50,   conc_mg_ml:0.1, diluente:"SF 0,9%",          preparo:"10 mg/100 mL → 0,1 mg/mL" },
-  { id:"ketamina",   nome:"Cetamina",   unidade:"mg/kg/h",    tipo:"mg/kg/h",    min:0.5,  max:2,    conc_mg_ml:1,   diluente:"SF 0,9%",          preparo:"250 mg/250 mL → 1 mg/mL" },
-  { id:"propofol",   nome:"Propofol",   unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:50,   max:200,  conc_mg_ml:10,  diluente:"Não diluir",       preparo:"Pronto: 10 mg/mL" },
-  { id:"aminofili",  nome:"Aminofilina", unidade:"mg/kg/h",   tipo:"mg/kg/h",    min:0.5,  max:1,    conc_mg_ml:1,   diluente:"SG5%",             preparo:"250 mg/250 mL → 1 mg/mL — LD: 5–6 mg/kg IV em 20 min" },
-  { id:"insulina",   nome:"Insulina Regular", unidade:"U/kg/h", tipo:"mg/kg/h",  min:0.05, max:0.1,  conc_mg_ml:0.1, diluente:"SF 0,9%",         preparo:"10 UI/100 mL SF → 0,1 UI/mL" },
-  { id:"heparina",   nome:"Heparina",   unidade:"U/kg/h",     tipo:"mg/kg/h",    min:10,   max:20,   conc_mg_ml:1,   diluente:"SF 0,9%",          preparo:"500 UI/500 mL → 1 UI/mL" },
-  { id:"nitroprus",  nome:"Nitroprussiato", unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:0.3, max:5, conc_mg_ml:0.2, diluente:"SG5% (proteger luz)", preparo:"50 mg/250 mL → 0,2 mg/mL" },
-  { id:"amiodarona", nome:"Amiodarona (manutenção)", unidade:"mcg/kg/min", tipo:"mcg/kg/min", min:5, max:15, conc_mg_ml:1.5, diluente:"SG5%", preparo:"375 mg/250 mL → 1,5 mg/mL — LD: 5 mg/kg IV em 30–60 min" },
+/* ── Drogas ──────────────────────────────────────────────────────────────
+   mA_K_n   : drug/kg in normalised units  (mcg for mcg-drugs, same for mg×1000)
+   mB_c_n   : fixed concentration (same normalised units per mL)
+   ampC_n   : ampule concentration in normalised units/mL
+   dF       : dose factor: 1 = dose already in mcg; 1000 = dose in mg or UI
+   tC       : time conversion: 60 if /min → /h; 1 if /h
+   Rate A   : dose × dF × tC × 50  / mA_K_n            (independent of weight)
+   Rate B   : dose × dF × tC × pk  / mB_c_n            (weight dependent)
+   Amp draw : mA_K_n × pk / ampC_n  mL                  (volume from ampoule)
+──────────────────────────────────────────────────────────────────────── */
+const DROGAS = [
+  { id:"dopamina",      nome:"Dopamina",         grupo:"Vasoativa",    cor:"#DC2626",
+    amp:"200 mg/5 mL (40 mg/mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:2,    doseMax:20,  doseInicio:5,
+    dF:1,   tC:60, vol:50, mA_K_n:3000,  mB_c_n:1600,  ampC_n:40000,
+    mA_label:"3 mg/kg em 50 mL", mA_eq:"1 mL/h = 1 mcg/kg/min",
+    mB_label:"1,6 mg/mL (80 mg/50 mL)", mB_total:"80 mg",
+    acesso:"Central ou periférico",
+    alertas:["Dose > 10 mcg/kg/min: predomina efeito alfa-adrenérgico"],
+  },
+  { id:"dobutamina",    nome:"Dobutamina",        grupo:"Vasoativa",    cor:"#DC2626",
+    amp:"250 mg/20 mL (12,5 mg/mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:2,    doseMax:20,  doseInicio:5,
+    dF:1,   tC:60, vol:50, mA_K_n:3000,  mB_c_n:2500,  ampC_n:12500,
+    mA_label:"3 mg/kg em 50 mL", mA_eq:"1 mL/h = 1 mcg/kg/min",
+    mB_label:"2,5 mg/mL (125 mg/50 mL)", mB_total:"125 mg",
+    acesso:"Central ou periférico",
+    alertas:["Menos vasoconstritora que dopamina","Pode causar taquicardia"],
+  },
+  { id:"adrenalina",    nome:"Adrenalina",        grupo:"Vasoativa",    cor:"#991B1B",
+    amp:"1 mg/mL (1:1000)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:0.01, doseMax:1,   doseInicio:0.05,
+    dF:1,   tC:60, vol:50, mA_K_n:300,   mB_c_n:32,    ampC_n:1000,
+    mA_label:"0,3 mg/kg em 50 mL", mA_eq:"1 mL/h = 0,1 mcg/kg/min",
+    mB_label:"0,032 mg/mL (1,6 mg/50 mL)", mB_total:"1,6 mg",
+    acesso:"Central (preferencial)",
+    alertas:["Acesso central recomendado","Proteger da luz"],
+  },
+  { id:"noradrenalina", nome:"Noradrenalina",     grupo:"Vasoativa",    cor:"#991B1B",
+    amp:"4 mg/4 mL (1 mg/mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:0.01, doseMax:1,   doseInicio:0.05,
+    dF:1,   tC:60, vol:50, mA_K_n:300,   mB_c_n:32,    ampC_n:1000,
+    mA_label:"0,3 mg/kg em 50 mL", mA_eq:"1 mL/h = 0,1 mcg/kg/min",
+    mB_label:"0,032 mg/mL (1,6 mg/50 mL)", mB_total:"1,6 mg",
+    acesso:"CENTRAL OBRIGATÓRIO",
+    alertas:["ACESSO CENTRAL OBRIGATÓRIO — necrose em extravasamento"],
+  },
+  { id:"milrinona",     nome:"Milrinona",         grupo:"Vasoativa",    cor:"#0891B2",
+    amp:"10 mg/10 mL (1 mg/mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:0.25, doseMax:0.75,doseInicio:0.5,
+    dF:1,   tC:60, vol:50, mA_K_n:600,   mB_c_n:200,   ampC_n:1000,
+    mA_label:"0,6 mg/kg em 50 mL", mA_eq:"1 mL/h = 0,2 mcg/kg/min",
+    mB_label:"0,2 mg/mL (10 mg/50 mL)", mB_total:"10 mg",
+    acesso:"Central (preferencial)",
+    alertas:["Loading (opcional): 50-75 mcg/kg em 30-60 min","Monitorar hipotensão e arritmias"],
+  },
+  { id:"pge1",          nome:"PGE1 (Alprostadil)",grupo:"Vasoativa",    cor:"#0891B2",
+    amp:"0,5 mg/mL (Prostavasin 500 mcg/mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/min", doseMin:0.01, doseMax:0.1, doseInicio:0.05,
+    dF:1,   tC:60, vol:50, mA_K_n:30,    mB_c_n:10,    ampC_n:500,
+    mA_label:"30 mcg/kg em 50 mL", mA_eq:"1 mL/h = 0,01 mcg/kg/min",
+    mB_label:"0,01 mg/mL (500 mcg/50 mL)", mB_total:"500 mcg",
+    acesso:"Central ou periférico",
+    alertas:["Proteger da luz","Monitorar apneia (dose-dependente)"],
+  },
+  { id:"fentanil",      nome:"Fentanil",          grupo:"Sedoanalgesia",cor:"#7C3AED",
+    amp:"50 mcg/mL (250 mcg/5 mL)", diluente:"SF 0,9%",
+    unidade:"mcg/kg/h",  doseMin:0.5,  doseMax:5,   doseInicio:1,
+    dF:1,   tC:1,  vol:50, mA_K_n:50,    mB_c_n:10,    ampC_n:50,
+    mA_label:"50 mcg/kg em 50 mL", mA_eq:"1 mL/h = 1 mcg/kg/h",
+    mB_label:"0,01 mg/mL (500 mcg/50 mL)", mB_total:"500 mcg",
+    acesso:"Central ou periférico",
+    alertas:["Monitorar FR e SpO₂","Ter naloxona disponível"],
+  },
+  { id:"midazolam",     nome:"Midazolam",         grupo:"Sedoanalgesia",cor:"#7C3AED",
+    amp:"5 mg/mL", diluente:"SF 0,9%",
+    unidade:"mg/kg/h",   doseMin:0.01, doseMax:0.1, doseInicio:0.02,
+    dF:1000,tC:1,  vol:50, mA_K_n:500,   mB_c_n:200,   ampC_n:5000,
+    mA_label:"0,5 mg/kg em 50 mL", mA_eq:"1 mL/h = 0,01 mg/kg/h",
+    mB_label:"0,2 mg/mL (10 mg/50 mL)", mB_total:"10 mg",
+    acesso:"Central ou periférico",
+    alertas:["Evitar em prematuros < 32s (risco hipotensão e HIV)","Monitorar abstinência em uso prolongado"],
+  },
+  { id:"morfina",       nome:"Morfina",           grupo:"Sedoanalgesia",cor:"#7C3AED",
+    amp:"10 mg/mL", diluente:"SF 0,9%",
+    unidade:"mg/kg/h",   doseMin:0.005,doseMax:0.05,doseInicio:0.01,
+    dF:1000,tC:1,  vol:50, mA_K_n:500,   mB_c_n:100,   ampC_n:10000,
+    mA_label:"0,5 mg/kg em 50 mL", mA_eq:"1 mL/h = 0,01 mg/kg/h",
+    mB_label:"0,1 mg/mL (5 mg/50 mL)", mB_total:"5 mg",
+    acesso:"Central ou periférico",
+    alertas:["Monitorar apneia e SpO₂","Início mais lento que fentanil"],
+  },
+  { id:"insulina",      nome:"Insulina Regular",  grupo:"Metabólico",   cor:"#059669",
+    amp:"100 UI/mL (Humulin R / Novolin R)", diluente:"SG 5%",
+    unidade:"UI/kg/h",   doseMin:0.01, doseMax:0.1, doseInicio:0.02,
+    dF:1000,tC:1,  vol:50, mA_K_n:500,   mB_c_n:1000,  ampC_n:null,
+    mA_label:"0,5 UI/kg em 50 mL SG 5%", mA_eq:"1 mL/h = 0,01 UI/kg/h",
+    mB_label:"1 UI/mL (50 UI/50 mL SG 5%)", mB_total:"50 UI",
+    acesso:"Central ou periférico",
+    alertas:["FLUSH: descartar 20 mL antes de conectar (adsorção)","Glicemia a cada 30-60 min","Usar SG 5% como diluente"],
+  },
 ];
 
-function calcRate(drug, dose, peso) {
-  if (!drug || dose === null || !peso) return null;
-  if (drug.tipo === "mcg/kg/min") return (dose * peso * 60) / (drug.conc_mg_ml * 1000);
-  if (drug.tipo === "mcg/kg/h")   return (dose * peso) / (drug.conc_mg_ml * 1000);
-  if (drug.tipo === "mg/kg/h")    return (dose * peso) / drug.conc_mg_ml;
-  return null;
+/* ── Fórmulas ───────────────────────────────────────────────────────────── */
+// Rate A (mL/h) — independente do peso
+const rateA = (d, dose) => (dose * d.dF * d.tC * d.vol) / d.mA_K_n;
+
+// Rate B (mL/h) — depende do peso
+const rateB = (d, pk, dose) => (dose * d.dF * d.tC * pk) / d.mB_c_n;
+
+// Quantidade de droga para Modo A (exibição)
+function amountA(d, pk) {
+  const n = d.mA_K_n * pk;
+  if (d.id === "insulina") return `${(n/1000).toFixed(2)} UI`;
+  if (d.dF === 1000) return `${(n/1000).toFixed(2)} mg`;
+  return n >= 1000 ? `${(n/1000).toFixed(2)} mg` : `${n.toFixed(0)} mcg`;
 }
 
-function InfoBox({ color, children }) {
+// Volume a retirar da ampola para Modo A
+function ampVol(d, pk) {
+  if (!d.ampC_n) return null;
+  const v = (d.mA_K_n * pk) / d.ampC_n;
+  return v < 0.01 ? "< 0,01 mL" : f2(v) + " mL";
+}
+
+/* ── Sub-componentes ────────────────────────────────────────────────────── */
+function InfoBox({ children }) {
   return (
-    <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
-      <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
+    <div style={{ background: C + "10", border: "1px solid " + C + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
+      <Info size={15} color={C} style={{ flexShrink: 0, marginTop: 2 }} />
       <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
 
-function TabBIC() {
-  const [pesoRaw, setPesoRaw] = useState("");
-  const [drugId, setDrugId]   = useState("dopamina");
-  const [doseRaw, setDoseRaw] = useState("");
-  const peso = parsePeso(pesoRaw);
-  const dose = parseNum(doseRaw);
-  const drug = DRUGS_BIC.find(d => d.id === drugId);
-  const rate = calcRate(drug, dose, peso);
-
+function RxRow({ label, children }) {
   return (
-    <div>
-      <InfoBox color={PRIMARY}><strong>Calculadora de BIC (Bomba de Infusão Contínua).</strong> Fórmulas verificadas: mcg/kg/min → mL/h = dose × peso × 60 / (conc_mg/mL × 1000) · mg/kg/h → mL/h = dose × peso / conc_mg/mL</InfoBox>
-
-      <div style={{ marginBottom: 10 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>PESO (kg)</p>
-        <input type="text" inputMode="decimal" placeholder="Ex: 3,500" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #FED7AA", outline: "none", boxSizing: "border-box" }} />
-      </div>
-
-      <div style={{ marginBottom: 10 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>MEDICAMENTO</p>
-        <select value={drugId} onChange={e => setDrugId(e.target.value)} style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 14, border: "1.5px solid #FED7AA", background: "#fff", outline: "none" }}>
-          {DRUGS_BIC.map(d => <option key={d.id} value={d.id}>{d.nome} ({d.unidade})</option>)}
-        </select>
-      </div>
-
-      {drug && (
-        <div style={{ background: "#FFF7ED", borderRadius: 8, padding: "8px 12px", marginBottom: 10, border: "1px solid #FED7AA" }}>
-          <p style={{ fontSize: 11, color: "#374151", margin: 0 }}><strong>Faixa:</strong> {drug.min}–{drug.max} {drug.unidade}</p>
-          <p style={{ fontSize: 11, color: "#374151", margin: "2px 0 0" }}><strong>Preparo:</strong> {drug.preparo}</p>
-          <p style={{ fontSize: 11, color: "#374151", margin: "2px 0 0" }}><strong>Diluente:</strong> {drug.diluente}</p>
-        </div>
-      )}
-
-      <div style={{ marginBottom: 14 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>DOSE ({drug ? drug.unidade : "—"})</p>
-        <input type="text" inputMode="decimal" placeholder={drug ? drug.min + " – " + drug.max : ""} value={doseRaw} onChange={e => setDoseRaw(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid " + (dose && drug && (dose < drug.min || dose > drug.max) ? "#FECACA" : "#FED7AA"), outline: "none", boxSizing: "border-box" }} />
-        {dose && drug && dose > drug.max && <p style={{ fontSize: 11, color: "#EF4444", margin: "3px 0 0" }}>Acima da dose máxima ({drug.max} {drug.unidade})</p>}
-      </div>
-
-      {rate !== null && peso && dose !== null && (
-        <div style={{ borderRadius: 12, border: "2px solid " + PRIMARY, overflow: "hidden" }}>
-          <div style={{ background: PRIMARY, padding: "12px 16px" }}>
-            <p style={{ fontWeight: 700, color: "#fff", fontSize: 18, margin: 0 }}>
-              {rate.toFixed(2)} mL/h
-            </p>
-          </div>
-          <div style={{ padding: "10px 14px", background: "#FFF7ED" }}>
-            <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
-              {drug.nome} {dose} {drug.unidade} · {peso} kg · conc. {drug.conc_mg_ml} mg/mL
-            </p>
-            <p style={{ fontSize: 11, color: "#9CA3AF", margin: "4px 0 0" }}>
-              Verificar compatibilidade e via de acesso antes de administrar
-            </p>
-          </div>
-        </div>
-      )}
-      {(!peso || !dose) && (
-        <div style={{ textAlign: "center", padding: "24px 16px", color: "#9CA3AF" }}>
-          <Activity size={36} color="#E5E7EB" style={{ display: "block", margin: "0 auto 8px" }} />
-          <p style={{ fontSize: 12 }}>Preencha peso e dose para calcular</p>
-        </div>
-      )}
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "5px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 12, gap: 8 }}>
+      <span style={{ color: "#6B7280", flexShrink: 0 }}>{label}</span>
+      <span style={{ fontWeight: 600, color: "#1F2937", textAlign: "right" }}>{children}</span>
     </div>
   );
 }
 
-function TabEletrolitos() {
-  const C = "#0EA5E9";
-  const [pesoRaw, setPesoRaw] = useState("");
-  const [naRaw, setNaRaw]     = useState("2");
-  const [kRaw, setKRaw]       = useState("2");
-  const peso = parsePeso(pesoRaw);
-  const na   = parseNum(naRaw) || 0;
-  const k    = parseNum(kRaw)  || 0;
+/* ── Tab BIC ─────────────────────────────────────────────────────────────── */
+function TabBIC() {
+  const [pesoRaw, setPesoRaw]   = useState("");
+  const [drogaSel, setDrogaSel] = useState(null);
+  const [doseRaw, setDoseRaw]   = useState("");
+  const [grupo, setGrupo]       = useState("Vasoativa");
+  const [copied, setCopied]     = useState(false);
 
-  const naVol = peso ? (na * peso / NACL20_MEQ_ML).toFixed(2) : null;
-  const kVol  = peso ? (k  * peso / KCL10_MEQ_ML ).toFixed(2) : null;
+  const pk    = pPesoG(pesoRaw);           // grams
+  const pkKg  = pk ? pk / 1000 : null;    // kg
+  const dose  = pN(doseRaw);
+  const d     = drogaSel;
+  const ok    = pkKg && d && dose > 0;
+
+  const rA   = ok ? rateA(d, dose)        : null;
+  const rB   = ok ? rateB(d, pkKg, dose)  : null;
+  const amt  = ok ? amountA(d, pkKg)      : null;
+  const aVol = ok ? ampVol(d, pkKg)       : null;
+
+  function selDroga(drug) {
+    setDrogaSel(drug);
+    setDoseRaw(String(drug.doseInicio));
+    setCopied(false);
+  }
+
+  function gerarTxt() {
+    if (!ok) return "";
+    return [
+      `${d.nome.toUpperCase()} — ${dose} ${d.unidade}`,
+      `Peso: ${pkKg.toFixed(3).replace(".",",")} kg`,
+      "",
+      "── MODO A (peso-dependente) ─────────────────",
+      `Preparar: ${amt} em ${d.vol} mL ${d.diluente}`,
+      aVol ? `Retirar da ampola [${d.amp}]: ${aVol}` : "",
+      `Completar com ${d.diluente} até ${d.vol} mL`,
+      `Infundir: ${f2(rA)} mL/h`,
+      `[${d.mA_eq}]`,
+      "",
+      `── MODO B (conc. fixa — ${d.mB_label}) ──────`,
+      `Preparar: ${d.mB_total} em ${d.vol} mL ${d.diluente}`,
+      `Infundir: ${f2(rB)} mL/h para este peso`,
+      "",
+      `Apresentação: ${d.amp}`,
+      `Acesso: ${d.acesso}`,
+      d.alertas.length ? "⚠ " + d.alertas.join("  ⚠ ") : "",
+      "",
+      "Ref: NeoFax 2023 · Harriet Lane · PedHub",
+    ].filter(l => l !== undefined).join("\n");
+  }
+
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(gerarTxt());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch (_) { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+  }
+
+  const GRUPOS = ["Vasoativa", "Sedoanalgesia", "Metabólico"];
 
   return (
     <div>
-      <InfoBox color={C}><strong>Diluição de Eletrólitos.</strong> Concentrações verificadas: NaCl 20% = {NACL20_MEQ_ML} mEq/mL · KCl 10% = {KCL10_MEQ_ML} mEq/mL. Limite periférico de soluções: 12,5% de glicose.</InfoBox>
+      <InfoBox>
+        <strong>BIC Neonatal — NeoFax 2023 · Harriet Lane.</strong>{" "}
+        Modo A: X/kg em 50 mL (peso-dependente).
+        Modo B: concentração fixa (padrão ISMP). Ambos geram prescrição completa.
+      </InfoBox>
 
-      <div style={{ marginBottom: 10 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>PESO (kg)</p>
-        <input type="text" inputMode="decimal" placeholder="Ex: 10,0" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #BAE6FD", outline: "none", boxSizing: "border-box" }} />
+      {/* Peso */}
+      <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid #E5E7EB" }}>
+        <label style={{ fontSize: 11.5, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Peso (g) *</label>
+        <input type="text" inputMode="decimal" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)} placeholder="Ex: 1450"
+          style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #E5E7EB", outline: "none", background: "#fff", boxSizing: "border-box" }} />
+        {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{pkKg.toFixed(3)} kg</p>}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
-        <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>Na⁺ alvo (mEq/kg/dia)</p>
-          <input type="text" inputMode="decimal" value={naRaw} onChange={e => setNaRaw(e.target.value)}
-            style={{ width: "100%", padding: "8px 10px", borderRadius: 8, fontSize: 14, border: "1.5px solid #BAE6FD", outline: "none", boxSizing: "border-box" }} />
-        </div>
-        <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 3px" }}>K⁺ alvo (mEq/kg/dia)</p>
-          <input type="text" inputMode="decimal" value={kRaw} onChange={e => setKRaw(e.target.value)}
-            style={{ width: "100%", padding: "8px 10px", borderRadius: 8, fontSize: 14, border: "1.5px solid #BAE6FD", outline: "none", boxSizing: "border-box" }} />
-        </div>
+      {/* Grupo filter */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+        {GRUPOS.map(g => (
+          <button key={g} onClick={() => { setGrupo(g); setDrogaSel(null); }}
+            style={{ flex: 1, padding: "7px 4px", fontSize: 10.5, fontWeight: grupo === g ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer",
+              background: grupo === g ? "#1E293B" : "#F3F4F6", color: grupo === g ? "#fff" : "#374151" }}>
+            {g}
+          </button>
+        ))}
       </div>
 
-      {peso && (
-        <div style={{ borderRadius: 10, border: "1.5px solid #BAE6FD", overflow: "hidden", marginBottom: 14 }}>
-          {[
-            { label:"NaCl 20%", valor: naVol + " mL/dia", sub: na + " mEq/kg/dia × " + peso + " kg ÷ " + NACL20_MEQ_ML + " mEq/mL", cor: C },
-            { label:"KCl 10%",  valor: kVol  + " mL/dia", sub: k  + " mEq/kg/dia × " + peso + " kg ÷ " + KCL10_MEQ_ML  + " mEq/mL", cor: "#10B981" },
-          ].map(({ label, valor, sub, cor }) => (
-            <div key={label} style={{ padding: "10px 14px", borderBottom: "1px solid #EFF6FF" }}>
-              <p style={{ fontWeight: 700, color: cor, fontSize: 13, margin: "0 0 2px" }}>{label} → {valor}</p>
-              <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>{sub}</p>
-            </div>
-          ))}
+      {/* Drug selector */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+        {DROGAS.filter(dr => dr.grupo === grupo).map(dr => (
+          <button key={dr.id} onClick={() => selDroga(dr)}
+            style={{ padding: "10px 12px", borderRadius: 9, textAlign: "left", cursor: "pointer",
+              border: `1.5px solid ${drogaSel?.id === dr.id ? dr.cor : "#E5E7EB"}`,
+              background: drogaSel?.id === dr.id ? dr.cor + "12" : "#fff" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: drogaSel?.id === dr.id ? dr.cor : "#374151" }}>{dr.nome}</div>
+            <div style={{ fontSize: 10, color: "#9CA3AF", marginTop: 2 }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Dose input */}
+      {d && (
+        <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid #E5E7EB" }}>
+          <label style={{ fontSize: 11.5, fontWeight: 600, color: "#374151", display: "block", marginBottom: 4 }}>
+            Dose ({d.unidade}) — alvo {d.doseMin}–{d.doseMax}
+          </label>
+          <input type="text" inputMode="decimal" value={doseRaw} onChange={e => setDoseRaw(e.target.value)} placeholder={String(d.doseInicio)}
+            style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid " + d.cor + "60", outline: "none", background: "#fff", boxSizing: "border-box" }} />
         </div>
       )}
 
-      <div style={{ background: "#FEF2F2", borderRadius: 10, padding: "10px 14px", border: "1px solid #FECACA" }}>
-        <p style={{ fontWeight: 700, color: "#991B1B", fontSize: 12, margin: "0 0 6px" }}>Alertas de segurança</p>
-        {["KCl NUNCA dar IV em bolus — risco de parada cardíaca",
-          "KCl IV máx periférico: 40 mEq/L (diluir adequadamente)",
-          "Progressão de Na⁺ no RN prematuro: dia 1 = 0–1 · dia 2 = 1–2 · dia 3 = 2–3 mEq/kg/dia",
-          "Acesso central para soluções hiperosmolares (glicose > 12,5% ou K > 80 mEq/L)",
-        ].map((c, i) => (
-          <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
-            <AlertTriangle size={12} color="#EF4444" style={{ flexShrink: 0, marginTop: 2 }} />
-            <span style={{ fontSize: 12, color: "#374151" }}>{c}</span>
+      {/* Resultado */}
+      {ok && (
+        <div>
+          {/* Alertas da droga */}
+          {d.alertas.map((a, i) => (
+            <div key={i} style={{ display: "flex", gap: 8, background: d.cor + "10", border: "1px solid " + d.cor + "30", borderRadius: 8, padding: "7px 12px", marginBottom: 8 }}>
+              <AlertTriangle size={13} color={d.cor} style={{ flexShrink: 0, marginTop: 1 }} />
+              <span style={{ fontSize: 12, color: "#374151" }}>{a}</span>
+            </div>
+          ))}
+
+          {/* Modo A */}
+          <div style={{ borderRadius: 10, border: "1.5px solid " + C, overflow: "hidden", marginBottom: 8 }}>
+            <div style={{ background: C + "15", padding: "8px 14px", display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontWeight: 700, color: C, fontSize: 12 }}>MODO A — Peso-dependente</span>
+              <span style={{ fontSize: 11, color: C }}>{d.mA_label}</span>
+            </div>
+            <div style={{ padding: "10px 14px" }}>
+              <RxRow label="Preparar">{amt} em {d.vol} mL {d.diluente}</RxRow>
+              {aVol && <RxRow label={`Retirar [${d.amp}]`}>{aVol}</RxRow>}
+              <RxRow label="Completar com">
+                {d.diluente} até {d.vol} mL
+              </RxRow>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
+                <span style={{ fontSize: 12, color: "#6B7280" }}>Infundir</span>
+                <span style={{ fontSize: 20, fontWeight: 800, color: C }}>{f2(rA)} mL/h</span>
+              </div>
+              <div style={{ fontSize: 10, color: "#9CA3AF", textAlign: "right" }}>{d.mA_eq}</div>
+            </div>
+          </div>
+
+          {/* Modo B */}
+          <div style={{ borderRadius: 10, border: "1.5px solid #D97706", overflow: "hidden", marginBottom: 12 }}>
+            <div style={{ background: "#FEF3C740", padding: "8px 14px", display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontWeight: 700, color: "#D97706", fontSize: 12 }}>MODO B — Concentração Fixa</span>
+              <span style={{ fontSize: 11, color: "#D97706" }}>{d.mB_label}</span>
+            </div>
+            <div style={{ padding: "10px 14px" }}>
+              <RxRow label="Preparar (padrão)">{d.mB_total} em {d.vol} mL {d.diluente}</RxRow>
+              <RxRow label="Acesso">{d.acesso}</RxRow>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
+                <span style={{ fontSize: 12, color: "#6B7280" }}>Infundir para este peso</span>
+                <span style={{ fontSize: 20, fontWeight: 800, color: "#D97706" }}>{f2(rB)} mL/h</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Prescrição copiável */}
+          <div style={{ background: "#1E293B", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", letterSpacing: ".07em", textTransform: "uppercase" }}>
+                Prescrição completa
+              </span>
+              <button onClick={copiar}
+                style={{ display: "flex", alignItems: "center", gap: 5, background: copied ? "#059669" : "#334155", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, color: "#fff", cursor: "pointer" }}>
+                {copied ? <CheckCircle size={12} /> : <Copy size={12} />}
+                {copied ? "Copiado!" : "Copiar"}
+              </button>
+            </div>
+            <pre style={{ fontSize: 11, color: "#CBD5E1", lineHeight: 1.75, margin: 0, whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
+              {gerarTxt()}
+            </pre>
+          </div>
+        </div>
+      )}
+
+      {/* Tabela de referência */}
+      <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
+          Doses de referência — NeoFax 2023
+        </div>
+        {DROGAS.map(dr => (
+          <div key={dr.id} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 11, gap: 6 }}>
+            <span style={{ color: dr.cor, fontWeight: 700, flexShrink: 0 }}>{dr.nome}</span>
+            <span style={{ color: "#374151", textAlign: "right" }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</span>
           </div>
         ))}
       </div>
@@ -183,32 +353,23 @@ function TabEletrolitos() {
   );
 }
 
+/* ── Componente principal ────────────────────────────────────────────────── */
 export default function DilucaoBic() {
-  const [tab, setTab] = useState(0);
-  const tabs  = ["BIC", "Eletrólitos"];
-  const cores = [PRIMARY, "#0EA5E9"];
-
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Diluição e BIC</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Bomba de Infusão Contínua · Eletrólitos</p>
-      </div>
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
-        {tabs.map((t, i) => {
-          const active = tab === i;
-          return <button key={i} onClick={() => setTab(i)} style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? cores[i] : "#6B7280", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer" }}>{t}</button>;
-        })}
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Drogas de Infusão Contínua · Neonatal</p>
       </div>
       <div style={{ padding: 16 }}>
-        {tab === 0 && <TabBIC />}
-        {tab === 1 && <TabEletrolitos />}
+        <TabBIC />
       </div>
       <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
         <div style={{ display: "flex", gap: 8 }}>
           <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Fórmulas verificadas contra NeoFax 2023 e Harriet Lane 22ª ed. KCl 10% = {KCL10_MEQ_ML} mEq/mL · NaCl 20% = {NACL20_MEQ_ML} mEq/mL. Confirmar com protocolo institucional. Não substitui julgamento clínico.
+            <strong>Apoio à decisão clínica.</strong> NeoFax 2023 · Harriet Lane · SBP.
+            Verificar protocolo institucional. Não substitui prescrição médica individualizada.
           </p>
         </div>
       </div>
