@@ -28,6 +28,7 @@ const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
 const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
 const Canguru = lazy(() => import('./modulos/canguru'));
 const GuiaVacinal2026 = lazy(() => import("./modulos/guia-vacinal-2026"));
+const Neonatologia5 = lazy(() => import("./modulos/neonatologia-5"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -155,6 +156,7 @@ export default function App() {
           <Route path="/tig-neonatal"      element={<TigNeonatal />} />
           <Route path="/canguru" element={<Canguru />} />
           <Route path="/guia-vacinal-2026" element={<GuiaVacinal2026 />} />
+          <Route path="/neonatologia-5" element={<Neonatologia5 />} />
 
           {/* Fallback — redireciona rotas desconhecidas para home */}
           <Route path="*"                  element={<PedHub />} />
