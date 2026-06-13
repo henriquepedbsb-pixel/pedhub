@@ -29,6 +29,7 @@ const Canguru          = lazy(() => import("./modulos/canguru"));
 const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
 const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
 const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
+const Neonatologia6 = lazy(() => import('./modulos/neonatologia-6'));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -159,6 +160,11 @@ export default function App() {
           <Route path="/canguru"           element={<Canguru />} />
           <Route path="/dexametasona-dbp"  element={<DexametasonaDbp />} />
           <Route path="/guia-vacinal-2026" element={<GuiaVacinal2026 />} />
+          <Route path="/neonatologia-6" element={
+  <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor:"#0284C7"}}></div></div>}>
+    <Neonatologia6 />
+  </Suspense>
+} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
