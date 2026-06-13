@@ -22,6 +22,7 @@ import {
   Syringe,
   Thermometer,
   Zap,
+  Wind,
 } from "lucide-react";
 
 /* ─── Catálogo de módulos ────────────────────────────────────────────────── */
@@ -205,12 +206,13 @@ const MODULOS = [
     cor:   "#10B981",
     grupo: "Neonatologia",
   },
-  {
-  id: "neonatologia-6",
-  titulo: "Reanimação ≥34 sem",
-  descricao: "Sala de parto · SBP 2026",
+ {
+  rota: "/neonatologia-6",
+  label: "Neo VI – Reanimação ≥34s",
+  desc: "Sala de Parto · SBP 2026",
+  Icon: Wind,
   cor: "#0284C7",
-  grupo: "neonatologia"
+  grupo: "Neonatologia",
 },
 ];
 
