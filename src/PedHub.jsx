@@ -214,7 +214,7 @@ const MODULOS = [
     cor:   "#F97316",
     grupo: "Neonatologia",
   },
-  { titulo: 'Sepse Pediátrica', descricao: 'SSC 2026 · BIC e diluição · Phoenix 2024', rota: '/sepse', cor: '#DC2626', grupo: 'Pediatria Geral' },
+  { rota: '/sepse', label: 'Sepse Pediátrica', desc: 'SSC 2026 · BIC e diluição · Phoenix 2024', Icon: Activity, cor: '#DC2626', grupo: 'Pediatria Geral' },
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
