@@ -205,6 +205,13 @@ const MODULOS = [
     cor:   "#10B981",
     grupo: "Neonatologia",
   },
+  {
+  id: "neonatologia-6",
+  titulo: "Reanimação ≥34 sem",
+  descricao: "Sala de parto · SBP 2026",
+  cor: "#0284C7",
+  grupo: "neonatologia"
+},
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
