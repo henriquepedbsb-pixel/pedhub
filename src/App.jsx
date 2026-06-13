@@ -30,6 +30,8 @@ const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
 const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
 const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
 const Neonatologia6 = lazy(() => import('./modulos/neonatologia-6'));
+const Sepse = lazy(() => import('./modulos/sepse'));
+   // ... outros módulos
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -165,6 +167,7 @@ export default function App() {
     <Neonatologia6 />
   </Suspense>
 } />
+          <Route path="/sepse" element={<Suspense fallback={<div>Carregando...</div>}><Sepse /></Suspense>} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
