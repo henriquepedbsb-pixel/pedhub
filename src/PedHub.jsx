@@ -7,6 +7,7 @@ import {
   Activity,
   AlertTriangle,
   Baby,
+  BookOpen,
   Brain,
   Calculator,
   ClipboardList,
@@ -14,6 +15,7 @@ import {
   FlaskConical,
   Heart,
   Leaf,
+  Moon,
   Pill,
   Scale,
   Search,
@@ -125,15 +127,63 @@ const MODULOS = [
     grupo: "Pediatria Geral",
   },
   {
+    rota:  "/sepse",
+    label: "Sepse Pediátrica",
+    desc:  "SSC 2026 · BIC e diluição · Phoenix 2024",
+    Icon:  Activity,
+    cor:   "#DC2626",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/isr",
+    label: "ISR Pediátrica",
+    desc:  "Sequência rápida · doses · via difícil",
+    Icon:  Zap,
+    cor:   "#C2410C",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/ventilacao",
+    label: "Ventilação Mecânica",
+    desc:  "VC · FR · PARDS · desmame",
+    Icon:  Wind,
+    cor:   "#0891B2",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/eletrolitos",
+    label: "Eletrólitos",
+    desc:  "Na · K · Ca · Mg · correções",
+    Icon:  Droplets,
+    cor:   "#7C3AED",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/bronquiolite",
+    label: "Bronquiolite",
+    desc:  "Gravidade · OAF · nirsevimab",
+    Icon:  Stethoscope,
+    cor:   "#0D9488",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/analgesia-sedacao",
+    label: "Analgesia e Sedação",
+    desc:  "FLACC · BIC · desmame · WAT-1",
+    Icon:  Moon,
+    cor:   "#F59E0B",
+    grupo: "Pediatria Geral",
+  },
+
+  /* ── Neonatologia ───────────────────────────────────────────────────── */
+  {
     rota:  "/cuidados-pele-rn",
     label: "Pele do RN",
     desc:  "SBP GPA 140 · Higiene · Emolientes",
     Icon:  Leaf,
     cor:   "#0891B2",
-    grupo: "Pediatria Geral",
+    grupo: "Neonatologia",
   },
-
-  /* ── Neonatologia ───────────────────────────────────────────────────── */
   {
     rota:  "/neonatologia-1",
     label: "Reanimação RNPT <34s",
@@ -183,6 +233,30 @@ const MODULOS = [
     grupo: "Neonatologia",
   },
   {
+    rota:  "/hipotermia",
+    label: "Hipotermia Terapêutica",
+    desc:  "EHI · Thompson · reaquecimento",
+    Icon:  Thermometer,
+    cor:   "#4F46E5",
+    grupo: "Neonatologia",
+  },
+  {
+    rota:  "/surfactante",
+    label: "Surfactante",
+    desc:  "LISA · INSURE · dose por peso",
+    Icon:  BookOpen,
+    cor:   "#059669",
+    grupo: "Neonatologia",
+  },
+  {
+    rota:  "/nec",
+    label: "Enterocolite Necrosante",
+    desc:  "Bell · ATB por peso/IG · cirurgia",
+    Icon:  AlertTriangle,
+    cor:   "#92400E",
+    grupo: "Neonatologia",
+  },
+  {
     rota:  "/canguru",
     label: "Canguru",
     desc:  "Prescrição e Receituário Neonatal",
@@ -222,7 +296,6 @@ const MODULOS = [
     cor:   "#EF4444",
     grupo: "Neonatologia",
   },
-  { rota: '/sepse', label: 'Sepse Pediátrica', desc: 'SSC 2026 · BIC e diluição · Phoenix 2024', Icon: Activity, cor: '#DC2626', grupo: 'Pediatria Geral' },
 ];
 
 const GRUPOS = ["Pediatria Geral", "Neonatologia"];
