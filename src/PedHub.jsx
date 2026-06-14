@@ -1,486 +1,362 @@
-// src/PedHub.jsx — Tela inicial do PedHub
-// Importação DIRETA em App.jsx (não lazy)
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Activity,
-  AlertTriangle,
-  Baby,
-  BookOpen,
-  Brain,
-  Calculator,
-  ClipboardList,
-  Droplets,
-  FlaskConical,
-  Heart,
-  Leaf,
-  Moon,
-  Pill,
-  Scale,
   Search,
-  Shield,
-  Stethoscope,
+  TrendingUp,
+  AlertTriangle,
+  FlaskConical,
+  Leaf,
+  Pill,
   Syringe,
+  Droplets,
+  BarChart2,
+  Layers,
   Thermometer,
+  Brain,
   Zap,
-  Wind,
+  Heart,
+  Activity,
+  Sun,
+  Baby,
+  Stethoscope,
+  Shield,
 } from "lucide-react";
 
-/* ─── Catálogo de módulos ────────────────────────────────────────────────── */
-const MODULOS = [
-  /* ── Pediatria Geral ────────────────────────────────────────────────── */
+const MODULOS_PED = [
   {
-    rota:  "/percentis",
-    label: "Percentis",
-    desc:  "OMS · Intergrowth · Fenton",
-    Icon:  Scale,
-    cor:   "#3B82F6",
-    grupo: "Pediatria Geral",
+    id: "percentis",
+    label: "Crescimento",
+    sub: "OMS · Fenton · Intergrowth",
+    icon: TrendingUp,
+    cor: "#3B82F6",
+    rota: "/percentis",
   },
   {
-    rota:  "/urgencias",
+    id: "urgencias",
     label: "Urgências",
-    desc:  "Anafilaxia · Asma · Convulsão · Choque",
-    Icon:  AlertTriangle,
-    cor:   "#EF4444",
-    grupo: "Pediatria Geral",
+    sub: "Anafilaxia · Asma · Sepse",
+    icon: AlertTriangle,
+    cor: "#EF4444",
+    rota: "/urgencias",
   },
   {
-    rota:  "/formulas",
+    id: "formulas",
     label: "Fórmulas",
-    desc:  "Nestlé × Danone · Escada APLV",
-    Icon:  FlaskConical,
-    cor:   "#10B981",
-    grupo: "Pediatria Geral",
+    sub: "Nestlé · Danone · APLV",
+    icon: FlaskConical,
+    cor: "#F59E0B",
+    rota: "/formulas",
   },
   {
-    rota:  "/gastropediatria",
+    id: "gastropediatria",
     label: "Gastro",
-    desc:  "DRGE · APLV · Constipação",
-    Icon:  Activity,
-    cor:   "#F59E0B",
-    grupo: "Pediatria Geral",
+    sub: "DRGE · APLV · Constipação",
+    icon: Leaf,
+    cor: "#10B981",
+    rota: "/gastropediatria",
   },
   {
-    rota:  "/pedfarma",
-    label: "PedFarma",
-    desc:  "48 medicamentos · dose por peso",
-    Icon:  Pill,
-    cor:   "#8B5CF6",
-    grupo: "Pediatria Geral",
+    id: "pedfarma",
+    label: "Farmácia",
+    sub: "47 medicamentos · BIC",
+    icon: Pill,
+    cor: "#8B5CF6",
+    rota: "/pedfarma",
   },
   {
-    rota:  "/vacinal",
+    id: "vacinal",
     label: "Vacinal",
-    desc:  "SBIm 2025/2026 · SUS / Privado",
-    Icon:  Syringe,
-    cor:   "#06B6D4",
-    grupo: "Pediatria Geral",
+    sub: "SBIm 2025/2026 · SUS/Privado",
+    icon: Syringe,
+    cor: "#3B82F6",
+    rota: "/vacinal",
   },
   {
-    rota:  "/hidratacao",
+    id: "hidratacao",
     label: "Hidratação",
-    desc:  "Holliday-Segar · Planos A / B / C",
-    Icon:  Droplets,
-    cor:   "#3B82F6",
-    grupo: "Pediatria Geral",
+    sub: "Plano A/B/C · Holliday",
+    icon: Droplets,
+    cor: "#06B6D4",
+    rota: "/hidratacao",
   },
   {
-    rota:  "/scores",
+    id: "scores",
     label: "Scores",
-    desc:  "Gorelick · Westley · PEWS",
-    Icon:  ClipboardList,
-    cor:   "#F97316",
-    grupo: "Pediatria Geral",
+    sub: "Desidratação · Westley · PEWS",
+    icon: BarChart2,
+    cor: "#F59E0B",
+    rota: "/scores",
   },
   {
-    rota:  "/febre-sem-foco",
-    label: "Febre Sem Foco",
-    desc:  "Fluxo por faixa etária · PECARN",
-    Icon:  Thermometer,
-    cor:   "#EF4444",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/tce-leve",
-    label: "TCE Leve",
-    desc:  "PECARN · TC vs Observação",
-    Icon:  Brain,
-    cor:   "#7C3AED",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/dnpm",
-    label: "DNPM",
-    desc:  "Marcos do desenvolvimento · Alarmes",
-    Icon:  Baby,
-    cor:   "#8B5CF6",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/dermato",
+    id: "dermato",
     label: "Dermato",
-    desc:  "DA · Impetigo · Escabiose · Urticária",
-    Icon:  Shield,
-    cor:   "#EC4899",
-    grupo: "Pediatria Geral",
+    sub: "Dermatoses infantis",
+    icon: Layers,
+    cor: "#EC4899",
+    rota: "/dermato",
   },
   {
-    rota:  "/sepse",
-    label: "Sepse Pediátrica",
-    desc:  "SSC 2026 · BIC e diluição · Phoenix 2024",
-    Icon:  Activity,
-    cor:   "#DC2626",
-    grupo: "Pediatria Geral",
+    id: "febre-sem-foco",
+    label: "Febre s/ Foco",
+    sub: "Rochester · PECARN",
+    icon: Thermometer,
+    cor: "#EF4444",
+    rota: "/febre-sem-foco",
   },
   {
-    rota:  "/isr",
-    label: "ISR Pediátrica",
-    desc:  "Sequência rápida · doses · via difícil",
-    Icon:  Zap,
-    cor:   "#C2410C",
-    grupo: "Pediatria Geral",
+    id: "dnpm",
+    label: "DNPM",
+    sub: "Marcos do desenvolvimento",
+    icon: Brain,
+    cor: "#8B5CF6",
+    rota: "/dnpm",
   },
   {
-    rota:  "/ventilacao",
-    label: "Ventilação Mecânica",
-    desc:  "VC · FR · PARDS · desmame",
-    Icon:  Wind,
-    cor:   "#0891B2",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/eletrolitos",
-    label: "Eletrólitos",
-    desc:  "Na · K · Ca · Mg · correções",
-    Icon:  Droplets,
-    cor:   "#7C3AED",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/bronquiolite",
-    label: "Bronquiolite",
-    desc:  "Gravidade · OAF · nirsevimab",
-    Icon:  Stethoscope,
-    cor:   "#0D9488",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/analgesia-sedacao",
-    label: "Analgesia e Sedação",
-    desc:  "FLACC · BIC · desmame · WAT-1",
-    Icon:  Moon,
-    cor:   "#F59E0B",
-    grupo: "Pediatria Geral",
-  },
-
-  /* ── Neonatologia ───────────────────────────────────────────────────── */
-  {
-    rota:  "/cuidados-pele-rn",
-    label: "Pele do RN",
-    desc:  "SBP GPA 140 · Higiene · Emolientes",
-    Icon:  Leaf,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-1",
-    label: "Reanimação RNPT <34s",
-    desc:  "Sala de parto · SBP 2026",
-    Icon:  Zap,
-    cor:   "#0E7490",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-6",
-    label: "Reanimação RN ≥34s",
-    desc:  "Sala de parto · SBP 2026",
-    Icon:  Wind,
-    cor:   "#0284C7",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-2",
-    label: "Hipoglicemia Neonatal",
-    desc:  "Hipoglicemia · Gel de Dextrose",
-    Icon:  Heart,
-    cor:   "#0D9488",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-3",
-    label: "Icterícia Neonatal",
-    desc:  "Fototerapia AAP 2022 · Causas",
-    Icon:  Stethoscope,
-    cor:   "#D97706",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-4",
-    label: "Scores Neonatais",
-    desc:  "Apgar · Capurro · Silverman",
-    Icon:  Calculator,
-    cor:   "#7C3AED",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-5",
-    label: "NPT Neonatal",
-    desc:  "Nutrição Parenteral Total · Eletrólitos",
-    Icon:  Droplets,
-    cor:   "#6366F1",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/hipotermia",
-    label: "Hipotermia Terapêutica",
-    desc:  "EHI · Thompson · reaquecimento",
-    Icon:  Thermometer,
-    cor:   "#4F46E5",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/surfactante",
-    label: "Surfactante",
-    desc:  "LISA · INSURE · dose por peso",
-    Icon:  BookOpen,
-    cor:   "#059669",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/nec",
-    label: "Enterocolite Necrosante",
-    desc:  "Bell · ATB por peso/IG · cirurgia",
-    Icon:  AlertTriangle,
-    cor:   "#92400E",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/canguru",
-    label: "Canguru",
-    desc:  "Prescrição e Receituário Neonatal",
-    Icon:  Heart,
-    cor:   "#10B981",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/tig-neonatal",
-    label: "TIG Neonatal",
-    desc:  "Taxa de Infusão de Glicose · UCIN",
-    Icon:  Droplets,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dexametasona-dbp",
-    label: "Dexa DBP",
-    desc:  "DART · Protocolo HMIB · Dexametasona RNPT",
-    Icon:  Pill,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dilucao-bic",
-    label: "Diluição e BIC",
-    desc:  "Vasoativas · Sedoanalgesia · PGE1 · Insulina",
-    Icon:  Activity,
-    cor:   "#F97316",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dor-neonatal",
-    label: "Dor Neonatal",
-    desc:  "NIPS · PIPP-R · N-PASS · CRIES",
-    Icon:  Activity,
-    cor:   "#EF4444",
-    grupo: "Neonatologia",
+    id: "tce-leve",
+    label: "TCE Leve",
+    sub: "PECARN · TC vs Observação",
+    icon: Zap,
+    cor: "#F59E0B",
+    rota: "/tce-leve",
   },
 ];
 
-const GRUPOS = ["Pediatria Geral", "Neonatologia"];
+const MODULOS_NEO = [
+  {
+    id: "neonatologia-1",
+    label: "Reanimação",
+    sub: "NRP 2020 · Sepse precoce",
+    icon: Heart,
+    cor: "#EF4444",
+    rota: "/neonatologia-1",
+  },
+  {
+    id: "neonatologia-2",
+    label: "Hipoglicemia",
+    sub: "Glicose · UCIN Canguru",
+    icon: Activity,
+    cor: "#10B981",
+    rota: "/neonatologia-2",
+  },
+  {
+    id: "neonatologia-3",
+    label: "Icterícia",
+    sub: "AAP 2022 · Fototerapia",
+    icon: Sun,
+    cor: "#F59E0B",
+    rota: "/neonatologia-3",
+  },
+  {
+    id: "neonatologia-4",
+    label: "IG & Vitalidade",
+    sub: "Capurro · Apgar · Silverman",
+    icon: Baby,
+    cor: "#8B5CF6",
+    rota: "/neonatologia-4",
+  },
+  {
+    id: "dilucao-bic",
+    label: "Diluição BIC",
+    sub: "Drogas vasoativas · Sedação",
+    icon: Stethoscope,
+    cor: "#3B82F6",
+    rota: "/dilucao-bic",
+  },
+  {
+    id: "cuidados-pele-rn",
+    label: "Pele do RN",
+    sub: "Cuidados neonatais",
+    icon: Shield,
+    cor: "#0891B2",
+    rota: "/cuidados-pele-rn",
+  },
+];
 
-/* ─── Card de módulo ─────────────────────────────────────────────────────── */
-function ModuloCard({ modulo, onClick }) {
-  const { label, desc, Icon, cor } = modulo;
+function CardModulo({ modulo }) {
+  const navigate = useNavigate();
+  const Icone = modulo.icon;
+
   return (
-    <button
-      onClick={onClick}
-      style={{
-        background: "#fff",
-        border: "1.5px solid #F3F4F6",
-        borderRadius: 14,
-        padding: "15px 13px",
-        cursor: "pointer",
-        textAlign: "left",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        width: "100%",
-        transition: "border-color 0.15s",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-      }}
+    <div
+      onClick={() => navigate(modulo.rota)}
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform select-none"
+      style={{ padding: "16px 10px", minHeight: "116px" }}
     >
-      <div style={{
-        width: 40, height: 40, borderRadius: 12,
-        background: cor + "18",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        flexShrink: 0,
-      }}>
-        <Icon size={20} color={cor} />
+      <div
+        className="rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{
+          width: "44px",
+          height: "44px",
+          backgroundColor: modulo.cor + "20",
+        }}
+      >
+        <Icone size={22} style={{ color: modulo.cor }} />
       </div>
-      <div>
-        <p style={{
-          fontWeight: 700, fontSize: 14.5,
-          color: "#111827", margin: "0 0 3px",
-          lineHeight: 1.25,
-          wordBreak: "break-word", hyphens: "auto",
-        }}>{label}</p>
-        <p style={{
-          fontSize: 12, color: "#9CA3AF",
-          margin: 0, lineHeight: 1.4,
-          wordBreak: "break-word",
-        }}>{desc}</p>
+      <div className="flex flex-col items-center gap-1 w-full">
+        <span
+          className="text-sm font-bold text-center leading-tight"
+          style={{ color: "#1E293B" }}
+        >
+          {modulo.label}
+        </span>
+        <span
+          className="text-xs text-center leading-tight"
+          style={{ color: "#64748B" }}
+        >
+          {modulo.sub}
+        </span>
       </div>
-      <div style={{ height: 3, borderRadius: 2, background: cor + "40", marginTop: "auto" }} />
-    </button>
+    </div>
   );
 }
 
-/* ─── Componente principal ───────────────────────────────────────────────── */
 export default function PedHub() {
-  const navigate = useNavigate();
   const [busca, setBusca] = useState("");
 
-  const modulosFiltrados = busca.trim()
-    ? MODULOS.filter(m =>
-        m.label.toLowerCase().includes(busca.toLowerCase()) ||
-        m.desc.toLowerCase().includes(busca.toLowerCase())
-      )
-    : MODULOS;
+  const filtrar = (lista) => {
+    if (!busca.trim()) return lista;
+    const q = busca.toLowerCase();
+    return lista.filter(
+      (m) =>
+        m.label.toLowerCase().includes(q) ||
+        m.sub.toLowerCase().includes(q)
+    );
+  };
 
-  const porGrupo = busca.trim()
-    ? [{ grupo: "Resultado da busca", mods: modulosFiltrados }]
-    : GRUPOS.map(g => ({ grupo: g, mods: MODULOS.filter(m => m.grupo === g) }));
+  const pedFiltrados = filtrar(MODULOS_PED);
+  const neoFiltrados = filtrar(MODULOS_NEO);
 
   return (
-    <div style={{
-      fontFamily: "'DM Sans', sans-serif",
-      maxWidth: 480, margin: "0 auto",
-      minHeight: "100vh",
-      background: "#F9FAFB",
-    }}>
-      {/* Hero */}
-      <div style={{
-        background: "linear-gradient(135deg, #1E40AF 0%, #0E7490 100%)",
-        padding: "28px 20px 24px",
-        color: "#fff",
-      }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "#F8FAFC", fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* Header */}
+      <div
+        className="sticky top-0 z-10 px-4 pt-5 pb-3"
+        style={{ backgroundColor: "#F8FAFC" }}
+      >
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <p style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, letterSpacing: "0.1em", margin: "0 0 4px" }}>
-              PEDSUITE
-            </p>
-            <h1 style={{
-              fontFamily: "'DM Serif Display', serif",
-              fontSize: 32, margin: "0 0 6px", lineHeight: 1.1,
-            }}>
+            <h1
+              className="text-2xl font-bold tracking-tight"
+              style={{ color: "#1E293B" }}
+            >
               PedHub
             </h1>
-            <p style={{ fontSize: 13, opacity: 0.85, margin: 0 }}>
-              Decisão clínica pediátrica · beira do leito
+            <p className="text-xs mt-0.5" style={{ color: "#64748B" }}>
+              Decisão clínica · Pediatria &amp; Neonatologia
             </p>
           </div>
-          <div style={{
-            background: "rgba(255,255,255,0.15)",
-            borderRadius: 12, padding: "6px 10px",
-            fontSize: 11, fontWeight: 700, color: "#fff",
-          }}>
-            {MODULOS.length} módulos
+          <div
+            className="rounded-xl flex items-center justify-center"
+            style={{
+              width: "44px",
+              height: "44px",
+              backgroundColor: "#3B82F620",
+            }}
+          >
+            <Stethoscope size={22} style={{ color: "#3B82F6" }} />
           </div>
         </div>
 
-        {/* Busca */}
-        <div style={{
-          marginTop: 18,
-          background: "rgba(255,255,255,0.15)",
-          borderRadius: 10,
-          display: "flex", alignItems: "center", gap: 10,
-          padding: "10px 14px",
-          border: "1px solid rgba(255,255,255,0.25)",
-        }}>
-          <Search size={16} color="rgba(255,255,255,0.7)" />
+        {/* Campo de busca */}
+        <div className="relative">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2"
+            style={{ color: "#94A3B8" }}
+          />
           <input
             type="text"
-            placeholder="Buscar módulo…"
+            placeholder="Buscar módulo..."
             value={busca}
-            onChange={e => setBusca(e.target.value)}
+            onChange={(e) => setBusca(e.target.value)}
+            className="w-full rounded-xl outline-none text-sm"
             style={{
-              background: "none", border: "none", outline: "none",
-              color: "#fff", fontSize: 14, flex: 1,
+              paddingLeft: "36px",
+              paddingRight: "16px",
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #E2E8F0",
+              color: "#1E293B",
               fontFamily: "'DM Sans', sans-serif",
             }}
           />
-          {busca && (
-            <button onClick={() => setBusca("")} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: 16, padding: 0 }}>×</button>
-          )}
         </div>
       </div>
 
-      {/* Grupos e cards */}
-      <div style={{ padding: "16px 16px 40px" }}>
-        {porGrupo.map(({ grupo, mods }) => (
-          <div key={grupo} style={{ marginBottom: 24 }}>
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8,
-              marginBottom: 12,
-            }}>
-              <p style={{
-                fontWeight: 700, fontSize: 12,
-                color: "#6B7280", margin: 0,
-                letterSpacing: "0.07em",
-                textTransform: "uppercase",
-              }}>
-                {grupo}
-              </p>
-              <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{mods.length}</span>
+      {/* Módulos */}
+      <div className="px-4 pb-8 space-y-5">
+        {/* Pediatria Geral */}
+        {pedFiltrados.length > 0 && (
+          <section>
+            <div className="flex items-center gap-2 mb-3">
+              <div
+                className="rounded-full"
+                style={{
+                  width: "4px",
+                  height: "18px",
+                  backgroundColor: "#3B82F6",
+                }}
+              />
+              <span
+                className="text-sm font-semibold"
+                style={{ color: "#475569" }}
+              >
+                Pediatria Geral
+              </span>
             </div>
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-            }}>
-              {mods.map(m => (
-                <ModuloCard
-                  key={m.rota}
-                  modulo={m}
-                  onClick={() => navigate(m.rota)}
-                />
+            <div className="grid grid-cols-2 gap-3">
+              {pedFiltrados.map((m) => (
+                <CardModulo key={m.id} modulo={m} />
               ))}
             </div>
+          </section>
+        )}
 
-            {mods.length === 0 && busca && (
-              <p style={{ fontSize: 13, color: "#9CA3AF", textAlign: "center", padding: "20px 0" }}>
-                Nenhum módulo encontrado para "{busca}"
-              </p>
-            )}
+        {/* Neonatologia */}
+        {neoFiltrados.length > 0 && (
+          <section>
+            <div className="flex items-center gap-2 mb-3">
+              <div
+                className="rounded-full"
+                style={{
+                  width: "4px",
+                  height: "18px",
+                  backgroundColor: "#8B5CF6",
+                }}
+              />
+              <span
+                className="text-sm font-semibold"
+                style={{ color: "#475569" }}
+              >
+                Neonatologia
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {neoFiltrados.map((m) => (
+                <CardModulo key={m.id} modulo={m} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {pedFiltrados.length === 0 && neoFiltrados.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <Search size={28} style={{ color: "#CBD5E1" }} />
+            <p className="text-sm" style={{ color: "#94A3B8" }}>
+              Nenhum módulo encontrado
+            </p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Footer */}
-      <div style={{
-        textAlign: "center",
-        padding: "0 20px 32px",
-        borderTop: "1px solid #E5E7EB",
-        paddingTop: 16,
-      }}>
-        <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0, lineHeight: 1.6 }}>
-          <strong style={{ color: "#6B7280" }}>PedHub · PedSuite</strong><br />
-          Apoio à decisão clínica — não substitui julgamento médico<br />
-          Dr. Henrique Flávio G. Gomes · CRM-DF 14.611
+      <div className="pb-6 text-center px-4">
+        <p className="text-[10px]" style={{ color: "#CBD5E1" }}>
+          PedHub · Dr. Henrique Flávio G. Gomes CRM-DF 14.611 · v1.0
         </p>
       </div>
     </div>
