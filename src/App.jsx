@@ -5,7 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PedHub from "./PedHub"; // importação direta — não lazy
 
-/* ─── Lazy imports ───────────────────────────────────────────────────────── */
+/* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
 const Urgencias        = lazy(() => import("./modulos/urgencias"));
 const Formulas         = lazy(() => import("./modulos/formulas"));
@@ -18,46 +18,69 @@ const FebreSemFoco     = lazy(() => import("./modulos/febre-sem-foco"));
 const TceLeve          = lazy(() => import("./modulos/tce-leve"));
 const Dnpm             = lazy(() => import("./modulos/dnpm"));
 const Dermato          = lazy(() => import("./modulos/dermato"));
+const Sepse            = lazy(() => import("./modulos/sepse"));
+const ISR              = lazy(() => import("./modulos/isr"));
+const Ventilacao       = lazy(() => import("./modulos/ventilacao"));
+const Eletrolitos      = lazy(() => import("./modulos/eletrolitos"));
+const Bronquiolite     = lazy(() => import("./modulos/bronquiolite"));
+const AnalgesiaSedacao = lazy(() => import("./modulos/analgesia-sedacao"));
+
+/* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
 const Neonatologia1    = lazy(() => import("./modulos/neonatologia-1"));
 const Neonatologia2    = lazy(() => import("./modulos/neonatologia-2"));
 const Neonatologia3    = lazy(() => import("./modulos/neonatologia-3"));
 const Neonatologia4    = lazy(() => import("./modulos/neonatologia-4"));
+const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
+const Neonatologia6    = lazy(() => import("./modulos/neonatologia-6"));
 const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
 const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
 const Canguru          = lazy(() => import("./modulos/canguru"));
-const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
-const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
 const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
-const Neonatologia6 = lazy(() => import('./modulos/neonatologia-6'));
-const Sepse         = lazy(() => import('./modulos/sepse'));
-const DorNeonatal    = lazy(() => import('./modulos/DorNeonatal'));
+const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
+const DorNeonatal      = lazy(() => import("./modulos/DorNeonatal"));
+const Hipotermia       = lazy(() => import("./modulos/hipotermia"));
+const Surfactante      = lazy(() => import("./modulos/surfactante"));
+const NEC              = lazy(() => import("./modulos/nec"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
-  "/percentis":         { label: "Percentis",          cor: "#3B82F6" },
-  "/urgencias":         { label: "Urgências",           cor: "#EF4444" },
-  "/formulas":          { label: "Fórmulas Infantis",   cor: "#10B981" },
-  "/gastropediatria":   { label: "Gastropediatria",     cor: "#F59E0B" },
-  "/pedfarma":          { label: "PedFarma",            cor: "#8B5CF6" },
-  "/vacinal":           { label: "Calendário Vacinal",  cor: "#06B6D4" },
-  "/hidratacao":        { label: "Hidratação",          cor: "#3B82F6" },
-  "/scores":            { label: "Scores Pediátricos",  cor: "#F97316" },
-  "/febre-sem-foco":    { label: "Febre Sem Foco",      cor: "#EF4444" },
-  "/tce-leve":          { label: "TCE Leve",            cor: "#7C3AED" },
-  "/dnpm":              { label: "DNPM",                cor: "#8B5CF6" },
-  "/dermato":           { label: "Dermatologia",        cor: "#EC4899" },
-  "/cuidados-pele-rn":  { label: "Pele do RN",          cor: "#0891B2" },
-  "/neonatologia-1":    { label: "Neonatologia I",      cor: "#0E7490" },
-  "/neonatologia-2":    { label: "Neonatologia II",     cor: "#0D9488" },
-  "/neonatologia-3":    { label: "Neonatologia III",    cor: "#D97706" },
-  "/neonatologia-4":    { label: "Neonatologia IV",     cor: "#7C3AED" },
-  "/neonatologia-5":    { label: "Neonatologia V",      cor: "#6366F1" },
-  "/dilucao-bic":       { label: "Diluição e BIC",      cor: "#F97316" },
-  "/tig-neonatal":      { label: "TIG Neonatal",        cor: "#0891B2" },
-  "/canguru":           { label: "Canguru",             cor: "#10B981" },
-  "/dexametasona-dbp":  { label: "Dexa DBP",            cor: "#0891B2" },
-  "/dor-neonatal":      { label: "Dor Neonatal",         cor: "#EF4444" },
+  // Pediatria Geral
+  "/percentis":         { label: "Percentis",              cor: "#3B82F6" },
+  "/urgencias":         { label: "Urgências",              cor: "#EF4444" },
+  "/formulas":          { label: "Fórmulas Infantis",      cor: "#10B981" },
+  "/gastropediatria":   { label: "Gastropediatria",        cor: "#F59E0B" },
+  "/pedfarma":          { label: "PedFarma",               cor: "#8B5CF6" },
+  "/vacinal":           { label: "Calendário Vacinal",     cor: "#06B6D4" },
+  "/hidratacao":        { label: "Hidratação",             cor: "#3B82F6" },
+  "/scores":            { label: "Scores Pediátricos",     cor: "#F97316" },
+  "/febre-sem-foco":    { label: "Febre Sem Foco",         cor: "#EF4444" },
+  "/tce-leve":          { label: "TCE Leve",               cor: "#7C3AED" },
+  "/dnpm":              { label: "DNPM",                   cor: "#8B5CF6" },
+  "/dermato":           { label: "Dermatologia",           cor: "#EC4899" },
+  "/sepse":             { label: "Sepse Pediátrica",       cor: "#DC2626" },
+  "/isr":               { label: "ISR Pediátrica",         cor: "#C2410C" },
+  "/ventilacao":        { label: "Ventilação Mecânica",    cor: "#0891B2" },
+  "/eletrolitos":       { label: "Distúrbios Eletrolíticos", cor: "#7C3AED" },
+  "/bronquiolite":      { label: "Bronquiolite",           cor: "#0D9488" },
+  "/analgesia-sedacao": { label: "Analgesia e Sedação",    cor: "#F59E0B" },
+  // Neonatologia
+  "/cuidados-pele-rn":  { label: "Pele do RN",             cor: "#0891B2" },
+  "/neonatologia-1":    { label: "Neonatologia I",         cor: "#0E7490" },
+  "/neonatologia-2":    { label: "Neonatologia II",        cor: "#0D9488" },
+  "/neonatologia-3":    { label: "Neonatologia III",       cor: "#D97706" },
+  "/neonatologia-4":    { label: "Neonatologia IV",        cor: "#7C3AED" },
+  "/neonatologia-5":    { label: "Neonatologia V",         cor: "#6366F1" },
+  "/neonatologia-6":    { label: "Neonatologia VI",        cor: "#0284C7" },
+  "/dilucao-bic":       { label: "Diluição e BIC",         cor: "#F97316" },
+  "/tig-neonatal":      { label: "TIG Neonatal",           cor: "#0891B2" },
+  "/canguru":           { label: "Canguru",               cor: "#10B981" },
+  "/dexametasona-dbp":  { label: "Dexa DBP",               cor: "#0891B2" },
+  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",      cor: "#06B6D4" },
+  "/dor-neonatal":      { label: "Dor Neonatal",           cor: "#EF4444" },
+  "/hipotermia":        { label: "Hipotermia Terapêutica", cor: "#4F46E5" },
+  "/surfactante":       { label: "Surfactante",            cor: "#059669" },
+  "/nec":               { label: "Enterocolite Necrosante", cor: "#92400E" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -137,7 +160,7 @@ export default function App() {
           {/* Home */}
           <Route path="/"                  element={<PedHub />} />
 
-          {/* Pediatria Geral */}
+          {/* ─── Pediatria Geral ─── */}
           <Route path="/percentis"         element={<Percentis />} />
           <Route path="/urgencias"         element={<Urgencias />} />
           <Route path="/formulas"          element={<Formulas />} />
@@ -150,26 +173,30 @@ export default function App() {
           <Route path="/tce-leve"          element={<TceLeve />} />
           <Route path="/dnpm"              element={<Dnpm />} />
           <Route path="/dermato"           element={<Dermato />} />
-          <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
+          <Route path="/sepse"             element={<Sepse />} />
+          <Route path="/isr"               element={<ISR />} />
+          <Route path="/ventilacao"        element={<Ventilacao />} />
+          <Route path="/eletrolitos"       element={<Eletrolitos />} />
+          <Route path="/bronquiolite"      element={<Bronquiolite />} />
+          <Route path="/analgesia-sedacao" element={<AnalgesiaSedacao />} />
 
-          {/* Neonatologia */}
+          {/* ─── Neonatologia ─── */}
+          <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
           <Route path="/neonatologia-1"    element={<Neonatologia1 />} />
           <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
           <Route path="/neonatologia-3"    element={<Neonatologia3 />} />
           <Route path="/neonatologia-4"    element={<Neonatologia4 />} />
           <Route path="/neonatologia-5"    element={<Neonatologia5 />} />
+          <Route path="/neonatologia-6"    element={<Neonatologia6 />} />
           <Route path="/dilucao-bic"       element={<DilucaoBic />} />
           <Route path="/tig-neonatal"      element={<TigNeonatal />} />
           <Route path="/canguru"           element={<Canguru />} />
           <Route path="/dexametasona-dbp"  element={<DexametasonaDbp />} />
           <Route path="/guia-vacinal-2026" element={<GuiaVacinal2026 />} />
-          <Route path="/neonatologia-6" element={
-  <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor:"#0284C7"}}></div></div>}>
-    <Neonatologia6 />
-  </Suspense>
-} />
-          <Route path="/sepse" element={<Suspense fallback={<div>Carregando...</div>}><Sepse /></Suspense>} />
           <Route path="/dor-neonatal"      element={<DorNeonatal />} />
+          <Route path="/hipotermia"        element={<Hipotermia />} />
+          <Route path="/surfactante"       element={<Surfactante />} />
+          <Route path="/nec"               element={<NEC />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
