@@ -30,8 +30,8 @@ const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
 const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
 const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
 const Neonatologia6 = lazy(() => import('./modulos/neonatologia-6'));
-const Sepse = lazy(() => import('./modulos/sepse'));
-   // ... outros módulos
+const Sepse         = lazy(() => import('./modulos/sepse'));
+const DorNeonatal    = lazy(() => import('./modulos/DorNeonatal'));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
@@ -57,6 +57,7 @@ const MODULO_MAP = {
   "/tig-neonatal":      { label: "TIG Neonatal",        cor: "#0891B2" },
   "/canguru":           { label: "Canguru",             cor: "#10B981" },
   "/dexametasona-dbp":  { label: "Dexa DBP",            cor: "#0891B2" },
+  "/dor-neonatal":      { label: "Dor Neonatal",         cor: "#EF4444" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -168,6 +169,7 @@ export default function App() {
   </Suspense>
 } />
           <Route path="/sepse" element={<Suspense fallback={<div>Carregando...</div>}><Sepse /></Suspense>} />
+          <Route path="/dor-neonatal"      element={<DorNeonatal />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
