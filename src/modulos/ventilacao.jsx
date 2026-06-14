@@ -416,7 +416,7 @@ export default function Ventilacao() {
                 {calcs.dpAlerta && (
                   <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #DC2626' }}>
                     <p style={{ margin: 0, fontSize: '11px', color: '#DC2626', fontWeight: '600' }}>
-                      DP > 15 cmH₂O — considerar reduzir VC ou reduzir PEEP para diminuir driving pressure (meta protetora)
+                      DP acima de 15 cmH₂O — considerar reduzir VC ou reduzir PEEP para diminuir driving pressure (meta protetora)
                     </p>
                   </div>
                 )}
