@@ -174,7 +174,7 @@ export default function NEC() {
             <p style={{ margin:'0 0 8px 0', fontSize:'14px', fontWeight:'700', color:C }}>📋 Enterocolite Necrosante (NEC)</p>
             <div style={{ backgroundColor:CLT, borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
               <p style={{ margin:0, fontSize:'12px', color:'#92400E' }}>
-                <strong>Definição:</strong> Inflamação intestinal necrosante em neonatos · emergência GI mais comum em prematuros · mortalidade 20-30% (> 50% cirúrgica)
+                <strong>Definição:</strong> Inflamação intestinal necrosante em neonatos · emergência GI mais comum em prematuros · mortalidade 20-30% (acima de 50% na forma cirúrgica)
               </p>
             </div>
             {['Prematuridade é o maior fator de risco (90% dos casos)',
