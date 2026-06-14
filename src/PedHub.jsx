@@ -310,7 +310,7 @@ function ModuloCard({ modulo, onClick }) {
         background: "#fff",
         border: "1.5px solid #F3F4F6",
         borderRadius: 14,
-        padding: "14px 12px",
+        padding: "15px 13px",
         cursor: "pointer",
         textAlign: "left",
         display: "flex",
@@ -331,13 +331,15 @@ function ModuloCard({ modulo, onClick }) {
       </div>
       <div>
         <p style={{
-          fontWeight: 700, fontSize: 13,
-          color: "#111827", margin: "0 0 2px",
-          lineHeight: 1.3,
+          fontWeight: 700, fontSize: 14.5,
+          color: "#111827", margin: "0 0 3px",
+          lineHeight: 1.25,
+          wordBreak: "break-word", hyphens: "auto",
         }}>{label}</p>
         <p style={{
-          fontSize: 11, color: "#9CA3AF",
+          fontSize: 12, color: "#9CA3AF",
           margin: 0, lineHeight: 1.4,
+          wordBreak: "break-word",
         }}>{desc}</p>
       </div>
       <div style={{ height: 3, borderRadius: 2, background: cor + "40", marginTop: "auto" }} />
