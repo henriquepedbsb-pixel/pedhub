@@ -214,6 +214,14 @@ const MODULOS = [
     cor:   "#F97316",
     grupo: "Neonatologia",
   },
+  {
+    rota:  "/dor-neonatal",
+    label: "Dor Neonatal",
+    desc:  "NIPS · PIPP-R · N-PASS · CRIES",
+    Icon:  Activity,
+    cor:   "#EF4444",
+    grupo: "Neonatologia",
+  },
   { rota: '/sepse', label: 'Sepse Pediátrica', desc: 'SSC 2026 · BIC e diluição · Phoenix 2024', Icon: Activity, cor: '#DC2626', grupo: 'Pediatria Geral' },
 ];
 
