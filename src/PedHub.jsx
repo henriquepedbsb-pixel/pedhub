@@ -173,6 +173,7 @@ const MODULOS = [
     Icon:  Moon,
     cor:   "#F59E0B",
     grupo: "Pediatria Geral",
+    { id: 'antibioticos', label: 'Antibioticoterapia', desc: 'Escolha empírica por síndrome clínica', cor: '#0D9488', path: '/antibioticos' }
   },
 
   /* ── Neonatologia ───────────────────────────────────────────────────── */
