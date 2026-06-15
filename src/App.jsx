@@ -25,6 +25,7 @@ const Eletrolitos      = lazy(() => import("./modulos/eletrolitos"));
 const Bronquiolite     = lazy(() => import("./modulos/bronquiolite"));
 const AnalgesiaSedacao = lazy(() => import("./modulos/analgesia-sedacao"));
 const Dor = lazy(() => import('./modulos/dor'));
+const Antibioticos = lazy(() => import('./modulos/antibioticos'));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
@@ -181,6 +182,7 @@ export default function App() {
           <Route path="/bronquiolite"      element={<Bronquiolite />} />
           <Route path="/analgesia-sedacao" element={<AnalgesiaSedacao />} />
           <Route path="/dor" element={<Dor />} />
+          <Route path="/antibioticos" element={<Antibioticos />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
