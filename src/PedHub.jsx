@@ -35,7 +35,7 @@ import {
 /* mesmo que estes não apareçam no grid da home (acessados via Hub Neonatal). */
 const MODULOS = [
   /* ── Pediatria Geral ────────────────────────────────────────────────── */
-  { rota: "/percentis",        label: "Percentis",            desc: "OMS · Intergrowth · Fenton",            Icon: Scale,         cor: "#3B82F6", grupo: "Pediatria Geral" },
+  { rota: "/percentis-oms",    label: "Percentis (OMS)",      desc: "OMS · curva 0–60 meses",                Icon: Scale,         cor: "#3B82F6", grupo: "Pediatria Geral" },
   { rota: "/urgencias",        label: "Urgências",            desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444", grupo: "Pediatria Geral" },
   { rota: "/formulas",         label: "Fórmulas",             desc: "Nestlé × Danone · Escada APLV",         Icon: FlaskConical,  cor: "#10B981", grupo: "Pediatria Geral" },
   { rota: "/gastropediatria",  label: "Gastro",               desc: "DRGE · APLV · Constipação",             Icon: Activity,      cor: "#F59E0B", grupo: "Pediatria Geral" },
@@ -75,6 +75,7 @@ const MODULOS = [
   { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1",   Icon: Activity,    cor: "#F97316", grupo: "Neonatologia" },
   { rota: "/dor-neonatal",     label: "Dor Neonatal",            desc: "NIPS · PIPP-R · N-PASS · CRIES",      Icon: Activity,    cor: "#EF4444", grupo: "Neonatologia" },
   { rota: "/idade-gestacional", label: "Idade Gestacional",       desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB", grupo: "Neonatologia" },
+  { rota: "/percentis",        label: "Percentis (completo)",    desc: "OMS · Intergrowth · Fenton",          Icon: Scale,       cor: "#3B82F6", grupo: "Neonatologia" },
 ];
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
