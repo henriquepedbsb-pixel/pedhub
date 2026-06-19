@@ -10,6 +10,7 @@ import {
   BookOpen,
   Brain,
   Calculator,
+  CalendarClock,
   ChevronRight,
   ClipboardList,
   Droplets,
@@ -73,6 +74,7 @@ const MODULOS = [
   { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",        Icon: Pill,        cor: "#0891B2", grupo: "Neonatologia" },
   { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1",   Icon: Activity,    cor: "#F97316", grupo: "Neonatologia" },
   { rota: "/dor-neonatal",     label: "Dor Neonatal",            desc: "NIPS · PIPP-R · N-PASS · CRIES",      Icon: Activity,    cor: "#EF4444", grupo: "Neonatologia" },
+  { rota: "/idade-gestacional", label: "Idade Gestacional",       desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB", grupo: "Neonatologia" },
 ];
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
