@@ -15,6 +15,7 @@ import {
   FlaskConical,
   Heart,
   Leaf,
+  Microscope,
   Moon,
   Pill,
   Scale,
@@ -173,7 +174,38 @@ const MODULOS = [
     Icon:  Moon,
     cor:   "#F59E0B",
     grupo: "Pediatria Geral",
-    { id: 'antibioticos', label: 'Antibioticoterapia', desc: 'Escolha empírica por síndrome clínica', cor: '#0D9488', path: '/antibioticos' }
+  },
+  {
+    rota:  "/dor",
+    label: "Escalas de Dor",
+    desc:  "FLACC · Wong-Baker · NRS · Escada",
+    Icon:  Activity,
+    cor:   "#F97316",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/antibioticos",
+    label: "Antibioticoterapia",
+    desc:  "Escolha empírica por síndrome clínica",
+    Icon:  Stethoscope,
+    cor:   "#0D9488",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/sedacao",
+    label: "Sedação",
+    desc:  "Cetamina · Midazolam · Fentanil · Checklist",
+    Icon:  Syringe,
+    cor:   "#6366F1",
+    grupo: "Pediatria Geral",
+  },
+  {
+    rota:  "/exames-lab",
+    label: "Exames Laboratoriais",
+    desc:  "Hemograma · Hormônios · Gastro · Vitaminas",
+    Icon:  Microscope,
+    cor:   "#0EA5E9",
+    grupo: "Pediatria Geral",
   },
 
   /* ── Neonatologia ───────────────────────────────────────────────────── */
@@ -423,7 +455,10 @@ export default function PedHub() {
             }}
           />
           {busca && (
-            <button onClick={() => setBusca("")} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: 16, padding: 0 }}>×</button>
+            <button
+              onClick={() => setBusca("")}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: 16, padding: 0 }}
+            >×</button>
           )}
         </div>
       </div>
@@ -432,10 +467,7 @@ export default function PedHub() {
       <div style={{ padding: "16px 16px 40px" }}>
         {porGrupo.map(({ grupo, mods }) => (
           <div key={grupo} style={{ marginBottom: 24 }}>
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8,
-              marginBottom: 12,
-            }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <p style={{
                 fontWeight: 700, fontSize: 12,
                 color: "#6B7280", margin: 0,
@@ -448,17 +480,9 @@ export default function PedHub() {
               <span style={{ fontSize: 11, color: "#9CA3AF" }}>{mods.length}</span>
             </div>
 
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-            }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {mods.map(m => (
-                <ModuloCard
-                  key={m.rota}
-                  modulo={m}
-                  onClick={() => navigate(m.rota)}
-                />
+                <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
               ))}
             </div>
 
@@ -474,9 +498,8 @@ export default function PedHub() {
       {/* Footer */}
       <div style={{
         textAlign: "center",
-        padding: "0 20px 32px",
+        padding: "16px 20px 32px",
         borderTop: "1px solid #E5E7EB",
-        paddingTop: 16,
       }}>
         <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0, lineHeight: 1.6 }}>
           <strong style={{ color: "#6B7280" }}>PedHub · PedSuite</strong><br />
