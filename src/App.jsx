@@ -24,8 +24,10 @@ const Ventilacao       = lazy(() => import("./modulos/ventilacao"));
 const Eletrolitos      = lazy(() => import("./modulos/eletrolitos"));
 const Bronquiolite     = lazy(() => import("./modulos/bronquiolite"));
 const AnalgesiaSedacao = lazy(() => import("./modulos/analgesia-sedacao"));
-const Dor = lazy(() => import('./modulos/dor'));
-const Antibioticos = lazy(() => import('./modulos/antibioticos'));
+const Dor              = lazy(() => import("./modulos/dor"));
+const Antibioticos     = lazy(() => import("./modulos/antibioticos"));
+const Sedacao          = lazy(() => import("./modulos/sedacao"));
+const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
@@ -48,41 +50,45 @@ const NEC              = lazy(() => import("./modulos/nec"));
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 const MODULO_MAP = {
   // Pediatria Geral
-  "/percentis":         { label: "Percentis",              cor: "#3B82F6" },
-  "/urgencias":         { label: "Urgências",              cor: "#EF4444" },
-  "/formulas":          { label: "Fórmulas Infantis",      cor: "#10B981" },
-  "/gastropediatria":   { label: "Gastropediatria",        cor: "#F59E0B" },
-  "/pedfarma":          { label: "PedFarma",               cor: "#8B5CF6" },
-  "/vacinal":           { label: "Calendário Vacinal",     cor: "#06B6D4" },
-  "/hidratacao":        { label: "Hidratação",             cor: "#3B82F6" },
-  "/scores":            { label: "Scores Pediátricos",     cor: "#F97316" },
-  "/febre-sem-foco":    { label: "Febre Sem Foco",         cor: "#EF4444" },
-  "/tce-leve":          { label: "TCE Leve",               cor: "#7C3AED" },
-  "/dnpm":              { label: "DNPM",                   cor: "#8B5CF6" },
-  "/dermato":           { label: "Dermatologia",           cor: "#EC4899" },
-  "/sepse":             { label: "Sepse Pediátrica",       cor: "#DC2626" },
-  "/isr":               { label: "ISR Pediátrica",         cor: "#C2410C" },
-  "/ventilacao":        { label: "Ventilação Mecânica",    cor: "#0891B2" },
-  "/eletrolitos":       { label: "Distúrbios Eletrolíticos", cor: "#7C3AED" },
-  "/bronquiolite":      { label: "Bronquiolite",           cor: "#0D9488" },
-  "/analgesia-sedacao": { label: "Analgesia e Sedação",    cor: "#F59E0B" },
+  "/percentis":         { label: "Percentis",                 cor: "#3B82F6" },
+  "/urgencias":         { label: "Urgências",                 cor: "#EF4444" },
+  "/formulas":          { label: "Fórmulas Infantis",         cor: "#10B981" },
+  "/gastropediatria":   { label: "Gastropediatria",           cor: "#F59E0B" },
+  "/pedfarma":          { label: "PedFarma",                  cor: "#8B5CF6" },
+  "/vacinal":           { label: "Calendário Vacinal",        cor: "#06B6D4" },
+  "/hidratacao":        { label: "Hidratação",                cor: "#3B82F6" },
+  "/scores":            { label: "Scores Pediátricos",        cor: "#F97316" },
+  "/febre-sem-foco":    { label: "Febre Sem Foco",            cor: "#EF4444" },
+  "/tce-leve":          { label: "TCE Leve",                  cor: "#7C3AED" },
+  "/dnpm":              { label: "DNPM",                      cor: "#8B5CF6" },
+  "/dermato":           { label: "Dermatologia",              cor: "#EC4899" },
+  "/sepse":             { label: "Sepse Pediátrica",          cor: "#DC2626" },
+  "/isr":               { label: "ISR Pediátrica",            cor: "#C2410C" },
+  "/ventilacao":        { label: "Ventilação Mecânica",       cor: "#0891B2" },
+  "/eletrolitos":       { label: "Distúrbios Eletrolíticos",  cor: "#7C3AED" },
+  "/bronquiolite":      { label: "Bronquiolite",              cor: "#0D9488" },
+  "/analgesia-sedacao": { label: "Analgesia e Sedação",       cor: "#F59E0B" },
+  "/dor":               { label: "Escalas de Dor",            cor: "#F97316" },
+  "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488" },
+  "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1" },
+  "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9" },
   // Neonatologia
-  "/cuidados-pele-rn":  { label: "Pele do RN",             cor: "#0891B2" },
-  "/neonatologia-1":    { label: "Neonatologia I",         cor: "#0E7490" },
-  "/neonatologia-2":    { label: "Neonatologia II",        cor: "#0D9488" },
-  "/neonatologia-3":    { label: "Neonatologia III",       cor: "#D97706" },
-  "/neonatologia-4":    { label: "Neonatologia IV",        cor: "#7C3AED" },
-  "/neonatologia-5":    { label: "Neonatologia V",         cor: "#6366F1" },
-  "/neonatologia-6":    { label: "Neonatologia VI",        cor: "#0284C7" },
-  "/dilucao-bic":       { label: "Diluição e BIC",         cor: "#F97316" },
-  "/tig-neonatal":      { label: "TIG Neonatal",           cor: "#0891B2" },
-  "/canguru":           { label: "Canguru",               cor: "#10B981" },
-  "/dexametasona-dbp":  { label: "Dexa DBP",               cor: "#0891B2" },
-  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",      cor: "#06B6D4" },
-  "/dor-neonatal":      { label: "Dor Neonatal",           cor: "#EF4444" },
-  "/hipotermia":        { label: "Hipotermia Terapêutica", cor: "#4F46E5" },
-  "/surfactante":       { label: "Surfactante",            cor: "#059669" },
-  "/nec":               { label: "Enterocolite Necrosante", cor: "#92400E" },
+  "/cuidados-pele-rn":  { label: "Pele do RN",                cor: "#0891B2" },
+  "/neonatologia-1":    { label: "Neonatologia I",            cor: "#0E7490" },
+  "/neonatologia-2":    { label: "Neonatologia II",           cor: "#0D9488" },
+  "/neonatologia-3":    { label: "Neonatologia III",          cor: "#D97706" },
+  "/neonatologia-4":    { label: "Neonatologia IV",           cor: "#7C3AED" },
+  "/neonatologia-5":    { label: "Neonatologia V",            cor: "#6366F1" },
+  "/neonatologia-6":    { label: "Neonatologia VI",           cor: "#0284C7" },
+  "/dilucao-bic":       { label: "Diluição e BIC",            cor: "#F97316" },
+  "/tig-neonatal":      { label: "TIG Neonatal",              cor: "#0891B2" },
+  "/canguru":           { label: "Canguru",                   cor: "#10B981" },
+  "/dexametasona-dbp":  { label: "Dexa DBP",                  cor: "#0891B2" },
+  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",         cor: "#06B6D4" },
+  "/dor-neonatal":      { label: "Dor Neonatal",              cor: "#EF4444" },
+  "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5" },
+  "/surfactante":       { label: "Surfactante",               cor: "#059669" },
+  "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -181,8 +187,10 @@ export default function App() {
           <Route path="/eletrolitos"       element={<Eletrolitos />} />
           <Route path="/bronquiolite"      element={<Bronquiolite />} />
           <Route path="/analgesia-sedacao" element={<AnalgesiaSedacao />} />
-          <Route path="/dor" element={<Dor />} />
-          <Route path="/antibioticos" element={<Antibioticos />} />
+          <Route path="/dor"               element={<Dor />} />
+          <Route path="/antibioticos"      element={<Antibioticos />} />
+          <Route path="/sedacao"           element={<Sedacao />} />
+          <Route path="/exames-lab"        element={<ExamesLab />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
