@@ -10,6 +10,7 @@ import {
   BookOpen,
   Brain,
   Calculator,
+  ChevronRight,
   ClipboardList,
   Droplets,
   FlaskConical,
@@ -28,310 +29,51 @@ import {
   Wind,
 } from "lucide-react";
 
-/* ─── Catálogo de módulos ────────────────────────────────────────────────── */
+/* ─── Catálogo completo de módulos ───────────────────────────────────────── */
+/* Mantido íntegro para que a BUSCA encontre também os módulos neonatais,    */
+/* mesmo que estes não apareçam no grid da home (acessados via Hub Neonatal). */
 const MODULOS = [
   /* ── Pediatria Geral ────────────────────────────────────────────────── */
-  {
-    rota:  "/percentis",
-    label: "Percentis",
-    desc:  "OMS · Intergrowth · Fenton",
-    Icon:  Scale,
-    cor:   "#3B82F6",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/urgencias",
-    label: "Urgências",
-    desc:  "Anafilaxia · Asma · Convulsão · Choque",
-    Icon:  AlertTriangle,
-    cor:   "#EF4444",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/formulas",
-    label: "Fórmulas",
-    desc:  "Nestlé × Danone · Escada APLV",
-    Icon:  FlaskConical,
-    cor:   "#10B981",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/gastropediatria",
-    label: "Gastro",
-    desc:  "DRGE · APLV · Constipação",
-    Icon:  Activity,
-    cor:   "#F59E0B",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/pedfarma",
-    label: "PedFarma",
-    desc:  "48 medicamentos · dose por peso",
-    Icon:  Pill,
-    cor:   "#8B5CF6",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/vacinal",
-    label: "Vacinal",
-    desc:  "SBIm 2025/2026 · SUS / Privado",
-    Icon:  Syringe,
-    cor:   "#06B6D4",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/hidratacao",
-    label: "Hidratação",
-    desc:  "Holliday-Segar · Planos A / B / C",
-    Icon:  Droplets,
-    cor:   "#3B82F6",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/scores",
-    label: "Scores",
-    desc:  "Gorelick · Westley · PEWS",
-    Icon:  ClipboardList,
-    cor:   "#F97316",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/febre-sem-foco",
-    label: "Febre Sem Foco",
-    desc:  "Fluxo por faixa etária · PECARN",
-    Icon:  Thermometer,
-    cor:   "#EF4444",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/tce-leve",
-    label: "TCE Leve",
-    desc:  "PECARN · TC vs Observação",
-    Icon:  Brain,
-    cor:   "#7C3AED",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/dnpm",
-    label: "DNPM",
-    desc:  "Marcos do desenvolvimento · Alarmes",
-    Icon:  Baby,
-    cor:   "#8B5CF6",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/dermato",
-    label: "Dermato",
-    desc:  "DA · Impetigo · Escabiose · Urticária",
-    Icon:  Shield,
-    cor:   "#EC4899",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/sepse",
-    label: "Sepse Pediátrica",
-    desc:  "SSC 2026 · BIC e diluição · Phoenix 2024",
-    Icon:  Activity,
-    cor:   "#DC2626",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/isr",
-    label: "ISR Pediátrica",
-    desc:  "Sequência rápida · doses · via difícil",
-    Icon:  Zap,
-    cor:   "#C2410C",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/ventilacao",
-    label: "Ventilação Mecânica",
-    desc:  "VC · FR · PARDS · desmame",
-    Icon:  Wind,
-    cor:   "#0891B2",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/eletrolitos",
-    label: "Eletrólitos",
-    desc:  "Na · K · Ca · Mg · correções",
-    Icon:  Droplets,
-    cor:   "#7C3AED",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/bronquiolite",
-    label: "Bronquiolite",
-    desc:  "Gravidade · OAF · nirsevimab",
-    Icon:  Stethoscope,
-    cor:   "#0D9488",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/analgesia-sedacao",
-    label: "Analgesia e Sedação",
-    desc:  "FLACC · BIC · desmame · WAT-1",
-    Icon:  Moon,
-    cor:   "#F59E0B",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/dor",
-    label: "Escalas de Dor",
-    desc:  "FLACC · Wong-Baker · NRS · Escada",
-    Icon:  Activity,
-    cor:   "#F97316",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/antibioticos",
-    label: "Antibioticoterapia",
-    desc:  "Escolha empírica por síndrome clínica",
-    Icon:  Stethoscope,
-    cor:   "#0D9488",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/sedacao",
-    label: "Sedação",
-    desc:  "Cetamina · Midazolam · Fentanil · Checklist",
-    Icon:  Syringe,
-    cor:   "#6366F1",
-    grupo: "Pediatria Geral",
-  },
-  {
-    rota:  "/exames-lab",
-    label: "Exames Laboratoriais",
-    desc:  "Hemograma · Hormônios · Gastro · Vitaminas",
-    Icon:  Microscope,
-    cor:   "#0EA5E9",
-    grupo: "Pediatria Geral",
-  },
+  { rota: "/percentis",        label: "Percentis",            desc: "OMS · Intergrowth · Fenton",            Icon: Scale,         cor: "#3B82F6", grupo: "Pediatria Geral" },
+  { rota: "/urgencias",        label: "Urgências",            desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444", grupo: "Pediatria Geral" },
+  { rota: "/formulas",         label: "Fórmulas",             desc: "Nestlé × Danone · Escada APLV",         Icon: FlaskConical,  cor: "#10B981", grupo: "Pediatria Geral" },
+  { rota: "/gastropediatria",  label: "Gastro",               desc: "DRGE · APLV · Constipação",             Icon: Activity,      cor: "#F59E0B", grupo: "Pediatria Geral" },
+  { rota: "/pedfarma",         label: "PedFarma",             desc: "48 medicamentos · dose por peso",       Icon: Pill,          cor: "#8B5CF6", grupo: "Pediatria Geral" },
+  { rota: "/vacinal",          label: "Vacinal",              desc: "SBIm 2025/2026 · SUS / Privado",        Icon: Syringe,       cor: "#06B6D4", grupo: "Pediatria Geral" },
+  { rota: "/hidratacao",       label: "Hidratação",           desc: "Holliday-Segar · Planos A / B / C",     Icon: Droplets,      cor: "#3B82F6", grupo: "Pediatria Geral" },
+  { rota: "/scores",           label: "Scores",               desc: "Gorelick · Westley · PEWS",             Icon: ClipboardList, cor: "#F97316", grupo: "Pediatria Geral" },
+  { rota: "/febre-sem-foco",   label: "Febre Sem Foco",       desc: "Fluxo por faixa etária · PECARN",       Icon: Thermometer,   cor: "#EF4444", grupo: "Pediatria Geral" },
+  { rota: "/tce-leve",         label: "TCE Leve",             desc: "PECARN · TC vs Observação",             Icon: Brain,         cor: "#7C3AED", grupo: "Pediatria Geral" },
+  { rota: "/dnpm",             label: "DNPM",                 desc: "Marcos do desenvolvimento · Alarmes",   Icon: Baby,          cor: "#8B5CF6", grupo: "Pediatria Geral" },
+  { rota: "/dermato",          label: "Dermato",              desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield,        cor: "#EC4899", grupo: "Pediatria Geral" },
+  { rota: "/sepse",            label: "Sepse Pediátrica",     desc: "SSC 2026 · BIC e diluição · Phoenix",   Icon: Activity,      cor: "#DC2626", grupo: "Pediatria Geral" },
+  { rota: "/isr",              label: "ISR Pediátrica",       desc: "Sequência rápida · doses · via difícil", Icon: Zap,          cor: "#C2410C", grupo: "Pediatria Geral" },
+  { rota: "/ventilacao",       label: "Ventilação Mecânica",  desc: "VC · FR · PARDS · desmame",             Icon: Wind,          cor: "#0891B2", grupo: "Pediatria Geral" },
+  { rota: "/eletrolitos",      label: "Eletrólitos",          desc: "Na · K · Ca · Mg · correções",          Icon: Droplets,      cor: "#7C3AED", grupo: "Pediatria Geral" },
+  { rota: "/bronquiolite",     label: "Bronquiolite",         desc: "Gravidade · OAF · nirsevimab",          Icon: Stethoscope,   cor: "#0D9488", grupo: "Pediatria Geral" },
+  { rota: "/analgesia-sedacao",label: "Analgesia e Sedação",  desc: "FLACC · BIC · desmame · WAT-1",         Icon: Moon,          cor: "#F59E0B", grupo: "Pediatria Geral" },
+  { rota: "/dor",              label: "Escalas de Dor",       desc: "FLACC · Wong-Baker · NRS · Escada",     Icon: Activity,      cor: "#F97316", grupo: "Pediatria Geral" },
+  { rota: "/antibioticos",     label: "Antibioticoterapia",   desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope,   cor: "#0D9488", grupo: "Pediatria Geral" },
+  { rota: "/sedacao",          label: "Sedação",              desc: "Cetamina · Midazolam · Fentanil · Checklist", Icon: Syringe, cor: "#6366F1", grupo: "Pediatria Geral" },
+  { rota: "/exames-lab",       label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9", grupo: "Pediatria Geral" },
 
-  /* ── Neonatologia ───────────────────────────────────────────────────── */
-  {
-    rota:  "/cuidados-pele-rn",
-    label: "Pele do RN",
-    desc:  "SBP GPA 140 · Higiene · Emolientes",
-    Icon:  Leaf,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-1",
-    label: "Reanimação RNPT <34s",
-    desc:  "Sala de parto · SBP 2026",
-    Icon:  Zap,
-    cor:   "#0E7490",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-6",
-    label: "Reanimação RN ≥34s",
-    desc:  "Sala de parto · SBP 2026",
-    Icon:  Wind,
-    cor:   "#0284C7",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-2",
-    label: "Hipoglicemia Neonatal",
-    desc:  "Hipoglicemia · Gel de Dextrose",
-    Icon:  Heart,
-    cor:   "#0D9488",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-3",
-    label: "Icterícia Neonatal",
-    desc:  "Fototerapia AAP 2022 · Causas",
-    Icon:  Stethoscope,
-    cor:   "#D97706",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-4",
-    label: "Scores Neonatais",
-    desc:  "Apgar · Capurro · Silverman",
-    Icon:  Calculator,
-    cor:   "#7C3AED",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/neonatologia-5",
-    label: "NPT Neonatal",
-    desc:  "Nutrição Parenteral Total · Eletrólitos",
-    Icon:  Droplets,
-    cor:   "#6366F1",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/hipotermia",
-    label: "Hipotermia Terapêutica",
-    desc:  "EHI · Thompson · reaquecimento",
-    Icon:  Thermometer,
-    cor:   "#4F46E5",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/surfactante",
-    label: "Surfactante",
-    desc:  "LISA · INSURE · dose por peso",
-    Icon:  BookOpen,
-    cor:   "#059669",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/nec",
-    label: "Enterocolite Necrosante",
-    desc:  "Bell · ATB por peso/IG · cirurgia",
-    Icon:  AlertTriangle,
-    cor:   "#92400E",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/canguru",
-    label: "Canguru",
-    desc:  "Prescrição e Receituário Neonatal",
-    Icon:  Heart,
-    cor:   "#10B981",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/tig-neonatal",
-    label: "TIG Neonatal",
-    desc:  "Taxa de Infusão de Glicose · UCIN",
-    Icon:  Droplets,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dexametasona-dbp",
-    label: "Dexa DBP",
-    desc:  "DART · Protocolo HMIB · Dexametasona RNPT",
-    Icon:  Pill,
-    cor:   "#0891B2",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dilucao-bic",
-    label: "Diluição e BIC",
-    desc:  "Vasoativas · Sedoanalgesia · PGE1 · Insulina",
-    Icon:  Activity,
-    cor:   "#F97316",
-    grupo: "Neonatologia",
-  },
-  {
-    rota:  "/dor-neonatal",
-    label: "Dor Neonatal",
-    desc:  "NIPS · PIPP-R · N-PASS · CRIES",
-    Icon:  Activity,
-    cor:   "#EF4444",
-    grupo: "Neonatologia",
-  },
+  /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
+  { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
+  { rota: "/neonatologia-1",   label: "Reanimação RNPT <34s",    desc: "Sala de parto · SBP 2026",            Icon: Zap,         cor: "#0E7490", grupo: "Neonatologia" },
+  { rota: "/neonatologia-6",   label: "Reanimação RN ≥34s",      desc: "Sala de parto · SBP 2026",            Icon: Wind,        cor: "#0284C7", grupo: "Neonatologia" },
+  { rota: "/neonatologia-2",   label: "Hipoglicemia Neonatal",   desc: "Hipoglicemia · Gel de Dextrose",      Icon: Heart,       cor: "#0D9488", grupo: "Neonatologia" },
+  { rota: "/neonatologia-3",   label: "Icterícia Neonatal",      desc: "Fototerapia AAP 2022 · Causas",       Icon: Stethoscope, cor: "#D97706", grupo: "Neonatologia" },
+  { rota: "/neonatologia-4",   label: "Scores Neonatais",        desc: "Apgar · Capurro · Silverman",         Icon: Calculator,  cor: "#7C3AED", grupo: "Neonatologia" },
+  { rota: "/neonatologia-5",   label: "NPT Neonatal",            desc: "Nutrição Parenteral Total · Eletrólitos", Icon: Droplets, cor: "#6366F1", grupo: "Neonatologia" },
+  { rota: "/hipotermia",       label: "Hipotermia Terapêutica",  desc: "EHI · Thompson · reaquecimento",      Icon: Thermometer, cor: "#4F46E5", grupo: "Neonatologia" },
+  { rota: "/surfactante",      label: "Surfactante",             desc: "LISA · INSURE · dose por peso",       Icon: BookOpen,    cor: "#059669", grupo: "Neonatologia" },
+  { rota: "/nec",              label: "Enterocolite Necrosante", desc: "Bell · ATB por peso/IG · cirurgia",   Icon: AlertTriangle, cor: "#92400E", grupo: "Neonatologia" },
+  { rota: "/canguru",          label: "Canguru",                 desc: "Prescrição e Receituário Neonatal",   Icon: Heart,       cor: "#10B981", grupo: "Neonatologia" },
+  { rota: "/tig-neonatal",     label: "TIG Neonatal",            desc: "Taxa de Infusão de Glicose · UCIN",   Icon: Droplets,    cor: "#0891B2", grupo: "Neonatologia" },
+  { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",        Icon: Pill,        cor: "#0891B2", grupo: "Neonatologia" },
+  { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1",   Icon: Activity,    cor: "#F97316", grupo: "Neonatologia" },
+  { rota: "/dor-neonatal",     label: "Dor Neonatal",            desc: "NIPS · PIPP-R · N-PASS · CRIES",      Icon: Activity,    cor: "#EF4444", grupo: "Neonatologia" },
 ];
-
-const GRUPOS = ["Pediatria Geral", "Neonatologia"];
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
@@ -350,7 +92,6 @@ function ModuloCard({ modulo, onClick }) {
         flexDirection: "column",
         gap: 8,
         width: "100%",
-        transition: "border-color 0.15s",
         boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       }}
     >
@@ -380,21 +121,61 @@ function ModuloCard({ modulo, onClick }) {
   );
 }
 
+/* ─── Card-portal do Hub Neonatal (largura total) ────────────────────────── */
+function NeonatalGateway({ count, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        gridColumn: "1 / -1",
+        background: "linear-gradient(135deg, #0E7490 0%, #155E75 100%)",
+        border: "none",
+        borderRadius: 16,
+        padding: "18px 18px",
+        cursor: "pointer",
+        textAlign: "left",
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        width: "100%",
+        boxShadow: "0 2px 10px rgba(14,116,144,0.25)",
+      }}
+    >
+      <div style={{
+        width: 48, height: 48, borderRadius: 14,
+        background: "rgba(255,255,255,0.18)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
+      }}>
+        <Baby size={26} color="#fff" />
+      </div>
+      <div style={{ flex: 1 }}>
+        <p style={{ fontWeight: 700, fontSize: 17, color: "#fff", margin: "0 0 3px", lineHeight: 1.2 }}>
+          Neonatologia
+        </p>
+        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", margin: 0, lineHeight: 1.4 }}>
+          {count} ferramentas · do parto à alta da UCIN
+        </p>
+      </div>
+      <ChevronRight size={22} color="#fff" style={{ flexShrink: 0 }} />
+    </button>
+  );
+}
+
 /* ─── Componente principal ───────────────────────────────────────────────── */
 export default function PedHub() {
   const navigate = useNavigate();
   const [busca, setBusca] = useState("");
 
-  const modulosFiltrados = busca.trim()
-    ? MODULOS.filter(m =>
-        m.label.toLowerCase().includes(busca.toLowerCase()) ||
-        m.desc.toLowerCase().includes(busca.toLowerCase())
-      )
-    : MODULOS;
+  const buscando = busca.trim().length > 0;
 
-  const porGrupo = busca.trim()
-    ? [{ grupo: "Resultado da busca", mods: modulosFiltrados }]
-    : GRUPOS.map(g => ({ grupo: g, mods: MODULOS.filter(m => m.grupo === g) }));
+  const resultadosBusca = MODULOS.filter(m =>
+    m.label.toLowerCase().includes(busca.toLowerCase()) ||
+    m.desc.toLowerCase().includes(busca.toLowerCase())
+  );
+
+  const pediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral");
+  const totalNeonatal = MODULOS.filter(m => m.grupo === "Neonatologia").length;
 
   return (
     <div style={{
@@ -463,36 +244,70 @@ export default function PedHub() {
         </div>
       </div>
 
-      {/* Grupos e cards */}
+      {/* Conteúdo */}
       <div style={{ padding: "16px 16px 40px" }}>
-        {porGrupo.map(({ grupo, mods }) => (
-          <div key={grupo} style={{ marginBottom: 24 }}>
+        {buscando ? (
+          /* ── Modo busca: todos os grupos ── */
+          <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <p style={{
-                fontWeight: 700, fontSize: 12,
-                color: "#6B7280", margin: 0,
-                letterSpacing: "0.07em",
-                textTransform: "uppercase",
+                fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                letterSpacing: "0.07em", textTransform: "uppercase",
               }}>
-                {grupo}
+                Resultado da busca
               </p>
               <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{mods.length}</span>
+              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{resultadosBusca.length}</span>
             </div>
-
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              {mods.map(m => (
+              {resultadosBusca.map(m => (
                 <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
               ))}
             </div>
-
-            {mods.length === 0 && busca && (
+            {resultadosBusca.length === 0 && (
               <p style={{ fontSize: 13, color: "#9CA3AF", textAlign: "center", padding: "20px 0" }}>
                 Nenhum módulo encontrado para "{busca}"
               </p>
             )}
           </div>
-        ))}
+        ) : (
+          /* ── Modo navegação: Pediatria Geral + portal Neonatologia ── */
+          <>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <p style={{
+                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                  letterSpacing: "0.07em", textTransform: "uppercase",
+                }}>
+                  Pediatria Geral
+                </p>
+                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
+                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{pediatria.length}</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {pediatria.map(m => (
+                  <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <p style={{
+                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                  letterSpacing: "0.07em", textTransform: "uppercase",
+                }}>
+                  Neonatologia
+                </p>
+                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
+                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{totalNeonatal}</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Footer */}
