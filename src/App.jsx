@@ -30,6 +30,7 @@ const Sedacao          = lazy(() => import("./modulos/sedacao"));
 const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
+const Neonatal         = lazy(() => import("./modulos/neonatal"));
 const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
 const Neonatologia1    = lazy(() => import("./modulos/neonatologia-1"));
 const Neonatologia2    = lazy(() => import("./modulos/neonatologia-2"));
@@ -48,6 +49,7 @@ const Surfactante      = lazy(() => import("./modulos/surfactante"));
 const NEC              = lazy(() => import("./modulos/nec"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
+/* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
 const MODULO_MAP = {
   // Pediatria Geral
   "/percentis":         { label: "Percentis",                 cor: "#3B82F6" },
@@ -72,23 +74,25 @@ const MODULO_MAP = {
   "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488" },
   "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1" },
   "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9" },
-  // Neonatologia
-  "/cuidados-pele-rn":  { label: "Pele do RN",                cor: "#0891B2" },
-  "/neonatologia-1":    { label: "Neonatologia I",            cor: "#0E7490" },
-  "/neonatologia-2":    { label: "Neonatologia II",           cor: "#0D9488" },
-  "/neonatologia-3":    { label: "Neonatologia III",          cor: "#D97706" },
-  "/neonatologia-4":    { label: "Neonatologia IV",           cor: "#7C3AED" },
-  "/neonatologia-5":    { label: "Neonatologia V",            cor: "#6366F1" },
-  "/neonatologia-6":    { label: "Neonatologia VI",           cor: "#0284C7" },
-  "/dilucao-bic":       { label: "Diluição e BIC",            cor: "#F97316" },
-  "/tig-neonatal":      { label: "TIG Neonatal",              cor: "#0891B2" },
-  "/canguru":           { label: "Canguru",                   cor: "#10B981" },
-  "/dexametasona-dbp":  { label: "Dexa DBP",                  cor: "#0891B2" },
-  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",         cor: "#06B6D4" },
-  "/dor-neonatal":      { label: "Dor Neonatal",              cor: "#EF4444" },
-  "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5" },
-  "/surfactante":       { label: "Surfactante",               cor: "#059669" },
-  "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E" },
+  // Neonatologia — hub
+  "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
+  // Neonatologia — módulos (voltam ao hub)
+  "/cuidados-pele-rn":  { label: "Pele do RN",                cor: "#0891B2", voltar: "/neonatal" },
+  "/neonatologia-1":    { label: "Neonatologia I",            cor: "#0E7490", voltar: "/neonatal" },
+  "/neonatologia-2":    { label: "Neonatologia II",           cor: "#0D9488", voltar: "/neonatal" },
+  "/neonatologia-3":    { label: "Neonatologia III",          cor: "#D97706", voltar: "/neonatal" },
+  "/neonatologia-4":    { label: "Neonatologia IV",           cor: "#7C3AED", voltar: "/neonatal" },
+  "/neonatologia-5":    { label: "Neonatologia V",            cor: "#6366F1", voltar: "/neonatal" },
+  "/neonatologia-6":    { label: "Neonatologia VI",           cor: "#0284C7", voltar: "/neonatal" },
+  "/dilucao-bic":       { label: "Diluição e BIC",            cor: "#F97316", voltar: "/neonatal" },
+  "/tig-neonatal":      { label: "TIG Neonatal",              cor: "#0891B2", voltar: "/neonatal" },
+  "/canguru":           { label: "Canguru",                   cor: "#10B981", voltar: "/neonatal" },
+  "/dexametasona-dbp":  { label: "Dexa DBP",                  cor: "#0891B2", voltar: "/neonatal" },
+  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",         cor: "#06B6D4", voltar: "/neonatal" },
+  "/dor-neonatal":      { label: "Dor Neonatal",              cor: "#EF4444", voltar: "/neonatal" },
+  "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5", voltar: "/neonatal" },
+  "/surfactante":       { label: "Surfactante",               cor: "#059669", voltar: "/neonatal" },
+  "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E", voltar: "/neonatal" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -98,6 +102,8 @@ function Header() {
   const modulo   = MODULO_MAP[location.pathname];
 
   if (!modulo) return null;
+
+  const destinoVoltar = modulo.voltar || "/";
 
   return (
     <div style={{
@@ -111,8 +117,8 @@ function Header() {
         padding: "11px 16px", gap: 12,
       }}>
         <button
-          onClick={() => navigate("/")}
-          aria-label="Voltar ao início"
+          onClick={() => navigate(destinoVoltar)}
+          aria-label="Voltar"
           style={{
             background: "none", border: "none", cursor: "pointer",
             padding: 4, display: "flex", alignItems: "center",
@@ -193,6 +199,7 @@ export default function App() {
           <Route path="/exames-lab"        element={<ExamesLab />} />
 
           {/* ─── Neonatologia ─── */}
+          <Route path="/neonatal"          element={<Neonatal />} />
           <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
           <Route path="/neonatologia-1"    element={<Neonatologia1 />} />
           <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
