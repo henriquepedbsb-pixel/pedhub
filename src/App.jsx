@@ -28,6 +28,7 @@ const Dor              = lazy(() => import("./modulos/dor"));
 const Antibioticos     = lazy(() => import("./modulos/antibioticos"));
 const Sedacao          = lazy(() => import("./modulos/sedacao"));
 const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
+const IdadeGestacional = lazy(() => import("./modulos/idade-gestacional"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const Neonatal         = lazy(() => import("./modulos/neonatal"));
@@ -74,6 +75,7 @@ const MODULO_MAP = {
   "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488" },
   "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1" },
   "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9" },
+  "/idade-gestacional": { label: "Idade Gestacional",         cor: "#2563EB", voltar: "/neonatal" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
@@ -197,6 +199,7 @@ export default function App() {
           <Route path="/antibioticos"      element={<Antibioticos />} />
           <Route path="/sedacao"           element={<Sedacao />} />
           <Route path="/exames-lab"        element={<ExamesLab />} />
+          <Route path="/idade-gestacional" element={<IdadeGestacional />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
