@@ -1,5 +1,9 @@
-// src/modulos/percentis.jsx — PedHub v1.1
+// src/modulos/percentis.jsx — PedHub v1.2
 // Curvas: OMS 0–60m | Intergrowth-21st 24–42s | Fenton 2013 24–40s
+//
+// v1.2 — Prop somenteOMS:
+//   • somenteOMS=true  → exibe apenas a curva da OMS (uso em Pediatria Geral)
+//   • somenteOMS=false → completo: OMS + Intergrowth + Fenton (Hub Neonatal)
 //
 // v1.1 — Correções:
 //   • Sub-componentes movidos para módulo (fix teclado mobile)
@@ -421,9 +425,9 @@ function CardPT({ label, data }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
-export default function Percentis() {
+export default function Percentis({ somenteOMS = false }) {
   const [tab, setTab] = useState(0);
-  const TABS = ["OMS (0–60m)", "Intergrowth", "Fenton 2013"];
+  const TABS = somenteOMS ? ["OMS (0–60m)"] : ["OMS (0–60m)", "Intergrowth", "Fenton 2013"];
 
   // OMS
   const [oSexo, setOSexo]     = useState("M");
@@ -519,20 +523,24 @@ export default function Percentis() {
         </div>
         <div>
           <h1 style={{ margin:0, fontSize:"20px", fontWeight:"800", color:"#111827" }}>Curvas de Crescimento</h1>
-          <p style={{ margin:0, fontSize:"12px", color:"#6B7280" }}>OMS · Intergrowth-21st · Fenton 2013</p>
+          <p style={{ margin:0, fontSize:"12px", color:"#6B7280" }}>
+            {somenteOMS ? "OMS — Organização Mundial da Saúde · 0–60 meses" : "OMS · Intergrowth-21st · Fenton 2013"}
+          </p>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display:"flex", gap:"4px", background:"#E5E7EB", borderRadius:"10px",
-        padding:"4px", marginBottom:"20px" }}>
-        {TABS.map((t, i) => (
-          <button key={i} style={tabStyle(i)}
-            onClick={() => { setTab(i); setORes(null); setPRes(null); }}>
-            {t}
-          </button>
-        ))}
-      </div>
+      {/* Tabs (ocultas no modo somente OMS) */}
+      {!somenteOMS && (
+        <div style={{ display:"flex", gap:"4px", background:"#E5E7EB", borderRadius:"10px",
+          padding:"4px", marginBottom:"20px" }}>
+          {TABS.map((t, i) => (
+            <button key={i} style={tabStyle(i)}
+              onClick={() => { setTab(i); setORes(null); setPRes(null); }}>
+              {t}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ─── Tab OMS ─── */}
       {tab === 0 && (
@@ -601,7 +609,7 @@ export default function Percentis() {
       )}
 
       {/* ─── Tab Intergrowth ─── */}
-      {tab === 1 && (
+      {!somenteOMS && tab === 1 && (
         <PretermTab
           sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
           ig={pIg}     setIg={setPIg}
@@ -617,7 +625,7 @@ export default function Percentis() {
       )}
 
       {/* ─── Tab Fenton ─── */}
-      {tab === 2 && (
+      {!somenteOMS && tab === 2 && (
         <PretermTab
           sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
           ig={pIg}     setIg={setPIg}
