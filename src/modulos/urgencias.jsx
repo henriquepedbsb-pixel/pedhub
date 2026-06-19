@@ -2,9 +2,11 @@ import { useState } from "react";
 import {
   AlertTriangle,
   Activity,
+  ArrowLeft,
   Calculator,
   ChevronRight,
   Clock,
+  Droplets,
   Heart,
   Info,
   Wind,
@@ -26,12 +28,20 @@ function calcDoses(w) {
     epiPCR_mL:       parseFloat(clamp(w * 0.1,  0, 10).toFixed(1)),
     epiIM_mg:        parseFloat(epiIM.toFixed(2)),
     epiIM_mL:        parseFloat(epiIM.toFixed(2)),
+    epiET_mg:        parseFloat(clamp(w * 0.1, 0, 2.5).toFixed(2)),
     atropina_mg:     parseFloat(clamp(Math.max(w * 0.02, 0.1), 0, w >= 30 ? 1 : 0.5).toFixed(2)),
     atropina_mL:     parseFloat((clamp(Math.max(w * 0.02, 0.1), 0, w >= 30 ? 1 : 0.5) / 0.5).toFixed(1)),
     adeno1_mg:       parseFloat(clamp(w * 0.1, 0, 6).toFixed(1)),
     adeno1_mL:       parseFloat(clamp(w * 0.1 / 3, 0, 2).toFixed(1)),
     adeno2_mg:       parseFloat(clamp(w * 0.2, 0, 12).toFixed(1)),
     adeno2_mL:       parseFloat(clamp(w * 0.2 / 3, 0, 4).toFixed(1)),
+    desfib1_J:       Math.round(clamp(w * 2, 0, 200)),
+    desfib2_J:       Math.round(clamp(w * 4, 0, 200)),
+    desfibMax_J:     Math.round(clamp(w * 10, 0, 200)),
+    cardioSinc1_J:   parseFloat(clamp(w * 0.5, 0, 50).toFixed(1)),
+    cardioSinc2_J:   Math.round(clamp(w * 2, 0, 100)),
+    amiodarona_mg:   Math.round(clamp(w * 5, 0, 300)),
+    lidocaina_mg:    parseFloat(clamp(w * 1, 0, 100).toFixed(1)),
     diazIV_mg:       parseFloat(clamp(w * 0.3, 0, 10).toFixed(1)),
     diazIV_mL:       parseFloat(clamp(w * 0.3 / 5, 0, 2).toFixed(2)),
     midaIN_mg:       parseFloat(clamp(w * 0.2, 0, 10).toFixed(1)),
@@ -206,12 +216,27 @@ function TabCalculadora({ d }) {
   return (
     <div>
       <SectionTitle icon={Zap} color="#DC2626" text="PCR / Reanimação" />
-      <DoseCard label="Adrenalina IV (PCR)" formula="0,01 mg/kg · máx 1 mg" color="#DC2626"
+      <DoseCard label="Adrenalina IV/IO (PCR)" formula="0,01 mg/kg · máx 1 mg" color="#DC2626"
         doses={[d.epiPCR_mg + " mg", d.epiPCR_mL + " mL"]}
         note="Sol. 1:10.000 (0,1 mg/mL) · Repetir a cada 3–5 min se necessário" />
+      <DoseCard label="Adrenalina endotraqueal" formula="0,1 mg/kg (10× a dose IV)" color="#DC2626"
+        doses={[d.epiET_mg + " mg"]}
+        note="Sol. 1:1.000 (1 mg/mL) · Apenas se sem acesso IV/IO · Seguir de ventilações" />
+      <DoseCard label="Desfibrilação (FV/TVsp)" formula="1º: 2 J/kg · 2º: 4 J/kg · seguintes ≥ 4 J/kg" color="#DC2626"
+        doses={[d.desfib1_J + " J", d.desfib2_J + " J", "máx " + d.desfibMax_J + " J"]}
+        note="Não sincronizado · Reiniciar RCP imediatamente após cada choque" />
+      <DoseCard label="Amiodarona (FV/TVsp refratária)" formula="5 mg/kg · máx 300 mg" color="#DC2626"
+        doses={[d.amiodarona_mg + " mg"]}
+        note="Bolus IV/IO após o 2º choque + adrenalina · Pode repetir até 2×" />
+      <DoseCard label="Lidocaína (alternativa)" formula="1 mg/kg · máx 100 mg" color="#DC2626"
+        doses={[d.lidocaina_mg + " mg"]}
+        note="Alternativa à amiodarona na FV/TVsp refratária" />
       <DoseCard label="Atropina IV" formula="0,02 mg/kg · mín 0,1 · máx 0,5 mg (< 30 kg) ou 1 mg (≥ 30 kg)" color="#DC2626"
         doses={[d.atropina_mg + " mg", d.atropina_mL + " mL"]}
-        note="0,5 mg/mL · Administração rápida" />
+        note="0,5 mg/mL · Bradicardia por tônus vagal ou bloqueio AV" />
+      <DoseCard label="Cardioversão sincronizada" formula="1ª: 0,5–1 J/kg · seguinte: 2 J/kg" color="#DC2626"
+        doses={[d.cardioSinc1_J + " J", d.cardioSinc2_J + " J"]}
+        note="TSV/TV instável com pulso · Sincronizado · Sedação se possível" />
 
       <SectionTitle icon={AlertTriangle} color="#EA580C" text="Anafilaxia" />
       <DoseCard label="Adrenalina IM (coxa)" formula="0,01 mg/kg · máx 0,5 mg" color="#EA580C"
@@ -634,6 +659,353 @@ function TabCAD({ d }) {
   );
 }
 
+/* ─── Tab PCR / PALS ──────────────────────────────────────────────────────── */
+function TabPCR({ d }) {
+  const C = "#DC2626";
+  return (
+    <div>
+      <InfoBox color={C}>
+        <strong>AHA PALS 2020.</strong> A base do sucesso é RCP de alta qualidade com mínimas interrupções e desfibrilação precoce nos ritmos chocáveis. Adrenalina precoce nos ritmos não chocáveis.
+      </InfoBox>
+
+      <SectionTitle icon={Heart} color={C} text="RCP de Alta Qualidade" />
+      <div style={{ background: "#FEF2F2", borderRadius: 10, padding: "12px 14px", marginBottom: 8, border: "1px solid #FECACA" }}>
+        {[
+          "Frequência: 100–120 compressões/min",
+          "Profundidade: pelo menos 1/3 do diâmetro AP do tórax (cerca de 4 cm no lactente, 5 cm na criança)",
+          "Permitir retorno total do tórax · Minimizar interrupções (menos de 10 s)",
+          "Relação 30:2 (1 socorrista) ou 15:2 (2 socorristas) sem via aérea avançada",
+          "Com via aérea avançada: compressões contínuas + 1 ventilação a cada 2–3 s (20–30/min)",
+          "Trocar quem comprime a cada 2 min",
+        ].map((item, i) => (
+          <div key={i} style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+            <span style={{ color: C, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>·</span>
+            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <SectionTitle icon={Activity} color="#B91C1C" text="Ritmo NÃO chocável (AESP / Assistolia)" />
+      {[
+        {
+          step: "1",
+          title: "RCP + Adrenalina precoce",
+          content: d
+            ? "Adrenalina " + d.epiPCR_mg + " mg (" + d.epiPCR_mL + " mL) IV/IO assim que possível · Repetir a cada 3–5 min · Sem acesso: ET " + d.epiET_mg + " mg (1:1.000)"
+            : "Adrenalina 0,01 mg/kg IV/IO (máx 1 mg) assim que possível · a cada 3–5 min · Sem acesso: ET 0,1 mg/kg (1:1.000)",
+          highlight: true,
+        },
+        {
+          step: "2",
+          title: "Ciclos de 2 min",
+          content: "RCP 2 min → checar ritmo → adrenalina a cada 3–5 min · Obter via aérea avançada e acesso IO/IV · Capnografia (EtCO₂)",
+          highlight: false,
+        },
+        {
+          step: "3",
+          title: "Causas reversíveis",
+          content: "Procurar e tratar 5H e 5T (abaixo) · AESP costuma ter causa identificável",
+          highlight: false,
+        },
+      ].map((item) => (
+        <StepCard key={item.step} {...item} color="#B91C1C" />
+      ))}
+
+      <SectionTitle icon={Zap} color={C} text="Ritmo chocável (FV / TV sem pulso)" />
+      {[
+        {
+          step: "1",
+          title: "Desfibrilar imediatamente",
+          content: d
+            ? "1º choque " + d.desfib1_J + " J (2 J/kg) → RCP 2 min → 2º choque " + d.desfib2_J + " J (4 J/kg) → seguintes ≥ 4 J/kg (máx " + d.desfibMax_J + " J)"
+            : "1º choque 2 J/kg → RCP 2 min → 2º choque 4 J/kg → seguintes ≥ 4 J/kg (máx 10 J/kg ou dose adulto)",
+          highlight: true,
+        },
+        {
+          step: "2",
+          title: "Adrenalina após 2º choque",
+          content: d
+            ? "Adrenalina " + d.epiPCR_mg + " mg (" + d.epiPCR_mL + " mL) IV/IO a cada 3–5 min, intercalada com os ciclos de RCP/choque"
+            : "Adrenalina 0,01 mg/kg IV/IO (máx 1 mg) a cada 3–5 min",
+          highlight: false,
+        },
+        {
+          step: "3",
+          title: "Antiarrítmico (FV/TVsp refratária)",
+          content: d
+            ? "Amiodarona " + d.amiodarona_mg + " mg (5 mg/kg, máx 300) em bolus após o 2º choque + adrenalina · pode repetir até 2× · OU Lidocaína " + d.lidocaina_mg + " mg (1 mg/kg)"
+            : "Amiodarona 5 mg/kg (máx 300 mg) em bolus, pode repetir até 2× · OU Lidocaína 1 mg/kg",
+          highlight: false,
+        },
+        {
+          step: "4",
+          title: "Sequência",
+          content: "Choque → RCP 2 min → checar ritmo/pulso → choque → RCP + adrenalina → choque → RCP + antiarrítmico · Manter ciclos",
+          highlight: false,
+        },
+      ].map((item) => (
+        <StepCard key={item.step} {...item} color={C} />
+      ))}
+
+      <SectionTitle icon={AlertTriangle} color="#92400E" text="Causas Reversíveis (5H e 5T)" />
+      <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+        <div style={{ flex: 1, background: "#FFFBEB", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 H</p>
+          {["Hipóxia", "Hipovolemia", "Hidrogênio (acidose)", "Hipo/Hipercalemia", "Hipotermia"].map((h, i) => (
+            <p key={i} style={{ fontSize: 11, color: "#374151", margin: "0 0 3px" }}>· {h}</p>
+          ))}
+        </div>
+        <div style={{ flex: 1, background: "#FFFBEB", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 T</p>
+          {["Tóxicos", "Tamponamento cardíaco", "Pneumotórax hipertensivo", "Trombose (coronária/pulmonar)", "Trauma"].map((t, i) => (
+            <p key={i} style={{ fontSize: 11, color: "#374151", margin: "0 0 3px" }}>· {t}</p>
+          ))}
+        </div>
+      </div>
+
+      <SectionTitle icon={Heart} color="#0891B2" text="Bradicardia com pulso + má perfusão" />
+      {[
+        {
+          step: "1",
+          title: "Oxigenar / ventilar",
+          content: "Garantir via aérea, O₂ e ventilação eficaz · A maioria das bradicardias pediátricas é por hipóxia",
+          highlight: false,
+        },
+        {
+          step: "2",
+          title: "RCP se FC < 60 com má perfusão",
+          content: "Iniciar compressões se FC < 60 bpm com sinais de má perfusão apesar de oxigenação/ventilação adequadas",
+          highlight: true,
+        },
+        {
+          step: "3",
+          title: "Adrenalina / Atropina",
+          content: d
+            ? "Adrenalina " + d.epiPCR_mg + " mg IV/IO a cada 3–5 min · Atropina " + d.atropina_mg + " mg (0,02 mg/kg) se tônus vagal ou bloqueio AV · considerar marca-passo"
+            : "Adrenalina 0,01 mg/kg IV/IO a cada 3–5 min · Atropina 0,02 mg/kg (mín 0,1 mg) se vagal/BAV · considerar marca-passo",
+          highlight: false,
+        },
+      ].map((item) => (
+        <StepCard key={item.step} {...item} color="#0891B2" />
+      ))}
+
+      <InfoBox color="#059669">
+        <strong>Pós-PCR (RCE):</strong> evitar hiperóxia (meta SpO₂ 94–99%) e hipóxia · evitar hipotensão · controle direcionado de temperatura (evitar febre) · tratar a causa de base · glicemia e eletrólitos. <strong>TSV/TV instável com pulso:</strong> cardioversão sincronizada {d ? d.cardioSinc1_J + " J → " + d.cardioSinc2_J + " J" : "0,5–1 J/kg → 2 J/kg"} (ver Calc.).
+      </InfoBox>
+    </div>
+  );
+}
+
+/* ─── Modo Crise: dados ───────────────────────────────────────────────────── */
+const CRISES = [
+  {
+    id: "pcr", label: "PCR / Parada", sub: "RCP + PALS", cor: "#DC2626", Icon: Heart, tab: 6,
+    acao: (d) => ({
+      titulo: "RCP de alta qualidade + Adrenalina",
+      dose: d ? "Adrenalina " + d.epiPCR_mg + " mg (" + d.epiPCR_mL + " mL) IV/IO" : "Adrenalina 0,01 mg/kg IV/IO (máx 1 mg)",
+      detalhe: "Sol. 1:10.000 · a cada 3–5 min · ritmo NÃO chocável: aplicar já",
+    }),
+    passos: (d) => [
+      "RCP 15:2 (2 socorristas) · 100–120/min · comprimir 1/3 do tórax · permitir retorno total",
+      "Conectar monitor/desfibrilador e checar o ritmo",
+      d ? "Adrenalina " + d.epiPCR_mg + " mg IV/IO a cada 3–5 min" : "Adrenalina 0,01 mg/kg IV/IO a cada 3–5 min",
+      d ? "Chocável (FV/TVsp): desfibrilar " + d.desfib1_J + " J → " + d.desfib2_J + " J" : "Chocável (FV/TVsp): 2 J/kg → 4 J/kg → ≥ 4 J/kg",
+      d ? "Refratária: Amiodarona " + d.amiodarona_mg + " mg após o 2º choque" : "Refratária: Amiodarona 5 mg/kg (máx 300) ou Lidocaína 1 mg/kg",
+      "Tratar causas reversíveis — 5H (hipóxia, hipovolemia, acidose, hipo/hipercalemia, hipotermia) e 5T (tóxicos, tamponamento, pneumotórax hipertensivo, trombose, trauma)",
+    ],
+  },
+  {
+    id: "anafilaxia", label: "Anafilaxia", sub: "Adrenalina IM", cor: "#EA580C", Icon: AlertTriangle, tab: 1,
+    acao: (d) => ({
+      titulo: "Adrenalina IM — IMEDIATA",
+      dose: d ? d.epiIM_mg + " mg (" + d.epiIM_mL + " mL) IM" : "0,01 mg/kg IM (máx 0,5 mg)",
+      detalhe: "Sol. 1:1.000 · face anterolateral da coxa",
+    }),
+    passos: (d) => [
+      d ? "Adrenalina " + d.epiIM_mg + " mg IM na coxa — agora" : "Adrenalina 0,01 mg/kg IM na coxa — agora",
+      "Decúbito dorsal + MMII elevados (semissupino se dispneia/vômito)",
+      "O₂ 100% se SpO₂ abaixo de 95%",
+      d ? "SF 0,9% " + d.bolus20 + " mL IV se hipotensão" : "SF 0,9% 20 mL/kg IV se hipotensão",
+      "Repetir adrenalina IM a cada 5–15 min se necessário · refratário: BIC IV",
+    ],
+  },
+  {
+    id: "convulsao", label: "Convulsão / EME", sub: "Benzodiazepínico", cor: "#7C3AED", Icon: Zap, tab: 3,
+    acao: (d) => ({
+      titulo: "Benzodiazepínico (crise ≥ 5 min)",
+      dose: d ? "Midazolam IN " + d.midaIN_mg + " mg · Diazepam IV " + d.diazIV_mg + " mg" : "Midazolam IN 0,2 mg/kg · Diazepam IV 0,3 mg/kg",
+      detalhe: "IN se sem acesso · IV se com acesso · repetir 1× após 5 min",
+    }),
+    passos: (d) => [
+      "Proteger via aérea · O₂ 100% · monitor",
+      d ? "Glicemia capilar: se baixa → Glicose 10% " + d.glicose10 + " mL IV" : "Glicemia capilar: se baixa → Glicose 10% 2 mL/kg IV",
+      d ? "SEM acesso: Midazolam IN " + d.midaIN_mg + " mg (dividir nas 2 narinas)" : "SEM acesso: Midazolam IN 0,2 mg/kg (máx 10 mg)",
+      d ? "COM acesso: Diazepam IV " + d.diazIV_mg + " mg em 2–3 min" : "COM acesso: Diazepam IV 0,3 mg/kg em 2–3 min",
+      "Persistiu após 2 doses de BDZ? → 2ª linha (fenobarbital / levetiracetam / fenitoína)",
+    ],
+  },
+  {
+    id: "choque", label: "Choque séptico", sub: "Volume + ATB", cor: "#0891B2", Icon: Activity, tab: 4,
+    acao: (d) => ({
+      titulo: "Expansão + Antibiótico em menos de 60 min",
+      dose: d ? "SF 0,9% " + d.bolus20 + " mL · Ceftriaxona " + d.ceftri_mg + " mg" : "SF 20 mL/kg · Ceftriaxona 100 mg/kg",
+      detalhe: "Bolus em 5–10 min · ATB na 1ª hora",
+    }),
+    passos: (d) => [
+      "2 acessos / IO em 5 min · coletar HC, lactato, gasometria, eletrólitos",
+      d ? "Ceftriaxona " + d.ceftri_mg + " mg IV (menor de 3m: associar Ampicilina)" : "Ceftriaxona 100 mg/kg IV (máx 4 g)",
+      d ? "SF 0,9% " + d.bolus20 + " mL em 5–10 min · reavaliar · máx 40–60 mL/kg na 1ª h" : "SF 20 mL/kg em 5–10 min · reavaliar · máx 40–60 mL/kg",
+      "Refratário a volume: Noradrenalina (choque quente) ou Adrenalina (choque frio) em BIC",
+      "Metas: TEC abaixo de 2 s · diurese acima de 1 mL/kg/h · lactato em queda",
+    ],
+  },
+  {
+    id: "asma", label: "Asma grave", sub: "β2 + O₂ + Cortic.", cor: "#2563EB", Icon: Wind, tab: 2,
+    acao: (d) => ({
+      titulo: "Salbutamol + O₂ + Corticoide",
+      dose: d ? "Salbutamol " + d.salbu_mg + " mg neb (a cada 20 min × 3)" : "Salbutamol 0,15 mg/kg neb (mín 2,5 mg)",
+      detalhe: "+ Ipratrópio · O₂ meta acima de 92%",
+    }),
+    passos: (d) => [
+      d ? "Salbutamol " + d.salbu_mg + " mg + Ipratrópio 0,5 mg neb · a cada 20 min × 3" : "Salbutamol 0,15 mg/kg + Ipratrópio 0,5 mg neb · a cada 20 min × 3",
+      "O₂ 100% (máscara com reservatório) · meta SpO₂ acima de 92%",
+      "Corticoide: Hidrocortisona 5–10 mg/kg IV (máx 300 mg)",
+      d ? "Grave/refratário: Sulfato de Mg " + d.magnesio_mg + " mg IV em 20 min" : "Grave/refratário: Sulfato de Mg 50 mg/kg IV em 20 min",
+      "Sem resposta / tórax silencioso: UTI + preparar via aérea avançada",
+    ],
+  },
+  {
+    id: "cad", label: "CAD", sub: "Fluidos + Insulina", cor: "#D97706", Icon: Droplets, tab: 5,
+    acao: (d) => ({
+      titulo: "Fluidos primeiro · Insulina depois",
+      dose: d ? "Insulina BIC " + d.insulina_uh + " U/h (NUNCA bolus)" : "Insulina 0,05–0,1 U/kg/h (NUNCA bolus)",
+      detalhe: "Iniciar 1–2 h após início dos fluidos e K⁺ acima de 3,5",
+    }),
+    passos: (d) => [
+      "Gasometria venosa + eletrólitos + glicemia + cetonemia · ECG",
+      d ? "Se choque: SF 0,9% " + d.bolus10 + " mL em 15–30 min (máx 20 mL/kg)" : "Se choque: SF 0,9% 10 mL/kg (máx 20 mL/kg)",
+      "Reidratação lenta em 24–48 h · iniciar KCl mesmo com K⁺ normal",
+      d ? "Insulina Regular BIC " + d.insulina_uh + " U/h · após reidratação e K⁺ acima de 3,5" : "Insulina Regular 0,05–0,1 U/kg/h · NUNCA bolus",
+      d ? "Edema cerebral: Manitol 20% " + d.manitol_glo + "–" + d.manitol_ghi + " g IV ou NaCl 3%" : "Edema cerebral: Manitol 0,5–1 g/kg IV ou NaCl 3%",
+    ],
+  },
+];
+
+/* ─── Modo Crise: grade de botões ─────────────────────────────────────────── */
+function CrisisGrid({ onPick }) {
+  return (
+    <div>
+      <p style={{ fontSize: 12, color: "#6B7280", margin: "4px 0 12px", lineHeight: 1.5 }}>
+        Toque na emergência para ver a <strong>ação imediata</strong> e a sequência condensada. Informe o peso acima para doses calculadas.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        {CRISES.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => onPick(c.id)}
+            style={{
+              background: c.cor, border: "none", borderRadius: 14,
+              padding: "18px 14px", cursor: "pointer", textAlign: "left",
+              display: "flex", flexDirection: "column", gap: 8, minHeight: 104,
+              boxShadow: "0 2px 8px " + c.cor + "44",
+            }}
+          >
+            <c.Icon size={26} color="#fff" />
+            <div>
+              <p style={{ fontWeight: 700, fontSize: 16, color: "#fff", margin: "0 0 2px", lineHeight: 1.15 }}>{c.label}</p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.85)", margin: 0 }}>{c.sub}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Modo Crise: cartão da emergência ────────────────────────────────────── */
+function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
+  const acao = crise.acao(d);
+  const passos = crise.passos(d);
+  return (
+    <div>
+      <button
+        onClick={onVoltar}
+        style={{
+          display: "flex", alignItems: "center", gap: 6, background: "none",
+          border: "none", cursor: "pointer", color: "#6B7280", fontSize: 13,
+          fontWeight: 600, padding: "2px 0", marginBottom: 12,
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        <ArrowLeft size={16} color="#6B7280" /> Emergências
+      </button>
+
+      {/* Cabeçalho da crise */}
+      <div style={{
+        background: crise.cor, borderRadius: 14, padding: "14px 16px",
+        display: "flex", alignItems: "center", gap: 12, marginBottom: 12,
+      }}>
+        <crise.Icon size={26} color="#fff" />
+        <span style={{ fontWeight: 700, fontSize: 19, color: "#fff" }}>{crise.label}</span>
+      </div>
+
+      {/* Ação imediata */}
+      <div style={{
+        background: crise.cor + "10", border: "2px solid " + crise.cor,
+        borderRadius: 14, padding: "14px 16px", marginBottom: 14,
+      }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: crise.cor, letterSpacing: "0.08em", margin: "0 0 6px" }}>
+          AÇÃO IMEDIATA
+        </p>
+        <p style={{ fontWeight: 700, fontSize: 14, color: "#111827", margin: "0 0 8px", lineHeight: 1.3 }}>
+          {acao.titulo}
+        </p>
+        <div style={{
+          background: crise.cor, color: "#fff", borderRadius: 10,
+          padding: "10px 14px", fontWeight: 700, fontSize: 17, lineHeight: 1.3,
+        }}>
+          {acao.dose}
+        </div>
+        <p style={{ fontSize: 12, color: "#6B7280", margin: "8px 0 0", lineHeight: 1.45 }}>{acao.detalhe}</p>
+      </div>
+
+      {/* Sequência */}
+      <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", letterSpacing: "0.06em", margin: "0 0 8px" }}>
+        SEQUÊNCIA
+      </p>
+      {passos.map((p, i) => (
+        <div key={i} style={{
+          display: "flex", gap: 12, marginBottom: 8, padding: "10px 14px",
+          borderRadius: 10, background: "#F9FAFB", border: "1px solid #F3F4F6",
+        }}>
+          <div style={{
+            width: 26, height: 26, borderRadius: "50%", background: crise.cor, color: "#fff",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontWeight: 700, fontSize: 12, flexShrink: 0,
+          }}>
+            {i + 1}
+          </div>
+          <span style={{ fontSize: 13, color: "#1F2937", lineHeight: 1.5, alignSelf: "center" }}>{p}</span>
+        </div>
+      ))}
+
+      {/* Ir ao protocolo completo */}
+      <button
+        onClick={() => onProtocolo(crise.tab)}
+        style={{
+          width: "100%", marginTop: 8, padding: "13px", borderRadius: 12,
+          background: "#fff", border: "1.5px solid " + crise.cor, cursor: "pointer",
+          color: crise.cor, fontWeight: 700, fontSize: 14,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        Ver protocolo completo <ChevronRight size={17} color={crise.cor} />
+      </button>
+    </div>
+  );
+}
+
 /* ─── Componente principal ────────────────────────────────────────────────── */
 const TABS = [
   { label: "Calc.",      icon: Calculator    },
@@ -642,16 +1014,27 @@ const TABS = [
   { label: "Convulsão",  icon: Zap           },
   { label: "Choque",     icon: Activity      },
   { label: "CAD",        icon: Heart         },
+  { label: "PCR/PALS",   icon: Heart         },
 ];
 
 const PRIMARY = "#EF4444";
 
 export default function Urgencias() {
-  const [tab, setTab]         = useState(0);
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [modo, setModo]           = useState("crise");   // "crise" | "detalhado"
+  const [criseAtiva, setCrise]    = useState(null);       // id da crise aberta
+  const [tab, setTab]             = useState(0);
+  const [pesoRaw, setPesoRaw]     = useState("");
 
   const peso = parsePeso(pesoRaw);
   const d    = peso ? calcDoses(peso) : null;
+
+  const criseObj = CRISES.find((c) => c.id === criseAtiva) || null;
+
+  function abrirProtocolo(tabIndex) {
+    setModo("detalhado");
+    setCrise(null);
+    setTab(tabIndex);
+  }
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
@@ -663,8 +1046,34 @@ export default function Urgencias() {
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Protocolos e doses por peso</p>
       </div>
 
-      {/* ── Peso ── */}
-      <div style={{ background: "#FEF2F2", borderBottom: "1px solid #FECACA", padding: "12px 16px" }}>
+      {/* ── Toggle de modo ── */}
+      <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", background: "#fff" }}>
+        {[
+          { id: "crise", label: "Modo Crise" },
+          { id: "detalhado", label: "Detalhado" },
+        ].map((m) => {
+          const ativo = modo === m.id;
+          return (
+            <button
+              key={m.id}
+              onClick={() => { setModo(m.id); setCrise(null); }}
+              style={{
+                flex: 1, padding: "10px", borderRadius: 10, fontSize: 13,
+                fontWeight: ativo ? 700 : 500, cursor: "pointer",
+                border: "1.5px solid " + (ativo ? PRIMARY : "#E5E7EB"),
+                background: ativo ? PRIMARY : "#fff",
+                color: ativo ? "#fff" : "#6B7280",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {m.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Peso (compartilhado) ── */}
+      <div style={{ background: "#FEF2F2", borderBottom: "1px solid #FECACA", padding: "12px 16px", margin: "12px 0 0" }}>
         <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
           PESO DO PACIENTE (kg) — doses calculadas automaticamente
         </label>
@@ -696,40 +1105,60 @@ export default function Urgencias() {
         )}
       </div>
 
-      {/* ── Tabs ── */}
-      <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
-        {TABS.map(({ label, icon: Icon }, i) => {
-          const active = tab === i;
-          return (
-            <button
-              key={i}
-              onClick={() => setTab(i)}
-              style={{
-                display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                padding: "10px 12px", fontSize: 10, fontWeight: active ? 700 : 500,
-                color: active ? PRIMARY : "#6B7280",
-                background: "transparent", border: "none",
-                borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),
-                cursor: "pointer", whiteSpace: "nowrap",
-                flexShrink: 0, minWidth: 58,
-              }}
-            >
-              <Icon size={16} />
-              {label}
-            </button>
-          );
-        })}
-      </div>
+      {/* ── MODO CRISE ── */}
+      {modo === "crise" && (
+        <div style={{ padding: 16 }}>
+          {criseObj ? (
+            <CrisisCard
+              crise={criseObj}
+              d={d}
+              onVoltar={() => setCrise(null)}
+              onProtocolo={abrirProtocolo}
+            />
+          ) : (
+            <CrisisGrid onPick={(id) => setCrise(id)} />
+          )}
+        </div>
+      )}
 
-      {/* ── Conteúdo ── */}
-      <div style={{ padding: 16 }}>
-        {tab === 0 && <TabCalculadora d={d} />}
-        {tab === 1 && <TabAnafilaxia  d={d} />}
-        {tab === 2 && <TabAsma        d={d} />}
-        {tab === 3 && <TabConvulsao   d={d} />}
-        {tab === 4 && <TabChoque      d={d} />}
-        {tab === 5 && <TabCAD         d={d} />}
-      </div>
+      {/* ── MODO DETALHADO ── */}
+      {modo === "detalhado" && (
+        <>
+          <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+            {TABS.map(({ label, icon: Icon }, i) => {
+              const active = tab === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setTab(i)}
+                  style={{
+                    display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
+                    padding: "10px 12px", fontSize: 10, fontWeight: active ? 700 : 500,
+                    color: active ? PRIMARY : "#6B7280",
+                    background: "transparent", border: "none",
+                    borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),
+                    cursor: "pointer", whiteSpace: "nowrap",
+                    flexShrink: 0, minWidth: 58,
+                  }}
+                >
+                  <Icon size={16} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div style={{ padding: 16 }}>
+            {tab === 0 && <TabCalculadora d={d} />}
+            {tab === 1 && <TabAnafilaxia  d={d} />}
+            {tab === 2 && <TabAsma        d={d} />}
+            {tab === 3 && <TabConvulsao   d={d} />}
+            {tab === 4 && <TabChoque      d={d} />}
+            {tab === 5 && <TabCAD         d={d} />}
+            {tab === 6 && <TabPCR         d={d} />}
+          </div>
+        </>
+      )}
 
       {/* ── Disclaimer ── */}
       <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
@@ -737,7 +1166,7 @@ export default function Urgencias() {
           <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Doses baseadas em WAO 2020, GINA 2024,
-            ILAE 2015, SBP, PALS 2020, Surviving Sepsis Campaign 2020 e ISPAD 2022.
+            ILAE 2015, SBP, AHA PALS 2020, Surviving Sepsis Campaign 2020 e ISPAD 2022.
             Confirme com peso atual, função renal e protocolo institucional.
             Não substitui julgamento clínico nem protocolo local.
           </p>
