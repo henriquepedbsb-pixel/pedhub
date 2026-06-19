@@ -1,7 +1,7 @@
 // src/PedHub.jsx — Tela inicial do PedHub
 // Importação DIRETA em App.jsx (não lazy)
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Activity,
@@ -9,9 +9,14 @@ import {
   Baby,
   BookOpen,
   Brain,
+  AlertOctagon,
+  Bug,
   Calculator,
   CalendarClock,
   ChevronRight,
+  Eye,
+  Footprints,
+  Milk,
   ClipboardList,
   Droplets,
   FlaskConical,
@@ -78,6 +83,16 @@ const MODULOS = [
   { rota: "/percentis",        label: "Percentis (completo)",    desc: "OMS · Intergrowth · Fenton",          Icon: Scale,       cor: "#3B82F6", grupo: "Neonatologia" },
 ];
 
+/* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
+const EM_BREVE = [
+  { label: "Aleitamento",            desc: "Amamentação · ALERV · introdução alimentar",   Icon: Milk,         cor: "#EC4899" },
+  { label: "Intoxicações",           desc: "Ingestão acidental · CIATOX · antídotos",       Icon: AlertOctagon, cor: "#DC2626" },
+  { label: "Oftalmologia",           desc: "Reflexo vermelho · triagem visual",             Icon: Eye,          cor: "#0EA5E9" },
+  { label: "Triagem Neonatal",       desc: "Pezinho · olhinho · orelhinha · coraçãozinho",  Icon: Footprints,   cor: "#0D9488" },
+  { label: "Infecções Congênitas",   desc: "STORCH · sífilis · toxoplasmose · CMV",         Icon: Bug,          cor: "#8B5CF6" },
+  { label: "Doenças Exantemáticas",  desc: "Sarampo · rubéola · exantema súbito e outros",  Icon: Thermometer,  cor: "#F59E0B" },
+];
+
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
   const { label, desc, Icon, cor } = modulo;
@@ -120,6 +135,51 @@ function ModuloCard({ modulo, onClick }) {
         }}>{desc}</p>
       </div>
       <div style={{ height: 3, borderRadius: 2, background: cor + "40", marginTop: "auto" }} />
+    </button>
+  );
+}
+
+
+/* ─── Card "Em breve" (placeholder, não navega) ──────────────────────────── */
+function BreveCard({ modulo, onClick }) {
+  const { label, desc, Icon } = modulo;
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        background: "#FAFAFA",
+        border: "1.5px dashed #D1D5DB",
+        borderRadius: 14,
+        padding: "15px 13px",
+        cursor: "pointer",
+        textAlign: "left",
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        width: "100%",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 12, background: "#F3F4F6",
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+        }}>
+          <Icon size={20} color="#9CA3AF" />
+        </div>
+        <span style={{
+          fontSize: 9, fontWeight: 700, color: "#6B7280", background: "#E5E7EB",
+          padding: "3px 7px", borderRadius: 20, letterSpacing: "0.04em", whiteSpace: "nowrap",
+        }}>EM BREVE</span>
+      </div>
+      <div>
+        <p style={{
+          fontWeight: 700, fontSize: 16, color: "#6B7280", margin: "0 0 3px",
+          lineHeight: 1.3, wordBreak: "break-word", hyphens: "auto",
+        }}>{label}</p>
+        <p style={{
+          fontSize: 13, color: "#9CA3AF", margin: 0, lineHeight: 1.45, wordBreak: "break-word",
+        }}>{desc}</p>
+      </div>
     </button>
   );
 }
@@ -169,12 +229,26 @@ function NeonatalGateway({ count, onClick }) {
 export default function PedHub() {
   const navigate = useNavigate();
   const [busca, setBusca] = useState("");
+  const [toastN, setToastN] = useState(0);
+
+  useEffect(() => {
+    if (toastN === 0) return;
+    const id = setTimeout(() => setToastN(0), 2500);
+    return () => clearTimeout(id);
+  }, [toastN]);
+
+  const dispararToast = () => setToastN(n => n + 1);
 
   const buscando = busca.trim().length > 0;
 
+  const termo = busca.toLowerCase();
   const resultadosBusca = MODULOS.filter(m =>
-    m.label.toLowerCase().includes(busca.toLowerCase()) ||
-    m.desc.toLowerCase().includes(busca.toLowerCase())
+    m.label.toLowerCase().includes(termo) ||
+    m.desc.toLowerCase().includes(termo)
+  );
+  const resultadosBreve = EM_BREVE.filter(m =>
+    m.label.toLowerCase().includes(termo) ||
+    m.desc.toLowerCase().includes(termo)
   );
 
   const pediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral");
@@ -260,14 +334,17 @@ export default function PedHub() {
                 Resultado da busca
               </p>
               <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{resultadosBusca.length}</span>
+              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{resultadosBusca.length + resultadosBreve.length}</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {resultadosBusca.map(m => (
                 <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
               ))}
+              {resultadosBreve.map(m => (
+                <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
+              ))}
             </div>
-            {resultadosBusca.length === 0 && (
+            {resultadosBusca.length === 0 && resultadosBreve.length === 0 && (
               <p style={{ fontSize: 13, color: "#9CA3AF", textAlign: "center", padding: "20px 0" }}>
                 Nenhum módulo encontrado para "{busca}"
               </p>
@@ -309,9 +386,39 @@ export default function PedHub() {
                 <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
               </div>
             </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <p style={{
+                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                  letterSpacing: "0.07em", textTransform: "uppercase",
+                }}>
+                  Em breve
+                </p>
+                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
+                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{EM_BREVE.length}</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {EM_BREVE.map(m => (
+                  <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
+                ))}
+              </div>
+            </div>
           </>
         )}
       </div>
+
+      {/* Toast "em breve" */}
+      {toastN > 0 && (
+        <div style={{
+          position: "fixed", left: "50%", bottom: 24, transform: "translateX(-50%)",
+          background: "#111827", color: "#fff", fontSize: 13, fontWeight: 600,
+          padding: "10px 18px", borderRadius: 24, boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+          zIndex: 200, maxWidth: "90%", textAlign: "center",
+        }}>
+          Em desenvolvimento — em breve no PedHub
+        </div>
+      )}
 
       {/* Footer */}
       <div style={{
