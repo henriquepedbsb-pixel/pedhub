@@ -1,9 +1,18 @@
-// src/modulos/percentis.jsx — PedHub v1.2
-// Curvas: OMS 0–60m | Intergrowth-21st 24–42s | Fenton 2013 24–40s
+// src/modulos/percentis.jsx — PedHub v1.3
+// Curvas: OMS 0–60m | Intergrowth-21st (nasc.) 24–42s | Intergrowth Postnatal 27–64s | Fenton 2013 24–40s
+//
+// v1.3 — Nova aba Intergrowth Postnatal:
+//   • Padrão distinto do "Intergrowth (nasc.)": não é foto ao nascer, é
+//     acompanhamento longitudinal do crescimento pós-natal do prematuro,
+//     por IGPM atual, até 64 semanas (quando funde com as curvas OMS).
+//   • Fonte: Villar J et al. Postnatal growth standards for preterm infants:
+//     the Preterm Postnatal Follow-up Study of the INTERGROWTH-21st Project.
+//     Lancet Glob Health 2015;3:e681-91. Tabelas oficiais (Univ. Oxford),
+//     centis 3/5/10/50/90/95/97, semana a semana, 27–64 semanas IGPM.
 //
 // v1.2 — Prop somenteOMS:
 //   • somenteOMS=true  → exibe apenas a curva da OMS (uso em Pediatria Geral)
-//   • somenteOMS=false → completo: OMS + Intergrowth + Fenton (Hub Neonatal)
+//   • somenteOMS=false → completo: OMS + Intergrowth + Intergrowth Postnatal + Fenton (Hub Neonatal)
 //
 // v1.1 — Correções:
 //   • Sub-componentes movidos para módulo (fix teclado mobile)
@@ -11,7 +20,8 @@
 //
 // Fontes clínicas:
 //   OMS: WHO Child Growth Standards. WHO, Geneva 2006.
-//   Intergrowth-21st: Villar J et al. Lancet 2014;384(9946):857-68.
+//   Intergrowth-21st (nasc.): Villar J et al. Lancet 2014;384(9946):857-68.
+//   Intergrowth-21st Postnatal: Villar J et al. Lancet Glob Health 2015;3:e681-91.
 //   Fenton 2013: Fenton TR & Kim JH. BMC Pediatrics 2013;13:59.
 
 import { useState } from "react";
@@ -179,7 +189,8 @@ const FEN_CW = {
      40:[32.9,34.8,36.7]}
 };
 
-// Intergrowth-21st
+// Intergrowth-21st (Newborn Size Standards — foto ao nascer, não usar para
+// acompanhamento longitudinal pós-natal; ver IGPOST_* abaixo para isso)
 const IGR_PW = {
   M:{24:[381,454,610,766,839],25:[443,528,710,892,977],26:[513,612,820,1028,1127],
      27:[594,708,945,1182,1296],28:[722,839,1090,1341,1458],29:[833,966,1245,1524,1657],
@@ -219,6 +230,134 @@ const IGR_CW = {
      32:[28.0,29.6,31.1],33:[28.7,30.3,31.9],34:[29.4,31.1,32.7],35:[30.1,31.8,33.5],
      36:[30.7,32.5,34.2],37:[31.3,33.1,34.9],38:[31.9,33.7,35.5],39:[32.4,34.2,36.1],
      40:[32.8,34.8,36.7],41:[33.2,35.2,37.2],42:[33.6,35.6,37.7]}
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Intergrowth-21st POSTNATAL Growth Standards (prematuros, acompanhamento
+// longitudinal por IGPM atual, 27–64 semanas — funde com OMS em 64s).
+// Fonte: Villar J et al. Lancet Glob Health 2015;3:e681-91 (tabelas oficiais
+// Univ. Oxford). Centis por semana: [P3, P5, P10, P50, P90, P95, P97].
+// Peso em gramas (convertido de kg da fonte); estatura e PC em cm.
+// ─────────────────────────────────────────────────────────────────────────────
+const IGPOST_PW = {
+  M:{27:[450,480,510,670,880,950,990],28:[570,600,640,830,1070,1150,1200],
+     29:[700,740,790,1000,1270,1370,1430],30:[850,880,940,1190,1500,1600,1670],
+     31:[1000,1040,1110,1390,1730,1840,1920],32:[1170,1210,1290,1600,1980,2100,2180],
+     33:[1340,1390,1470,1810,2230,2360,2460],34:[1510,1570,1660,2040,2490,2640,2740],
+     35:[1700,1760,1860,2260,2750,2910,3020],36:[1880,1950,2060,2500,3020,3190,3310],
+     37:[2070,2140,2260,2730,3290,3480,3600],38:[2260,2340,2460,2960,3570,3760,3890],
+     39:[2450,2530,2670,3200,3840,4040,4180],40:[2640,2730,2870,3430,4110,4320,4470],
+     41:[2820,2920,3070,3660,4380,4600,4760],42:[3010,3110,3270,3890,4640,4880,5040],
+     43:[3190,3300,3460,4120,4900,5150,5320],44:[3370,3480,3660,4340,5160,5420,5590],
+     45:[3550,3660,3840,4560,5410,5680,5860],46:[3720,3840,4030,4780,5660,5940,6130],
+     47:[3890,4010,4210,4990,5900,6190,6390],48:[4060,4180,4390,5190,6140,6440,6640],
+     49:[4220,4350,4560,5390,6370,6680,6890],50:[4370,4510,4730,5590,6600,6920,7130],
+     51:[4520,4660,4890,5770,6820,7150,7370],52:[4670,4820,5050,5960,7030,7370,7600],
+     53:[4810,4960,5200,6140,7240,7590,7830],54:[4950,5110,5350,6310,7450,7800,8040],
+     55:[5090,5240,5500,6480,7640,8010,8260],56:[5220,5380,5640,6650,7830,8210,8460],
+     57:[5340,5510,5770,6800,8020,8410,8660],58:[5470,5630,5900,6960,8200,8590,8860],
+     59:[5580,5760,6030,7110,8380,8780,9050],60:[5700,5870,6150,7250,8550,8960,9230],
+     61:[5810,5990,6270,7390,8710,9130,9410],62:[5920,6100,6390,7530,8870,9300,9580],
+     63:[6020,6200,6500,7660,9030,9460,9750],64:[6120,6310,6610,7790,9180,9620,9910]},
+  F:{27:[410,440,470,610,800,860,910],28:[520,550,590,760,970,1050,1100],
+     29:[640,670,720,910,1160,1250,1300],30:[770,810,860,1090,1370,1460,1520],
+     31:[910,950,1010,1270,1580,1680,1750],32:[1060,1110,1180,1460,1800,1920,1990],
+     33:[1220,1270,1340,1650,2030,2160,2240],34:[1380,1430,1520,1860,2270,2410,2500],
+     35:[1550,1600,1700,2070,2510,2660,2760],36:[1720,1780,1880,2280,2760,2920,3020],
+     37:[1890,1960,2060,2490,3010,3170,3290],38:[2060,2130,2250,2710,3260,3430,3550],
+     39:[2230,2310,2430,2920,3500,3690,3820],40:[2410,2490,2620,3130,3750,3950,4080],
+     41:[2580,2660,2800,3350,3990,4200,4340],42:[2750,2840,2980,3550,4240,4450,4600],
+     43:[2910,3010,3160,3760,4480,4700,4850],44:[3080,3180,3340,3960,4710,4950,5110],
+     45:[3240,3340,3510,4160,4940,5190,5350],46:[3400,3500,3680,4360,5170,5420,5600],
+     47:[3550,3660,3840,4550,5390,5650,5830],48:[3700,3820,4010,4740,5610,5880,6060],
+     49:[3850,3970,4160,4920,5820,6100,6290],50:[3990,4120,4320,5100,6020,6320,6510],
+     51:[4130,4260,4460,5270,6220,6530,6730],52:[4260,4400,4610,5440,6420,6730,6940],
+     53:[4400,4530,4750,5600,6610,6930,7140],54:[4520,4660,4890,5760,6800,7120,7340],
+     55:[4640,4790,5020,5920,6980,7310,7540],56:[4760,4910,5150,6070,7150,7500,7730],
+     57:[4880,5030,5270,6210,7320,7670,7910],58:[4990,5140,5390,6350,7490,7850,8090],
+     59:[5100,5250,5510,6490,7650,8010,8260],60:[5200,5360,5620,6620,7800,8180,8430],
+     61:[5300,5470,5730,6750,7950,8330,8590],62:[5400,5570,5830,6870,8100,8490,8750],
+     63:[5490,5660,5930,6990,8240,8640,8900],64:[5580,5760,6030,7110,8380,8780,9050]}
+};
+const IGPOST_LW = {
+  M:{27:[28.73,29.20,29.94,32.71,35.74,36.65,37.25],28:[30.67,31.14,31.87,34.57,37.50,38.39,38.96],
+     29:[32.53,32.98,33.70,36.34,39.19,40.04,40.60],30:[34.28,34.73,35.44,38.02,40.80,41.62,42.17],
+     31:[35.95,36.39,37.08,39.62,42.33,43.14,43.66],32:[37.53,37.97,38.65,41.14,43.79,44.58,45.09],
+     33:[39.03,39.46,40.13,42.58,45.19,45.96,46.46],34:[40.45,40.87,41.53,43.96,46.52,47.28,47.77],
+     35:[41.79,42.21,42.86,45.26,47.79,48.54,49.02],36:[43.06,43.47,44.13,46.50,49.01,49.74,50.23],
+     37:[44.26,44.67,45.32,47.69,50.17,50.90,51.38],38:[45.40,45.81,46.46,48.81,51.28,52.01,52.48],
+     39:[46.48,46.89,47.54,49.89,52.35,53.07,53.55],40:[47.51,47.92,48.57,50.91,53.37,54.10,54.57],
+     41:[48.48,48.90,49.55,51.89,54.35,55.08,55.55],42:[49.41,49.83,50.48,52.83,55.30,56.02,56.49],
+     43:[50.29,50.71,51.37,53.73,56.20,56.93,57.40],44:[51.14,51.56,52.21,54.59,57.08,57.81,58.28],
+     45:[51.94,52.36,53.03,55.42,57.92,58.65,59.13],46:[52.71,53.14,53.80,56.21,58.73,59.47,59.95],
+     47:[53.44,53.87,54.55,56.98,59.51,60.26,60.74],48:[54.15,54.58,55.26,57.71,60.27,61.02,61.51],
+     49:[54.82,55.26,55.95,58.42,61.00,61.76,62.25],50:[55.47,55.91,56.61,59.10,61.71,62.47,62.97],
+     51:[56.09,56.54,57.24,59.76,62.40,63.17,63.67],52:[56.69,57.14,57.85,60.40,63.06,63.84,64.35],
+     53:[57.27,57.73,58.44,61.02,63.71,64.49,65.01],54:[57.83,58.29,59.01,61.62,64.33,65.13,65.65],
+     55:[58.37,58.83,59.56,62.20,64.94,65.75,66.27],56:[58.89,59.36,60.10,62.76,65.54,66.35,66.88],
+     57:[59.39,59.87,60.61,63.30,66.12,66.94,67.48],58:[59.88,60.36,61.11,63.84,66.68,67.51,68.06],
+     59:[60.35,60.84,61.60,64.35,67.23,68.07,68.62],60:[60.81,61.30,62.07,64.86,67.77,68.62,69.18],
+     61:[61.26,61.75,62.53,65.35,68.29,69.15,69.72],62:[61.69,62.19,62.98,65.83,68.80,69.68,70.24],
+     63:[62.11,62.62,63.42,66.30,69.31,70.19,70.76],64:[62.52,63.04,63.84,66.75,69.80,70.69,71.27]},
+  F:{27:[27.84,28.29,29.01,31.70,34.63,35.52,36.10],28:[29.72,30.17,30.88,33.50,36.34,37.20,37.76],
+     29:[31.52,31.96,32.65,35.21,37.97,38.80,39.34],30:[33.22,33.65,34.34,36.84,39.53,40.33,40.86],
+     31:[34.84,35.26,35.94,38.39,41.02,41.80,42.31],32:[36.37,36.79,37.45,39.86,42.43,43.20,43.69],
+     33:[37.82,38.23,38.89,41.26,43.79,44.53,45.02],34:[39.19,39.60,40.25,42.59,45.08,45.81,46.29],
+     35:[40.49,40.90,41.54,43.86,46.31,47.03,47.50],36:[41.72,42.12,42.76,45.06,47.49,48.20,48.67],
+     37:[42.89,43.29,43.92,46.21,48.61,49.32,49.79],38:[43.99,44.39,45.02,47.30,49.69,50.40,50.86],
+     39:[45.04,45.44,46.07,48.34,50.73,51.43,51.88],40:[46.03,46.43,47.06,49.33,51.72,52.42,52.87],
+     41:[46.98,47.38,48.01,50.29,52.67,53.37,53.82],42:[47.88,48.28,48.91,51.19,53.58,54.28,54.74],
+     43:[48.73,49.14,49.77,52.06,54.46,55.17,55.62],44:[49.55,49.96,50.60,52.90,55.31,56.01,56.47],
+     45:[50.33,50.74,51.38,53.70,56.12,56.83,57.30],46:[51.08,51.49,52.13,54.47,56.91,57.62,58.09],
+     47:[51.79,52.20,52.86,55.21,57.67,58.39,58.86],48:[52.47,52.89,53.55,55.92,58.40,59.13,59.60],
+     49:[53.12,53.55,54.21,56.61,59.11,59.84,60.32],50:[53.75,54.18,54.85,57.27,59.80,60.54,61.02],
+     51:[54.36,54.79,55.47,57.91,60.46,61.21,61.69],52:[54.94,55.37,56.06,58.53,61.11,61.86,62.35],
+     53:[55.50,55.94,56.63,59.13,61.73,62.50,62.99],54:[56.04,56.48,57.18,59.70,62.34,63.11,63.61],
+     55:[56.56,57.01,57.72,60.27,62.93,63.71,64.22],56:[57.06,57.52,58.23,60.81,63.51,64.30,64.81],
+     57:[57.55,58.01,58.73,61.34,64.07,64.87,65.38],58:[58.02,58.49,59.22,61.86,64.61,65.42,65.95],
+     59:[58.48,58.95,59.69,62.36,65.15,65.96,66.49],60:[58.92,59.40,60.15,62.85,65.67,66.49,67.03],
+     61:[59.36,59.84,60.59,63.32,66.17,67.01,67.55],62:[59.78,60.26,61.03,63.79,66.67,67.52,68.07],
+     63:[60.19,60.68,61.45,64.24,67.16,68.01,68.57],64:[60.59,61.08,61.86,64.68,67.63,68.50,69.06]}
+};
+const IGPOST_CW = {
+  M:{27:[21.52,21.92,22.56,24.78,27.00,27.63,28.04],28:[22.90,23.28,23.86,25.90,27.95,28.53,28.91],
+     29:[24.17,24.52,25.06,26.95,28.85,29.39,29.74],30:[25.33,25.66,26.16,27.93,29.70,30.21,30.53],
+     31:[26.40,26.71,27.18,28.85,30.51,30.99,31.30],32:[27.39,27.68,28.13,29.71,31.29,31.74,32.03],
+     33:[28.30,28.58,29.01,30.51,32.02,32.45,32.73],34:[29.15,29.41,29.83,31.27,32.72,33.13,33.40],
+     35:[29.94,30.19,30.59,31.99,33.39,33.78,34.04],36:[30.67,30.92,31.31,32.67,34.02,34.41,34.66],
+     37:[31.36,31.60,31.98,33.30,34.63,35.01,35.25],38:[32.00,32.24,32.61,33.91,35.21,35.58,35.82],
+     39:[32.61,32.84,33.21,34.49,35.76,36.13,36.36],40:[33.17,33.41,33.77,35.03,36.30,36.66,36.89],
+     41:[33.71,33.94,34.30,35.55,36.81,37.16,37.39],42:[34.21,34.44,34.80,36.05,37.30,37.65,37.88],
+     43:[34.69,34.92,35.27,36.52,37.76,38.12,38.35],44:[35.14,35.37,35.72,36.97,38.22,38.57,38.80],
+     45:[35.56,35.79,36.15,37.40,38.65,39.01,39.23],46:[35.97,36.20,36.55,37.81,39.07,39.42,39.65],
+     47:[36.35,36.58,36.94,38.20,39.47,39.83,40.06],48:[36.71,36.95,37.31,38.58,39.85,40.22,40.45],
+     49:[37.06,37.30,37.66,38.94,40.23,40.59,40.83],50:[37.39,37.63,38.00,39.29,40.59,40.95,41.19],
+     51:[37.71,37.95,38.32,39.63,40.93,41.31,41.55],52:[38.01,38.25,38.63,39.95,41.27,41.64,41.89],
+     53:[38.29,38.54,38.92,40.26,41.59,41.97,42.22],54:[38.57,38.82,39.20,40.55,41.90,42.29,42.54],
+     55:[38.83,39.08,39.47,40.84,42.21,42.60,42.85],56:[39.09,39.34,39.73,41.12,42.50,42.90,43.15],
+     57:[39.33,39.58,39.98,41.38,42.78,43.18,43.44],58:[39.56,39.82,40.22,41.64,43.06,43.46,43.72],
+     59:[39.78,40.05,40.46,41.89,43.33,43.74,44.00],60:[40.00,40.26,40.68,42.13,43.58,44.00,44.27],
+     61:[40.20,40.47,40.89,42.36,43.84,44.25,44.52],62:[40.40,40.68,41.10,42.59,44.08,44.50,44.78],
+     63:[40.59,40.87,41.30,42.81,44.32,44.74,45.02],64:[40.78,41.06,41.49,43.02,44.54,44.98,45.26]},
+  F:{27:[20.72,21.13,21.76,23.98,26.20,26.83,27.24],28:[22.11,22.48,23.06,25.11,27.15,27.73,28.11],
+     29:[23.37,23.72,24.26,26.16,28.05,28.59,28.94],30:[24.53,24.86,25.36,27.14,28.91,29.41,29.74],
+     31:[25.60,25.91,26.39,28.05,29.72,30.19,30.50],32:[26.59,26.88,27.33,28.91,30.49,30.94,31.23],
+     33:[27.50,27.78,28.21,29.72,31.22,31.65,31.93],34:[28.35,28.62,29.03,30.48,31.92,32.34,32.60],
+     35:[29.14,29.40,29.80,31.19,32.59,32.99,33.24],36:[29.88,30.13,30.51,31.87,33.23,33.61,33.86],
+     37:[30.56,30.81,31.19,32.51,33.83,34.21,34.45],38:[31.21,31.45,31.82,33.11,34.41,34.78,35.02],
+     39:[31.81,32.05,32.41,33.69,34.97,35.33,35.57],40:[32.38,32.61,32.97,34.24,35.50,35.86,36.09],
+     41:[32.91,33.14,33.50,34.76,36.01,36.37,36.60],42:[33.42,33.65,34.00,35.25,36.50,36.86,37.08],
+     43:[33.89,34.12,34.48,35.72,36.97,37.32,37.55],44:[34.34,34.57,34.93,36.17,37.42,37.77,38.00],
+     45:[34.77,35.00,35.35,36.60,37.85,38.21,38.44],46:[35.17,35.40,35.76,37.01,38.27,38.63,38.86],
+     47:[35.55,35.79,36.15,37.41,38.67,39.03,39.26],48:[35.92,36.15,36.51,37.79,39.06,39.42,39.65],
+     49:[36.26,36.50,36.87,38.15,39.43,39.80,40.03],50:[36.60,36.83,37.20,38.50,39.79,40.16,40.40],
+     51:[36.91,37.15,37.52,38.83,40.14,40.51,40.75],52:[37.21,37.45,37.83,39.15,40.47,40.85,41.09],
+     53:[37.50,37.74,38.13,39.46,40.80,41.18,41.42],54:[37.77,38.02,38.41,39.76,41.11,41.49,41.74],
+     55:[38.04,38.29,38.68,40.05,41.41,41.80,42.05],56:[38.29,38.54,38.94,40.32,41.71,42.10,42.35],
+     57:[38.53,38.79,39.19,40.59,41.99,42.39,42.65],58:[38.76,39.02,39.43,40.85,42.26,42.67,42.93],
+     59:[38.99,39.25,39.66,41.10,42.53,42.94,43.20],60:[39.20,39.47,39.88,41.34,42.79,43.20,43.47],
+     61:[39.41,39.68,40.10,41.57,43.04,43.46,43.73],62:[39.61,39.88,40.31,41.79,43.28,43.71,43.98],
+     63:[39.80,40.08,40.51,42.01,43.52,43.95,44.23],64:[39.98,40.26,40.70,42.22,43.75,44.18,44.46]}
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -285,6 +424,22 @@ function percFromBand5(val, band) {
   if (v < band[2]) return 30;
   if (v < band[3]) return 70;
   if (v < band[4]) return 95;
+  return 99;
+}
+// Banda de 7 centis (P3,P5,P10,P50,P90,P95,P97) — Intergrowth Postnatal.
+// Reaproveita as mesmas chaves de PERC_Z_MAP (1,5,8,30,70,92,95,99) já usadas
+// por percFromBand5, garantindo Z aproximado consistente sem tabela nova.
+function percFromBand7(val, band) {
+  if (!band || val === null || val === "") return null;
+  const v = parseFloat(val);
+  if (isNaN(v)) return null;
+  if (v < band[0]) return 1;
+  if (v < band[1]) return 5;
+  if (v < band[2]) return 8;
+  if (v < band[3]) return 30;
+  if (v < band[4]) return 70;
+  if (v < band[5]) return 92;
+  if (v < band[6]) return 95;
   return 99;
 }
 function parseNum(s) {
@@ -388,7 +543,9 @@ function CardOMS({ label, data }) {
 function CardPT({ label, data }) {
   if (!data) return null;
   const { perc, z, cl, val, band } = data;
-  const bandTxt = band?.length === 5
+  const bandTxt = band?.length === 7
+    ? `P3:${band[0]} · P10:${band[2]} · P50:${band[3]} · P90:${band[4]} · P97:${band[6]}`
+    : band?.length === 5
     ? `P3:${band[0]} · P10:${band[1]} · P50:${band[2]} · P90:${band[3]} · P97:${band[4]}`
     : band ? `P10:${band[0]} · P50:${band[1]} · P90:${band[2]}` : "";
   return (
@@ -427,7 +584,9 @@ function CardPT({ label, data }) {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Percentis({ somenteOMS = false }) {
   const [tab, setTab] = useState(0);
-  const TABS = somenteOMS ? ["OMS (0–60m)"] : ["OMS (0–60m)", "Intergrowth", "Fenton 2013"];
+  const TABS = somenteOMS
+    ? ["OMS (0–60m)"]
+    : ["OMS (0–60m)", "Interg. Nasc.", "Interg. Postnatal", "Fenton 2013"];
 
   // OMS
   const [oSexo, setOSexo]     = useState("M");
@@ -438,13 +597,21 @@ export default function Percentis({ somenteOMS = false }) {
   const [oPc, setOPc]         = useState("");
   const [oRes, setORes]       = useState(null);
 
-  // Pré-termo
+  // Pré-termo (Intergrowth nascimento / Fenton — foto ao nascer)
   const [pSexo, setPSexo]   = useState("M");
   const [pIg, setPIg]       = useState("");
   const [pPeso, setPPeso]   = useState("");
   const [pComp, setPComp]   = useState("");
   const [pPc, setPPc]       = useState("");
   const [pRes, setPRes]     = useState(null);
+
+  // Intergrowth Postnatal (acompanhamento longitudinal por IGPM atual)
+  const [nSexo, setNSexo]     = useState("M");
+  const [nIgpm, setNIgpm]     = useState("");
+  const [nPeso, setNPeso]     = useState("");
+  const [nAltura, setNAltura] = useState("");
+  const [nPc, setNPc]         = useState("");
+  const [nRes, setNRes]       = useState(null);
 
   function calcOMS() {
     const anos  = parseNum(oAnos)  || 0;
@@ -501,8 +668,29 @@ export default function Percentis({ somenteOMS = false }) {
     });
   }
 
+  function calcPostnatal() {
+    const igpm = parseNum(nIgpm);
+    if (!igpm || igpm < 27 || igpm > 64) { alert("IGPM atual: 27–64 semanas"); return; }
+    const igpmW  = Math.round(igpm);
+    const bandP  = getPretermPercs(IGPOST_PW[nSexo], igpmW);
+    const bandL  = getPretermPercs(IGPOST_LW[nSexo], igpmW);
+    const bandC  = getPretermPercs(IGPOST_CW[nSexo], igpmW);
+    const pesoG  = parseNum(nPeso);
+    const altCm  = parseNum(nAltura);
+    const pcCm   = parseNum(nPc);
+    const percP  = pesoG ? percFromBand7(pesoG, bandP) : null;
+    const percL  = altCm ? percFromBand7(altCm, bandL) : null;
+    const percC  = pcCm  ? percFromBand7(pcCm,  bandC) : null;
+    setNRes({
+      igpm: igpmW,
+      peso:   pesoG ? { perc:percP, z:percToZ(percP), cl:classify(percP), val:pesoG, band:bandP } : null,
+      altura: altCm ? { perc:percL, z:percToZ(percL), cl:classify(percL), val:altCm, band:bandL } : null,
+      pc:     pcCm  ? { perc:percC, z:percToZ(percC), cl:classify(percC), val:pcCm,  band:bandC } : null,
+    });
+  }
+
   const tabStyle = (i) => ({
-    padding:"8px 0", borderRadius:"8px", fontSize:"13px",
+    padding:"8px 0", borderRadius:"8px", fontSize:"12px",
     fontWeight: tab === i ? "700" : "500",
     backgroundColor: tab === i ? "#3B82F6" : "transparent",
     color: tab === i ? "#FFFFFF" : "#6B7280",
@@ -535,7 +723,7 @@ export default function Percentis({ somenteOMS = false }) {
           padding:"4px", marginBottom:"20px" }}>
           {TABS.map((t, i) => (
             <button key={i} style={tabStyle(i)}
-              onClick={() => { setTab(i); setORes(null); setPRes(null); }}>
+              onClick={() => { setTab(i); setORes(null); setPRes(null); setNRes(null); }}>
               {t}
             </button>
           ))}
@@ -608,7 +796,7 @@ export default function Percentis({ somenteOMS = false }) {
         </div>
       )}
 
-      {/* ─── Tab Intergrowth ─── */}
+      {/* ─── Tab Intergrowth (nascimento) ─── */}
       {!somenteOMS && tab === 1 && (
         <PretermTab
           sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
@@ -619,13 +807,26 @@ export default function Percentis({ somenteOMS = false }) {
           calc={() => calcPreterm(true)}
           res={pRes}
           igRange="24–42 semanas"
-          titulo="Intergrowth-21st"
+          titulo="Intergrowth-21st (nascimento)"
           subtitulo="Villar J et al. Lancet 2014"
         />
       )}
 
-      {/* ─── Tab Fenton ─── */}
+      {/* ─── Tab Intergrowth Postnatal ─── */}
       {!somenteOMS && tab === 2 && (
+        <PostnatalTab
+          sexo={nSexo} setSexo={v => { setNSexo(v); setNRes(null); }}
+          igpm={nIgpm} setIgpm={setNIgpm}
+          peso={nPeso} setPeso={setNPeso}
+          altura={nAltura} setAltura={setNAltura}
+          pc={nPc}     setPc={setNPc}
+          calc={calcPostnatal}
+          res={nRes}
+        />
+      )}
+
+      {/* ─── Tab Fenton ─── */}
+      {!somenteOMS && tab === 3 && (
         <PretermTab
           sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
           ig={pIg}     setIg={setPIg}
@@ -645,8 +846,9 @@ export default function Percentis({ somenteOMS = false }) {
         borderLeft:"3px solid #9CA3AF" }}>
         <p style={{ margin:0, fontSize:"11px", color:"#6B7280", lineHeight:"1.5" }}>
           <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
-          Valores derivados das publicações originais (OMS 2006, Intergrowth-21st 2014, Fenton 2013).
-          Z-scores em tabelas pré-termo são aproximações derivadas dos percentis de referência.
+          Valores derivados das publicações originais (OMS 2006, Intergrowth-21st 2014,
+          Intergrowth-21st Postnatal 2015, Fenton 2013). Z-scores em tabelas pré-termo são
+          aproximações derivadas dos percentis de referência.
         </p>
       </div>
     </div>
@@ -654,7 +856,7 @@ export default function Percentis({ somenteOMS = false }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sub-componente para abas pré-termo
+// Sub-componente para abas pré-termo (foto ao nascer: Intergrowth nasc. / Fenton)
 // ─────────────────────────────────────────────────────────────────────────────
 function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc, setPc,
                       calc, res, igRange, titulo, subtitulo }) {
@@ -716,8 +918,73 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Sub-componente — Intergrowth Postnatal (acompanhamento longitudinal por
+// IGPM atual, distinto do PretermTab que classifica foto ao nascer)
+// ─────────────────────────────────────────────────────────────────────────────
+function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, setAltura, pc, setPc, calc, res }) {
+  return (
+    <div>
+      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+        boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
+          <p style={{ margin:0, fontWeight:"700", color:"#374151", fontSize:"14px" }}>Intergrowth Postnatal</p>
+          <span style={{ fontSize:"11px", color:"#9CA3AF" }}>Villar J et al. Lancet Glob Health 2015</span>
+        </div>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>Sexo</p>
+        <div style={{ display:"flex", gap:"8px" }}>
+          <SexoBtn val="M" cur={sexo} set={setSexo} />
+          <SexoBtn val="F" cur={sexo} set={setSexo} />
+        </div>
+      </div>
+
+      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+        boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>
+          Medidas atuais
+        </p>
+        <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
+          <Input label="IGPM atual (27–64 semanas)" val={igpm}   set={setIgpm}   ph="ex: 44"   unit="semanas" />
+          <Input label="Peso atual"                 val={peso}   set={setPeso}   ph="ex: 3200" unit="g"       />
+          <Input label="Estatura atual"              val={altura} set={setAltura} ph="ex: 48,0" unit="cm"      />
+          <Input label="Perímetro Cefálico atual"    val={pc}     set={setPc}     ph="ex: 34,0" unit="cm"      />
+        </div>
+      </div>
+
+      <button onClick={calc} style={{
+        width:"100%", padding:"14px", borderRadius:"12px", border:"none",
+        background:"#059669", color:"#FFFFFF", fontSize:"16px", fontWeight:"700", cursor:"pointer",
+      }}>
+        Avaliar Crescimento
+      </button>
+
+      {res && (
+        <div style={{ marginTop:"20px" }}>
+          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"#374151" }}>
+            Resultado — IGPM {res.igpm} semanas · {sexo === "M" ? "Menino" : "Menina"}
+          </h3>
+          <CardPT label="Peso"               data={res.peso}   />
+          <CardPT label="Estatura"           data={res.altura} />
+          <CardPT label="Perímetro Cefálico" data={res.pc}     />
+          <div style={{ background:"#ECFDF5", borderRadius:"10px", padding:"10px", marginTop:"8px",
+            display:"flex", gap:"8px", alignItems:"flex-start" }}>
+            <Info size={14} color="#059669" style={{ marginTop:"1px", flexShrink:0 }} />
+            <p style={{ margin:0, fontSize:"12px", color:"#047857" }}>
+              Válido para acompanhamento pós-natal de prematuros (nascidos 27–36+6 semanas) até
+              64 semanas de IGPM, quando as curvas se fundem com os padrões OMS sem ajuste.
+              Diferente da aba "Interg. Nasc." — aqui a referência é o crescimento longitudinal,
+              não o tamanho ao nascer.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Exports nomeados — reaproveitados por classificacao-rn.jsx (AIG/PIG/GIG)
 // sem duplicar tabelas de curva. Não afeta o export default nem o comportamento
 // deste módulo.
 // ─────────────────────────────────────────────────────────────────────────────
-export { IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW, getPretermPercs, percFromBand5, percFromBand3, classify };
+export { IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW, IGPOST_PW, IGPOST_LW, IGPOST_CW,
+         getPretermPercs, percFromBand5, percFromBand3, percFromBand7, classify };
