@@ -50,7 +50,42 @@ const FORMULAS = {
   pregomin:    { nome: 'Pregomin Pepti',    kcal: 66, prot: 1.8, p: 28, zn: 0.50, vitD: 44 },
 };
 
+/* ── Apresentações de Ferro ──
+   Sulfato Ferroso: 1,25 mg Fe/gota (padrão institucional, referência SBP/NeoFax)
+   Neutrofer (glicinato férrico): 250 mg/mL do complexo = 50 mg Fe III/mL = 2,5 mg Fe/gota (bula do fabricante)
+   Myrafer (ferripolimaltose): 400 mg ferripolimaltose/mL = 100 mg Fe elementar/mL = 5 mg Fe/gota (bula do fabricante)
+   Neutrofer e Myrafer NÃO são sulfato ferroso — são alternativas usadas em caso de
+   intolerância gastrointestinal, com teor de ferro elementar equivalente na dose. */
+const FERRO_PRODUTOS = {
+  sulfato:   { key: 'sulfato',   btn: 'Sulfato Ferroso', nome: 'Sulfato Ferroso',
+               sal: 'sulfato ferroso',   mgGota: 1.25, alternativa: false },
+  neutrofer: { key: 'neutrofer', btn: 'Neutrofer',       nome: 'Neutrofer',
+               sal: 'glicinato férrico', mgGota: 2.5,  alternativa: true  },
+  myrafer:   { key: 'myrafer',   btn: 'Myrafer',         nome: 'Myrafer',
+               sal: 'ferripolimaltose',  mgGota: 5,    alternativa: true  },
+};
+
+/* ── Apresentações de Zinco ──
+   Padrão: solução 5 mg/mL (referência do protocolo institucional)
+   Biozinc: 2 mg/0,5 mL = 4 mg/mL, gluconato de zinco (bula do fabricante)
+   Unizinco: 4 mg/mL, sulfato de zinco heptaidratado 17,6 mg/mL (bula do fabricante) */
+const ZINCO_PRODUTOS = {
+  padrao:   { key: 'padrao',   btn: 'Padrão 5 mg/mL', nome: 'Zinco solução padrão',
+              sal: 'sulfato de zinco 5 mg/mL',   mgMl: 5 },
+  biozinc:  { key: 'biozinc',  btn: 'Biozinc',        nome: 'Biozinc',
+              sal: 'gluconato de zinco 4 mg/mL', mgMl: 4 },
+  unizinco: { key: 'unizinco', btn: 'Unizinco',       nome: 'Unizinco',
+              sal: 'sulfato de zinco 4 mg/mL',   mgMl: 4 },
+};
+
 const parseFld = v => parseFloat(String(v).replace(',', '.'));
+
+/* Resolve a dose final exibida: usa o valor editado manualmente se for válido,
+   caso contrário cai no valor sugerido pelo cálculo automático. */
+function finalDose(manualStr, suggested) {
+  const num = parseFld(manualStr);
+  return manualStr !== '' && !Number.isNaN(num) && num >= 0 ? num : suggested;
+}
 
 function calcDias(dnStr) {
   if (!dnStr) return null;
@@ -69,7 +104,8 @@ const HOJE_ISO = new Date().toISOString().split('T')[0];
    MOTOR DE CÁLCULO COMPARTILHADO
 ════════════════════════════════════════════ */
 function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
-                    tipoDieta, volKgStr, tomadasStr, sachetStr, formula }) {
+                    tipoDieta, volKgStr, tomadasStr, sachetStr, formula,
+                    ferroMarca = 'sulfato', znMarca = 'padrao' }) {
   const peso   = parseFld(pesoG);
   const pesorn = parseFld(pesornG);
   const ig     = parseInt(igSemStr,   10) || 0;
@@ -85,6 +121,9 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const pnk     = pesorn / 1000;
   const menor32 = ig < 32;
   const preT    = ig < 37;
+
+  const ferroProd = FERRO_PRODUTOS[ferroMarca] || FERRO_PRODUTOS.sulfato;
+  const znProd    = ZINCO_PRODUTOS[znMarca]    || ZINCO_PRODUTOS.padrao;
 
   let dKcal = 0, dProt = 0, dP = 0, dZn = 0, dVitD = 0;
   const volTotal = vol * pk;
@@ -119,7 +158,7 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const ferroRateBase = pesorn < 1000 ? 4 : pesorn < 1500 ? 3 : pesorn < 2500 ? 2 : 1;
   const ferroRate     = ferroAtivo ? ferroRateBase : 0;
   const ferroDose     = ferroRate * pk;
-  const ferroGotas    = ferroAtivo ? Math.ceil(ferroDose / 1.25) : 0;
+  const ferroGotas    = ferroAtivo ? Math.ceil(ferroDose / ferroProd.mgGota) : 0;
   const ferroDiasRest = (!ferroAtivo && preT) ? 30 - dias : 0;
 
   // Fósforo (Fosfato tricálcico 12,9%) — indicado se IG<32s ou PN<1500g,
@@ -143,7 +182,7 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const znAtivo    = znIndicado && !znSuspenso && igCorrSem >= 36;
   const znRate     = znAtivo ? (znHighCrit ? 2 : 1) : 0;
   const znNec      = znAtivo ? Math.max(0, znRate * pk - dZn) : 0;
-  const znVol      = znNec / 5;
+  const znVol      = znNec / znProd.mgMl;
   const znSemRest  = (znIndicado && !znSuspenso && !znAtivo) ? 36 - igCorrSem : 0;
 
   // Vitamina D (colecalciferol) — apresentação única de 200 UI/gota,
@@ -168,6 +207,7 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   return {
     pk, pnk, ig, igd, menor32, preT,
     volTotal, volTom, kcalKg, protKg, dP, dZn, dVitD,
+    ferroProd, znProd,
     ferroAtivo, ferroRate, ferroDose, ferroGotas, ferroDiasRest,
     fosIndicado, fosSuspenso, fosAtivo, pVol, pTom, pSuficDieta, pDoseMgKg,
     znIndicado, znSuspenso, znAtivo, znHighCrit, znMidCrit, znRate, znNec, znVol, znSemRest,
@@ -291,6 +331,10 @@ function TabPrescricao() {
   const [tomadas,   setTomadas]   = useState('');
   const [sachets,   setSachets]   = useState('6');
   const [formula,   setFormula]   = useState('aptamil');
+  const [ferroMarca, setFerroMarca] = useState('sulfato');
+  const [znMarca,    setZnMarca]    = useState('padrao');
+  const [ferroManual, setFerroManual] = useState('');
+  const [znManual,    setZnManual]    = useState('');
   const [resultado, setResultado] = useState(null);
   const [erro,      setErro]      = useState('');
 
@@ -314,8 +358,11 @@ function TabPrescricao() {
       diasVidaStr: String(diasCalc),
       tipoDieta, volKgStr: volKg, tomadasStr: tomadas,
       sachetStr: sachets, formula,
+      ferroMarca, znMarca,
     });
     if (!r) { setErro('Dados inválidos. Verifique os campos.'); return; }
+    setFerroManual('');
+    setZnManual('');
     setResultado(r);
   }
 
@@ -324,6 +371,8 @@ function TabPrescricao() {
     setIgSem(''); setIgDias(''); setDataNasc('');
     setTipoDieta(''); setVolKg(''); setTomadas('');
     setSachets('6'); setFormula('aptamil');
+    setFerroMarca('sulfato'); setZnMarca('padrao');
+    setFerroManual(''); setZnManual('');
     setResultado(null); setErro('');
   }
 
@@ -389,9 +438,46 @@ function TabPrescricao() {
         )}
       </Card>
 
+      <Card>
+        <CardHead Icon={Pill}>Suplementação — apresentações</CardHead>
+        <Fld label="Ferro">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(FERRO_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={ferroMarca === p.key}
+                onClick={() => { setFerroMarca(p.key); setFerroManual(''); }}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {FERRO_PRODUTOS[ferroMarca].sal} — {FERRO_PRODUTOS[ferroMarca].mgGota} mg Fe/gota
+            {FERRO_PRODUTOS[ferroMarca].alternativa ? ' (alternativa ao sulfato ferroso)' : ''}
+          </div>
+        </Fld>
+        <Fld label="Zinco">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(ZINCO_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={znMarca === p.key}
+                onClick={() => { setZnMarca(p.key); setZnManual(''); }}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {ZINCO_PRODUTOS[znMarca].sal}
+          </div>
+        </Fld>
+      </Card>
+
       {erro && <ErrBox msg={erro} />}
       <BtnRow onGerar={gerar} onLimpar={limpar} labelGerar="Gerar Prescrição" />
-      {resultado && <ResultPrescricao res={resultado} nome={nome} />}
+      {resultado && (
+        <ResultPrescricao
+          res={resultado} nome={nome}
+          ferroManual={ferroManual} setFerroManual={setFerroManual}
+          znManual={znManual} setZnManual={setZnManual}
+        />
+      )}
     </div>
   );
 }
@@ -411,6 +497,10 @@ function TabReceituario() {
   const [volKg,     setVolKg]     = useState('');
   const [sachets,   setSachets]   = useState('6');
   const [formula,   setFormula]   = useState('aptamil');
+  const [ferroMarca, setFerroMarca] = useState('sulfato');
+  const [znMarca,    setZnMarca]    = useState('padrao');
+  const [ferroManual, setFerroManual] = useState('');
+  const [znManual,    setZnManual]    = useState('');
   const [resultado, setResultado] = useState(null);
   const [erro,      setErro]      = useState('');
 
@@ -434,8 +524,11 @@ function TabReceituario() {
       diasVidaStr: String(diasCalc),
       tipoDieta, volKgStr: volKg, tomadasStr: '8',
       sachetStr: sachets, formula,
+      ferroMarca, znMarca,
     });
     if (!r) { setErro('Dados inválidos. Verifique os campos.'); return; }
+    setFerroManual('');
+    setZnManual('');
     setResultado(r);
   }
 
@@ -443,6 +536,8 @@ function TabReceituario() {
     setNomePac(''); setNrSES(''); setPesoG(''); setPesornG('');
     setIgSem(''); setIgDias(''); setDataNasc('');
     setTipoDieta(''); setVolKg(''); setSachets('6'); setFormula('aptamil');
+    setFerroMarca('sulfato'); setZnMarca('padrao');
+    setFerroManual(''); setZnManual('');
     setResultado(null); setErro('');
   }
 
@@ -510,9 +605,46 @@ function TabReceituario() {
         )}
       </Card>
 
+      <Card>
+        <CardHead Icon={Pill}>Suplementação — apresentações</CardHead>
+        <Fld label="Ferro">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(FERRO_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={ferroMarca === p.key}
+                onClick={() => { setFerroMarca(p.key); setFerroManual(''); }}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {FERRO_PRODUTOS[ferroMarca].sal} — {FERRO_PRODUTOS[ferroMarca].mgGota} mg Fe/gota
+            {FERRO_PRODUTOS[ferroMarca].alternativa ? ' (alternativa ao sulfato ferroso)' : ''}
+          </div>
+        </Fld>
+        <Fld label="Zinco">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(ZINCO_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={znMarca === p.key}
+                onClick={() => { setZnMarca(p.key); setZnManual(''); }}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {ZINCO_PRODUTOS[znMarca].sal}
+          </div>
+        </Fld>
+      </Card>
+
       {erro && <ErrBox msg={erro} />}
       <BtnRow onGerar={gerar} onLimpar={limpar} labelGerar="Gerar Receituário" />
-      {resultado && <ResultReceituario res={resultado} nomePac={nomePac} nrSES={nrSES} />}
+      {resultado && (
+        <ResultReceituario
+          res={resultado} nomePac={nomePac} nrSES={nrSES}
+          ferroManual={ferroManual} setFerroManual={setFerroManual}
+          znManual={znManual} setZnManual={setZnManual}
+        />
+      )}
     </div>
   );
 }
@@ -520,7 +652,19 @@ function TabReceituario() {
 /* ════════════════════════════════════════════
    RESULTADO — PRESCRIÇÃO
 ════════════════════════════════════════════ */
-function ResultPrescricao({ res, nome }) {
+function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, setZnManual }) {
+  const ferroLabel = res.ferroProd.key === 'sulfato'
+    ? 'Sulfato ferroso gotas'
+    : `${res.ferroProd.nome} (${res.ferroProd.sal}) — alt. sulfato ferroso`;
+  const znLabel = res.znProd.key === 'padrao'
+    ? 'Zinco sol. 5 mg/mL'
+    : `${res.znProd.nome} (${res.znProd.sal})`;
+
+  const ferroFinal   = res.ferroAtivo ? finalDose(ferroManual, res.ferroGotas) : 0;
+  const znDoseAtiva  = res.znIndicado && !res.znSuspenso && res.znAtivo && res.znVol >= 0.05;
+  const znFinal      = znDoseAtiva ? finalDose(znManual, res.znVol) : 0;
+  const fmtFerro = n => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+
   return (
     <>
       {/* ── área imprimível (sem o botão) ── */}
@@ -561,7 +705,7 @@ function ResultPrescricao({ res, nome }) {
         <Card>
           <CardHead Icon={Pill}>Suplementação</CardHead>
 
-          <RxItem n="1" label="Sulfato ferroso gotas" status={res.ferroAtivo ? 'ativo' : 'aguardo'}>
+          <RxItem n="1" label={ferroLabel} status={res.ferroAtivo ? 'ativo' : 'aguardo'}>
             {!res.ferroAtivo && res.preT ? (
               <AguardoBadge>
                 Iniciar no 30.º dia de vida
@@ -571,10 +715,16 @@ function ResultPrescricao({ res, nome }) {
               </AguardoBadge>
             ) : (
               <>
-                <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN)
+                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN ·
+                  1 gota = {res.ferroProd.mgGota} mg Fe — {res.ferroProd.sal})
                 </span>
+                <DoseEditor
+                  suggested={res.ferroGotas} value={ferroManual}
+                  onChange={setFerroManual} onReset={() => setFerroManual('')}
+                  unit="gotas/dia" decimals={0}
+                />
               </>
             )}
           </RxItem>
@@ -607,7 +757,7 @@ function ResultPrescricao({ res, nome }) {
           </div>
 
           <div className={res.znSuspenso ? 'print-hide' : undefined}>
-            <RxItem n="3" label="Zinco sol. 5 mg/mL"
+            <RxItem n="3" label={znLabel}
               status={!res.znIndicado ? 'nao-indicado' : res.znSuspenso ? 'suspenso' : !res.znAtivo ? 'aguardo' : res.znVol < 0.05 ? 'dieta-ok' : 'ativo'}>
               {!res.znIndicado ? (
                 <NaoIndicadoBadge>Não indicado — IG ≥ 37 semanas</NaoIndicadoBadge>
@@ -624,10 +774,15 @@ function ResultPrescricao({ res, nome }) {
                 <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
               ) : (
                 <>
-                  <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <strong>{znFinal.toFixed(2)} mL/dia</strong> VO 1×/dia
                   <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'} · {res.znProd.sal})
                   </span>
+                  <DoseEditor
+                    suggested={res.znVol} value={znManual}
+                    onChange={setZnManual} onReset={() => setZnManual('')}
+                    unit="mL/dia" decimals={2}
+                  />
                 </>
               )}
             </RxItem>
@@ -732,8 +887,20 @@ function ResultPrescricao({ res, nome }) {
 /* ════════════════════════════════════════════
    RESULTADO — RECEITUÁRIO
 ════════════════════════════════════════════ */
-function ResultReceituario({ res, nomePac, nrSES }) {
+function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, znManual, setZnManual }) {
   const hoje = new Date().toLocaleDateString('pt-BR');
+
+  const ferroLabel = res.ferroProd.key === 'sulfato'
+    ? 'Sulfato ferroso gotas'
+    : `${res.ferroProd.nome} (${res.ferroProd.sal}) — alt. sulfato ferroso`;
+  const znLabel = res.znProd.key === 'padrao'
+    ? 'Zinco solução 5 mg/mL'
+    : `${res.znProd.nome} (${res.znProd.sal})`;
+
+  const ferroFinal  = res.ferroAtivo ? finalDose(ferroManual, res.ferroGotas) : 0;
+  const znDoseAtiva = res.znIndicado && !res.znSuspenso && res.znAtivo && res.znVol >= 0.05;
+  const znFinal     = znDoseAtiva ? finalDose(znManual, res.znVol) : 0;
+  const fmtFerro = n => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
   return (
     <>
@@ -772,7 +939,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             <InfoCell label="Peso atual" value={`${(res.pk * 1000).toFixed(0)} g`} />
           </div>
 
-          <RxDocItem n="1" titulo="Sulfato ferroso gotas">
+          <RxDocItem n="1" titulo={ferroLabel}>
             {!res.ferroAtivo && res.preT ? (
               <span style={{ color: COR.warn }}>
                 Aguardar 30.º dia de vida
@@ -782,10 +949,16 @@ function ResultReceituario({ res, nomePac, nrSES }) {
               </span>
             ) : (
               <>
-                <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia)
+                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia ·
+                  1 gota = {res.ferroProd.mgGota} mg Fe — {res.ferroProd.sal})
                 </span>
+                <DoseEditor
+                  suggested={res.ferroGotas} value={ferroManual}
+                  onChange={setFerroManual} onReset={() => setFerroManual('')}
+                  unit="gotas/dia" decimals={0}
+                />
               </>
             )}
           </RxDocItem>
@@ -813,7 +986,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
           </div>
 
           <div className={res.znSuspenso ? 'print-hide' : undefined}>
-            <RxDocItem n="3" titulo="Zinco solução 5 mg/mL">
+            <RxDocItem n="3" titulo={znLabel}>
               {!res.znIndicado ? (
                 <span style={{ color: COR.slate }}>Não indicado — IG ≥ 37 semanas</span>
               ) : res.znSuspenso ? (
@@ -829,10 +1002,15 @@ function ResultReceituario({ res, nomePac, nrSES }) {
                 <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
               ) : (
                 <>
-                  <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <strong>{znFinal.toFixed(2)} mL/dia</strong> VO 1×/dia
                   <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'} · {res.znProd.sal})
                   </span>
+                  <DoseEditor
+                    suggested={res.znVol} value={znManual}
+                    onChange={setZnManual} onReset={() => setZnManual('')}
+                    unit="mL/dia" decimals={2}
+                  />
                 </>
               )}
             </RxDocItem>
@@ -1023,6 +1201,62 @@ function RxItem({ n, label, status, children }) {
         {n}. {label}
       </div>
       <div style={{ fontSize: 13, color: COR.texto, lineHeight: 1.5 }}>{children}</div>
+    </div>
+  );
+}
+
+/* Campo editável de dose — pré-preenchido com o valor sugerido pelo cálculo
+   automático, mas livre para o médico ajustar. Visível apenas na tela
+   (print-hide) — a impressão mostra sempre o valor final em texto (acima). */
+function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 }) {
+  const sugStr  = suggested.toFixed(decimals);
+  const num     = parseFld(value);
+  const isValid = value !== '' && !Number.isNaN(num) && num >= 0;
+  const current = isValid ? num : suggested;
+  const edited  = isValid && Math.abs(num - suggested) > 0.01;
+  const bigDiff = edited && suggested > 0 && Math.abs(current - suggested) / suggested > 0.3;
+
+  return (
+    <div className="print-hide" style={{ marginTop: 7 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={value !== '' ? value : sugStr}
+          onChange={e => onChange(e.target.value)}
+          style={{
+            width: 74, padding: '7px 9px', borderRadius: RS,
+            border: `1.5px solid ${edited ? COR.warn : COR.borda}`,
+            fontSize: 13, fontWeight: 700, color: COR.texto, background: '#fff',
+            outline: 'none', boxSizing: 'border-box',
+          }}
+        />
+        <span style={{ fontSize: 11.5, color: COR.muted }}>{unit}</span>
+        <button
+          type="button"
+          onClick={onReset}
+          title="Usar valor sugerido"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            border: 'none', background: 'transparent', color: COR.mid,
+            fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: '4px 2px',
+          }}
+        >
+          <RefreshCw size={12} /> sugerido: {sugStr}
+        </button>
+      </div>
+      {edited && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: COR.warn, background: COR.warnL, padding: '2px 7px', borderRadius: 999 }}>
+            editado manualmente
+          </span>
+          {bigDiff && (
+            <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10.5, color: COR.err }}>
+              <AlertTriangle size={11} /> valor bem diferente do sugerido — confira
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
