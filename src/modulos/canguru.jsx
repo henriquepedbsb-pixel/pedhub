@@ -112,6 +112,9 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const igCorrSem   = Math.floor(igCorrDias / 7);
   const igCorrResto = igCorrDias % 7;
 
+  const diasTermoDiff   = (40 - ig) * 7 - igd;
+  const idadeCorrigDias = preT ? Math.max(0, dias - diasTermoDiff) : dias;
+
   const ferroAtivo    = preT ? dias >= 30 : true;
   const ferroRateBase = pesorn < 1000 ? 4 : pesorn < 1500 ? 3 : pesorn < 2500 ? 2 : 1;
   const ferroRate     = ferroAtivo ? ferroRateBase : 0;
@@ -131,14 +134,17 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const pSuficDieta = fosAtivo && dP >= 75 * pk;
   const pDoseMgKg   = pk > 0 ? pNecRaw / pk : 0;
 
+  // Zinco — indicado por IG/PN ao nascimento, inicia com IGPM ≥ 36 semanas,
+  // SUSPENSO ao atingir 6 meses de idade corrigida (protocolo institucional).
   const znHighCrit = ig < 32 || pesorn < 1500;
   const znMidCrit  = !znHighCrit && ig < 37;
   const znIndicado = znHighCrit || znMidCrit;
-  const znAtivo    = znIndicado && igCorrSem >= 36;
+  const znSuspenso = znIndicado && idadeCorrigDias >= 180;
+  const znAtivo    = znIndicado && !znSuspenso && igCorrSem >= 36;
   const znRate     = znAtivo ? (znHighCrit ? 2 : 1) : 0;
   const znNec      = znAtivo ? Math.max(0, znRate * pk - dZn) : 0;
   const znVol      = znNec / 5;
-  const znSemRest  = (znIndicado && !znAtivo) ? 36 - igCorrSem : 0;
+  const znSemRest  = (znIndicado && !znSuspenso && !znAtivo) ? 36 - igCorrSem : 0;
 
   // Vitamina D (colecalciferol) — apresentação única de 200 UI/gota,
   // sempre como complemento ao que já é recebido via dieta + polivitamínico.
@@ -154,8 +160,6 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const proxLab  = Math.ceil((dias + 1) / 21) * 21;
   const alert44  = igCorrSem >= 44;
 
-  const diasTermoDiff   = (40 - ig) * 7 - igd;
-  const idadeCorrigDias = preT ? Math.max(0, dias - diasTermoDiff) : dias;
   const alerta28apx     = preT
     ? (idadeCorrigDias >= 24 && idadeCorrigDias < 28)
     : (dias >= 24 && dias < 28);
@@ -166,7 +170,7 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
     volTotal, volTom, kcalKg, protKg, dP, dZn, dVitD,
     ferroAtivo, ferroRate, ferroDose, ferroGotas, ferroDiasRest,
     fosIndicado, fosSuspenso, fosAtivo, pVol, pTom, pSuficDieta, pDoseMgKg,
-    znIndicado, znAtivo, znHighCrit, znMidCrit, znRate, znNec, znVol, znSemRest,
+    znIndicado, znSuspenso, znAtivo, znHighCrit, znMidCrit, znRate, znNec, znVol, znSemRest,
     vitDAlvo, vitDDieta, vitDTotal, vitDNec, vitDG200,
     igCorrSem, igCorrResto,
     alertUSG, alertEco, labHoje, proxLab, alert44,
@@ -575,53 +579,59 @@ function ResultPrescricao({ res, nome }) {
             )}
           </RxItem>
 
-          <RxItem n="2"
-            label={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
-            status={!res.fosIndicado ? 'nao-indicado' : res.fosSuspenso ? 'suspenso' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
-            {!res.fosIndicado ? (
-              <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
-            ) : res.fosSuspenso ? (
-              <SuspensoBadge>
-                Suspenso — IGPM ≥ 40 semanas
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
-                </span>
-              </SuspensoBadge>
-            ) : res.pSuficDieta ? (
-              <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
-            ) : (
-              <>
-                <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO — 4 tomadas de{' '}
-                <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
-                <div style={{ fontSize: 11, color: COR.warn, marginTop: 3 }}>
-                  Distribuição 6/6h fixa — independente do horário das refeições
-                </div>
-              </>
-            )}
-          </RxItem>
+          <div className={res.fosSuspenso ? 'print-hide' : undefined}>
+            <RxItem n="2"
+              label={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
+              status={!res.fosIndicado ? 'nao-indicado' : res.fosSuspenso ? 'suspenso' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
+              {!res.fosIndicado ? (
+                <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
+              ) : res.fosSuspenso ? (
+                <SuspensoBadge>
+                  Suspenso — IGPM ≥ 40 semanas
+                  <span style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
+                  </span>
+                </SuspensoBadge>
+              ) : res.pSuficDieta ? (
+                <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
+              ) : (
+                <>
+                  <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO — 4 tomadas de{' '}
+                  <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+                  <div style={{ fontSize: 11, color: COR.warn, marginTop: 3 }}>
+                    Distribuição 6/6h fixa — independente do horário das refeições
+                  </div>
+                </>
+              )}
+            </RxItem>
+          </div>
 
-          <RxItem n="3" label="Zinco sol. 5 mg/mL"
-            status={!res.znIndicado ? 'nao-indicado' : !res.znAtivo ? 'aguardo' : res.znVol < 0.05 ? 'dieta-ok' : 'ativo'}>
-            {!res.znIndicado ? (
-              <NaoIndicadoBadge>Não indicado — IG ≥ 37 semanas</NaoIndicadoBadge>
-            ) : !res.znAtivo ? (
-              <AguardoBadge>
-                Iniciar com IGPM ≥ 36 semanas
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
-                </span>
-              </AguardoBadge>
-            ) : res.znVol < 0.05 ? (
-              <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
-            ) : (
-              <>
-                <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
-                </span>
-              </>
-            )}
-          </RxItem>
+          <div className={res.znSuspenso ? 'print-hide' : undefined}>
+            <RxItem n="3" label="Zinco sol. 5 mg/mL"
+              status={!res.znIndicado ? 'nao-indicado' : res.znSuspenso ? 'suspenso' : !res.znAtivo ? 'aguardo' : res.znVol < 0.05 ? 'dieta-ok' : 'ativo'}>
+              {!res.znIndicado ? (
+                <NaoIndicadoBadge>Não indicado — IG ≥ 37 semanas</NaoIndicadoBadge>
+              ) : res.znSuspenso ? (
+                <SuspensoBadge>Suspenso — idade corrigida ≥ 6 meses</SuspensoBadge>
+              ) : !res.znAtivo ? (
+                <AguardoBadge>
+                  Iniciar com IGPM ≥ 36 semanas
+                  <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
+                  </span>
+                </AguardoBadge>
+              ) : res.znVol < 0.05 ? (
+                <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
+              ) : (
+                <>
+                  <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                  </span>
+                </>
+              )}
+            </RxItem>
+          </div>
 
           <RxItem n="4" label="Polivitamínico (Growvit BB / Pedianutri ou equiv.)" status="ativo">
             <strong>6 gotas</strong> VO 12/12h
@@ -780,47 +790,53 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             )}
           </RxDocItem>
 
-          <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
-            {!res.fosIndicado ? (
-              <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
-            ) : res.fosSuspenso ? (
-              <span style={{ color: COR.slate }}>
-                Suspenso — IGPM ≥ 40 semanas
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
+          <div className={res.fosSuspenso ? 'print-hide' : undefined}>
+            <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
+              {!res.fosIndicado ? (
+                <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
+              ) : res.fosSuspenso ? (
+                <span style={{ color: COR.slate }}>
+                  Suspenso — IGPM ≥ 40 semanas
+                  <span style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
+                  </span>
                 </span>
-              </span>
-            ) : res.pSuficDieta ? (
-              <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
-            ) : (
-              <>
-                <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO em 4 tomadas de{' '}
-                <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
-              </>
-            )}
-          </RxDocItem>
+              ) : res.pSuficDieta ? (
+                <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
+              ) : (
+                <>
+                  <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO em 4 tomadas de{' '}
+                  <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+                </>
+              )}
+            </RxDocItem>
+          </div>
 
-          <RxDocItem n="3" titulo="Zinco solução 5 mg/mL">
-            {!res.znIndicado ? (
-              <span style={{ color: COR.slate }}>Não indicado — IG ≥ 37 semanas</span>
-            ) : !res.znAtivo ? (
-              <span style={{ color: COR.warn }}>
-                Aguardar IGPM ≥ 36 semanas
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
+          <div className={res.znSuspenso ? 'print-hide' : undefined}>
+            <RxDocItem n="3" titulo="Zinco solução 5 mg/mL">
+              {!res.znIndicado ? (
+                <span style={{ color: COR.slate }}>Não indicado — IG ≥ 37 semanas</span>
+              ) : res.znSuspenso ? (
+                <span style={{ color: COR.slate }}>Suspenso — idade corrigida ≥ 6 meses</span>
+              ) : !res.znAtivo ? (
+                <span style={{ color: COR.warn }}>
+                  Aguardar IGPM ≥ 36 semanas
+                  <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
+                  </span>
                 </span>
-              </span>
-            ) : res.znVol < 0.05 ? (
-              <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
-            ) : (
-              <>
-                <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
-                </span>
-              </>
-            )}
-          </RxDocItem>
+              ) : res.znVol < 0.05 ? (
+                <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
+              ) : (
+                <>
+                  <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+                    {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
+                  </span>
+                </>
+              )}
+            </RxDocItem>
+          </div>
 
           <RxDocItem n="4" titulo="Polivitamínico (Growvit BB / Pedianutri ou equiv.)">
             <strong>6 gotas</strong> VO 12/12h
