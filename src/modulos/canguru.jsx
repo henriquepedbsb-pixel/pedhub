@@ -119,13 +119,17 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const ferroGotas    = ferroAtivo ? Math.ceil(ferroDose / 1.25) : 0;
   const ferroDiasRest = (!ferroAtivo && preT) ? 30 - dias : 0;
 
-  const fosIndicado  = ig < 32 || pesorn < 1500;
-  const pAlvoMid     = 87.5 * pk;
-  const pNecRaw      = fosIndicado ? Math.max(0, pAlvoMid - dP) : 0;
-  const pVol         = pNecRaw / FOS_P_ML;
-  const pTom         = pVol / 4;
-  const pSuficDieta  = fosIndicado && dP >= 75 * pk;
-  const pDoseMgKg    = pk > 0 ? pNecRaw / pk : 0;
+  // Fósforo (Fosfato tricálcico 12,9%) — indicado se IG<32s ou PN<1500g,
+  // SUSPENSO ao atingir IGPM ≥ 40 semanas (protocolo institucional).
+  const fosIndicado = ig < 32 || pesorn < 1500;
+  const fosSuspenso = fosIndicado && igCorrSem >= 40;
+  const fosAtivo    = fosIndicado && !fosSuspenso;
+  const pAlvoMid    = 87.5 * pk;
+  const pNecRaw     = fosAtivo ? Math.max(0, pAlvoMid - dP) : 0;
+  const pVol        = pNecRaw / FOS_P_ML;
+  const pTom        = pVol / 4;
+  const pSuficDieta = fosAtivo && dP >= 75 * pk;
+  const pDoseMgKg   = pk > 0 ? pNecRaw / pk : 0;
 
   const znHighCrit = ig < 32 || pesorn < 1500;
   const znMidCrit  = !znHighCrit && ig < 37;
@@ -136,12 +140,13 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const znVol      = znNec / 5;
   const znSemRest  = (znIndicado && !znAtivo) ? 36 - igCorrSem : 0;
 
+  // Vitamina D (colecalciferol) — apresentação única de 200 UI/gota,
+  // sempre como complemento ao que já é recebido via dieta + polivitamínico.
   const vitDAlvo  = ig < 32 ? 800 : ig < 37 ? 600 : 400;
   const vitDDieta = dVitD;
   const vitDTotal = vitDDieta + POLIVIT_VD;
   const vitDNec   = Math.max(0, vitDAlvo - vitDTotal);
   const vitDG200  = Math.ceil(vitDNec / 200);
-  const vitDG400  = Math.ceil(vitDNec / 400);
 
   const alertUSG = dias >= 0 && dias <= 7;
   const alertEco = ig < 34;
@@ -160,9 +165,9 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
     pk, pnk, ig, igd, menor32, preT,
     volTotal, volTom, kcalKg, protKg, dP, dZn, dVitD,
     ferroAtivo, ferroRate, ferroDose, ferroGotas, ferroDiasRest,
-    fosIndicado, pVol, pTom, pSuficDieta, pDoseMgKg,
+    fosIndicado, fosSuspenso, fosAtivo, pVol, pTom, pSuficDieta, pDoseMgKg,
     znIndicado, znAtivo, znHighCrit, znMidCrit, znRate, znNec, znVol, znSemRest,
-    vitDAlvo, vitDDieta, vitDTotal, vitDNec, vitDG200, vitDG400,
+    vitDAlvo, vitDDieta, vitDTotal, vitDNec, vitDG200,
     igCorrSem, igCorrResto,
     alertUSG, alertEco, labHoje, proxLab, alert44,
     alerta28apx, alerta28ating,
@@ -570,10 +575,17 @@ function ResultPrescricao({ res, nome }) {
           </RxItem>
 
           <RxItem n="2"
-            label={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
-            status={!res.fosIndicado ? 'nao-indicado' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
+            label={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
+            status={!res.fosIndicado ? 'nao-indicado' : res.fosSuspenso ? 'suspenso' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
             {!res.fosIndicado ? (
               <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
+            ) : res.fosSuspenso ? (
+              <SuspensoBadge>
+                Suspenso — IGPM ≥ 40 semanas
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
+                </span>
+              </SuspensoBadge>
             ) : res.pSuficDieta ? (
               <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
             ) : (
@@ -615,7 +627,7 @@ function ResultPrescricao({ res, nome }) {
             <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
           </RxItem>
 
-          <RxItem n="5" label="Colecalciferol" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
+          <RxItem n="5" label="Vitamina D (colecalciferol)" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
             {res.vitDNec <= 0 ? (
               <OkBadge>
                 Não necessário — dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
@@ -626,13 +638,9 @@ function ResultPrescricao({ res, nome }) {
                   <strong>{res.vitDG200} gotas</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
                 </div>
-                <div>
-                  <strong>{res.vitDG400} gotas</strong> VO 1×/dia
-                  <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI/gota)</span>
-                </div>
                 <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                  Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
-                  {' '}= {res.vitDNec.toFixed(0)} UI adicionais · ajustar conforme apresentação disponível
+                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
               </>
             )}
@@ -768,9 +776,16 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             )}
           </RxDocItem>
 
-          <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosIndicado && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
+          <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
             {!res.fosIndicado ? (
               <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
+            ) : res.fosSuspenso ? (
+              <span style={{ color: COR.slate }}>
+                Suspenso — IGPM ≥ 40 semanas
+                <span style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
+                </span>
+              </span>
             ) : res.pSuficDieta ? (
               <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
             ) : (
@@ -807,7 +822,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             <strong>6 gotas</strong> VO 12/12h
           </RxDocItem>
 
-          <RxDocItem n="5" titulo="Colecalciferol (Vitamina D)">
+          <RxDocItem n="5" titulo="Vitamina D (colecalciferol)">
             {res.vitDNec <= 0 ? (
               <span style={{ color: COR.ok }}>
                 Não necessário — alvo {res.vitDAlvo} UI coberto
@@ -821,12 +836,8 @@ function ResultReceituario({ res, nomePac, nrSES }) {
                   <strong>{res.vitDG200} gotas</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
                 </div>
-                <div>
-                  <strong>{res.vitDG400} gotas</strong> VO 1×/dia
-                  <span style={{ color: COR.muted, fontSize: 11 }}> — 400 UI/gota</span>
-                </div>
                 <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                  Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
                   {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
               </>
@@ -981,6 +992,7 @@ const STATUS_BORDER = {
   aguardo: COR.warn,
   'nao-indicado': COR.slate,
   'dieta-ok': COR.ok,
+  suspenso: COR.slate,
 };
 
 function RxItem({ n, label, status, children }) {
@@ -1006,6 +1018,15 @@ function AguardoBadge({ children }) {
 
 function NaoIndicadoBadge({ children }) {
   return <span style={{ color: COR.slate }}>{children}</span>;
+}
+
+function SuspensoBadge({ children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, color: COR.slate }}>
+      <Info size={13} style={{ flexShrink: 0, marginTop: 2 }} />
+      <span>{children}</span>
+    </div>
+  );
 }
 
 function OkBadge({ children }) {
