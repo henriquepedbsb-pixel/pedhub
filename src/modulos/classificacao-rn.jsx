@@ -13,7 +13,7 @@
 import { useState } from "react";
 import { Ruler, Info, AlertTriangle } from "lucide-react";
 import {
-  IGR_PW, IGR_LW, FEN_PW, FEN_LW,
+  IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW,
   getPretermPercs, percFromBand5, percFromBand3, classify,
 } from "./percentis";
 
@@ -46,6 +46,29 @@ function classificarPeso(g) {
   if (g < 2500)  return { label: "Baixo Peso",         sigla: "BPN",  desc: "1.500–2.499 g",    color: "#D97706", bg: "#FFFBEB" };
   if (g <= 4000) return { label: "Peso Adequado",      sigla: null,   desc: "2.500–4.000 g",    color: "#16A34A", bg: "#F0FDF4" };
   return                { label: "Macrossômico",       sigla: null,   desc: "> 4.000 g",        color: "#7C3AED", bg: "#F5F3FF" };
+}
+
+/* ─── PIG Simétrico x Assimétrico — só se aplica quando o peso é PIG ──────── */
+function classificarSimetriaPIG(pesoCl, pcData) {
+  if (!pesoCl || pesoCl.label !== "PIG") return null;
+  if (!pcData || !pcData.cl) return { indefinido: true };
+  const pcReduzido = pcData.perc < 10;
+  if (pcReduzido) {
+    return {
+      indefinido: false,
+      tipo: "Simétrico",
+      color: "#7C3AED",
+      bg: "#F5F3FF",
+      desc: "PC também reduzido (< P10) — acometimento global, sugere insulto precoce (1º/2º trimestre): cromossomopatias, infecções congênitas, uso de substâncias.",
+    };
+  }
+  return {
+    indefinido: false,
+    tipo: "Assimétrico",
+    color: "#0D9488",
+    bg: "#F0FDFA",
+    desc: "PC poupado (≥ P10) em relação ao peso — padrão de \"brain-sparing\", sugere insulto tardio (3º trimestre): insuficiência placentária, pré-eclâmpsia.",
+  };
 }
 
 /* ─── Sub-componentes ─────────────────────────────────────────────────────── */
@@ -164,6 +187,30 @@ function ResultPercentil({ label, data }) {
   );
 }
 
+function ResultSimetria({ resultado }) {
+  if (!resultado) return null;
+  if (resultado.indefinido) {
+    return (
+      <div style={{ borderRadius: 10, border: "1.5px solid #E5E7EB", background: "#F9FAFB", padding: 12, marginBottom: 8, display: "flex", gap: 8, alignItems: "flex-start" }}>
+        <Info size={14} color="#9CA3AF" style={{ marginTop: 1, flexShrink: 0 }} />
+        <p style={{ margin: 0, fontSize: 12, color: "#6B7280" }}>
+          Informe o perímetro cefálico para classificar o PIG como simétrico ou assimétrico.
+        </p>
+      </div>
+    );
+  }
+  const { tipo, color, bg, desc } = resultado;
+  return (
+    <div style={{ borderRadius: 10, border: `1.5px solid ${color}`, background: bg, padding: 14, marginBottom: 8 }}>
+      <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#9CA3AF" }}>
+        Classificação do PIG
+      </p>
+      <span style={{ fontWeight: 800, fontSize: 18, color }}>PIG {tipo}</span>
+      <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "#374151", lineHeight: 1.5 }}>{desc}</p>
+    </div>
+  );
+}
+
 /* ─── Componente principal ────────────────────────────────────────────────── */
 export default function ClassificacaoRN() {
   const [sexo, setSexo]       = useState("M");
@@ -171,6 +218,7 @@ export default function ClassificacaoRN() {
   const [igDias, setIgDias]   = useState("");
   const [peso, setPeso]       = useState("");
   const [estatura, setEstatura] = useState("");
+  const [pc, setPc]           = useState("");
   const [curva, setCurva]     = useState("intergrowth"); // 'intergrowth' | 'fenton'
   const [res, setRes]         = useState(null);
   const [erro, setErro]       = useState("");
@@ -184,37 +232,47 @@ export default function ClassificacaoRN() {
     const dias    = parseInt(igDias, 10) || 0;
     const pesoG   = parseNum(peso);
     const estCm   = parseNum(estatura);
+    const pcCm    = parseNum(pc);
 
     if (!semanas || semanas < 22 || semanas > 44 || dias < 0 || dias > 6) {
       setErro("Informe uma IG válida (22–44 semanas, 0–6 dias).");
       return;
     }
-    if (!pesoG && !estCm) {
-      setErro("Informe ao menos o peso ou a estatura ao nascer.");
+    if (!pesoG && !estCm && !pcCm) {
+      setErro("Informe ao menos o peso, a estatura ou o perímetro cefálico ao nascer.");
       return;
     }
 
     const curvaEfetiva = curva === "fenton" && semanas > 40 ? "intergrowth" : curva;
     const tabP = curvaEfetiva === "fenton" ? FEN_PW : IGR_PW;
     const tabL = curvaEfetiva === "fenton" ? FEN_LW : IGR_LW;
+    const tabC = curvaEfetiva === "fenton" ? FEN_CW : IGR_CW;
     const bandP = getPretermPercs(tabP[sexo], semanas);
     const bandL = getPretermPercs(tabL[sexo], semanas);
+    const bandC = getPretermPercs(tabC[sexo], semanas);
 
     const percP = pesoG ? percFromBand5(pesoG, bandP) : null;
     const percL = estCm ? percFromBand3(estCm, bandL) : null;
+    const percC = pcCm  ? percFromBand3(pcCm,  bandC) : null;
+
+    const pesoCat = pesoG ? classificarPeso(pesoG) : null;
+    const pesoClIG = pesoG ? classify(percP) : null;
+    const pcIG    = pcCm  ? { val: pcCm, unidade: "cm", perc: percC, cl: classify(percC) } : null;
 
     setRes({
       igCat: classificarIG(semanas, dias),
-      pesoCat: pesoG ? classificarPeso(pesoG) : null,
-      pesoIG: pesoG ? { val: pesoG, unidade: "g", perc: percP, cl: classify(percP) } : null,
+      pesoCat,
+      pesoIG: pesoG ? { val: pesoG, unidade: "g", perc: percP, cl: pesoClIG } : null,
       estIG: estCm ? { val: estCm, unidade: "cm", perc: percL, cl: classify(percL) } : null,
+      pcIG,
+      simetria: classificarSimetriaPIG(pesoClIG, pcIG),
       curvaUsada: curvaEfetiva,
       semanas, dias,
     });
   }
 
   function limpar() {
-    setIgSem(""); setIgDias(""); setPeso(""); setEstatura("");
+    setIgSem(""); setIgDias(""); setPeso(""); setEstatura(""); setPc("");
     setRes(null); setErro("");
   }
 
@@ -228,7 +286,7 @@ export default function ClassificacaoRN() {
         </div>
         <div>
           <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#111827" }}>Classificação do RN</h1>
-          <p style={{ margin: 0, fontSize: 12, color: "#6B7280" }}>Idade gestacional · Peso · Estatura ao nascimento</p>
+          <p style={{ margin: 0, fontSize: 12, color: "#6B7280" }}>Idade gestacional · Peso · Estatura · Perímetro cefálico</p>
         </div>
       </div>
 
@@ -253,6 +311,7 @@ export default function ClassificacaoRN() {
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <Input label="Peso ao nascer" val={peso} set={setPeso} ph="ex: 1500" unit="g" />
           <Input label="Estatura ao nascer" val={estatura} set={setEstatura} ph="ex: 38,0" unit="cm" />
+          <Input label="Perímetro cefálico ao nascer" val={pc} set={setPc} ph="ex: 27,0" unit="cm" />
         </div>
       </Card>
 
@@ -290,14 +349,15 @@ export default function ClassificacaoRN() {
           <ResultBadge titulo="Idade Gestacional" resultado={res.igCat} />
           {res.pesoCat && <ResultBadge titulo="Peso ao Nascer" resultado={res.pesoCat} />}
 
-          {(res.pesoIG || res.estIG) && (
+          {(res.pesoIG || res.estIG || res.pcIG) && (
             <>
               <p style={{ margin: "4px 0 8px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#9CA3AF" }}>
-                Peso e Estatura x Idade Gestacional
+                Peso, Estatura e PC x Idade Gestacional
               </p>
               {res.pesoIG && <ResultPercentil label="Peso" data={res.pesoIG} />}
               {res.estIG && <ResultPercentil label="Estatura" data={res.estIG} />}
-              <div style={{ background: COR_LITE, borderRadius: 10, padding: 10, marginTop: 4, display: "flex", gap: 8, alignItems: "flex-start" }}>
+              {res.pcIG && <ResultPercentil label="Perímetro Cefálico" data={res.pcIG} />}
+              <div style={{ background: COR_LITE, borderRadius: 10, padding: 10, marginTop: 4, marginBottom: 10, display: "flex", gap: 8, alignItems: "flex-start" }}>
                 <Info size={14} color={COR} style={{ marginTop: 1, flexShrink: 0 }} />
                 <p style={{ margin: 0, fontSize: 12, color: "#9D174D" }}>
                   <strong>AIG</strong> (P10–P90) · <strong>PIG</strong> (&lt;P10) · <strong>GIG</strong> (&gt;P90) —
@@ -305,6 +365,7 @@ export default function ClassificacaoRN() {
                   Percentil aproximado por faixa de referência.
                 </p>
               </div>
+              <ResultSimetria resultado={res.simetria} />
             </>
           )}
         </div>
@@ -316,6 +377,8 @@ export default function ClassificacaoRN() {
           <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
           Classificação de IG segundo faixas SBP; peso ao nascer segundo OMS/SBP; AIG/PIG/GIG derivado das
           curvas Intergrowth-21st (Villar J et al. Lancet 2014) e Fenton 2013 (Fenton TR &amp; Kim JH. BMC Pediatrics 2013).
+          Simetria do PIG é uma orientação geral (peso x perímetro cefálico) — a etiologia da restrição de
+          crescimento deve sempre ser investigada pelo médico assistente.
         </p>
       </div>
     </div>
