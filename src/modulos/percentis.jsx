@@ -720,4 +720,4 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
 // sem duplicar tabelas de curva. Não afeta o export default nem o comportamento
 // deste módulo.
 // ─────────────────────────────────────────────────────────────────────────────
-export { IGR_PW, IGR_LW, FEN_PW, FEN_LW, getPretermPercs, percFromBand5, percFromBand3, classify };
+export { IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW, getPretermPercs, percFromBand5, percFromBand3, classify };
