@@ -23,7 +23,7 @@ const DANGER_L = "#fee2e2";
 /* ── Constantes clínicas verificadas ── */
 const NACL_MEQ_ML = 3.4;   // NaCl 20%:          200 mg/mL ÷ 58,5 mg/mEq ≈ 3,4 mEq Na/mL
 const KCL_MEQ_ML  = 1.34;  // KCl 10%:           100 mg/mL ÷ 74,5 mg/mEq ≈ 1,34 mEq K/mL
-const CA_ML_KG    = 2;     // Gluconato Ca 10%:   2 mL/kg/dia
+const CA_ML_KG    = 2;     // Gluconato Ca 10%:   2 mL/kg/dia (sugestão padrão)
 const CA_MEQ_ML   = 0.45;  // Gluconato Ca 10%:  ~0,45 mEq Ca/mL
 
 /* ── Helpers ── */
@@ -34,6 +34,13 @@ function pPeso(s) {
 function pNum(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 ? v : null;
+}
+/* Resolve override manual de dose de eletrólito: string vazia ou inválida
+   volta null (usa sugestão automática); aceita zero (médico pode suspender). */
+function pOverride(s) {
+  if (s === "" || s == null) return null;
+  const v = parseFloat(String(s).replace(",", "."));
+  return !isNaN(v) && v >= 0 ? v : null;
 }
 function getNa(dia) { return [1, 2, 3][Math.min(dia - 1, 2)]; }
 function getK(dia, diurese) {
@@ -115,6 +122,55 @@ function RxLine({ name, vol, unit, detail, isABD }) {
   );
 }
 
+/* Campo editável de dose de eletrólito — pré-preenchido com a sugestão
+   automática por idade/diurese, mas livre para o médico ajustar. Editar
+   a dose recalcula todo o resto da prescrição (volume, ABD, SG). */
+function DoseEdit({ value, onChange, onReset, suggested, unit, decimals = 1, zeroWarn }) {
+  const num          = parseFloat(String(value).replace(",", "."));
+  const hasOverride  = value !== "" && !isNaN(num) && num >= 0;
+  const current      = hasOverride ? num : suggested;
+  const edited       = hasOverride && Math.abs(num - suggested) > 0.01;
+  const bigDiff       = edited && (
+    (suggested > 0 && Math.abs(current - suggested) / suggested > 0.3) ||
+    (suggested === 0 && current > 0 && zeroWarn)
+  );
+
+  return (
+    <div style={{ marginTop: 6, marginBottom: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <IW>
+          <input
+            type="text" inputMode="decimal"
+            value={value !== "" ? value : suggested.toFixed(decimals)}
+            onChange={e => onChange(e.target.value)}
+            style={{ width: 60, padding: "7px 9px", border: "none", outline: "none", fontSize: 13, fontWeight: 700, color: TEXTO, background: "transparent" }}
+          />
+          <UT text={unit} />
+        </IW>
+        <button
+          type="button"
+          onClick={onReset}
+          style={{ border: "none", background: "transparent", color: AZ_M, fontSize: 11, fontWeight: 600, cursor: "pointer", padding: "4px 2px" }}
+        >
+          sugerido: {suggested.toFixed(decimals)}
+        </button>
+      </div>
+      {edited && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 10.5, fontWeight: 700, color: WARN, background: WARN_L, padding: "2px 7px", borderRadius: 999 }}>
+            editado manualmente
+          </span>
+          {bigDiff && (
+            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10.5, color: DANGER }}>
+              <AlertTriangle size={11} /> confira — destoa muito do sugerido
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Componente principal ── */
 export default function TigNeonatal() {
   const [pesoRaw, setPesoRaw] = useState("");
@@ -122,10 +178,23 @@ export default function TigNeonatal() {
   const [diurese, setDiurese] = useState(false);
   const [tigRaw,  setTigRaw ] = useState("");
   const [volRaw,  setVolRaw ] = useState("");
+  const [naManual, setNaManual] = useState("");
+  const [kManual,  setKManual ] = useState("");
+  const [caManual, setCaManual] = useState("");
 
   const peso = pPeso(pesoRaw);
   const tig  = pNum(tigRaw);
   const vol  = pNum(volRaw);
+
+  function mudarDia(delta) {
+    setDia(d => Math.min(99, Math.max(1, d + delta)));
+    setNaManual("");
+    setKManual("");
+  }
+  function mudarDiurese(v) {
+    setDiurese(v);
+    setKManual("");
+  }
 
   const calc = useMemo(() => {
     if (!peso || !tig || !vol || dia < 1) return null;
@@ -134,11 +203,22 @@ export default function TigNeonatal() {
     const gg        = tig * peso * 1.44;       // g de glicose / dia
     const vol_total = vol * peso;              // mL / dia
     const mlh       = vol_total / 24;          // mL / h
-    const na_dose   = getNa(dia);
-    const k_dose    = getK(dia, diurese);
+
+    const na_sug = getNa(dia);
+    const k_sug  = getK(dia, diurese);
+    const ca_sug = CA_ML_KG;
+
+    const naOverride = pOverride(naManual);
+    const kOverride  = pOverride(kManual);
+    const caOverride = pOverride(caManual);
+
+    const na_dose = naOverride !== null ? naOverride : na_sug;
+    const k_dose  = kOverride  !== null ? kOverride  : k_sug;
+    const ca_rate = caOverride !== null ? caOverride : ca_sug;
+
     const na_meq    = na_dose * peso;
     const k_meq     = k_dose  * peso;
-    const ca_ml     = CA_ML_KG * peso;
+    const ca_ml     = ca_rate * peso;
     const vol_nacl  = na_meq / NACL_MEQ_ML;
     const vol_kcl   = k_dose > 0 ? k_meq / KCL_MEQ_ML : 0;
     const vol_elec  = vol_nacl + vol_kcl + ca_ml;
@@ -175,10 +255,11 @@ export default function TigNeonatal() {
 
     return {
       conc, gg, mlh, vol_total, vol_avail, conc_alvo,
-      sgItems, na_dose, k_dose, na_meq, k_meq, ca_ml,
+      sgItems, na_dose, k_dose, na_meq, k_meq, ca_ml, ca_rate,
+      na_sug, k_sug, ca_sug,
       vol_nacl, vol_kcl, dia,
     };
-  }, [peso, tig, vol, dia, diurese]);
+  }, [peso, tig, vol, dia, diurese, naManual, kManual, caManual]);
 
   /* Hero */
   const heroGrad = !calc || calc.conc <= 12.5
@@ -236,12 +317,12 @@ export default function TigNeonatal() {
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: TEXTO, marginBottom: 8 }}>Dias de vida</label>
             <div style={{ display: "inline-flex", alignItems: "center", background: "#f8fbfd", border: "1.5px solid " + BORDA, borderRadius: 10, overflow: "hidden" }}>
               <button
-                onClick={() => setDia(d => Math.max(1, d - 1))}
+                onClick={() => mudarDia(-1)}
                 style={{ width: 52, height: 52, border: "none", background: "transparent", fontSize: 24, fontWeight: 300, color: AZ_M, cursor: "pointer", borderRight: "1px solid " + BORDA }}
               >−</button>
               <div style={{ minWidth: 64, textAlign: "center", fontSize: 22, fontWeight: 700, color: TEXTO, padding: "0 8px" }}>{dia}</div>
               <button
-                onClick={() => setDia(d => Math.min(99, d + 1))}
+                onClick={() => mudarDia(1)}
                 style={{ width: 52, height: 52, border: "none", background: "transparent", fontSize: 24, fontWeight: 300, color: AZ_M, cursor: "pointer", borderLeft: "1px solid " + BORDA }}
               >+</button>
             </div>
@@ -256,11 +337,11 @@ export default function TigNeonatal() {
             </div>
             <div style={{ display: "flex", background: FUNDO, border: "1px solid " + BORDA, borderRadius: 8, padding: 3, gap: 3 }}>
               <button
-                onClick={() => setDiurese(false)}
+                onClick={() => mudarDiurese(false)}
                 style={{ padding: "7px 14px", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", background: !diurese ? DANGER : "transparent", color: !diurese ? "#fff" : DETALHE, boxShadow: !diurese ? "0 1px 4px rgba(220,38,38,0.3)" : "none" }}
               >Não</button>
               <button
-                onClick={() => setDiurese(true)}
+                onClick={() => mudarDiurese(true)}
                 style={{ padding: "7px 14px", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", background: diurese ? OK : "transparent", color: diurese ? "#fff" : DETALHE, boxShadow: diurese ? "0 1px 4px rgba(22,163,74,0.3)" : "none" }}
               >Sim</button>
             </div>
@@ -393,14 +474,28 @@ export default function TigNeonatal() {
                       vol={calc.vol_nacl.toFixed(1)} unit="mL"
                       detail={`${calc.na_meq.toFixed(1)} mEq Na · ${calc.na_dose} mEq/kg/dia`}
                     />
+                    <DoseEdit
+                      value={naManual} onChange={setNaManual} onReset={() => setNaManual("")}
+                      suggested={calc.na_sug} unit="mEq/kg/dia" decimals={1}
+                    />
+
                     {calc.k_dose > 0
                       ? <RxLine name="KCl 10%" vol={calc.vol_kcl.toFixed(1)} unit="mL" detail={`${calc.k_meq.toFixed(2)} mEq K · ${calc.k_dose} mEq/kg/dia`} />
                       : <RxLine name="KCl 10%" vol="—" detail="Suspenso — sem diurese no 1.º dia" />
                     }
+                    <DoseEdit
+                      value={kManual} onChange={setKManual} onReset={() => setKManual("")}
+                      suggested={calc.k_sug} unit="mEq/kg/dia" decimals={1} zeroWarn
+                    />
+
                     <RxLine
                       name="Gluconato Ca 10%"
                       vol={calc.ca_ml.toFixed(1)} unit="mL"
-                      detail={`${(calc.ca_ml * CA_MEQ_ML).toFixed(1)} mEq Ca · 2 mL/kg/dia`}
+                      detail={`${(calc.ca_ml * CA_MEQ_ML).toFixed(1)} mEq Ca · ${calc.ca_rate} mL/kg/dia`}
+                    />
+                    <DoseEdit
+                      value={caManual} onChange={setCaManual} onReset={() => setCaManual("")}
+                      suggested={calc.ca_sug} unit="mL/kg/dia" decimals={1}
                     />
                   </SeccaoRx>
 
@@ -424,10 +519,16 @@ export default function TigNeonatal() {
                       K suspenso no 1.º dia — sem diurese documentada (hipercalemia em RNPT)
                     </div>
                   )}
-                  {calc.k_dose === 0.5 && calc.dia === 1 && (
+                  {calc.k_dose > 0 && calc.dia === 1 && !diurese && (
+                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#78350f", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                      <AlertTriangle size={12} color={WARN} style={{ flexShrink: 0, marginTop: 1 }} />
+                      K iniciado manualmente sem diurese documentada — atenção a hipercalemia (RNPT)
+                    </div>
+                  )}
+                  {calc.k_dose > 0 && calc.dia === 1 && diurese && (
                     <div style={{ background: OK_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#14532d", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <CheckCircle size={12} color={OK} style={{ flexShrink: 0, marginTop: 1 }} />
-                      K iniciado (0,5 mEq/kg/dia) — diurese presente
+                      K iniciado ({calc.k_dose} mEq/kg/dia) — diurese presente
                     </div>
                   )}
                   {calc.sgItems.length > 0 && calc.sgItems[calc.sgItems.length - 1].overload && (
@@ -523,6 +624,9 @@ export default function TigNeonatal() {
             <p style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
               <Info size={12} color={AZ_M} />
               Acesso periférico: concentração máxima 12,5%
+            </p>
+            <p style={{ marginTop: 6, fontSize: 11 }}>
+              Os três valores acima são sugestões — cada dose fica editável na prescrição gerada.
             </p>
           </div>
         </div>
