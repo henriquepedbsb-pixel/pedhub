@@ -32,6 +32,7 @@ const IdadeGestacional = lazy(() => import("./modulos/idade-gestacional"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const Neonatal         = lazy(() => import("./modulos/neonatal"));
+const ClassificacaoRN  = lazy(() => import("./modulos/classificacao-rn"));
 const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
 const Neonatologia1    = lazy(() => import("./modulos/neonatologia-1"));
 const Neonatologia2    = lazy(() => import("./modulos/neonatologia-2"));
@@ -80,6 +81,7 @@ const MODULO_MAP = {
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
+  "/classificacao-rn":  { label: "Classificação do RN",       cor: "#DB2777", voltar: "/neonatal" },
   "/cuidados-pele-rn":  { label: "Pele do RN",                cor: "#0891B2", voltar: "/neonatal" },
   "/neonatologia-1":    { label: "Neonatologia I",            cor: "#0E7490", voltar: "/neonatal" },
   "/neonatologia-2":    { label: "Neonatologia II",           cor: "#0D9488", voltar: "/neonatal" },
@@ -205,6 +207,7 @@ export default function App() {
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
+          <Route path="/classificacao-rn"  element={<ClassificacaoRN />} />
           <Route path="/cuidados-pele-rn"  element={<CuidadosPeleRn />} />
           <Route path="/neonatologia-1"    element={<Neonatologia1 />} />
           <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
