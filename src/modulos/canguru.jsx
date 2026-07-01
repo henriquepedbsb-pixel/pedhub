@@ -191,6 +191,7 @@ function printById(id) {
     '<style>' +
     '* { box-sizing: border-box; margin: 0; padding: 0; }' +
     'body { font-family: "DM Sans", Arial, sans-serif; padding: 20px; background: #fff; color: #1A2332; }' +
+    '.print-hide { display: none !important; }' +
     '@media print { body { padding: 10mm; } button { display: none !important; } }' +
     '</style>' +
     '</head><body>' + el.innerHTML + '</body></html>'
@@ -537,7 +538,7 @@ function ResultPrescricao({ res, nome }) {
           </div>
         </Card>
 
-        <Card>
+        <Card className="print-hide">
           <CardHead Icon={Droplets}>Dieta enteral</CardHead>
           <RxRow label="Volume total">{res.volTotal.toFixed(1)} mL/dia</RxRow>
           <RxRow label="Por tomada">{res.volTom.toFixed(1)} mL · {res.tom}× ao dia</RxRow>
@@ -560,14 +561,14 @@ function ResultPrescricao({ res, nome }) {
             {!res.ferroAtivo && res.preT ? (
               <AguardoBadge>
                 Iniciar no 30.º dia de vida
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
                 </span>
               </AguardoBadge>
             ) : (
               <>
                 <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN)
                 </span>
               </>
@@ -582,7 +583,7 @@ function ResultPrescricao({ res, nome }) {
             ) : res.fosSuspenso ? (
               <SuspensoBadge>
                 Suspenso — IGPM ≥ 40 semanas
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
                 </span>
               </SuspensoBadge>
@@ -606,7 +607,7 @@ function ResultPrescricao({ res, nome }) {
             ) : !res.znAtivo ? (
               <AguardoBadge>
                 Iniciar com IGPM ≥ 36 semanas
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
                 </span>
               </AguardoBadge>
@@ -615,7 +616,7 @@ function ResultPrescricao({ res, nome }) {
             ) : (
               <>
                 <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
                 </span>
               </>
@@ -624,13 +625,16 @@ function ResultPrescricao({ res, nome }) {
 
           <RxItem n="4" label="Polivitamínico (Growvit BB / Pedianutri ou equiv.)" status="ativo">
             <strong>6 gotas</strong> VO 12/12h
-            <span style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
+            <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
           </RxItem>
 
           <RxItem n="5" label="Vitamina D (colecalciferol)" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
             {res.vitDNec <= 0 ? (
               <OkBadge>
-                Não necessário — dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
+                Não necessário
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+                  {' '}— dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
+                </span>
               </OkBadge>
             ) : (
               <>
@@ -638,7 +642,7 @@ function ResultPrescricao({ res, nome }) {
                   <strong>{res.vitDG200} gotas</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
                 </div>
-                <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
+                <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
                   Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
                   {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
@@ -660,7 +664,7 @@ function ResultPrescricao({ res, nome }) {
           </div>
         </Card>
 
-        <Card>
+        <Card className="print-hide">
           <CardHead Icon={AlertTriangle}>Alertas de rastreio</CardHead>
           {res.alertUSG && (
             <Alerta cor={COR.warn} bg={COR.warnL}>
@@ -762,14 +766,14 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             {!res.ferroAtivo && res.preT ? (
               <span style={{ color: COR.warn }}>
                 Aguardar 30.º dia de vida
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(faltam {res.ferroDiasRest} dia{res.ferroDiasRest !== 1 ? 's' : ''})
                 </span>
               </span>
             ) : (
               <>
                 <strong>{res.ferroGotas} gotas</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia)
                 </span>
               </>
@@ -782,7 +786,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             ) : res.fosSuspenso ? (
               <span style={{ color: COR.slate }}>
                 Suspenso — IGPM ≥ 40 semanas
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(atual {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''})
                 </span>
               </span>
@@ -802,7 +806,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             ) : !res.znAtivo ? (
               <span style={{ color: COR.warn }}>
                 Aguardar IGPM ≥ 36 semanas
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(atual {res.igCorrSem}s, faltam {res.znSemRest} sem.)
                 </span>
               </span>
@@ -811,7 +815,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             ) : (
               <>
                 <strong>{res.znVol.toFixed(2)} mL/dia</strong> VO 1×/dia
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'})
                 </span>
               </>
@@ -826,7 +830,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
             {res.vitDNec <= 0 ? (
               <span style={{ color: COR.ok }}>
                 Não necessário — alvo {res.vitDAlvo} UI coberto
-                <span style={{ color: COR.muted, fontSize: 11 }}>
+                <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}(dieta {res.vitDDieta.toFixed(0)} UI + polivit 400 UI)
                 </span>
               </span>
@@ -836,7 +840,7 @@ function ResultReceituario({ res, nomePac, nrSES }) {
                   <strong>{res.vitDG200} gotas</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
                 </div>
-                <div style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
+                <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
                   Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
                   {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
@@ -867,9 +871,9 @@ function ResultReceituario({ res, nomePac, nrSES }) {
    SUB-COMPONENTES
 ════════════════════════════════════════════ */
 
-function Card({ children }) {
+function Card({ children, className }) {
   return (
-    <div style={{ background: COR.card, border: `1px solid ${COR.borda}`, borderRadius: R, padding: 16, marginBottom: 12, boxShadow: '0 1px 3px rgba(6,95,70,.07)' }}>
+    <div className={className} style={{ background: COR.card, border: `1px solid ${COR.borda}`, borderRadius: R, padding: 16, marginBottom: 12, boxShadow: '0 1px 3px rgba(6,95,70,.07)' }}>
       {children}
     </div>
   );
