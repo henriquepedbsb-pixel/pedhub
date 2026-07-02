@@ -36,10 +36,10 @@ import {
 } from "lucide-react";
 
 /* ─── Catálogo completo de módulos ───────────────────────────────────────── */
-/* Mantido íntegro para que a BUSCA encontre também os módulos neonatais,    */
-/* mesmo que estes não apareçam no grid da home (acessados via Hub Neonatal). */
+/* Mantido íntegro para que a BUSCA encontre também os módulos individuais,  */
+/* mesmo que estes não apareçam no grid da home (acessados via Hub próprio). */
 const MODULOS = [
-  /* ── Pediatria Geral ────────────────────────────────────────────────── */
+  /* ── Pediatria Geral (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/percentis-oms",    label: "Percentis (OMS)",      desc: "OMS · curva 0–60 meses",                Icon: Scale,         cor: "#3B82F6", grupo: "Pediatria Geral" },
   { rota: "/urgencias",        label: "Urgências",            desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444", grupo: "Pediatria Geral" },
   { rota: "/formulas",         label: "Fórmulas",             desc: "Nestlé × Danone · Escada APLV",         Icon: FlaskConical,  cor: "#10B981", grupo: "Pediatria Geral" },
@@ -139,7 +139,6 @@ function ModuloCard({ modulo, onClick }) {
   );
 }
 
-
 /* ─── Card "Em breve" (placeholder, não navega) ──────────────────────────── */
 function BreveCard({ modulo, onClick }) {
   const { label, desc, Icon } = modulo;
@@ -180,6 +179,47 @@ function BreveCard({ modulo, onClick }) {
           fontSize: 13, color: "#9CA3AF", margin: 0, lineHeight: 1.45, wordBreak: "break-word",
         }}>{desc}</p>
       </div>
+    </button>
+  );
+}
+
+/* ─── Card-portal do Hub Pediatria Geral (largura total) ─────────────────── */
+function PediatriaGateway({ count, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        gridColumn: "1 / -1",
+        background: "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)",
+        border: "none",
+        borderRadius: 16,
+        padding: "18px 18px",
+        cursor: "pointer",
+        textAlign: "left",
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        width: "100%",
+        boxShadow: "0 2px 10px rgba(30,64,175,0.25)",
+      }}
+    >
+      <div style={{
+        width: 48, height: 48, borderRadius: 14,
+        background: "rgba(255,255,255,0.18)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
+      }}>
+        <Stethoscope size={26} color="#fff" />
+      </div>
+      <div style={{ flex: 1 }}>
+        <p style={{ fontWeight: 700, fontSize: 17, color: "#fff", margin: "0 0 3px", lineHeight: 1.2 }}>
+          Pediatria Geral
+        </p>
+        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", margin: 0, lineHeight: 1.4 }}>
+          {count} ferramentas · ambulatório à emergência pediátrica
+        </p>
+      </div>
+      <ChevronRight size={22} color="#fff" style={{ flexShrink: 0 }} />
     </button>
   );
 }
@@ -251,7 +291,7 @@ export default function PedHub() {
     m.desc.toLowerCase().includes(termo)
   );
 
-  const pediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral");
+  const totalPediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral").length;
   const totalNeonatal = MODULOS.filter(m => m.grupo === "Neonatologia").length;
 
   return (
@@ -351,7 +391,7 @@ export default function PedHub() {
             )}
           </div>
         ) : (
-          /* ── Modo navegação: Pediatria Geral + portal Neonatologia ── */
+          /* ── Modo navegação: portais Pediatria Geral + Neonatologia ── */
           <>
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
@@ -362,12 +402,10 @@ export default function PedHub() {
                   Pediatria Geral
                 </p>
                 <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{pediatria.length}</span>
+                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{totalPediatria}</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {pediatria.map(m => (
-                  <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
-                ))}
+                <PediatriaGateway count={totalPediatria} onClick={() => navigate("/pediatria-geral")} />
               </div>
             </div>
 
