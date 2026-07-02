@@ -20,6 +20,7 @@ import {
   Activity,
   Leaf,
   Ruler,
+  Syringe,
 } from "lucide-react";
 
 const COR_HUB = "#0E7490";
@@ -34,6 +35,7 @@ const SECOES = [
       { rota: "/neonatologia-6",   label: "Reanimação RN ≥34s",   desc: "Sala de parto · SBP 2026",       Icon: Wind,       cor: "#0284C7" },
       { rota: "/neonatologia-4",   label: "Scores Neonatais",     desc: "Apgar · Capurro · Silverman",    Icon: Calculator, cor: "#7C3AED" },
       { rota: "/classificacao-rn", label: "Classificação do RN",  desc: "IG · Peso · Estatura ao nascer", Icon: Ruler,      cor: "#DB2777" },
+      { rota: "/sala-de-parto",    label: "Sala de Parto",        desc: "TOT · Sonda · Cateteres umbilicais", Icon: Syringe, cor: "#B45309" },
     ],
   },
   {
