@@ -173,16 +173,160 @@ function TabPEWS() {
   );
 }
 
+/* ─── Escala de Finnegan modificada (Síndrome de Abstinência Neonatal) ────
+   21 itens em 3 domínios — AAP 2020 Clinical Report on NAS.
+   Critério clássico para tratamento farmacológico: escore ≥ 8 em 3
+   avaliações consecutivas OU ≥ 12 em 2 avaliações consecutivas — NÃO
+   uma pontuação isolada. Doses de morfina/metadona/fenobarbital: PedFarma. */
+const FINNEGAN_SECOES_RAW = [
+  {
+    titulo: "Sistema Nervoso Central",
+    itens: [
+      { label: "Choro", opts: [{ label: "Normal", v: 0 }, { label: "Excessivo/agudo, intermitente", v: 2 }, { label: "Contínuo, agudo", v: 3 }] },
+      { label: "Sono após mamada", opts: [{ label: "Normal (> 3 h)", v: 0 }, { label: "< 3 h", v: 1 }, { label: "< 2 h", v: 2 }, { label: "< 1 h", v: 3 }] },
+      { label: "Reflexo de Moro", opts: [{ label: "Normal", v: 0 }, { label: "Hiperativo", v: 2 }, { label: "Muito hiperativo", v: 3 }] },
+      { label: "Tremores ao ser perturbado", opts: [{ label: "Ausente", v: 0 }, { label: "Leve", v: 1 }, { label: "Moderado/grave", v: 2 }] },
+      { label: "Tremores em repouso (não perturbado)", opts: [{ label: "Ausente", v: 0 }, { label: "Leve", v: 3 }, { label: "Moderado/grave", v: 4 }] },
+      { label: "Tônus muscular", opts: [{ label: "Normal", v: 0 }, { label: "Aumentado", v: 2 }] },
+      { label: "Escoriação (fricção — joelho, dedos, nariz)", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Mioclonias", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 3 }] },
+      { label: "Convulsões generalizadas", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 5 }] },
+    ],
+  },
+  {
+    titulo: "Metabólico / Vasomotor / Respiratório",
+    itens: [
+      { label: "Sudorese", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Febre", opts: [{ label: "< 37,2 °C", v: 0 }, { label: "37,2–38,3 °C", v: 1 }, { label: "> 38,3 °C", v: 2 }] },
+      { label: "Bocejos frequentes (> 3–4×/intervalo)", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Pele marmórea (mottling)", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Congestão nasal", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Espirros frequentes (> 3–4×/intervalo)", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Batimento de asa nasal", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 2 }] },
+      { label: "Frequência respiratória", opts: [{ label: "Normal (< 60 irpm)", v: 0 }, { label: "> 60 irpm, sem retração", v: 1 }, { label: "> 60 irpm, com retração", v: 2 }] },
+    ],
+  },
+  {
+    titulo: "Gastrointestinal",
+    itens: [
+      { label: "Sucção excessiva", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 1 }] },
+      { label: "Dificuldade de alimentação (sucção incoordenada)", opts: [{ label: "Ausente", v: 0 }, { label: "Presente", v: 2 }] },
+      { label: "Regurgitação / vômito", opts: [{ label: "Ausente", v: 0 }, { label: "Regurgitação", v: 2 }, { label: "Vômito em jato", v: 3 }] },
+      { label: "Evacuações", opts: [{ label: "Normais", v: 0 }, { label: "Amolecidas", v: 2 }, { label: "Líquidas/explosivas", v: 3 }] },
+    ],
+  },
+];
+
+// Índice global fixo por item — calculado uma vez, no carregamento do módulo
+let __finneganIdx = 0;
+const FINNEGAN_SECOES = FINNEGAN_SECOES_RAW.map((secao) => ({
+  ...secao,
+  itens: secao.itens.map((item) => ({ ...item, idx: __finneganIdx++ })),
+}));
+const FINNEGAN_TOTAL_ITENS = __finneganIdx;
+const FINNEGAN_MAX_SCORE = FINNEGAN_SECOES.reduce(
+  (acc, s) => acc + s.itens.reduce((a, it) => a + Math.max(...it.opts.map((o) => o.v)), 0),
+  0
+);
+
+function finneganResult(score) {
+  if (score < 8) {
+    return {
+      grau: "Abaixo do limiar farmacológico",
+      color: "#10B981",
+      condutas: [
+        "Manter medidas não farmacológicas: ambiente calmo, pouca luz/ruído, contato pele a pele",
+        "Priorizar aleitamento materno, se não houver contraindicação",
+        "Reavaliar a cada 3–4 h",
+      ],
+    };
+  }
+  if (score < 12) {
+    return {
+      grau: "Zona de atenção",
+      color: "#F59E0B",
+      condutas: [
+        "Otimizar medidas não farmacológicas antes de considerar tratamento",
+        "Reavaliar em intervalo curto (3–4 h)",
+        "Comunicar a equipe se o escore se mantiver ≥ 8 em avaliações consecutivas",
+      ],
+    };
+  }
+  return {
+    grau: "Score isolado atinge critério de gravidade",
+    color: "#EF4444",
+    condutas: [
+      "Confirmar padrão antes de tratar: critério clássico é ≥ 8 em 3 avaliações consecutivas OU ≥ 12 em 2 avaliações consecutivas",
+      "Se o padrão se confirmar: iniciar tratamento farmacológico conforme protocolo institucional — doses de morfina/metadona/fenobarbital em PedFarma",
+      "Manter reavaliação a cada 3–4 h durante o tratamento",
+    ],
+  };
+}
+
+function TabFinnegan() {
+  const [vals, setVals] = useState(Array(FINNEGAN_TOTAL_ITENS).fill(0));
+  const total = vals.reduce((a, b) => a + b, 0);
+  const res   = finneganResult(total);
+  const set   = (i, v) => setVals(prev => prev.map((x, idx) => idx === i ? v : x));
+
+  return (
+    <div>
+      <InfoBox color="#7C3AED">
+        <strong>Escala de Finnegan modificada (21 itens) — AAP 2020.</strong> Avaliação da Síndrome de Abstinência Neonatal (SAN) em RN exposto a opioides/outras substâncias na gestação. Reavaliar a cada 3–4 h.
+      </InfoBox>
+
+      {FINNEGAN_SECOES.map((secao, si) => (
+        <div key={si} style={{ marginBottom: 16 }}>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "#6B7280", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+            {secao.titulo}
+          </p>
+          {secao.itens.map((item) => (
+            <div key={item.idx} style={{ marginBottom: 12 }}>
+              <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 6px" }}>{item.label}</p>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {item.opts.map((opt) => (
+                  <button
+                    key={opt.v}
+                    onClick={() => set(item.idx, opt.v)}
+                    style={{
+                      padding: "6px 12px", borderRadius: 8, fontSize: 12,
+                      fontWeight: vals[item.idx] === opt.v ? 700 : 500, cursor: "pointer", border: "none",
+                      background: vals[item.idx] === opt.v ? "#7C3AED" : "#F3F4F6",
+                      color: vals[item.idx] === opt.v ? "#fff" : "#374151",
+                    }}
+                  >
+                    {opt.label} ({opt.v})
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      <div style={{ background: "#F3F4F6", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>Pontuação total</span>
+        <span style={{ fontWeight: 800, fontSize: 18, color: "#111827" }}>{total} / {FINNEGAN_MAX_SCORE}</span>
+      </div>
+      <ResultBox label={res.grau} value={"Finnegan: " + total} color={res.color} condutas={res.condutas} />
+
+      <InfoBox color="#DC2626">
+        <strong>Importante:</strong> a decisão de iniciar tratamento farmacológico não se baseia em uma única pontuação isolada. Critério clássico: escore ≥ 8 em 3 avaliações consecutivas OU ≥ 12 em 2 avaliações consecutivas.
+      </InfoBox>
+    </div>
+  );
+}
+
 export default function Scores() {
   const [tab, setTab] = useState(0);
-  const tabs  = ["Gorelick", "Westley", "PEWS"];
-  const cores = ["#3B82F6", "#F59E0B", "#EF4444"];
+  const tabs  = ["Gorelick", "Westley", "PEWS", "Finnegan"];
+  const cores = ["#3B82F6", "#F59E0B", "#EF4444", "#7C3AED"];
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Scores Pediátricos</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Desidratação · Crupe · PEWS</p>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Desidratação · Crupe · PEWS · Finnegan</p>
       </div>
       <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
         {tabs.map((t, i) => {
@@ -194,12 +338,13 @@ export default function Scores() {
         {tab === 0 && <TabGorelick />}
         {tab === 1 && <TabWestley />}
         {tab === 2 && <TabPEWS />}
+        {tab === 3 && <TabFinnegan />}
       </div>
       <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
         <div style={{ display: "flex", gap: 8 }}>
           <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Gorelick 1997/SBP 2022 · Westley 1978/SBP 2017 · PEWS Monaghan 2005. Não substitui julgamento clínico.
+            <strong>Apoio à decisão clínica.</strong> Gorelick 1997/SBP 2022 · Westley 1978/SBP 2017 · PEWS Monaghan 2005 · Finnegan modificada/AAP 2020. Não substitui julgamento clínico.
           </p>
         </div>
       </div>
