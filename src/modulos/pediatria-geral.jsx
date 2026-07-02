@@ -21,6 +21,7 @@ import {
   ClipboardList,
   Shield,
   Baby,
+  Bug,
 } from "lucide-react";
 
 const COR_HUB = "#1E40AF";
@@ -70,13 +71,14 @@ const SECOES = [
     ],
   },
   {
-    titulo: "Gastro & Dermato",
+    titulo: "Especialidades Pediátricas",
     Icon: FlaskConical,
     mods: [
       { rota: "/gastropediatria", label: "Gastro",     desc: "DRGE · APLV · Constipação",         Icon: Activity,     cor: "#F59E0B" },
       { rota: "/formulas",        label: "Fórmulas",   desc: "Nestlé × Danone · Escada APLV",     Icon: FlaskConical, cor: "#10B981" },
       { rota: "/hidratacao",      label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", Icon: Droplets,     cor: "#3B82F6" },
       { rota: "/dermato",         label: "Dermato",    desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield,   cor: "#EC4899" },
+      { rota: "/torchs",          label: "Infecções Congênitas", desc: "TORCHS · sífilis, toxo, CMV, herpes, rubéola", Icon: Bug, cor: "#E11D48" },
     ],
   },
 ];
