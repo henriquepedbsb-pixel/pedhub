@@ -29,6 +29,7 @@ const Antibioticos     = lazy(() => import("./modulos/antibioticos"));
 const Sedacao          = lazy(() => import("./modulos/sedacao"));
 const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
 const IdadeGestacional = lazy(() => import("./modulos/idade-gestacional"));
+const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
 const Neonatal         = lazy(() => import("./modulos/neonatal"));
@@ -53,30 +54,32 @@ const NEC              = lazy(() => import("./modulos/nec"));
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 /* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
 const MODULO_MAP = {
-  // Pediatria Geral
+  // Pediatria Geral — hub
+  "/pediatria-geral":   { label: "Pediatria Geral",           cor: "#1E40AF" },
+  // Pediatria Geral — módulos (voltam ao hub)
   "/percentis":         { label: "Percentis",                 cor: "#3B82F6", voltar: "/neonatal" },
-  "/percentis-oms":     { label: "Percentis (OMS)",           cor: "#3B82F6" },
-  "/urgencias":         { label: "Urgências",                 cor: "#EF4444" },
-  "/formulas":          { label: "Fórmulas Infantis",         cor: "#10B981" },
-  "/gastropediatria":   { label: "Gastropediatria",           cor: "#F59E0B" },
-  "/pedfarma":          { label: "PedFarma",                  cor: "#8B5CF6" },
-  "/vacinal":           { label: "Calendário Vacinal",        cor: "#06B6D4" },
-  "/hidratacao":        { label: "Hidratação",                cor: "#3B82F6" },
-  "/scores":            { label: "Scores Pediátricos",        cor: "#F97316" },
-  "/febre-sem-foco":    { label: "Febre Sem Foco",            cor: "#EF4444" },
-  "/tce-leve":          { label: "TCE Leve",                  cor: "#7C3AED" },
-  "/dnpm":              { label: "DNPM",                      cor: "#8B5CF6" },
-  "/dermato":           { label: "Dermatologia",              cor: "#EC4899" },
-  "/sepse":             { label: "Sepse Pediátrica",          cor: "#DC2626" },
-  "/isr":               { label: "ISR Pediátrica",            cor: "#C2410C" },
-  "/ventilacao":        { label: "Ventilação Mecânica",       cor: "#0891B2" },
-  "/eletrolitos":       { label: "Distúrbios Eletrolíticos",  cor: "#7C3AED" },
-  "/bronquiolite":      { label: "Bronquiolite",              cor: "#0D9488" },
-  "/analgesia-sedacao": { label: "Analgesia e Sedação",       cor: "#F59E0B" },
-  "/dor":               { label: "Escalas de Dor",            cor: "#F97316" },
-  "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488" },
-  "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1" },
-  "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9" },
+  "/percentis-oms":     { label: "Percentis (OMS)",           cor: "#3B82F6", voltar: "/pediatria-geral" },
+  "/urgencias":         { label: "Urgências",                 cor: "#EF4444", voltar: "/pediatria-geral" },
+  "/formulas":          { label: "Fórmulas Infantis",         cor: "#10B981", voltar: "/pediatria-geral" },
+  "/gastropediatria":   { label: "Gastropediatria",           cor: "#F59E0B", voltar: "/pediatria-geral" },
+  "/pedfarma":          { label: "PedFarma",                  cor: "#8B5CF6", voltar: "/pediatria-geral" },
+  "/vacinal":           { label: "Calendário Vacinal",        cor: "#06B6D4", voltar: "/pediatria-geral" },
+  "/hidratacao":        { label: "Hidratação",                cor: "#3B82F6", voltar: "/pediatria-geral" },
+  "/scores":            { label: "Scores Pediátricos",        cor: "#F97316", voltar: "/pediatria-geral" },
+  "/febre-sem-foco":    { label: "Febre Sem Foco",            cor: "#EF4444", voltar: "/pediatria-geral" },
+  "/tce-leve":          { label: "TCE Leve",                  cor: "#7C3AED", voltar: "/pediatria-geral" },
+  "/dnpm":              { label: "DNPM",                      cor: "#8B5CF6", voltar: "/pediatria-geral" },
+  "/dermato":           { label: "Dermatologia",              cor: "#EC4899", voltar: "/pediatria-geral" },
+  "/sepse":             { label: "Sepse Pediátrica",          cor: "#DC2626", voltar: "/pediatria-geral" },
+  "/isr":               { label: "ISR Pediátrica",            cor: "#C2410C", voltar: "/pediatria-geral" },
+  "/ventilacao":        { label: "Ventilação Mecânica",       cor: "#0891B2", voltar: "/pediatria-geral" },
+  "/eletrolitos":       { label: "Distúrbios Eletrolíticos",  cor: "#7C3AED", voltar: "/pediatria-geral" },
+  "/bronquiolite":      { label: "Bronquiolite",              cor: "#0D9488", voltar: "/pediatria-geral" },
+  "/analgesia-sedacao": { label: "Analgesia e Sedação",       cor: "#F59E0B", voltar: "/pediatria-geral" },
+  "/dor":               { label: "Escalas de Dor",            cor: "#F97316", voltar: "/pediatria-geral" },
+  "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488", voltar: "/pediatria-geral" },
+  "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1", voltar: "/pediatria-geral" },
+  "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9", voltar: "/pediatria-geral" },
   "/idade-gestacional": { label: "Idade Gestacional",         cor: "#2563EB", voltar: "/neonatal" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
@@ -180,6 +183,7 @@ export default function App() {
           <Route path="/"                  element={<PedHub />} />
 
           {/* ─── Pediatria Geral ─── */}
+          <Route path="/pediatria-geral"   element={<PediatriaGeral />} />
           <Route path="/percentis"         element={<Percentis />} />
           <Route path="/percentis-oms"     element={<Percentis somenteOMS />} />
           <Route path="/urgencias"         element={<Urgencias />} />
