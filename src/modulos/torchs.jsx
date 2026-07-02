@@ -15,7 +15,7 @@ import {
   Bug,
 } from "lucide-react";
 
-const COR = "#6366F1"; // indigo-500 — cor do módulo TORCHS
+const COR = "#E11D48"; // rose-600 — cor do módulo TORCHS
 
 // ─────────────────────────────────────────────────────────
 // Sub-componentes (definidos FORA do componente principal —
@@ -125,12 +125,12 @@ export default function Torchs() {
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
       {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #4F46E5)` }}>
+      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #9F1239)` }}>
         <h1 className="text-white text-lg font-bold flex items-center gap-2">
           <Baby size={22} />
-          TORCHS — Infecções Congênitas
+          Infecções Congênitas
         </h1>
-        <p className="text-indigo-100 text-xs mt-1">
+        <p className="text-rose-100 text-xs mt-1">
           Toxoplasmose · Rubéola · Citomegalovírus · Herpes · Sífilis congênita
         </p>
       </div>
@@ -146,7 +146,7 @@ export default function Torchs() {
           value={pesoStr}
           onChange={(e) => setPesoStr(e.target.value)}
           placeholder="Ex: 3,2"
-          className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-indigo-400"
+          className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-rose-400"
         />
       </div>
 
@@ -163,7 +163,7 @@ export default function Torchs() {
                 onClick={() => setAba(p.id)}
                 className={
                   ativo
-                    ? "!bg-indigo-500 !text-white flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
+                    ? "!bg-rose-600 !text-white flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
                     : "bg-white text-gray-600 border border-gray-200 flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
                 }
               >
