@@ -52,6 +52,7 @@ const DorNeonatal      = lazy(() => import("./modulos/DorNeonatal"));
 const Hipotermia       = lazy(() => import("./modulos/hipotermia"));
 const Surfactante      = lazy(() => import("./modulos/surfactante"));
 const NEC              = lazy(() => import("./modulos/nec"));
+const SalaDeParto      = lazy(() => import("./modulos/sala-de-parto"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 /* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
@@ -105,6 +106,7 @@ const MODULO_MAP = {
   "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5", voltar: "/neonatal" },
   "/surfactante":       { label: "Surfactante",               cor: "#059669", voltar: "/neonatal" },
   "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E", voltar: "/neonatal" },
+  "/sala-de-parto":     { label: "Sala de Parto",             cor: "#B45309", voltar: "/neonatal" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -234,6 +236,7 @@ export default function App() {
           <Route path="/hipotermia"        element={<Hipotermia />} />
           <Route path="/surfactante"       element={<Surfactante />} />
           <Route path="/nec"               element={<NEC />} />
+          <Route path="/sala-de-parto"     element={<SalaDeParto />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
