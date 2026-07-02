@@ -30,6 +30,7 @@ const Sedacao          = lazy(() => import("./modulos/sedacao"));
 const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
 const IdadeGestacional = lazy(() => import("./modulos/idade-gestacional"));
 const Torchs           = lazy(() => import("./modulos/torchs"));
+const Intoxicacoes     = lazy(() => import("./modulos/intoxicacoes"));
 const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
@@ -83,6 +84,7 @@ const MODULO_MAP = {
   "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9", voltar: "/pediatria-geral" },
   "/idade-gestacional": { label: "Idade Gestacional",         cor: "#2563EB", voltar: "/neonatal" },
   "/torchs":            { label: "Infecções Congênitas",      cor: "#E11D48", voltar: "/pediatria-geral" },
+  "/intoxicacoes":      { label: "Intoxicações",              cor: "#65A30D", voltar: "/pediatria-geral" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
@@ -211,6 +213,7 @@ export default function App() {
           <Route path="/exames-lab"        element={<ExamesLab />} />
           <Route path="/idade-gestacional" element={<IdadeGestacional />} />
           <Route path="/torchs"            element={<Torchs />} />
+          <Route path="/intoxicacoes"      element={<Intoxicacoes />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
