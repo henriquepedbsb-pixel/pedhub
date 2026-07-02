@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pill, Search, Info, ChevronRight } from "lucide-react";
+import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight } from "lucide-react";
 
 const PRIMARY = "#8B5CF6";
 
@@ -69,8 +69,104 @@ function parsePeso(s) {
   return !isNaN(v) && v > 0 && v <= 150 ? v : null;
 }
 
+function parseDose(s) {
+  const v = parseFloat(String(s).replace(",", "."));
+  return !isNaN(v) && v > 0 ? v : null;
+}
+
 const CATS = ["Todos", "Antibiótico", "Analgésico", "Corticoide", "Respiratório", "Antihistamínico", "Gastrointestinal", "Neurológico", "Antifúngico", "Antiviral", "Suplemento", "Antídoto"];
 const CAT_CORES = { "Antibiótico":"#10B981","Analgésico":"#EF4444","Corticoide":"#F97316","Respiratório":"#2563EB","Antihistamínico":"#F59E0B","Gastrointestinal":"#D97706","Neurológico":"#7C3AED","Antifúngico":"#059669","Antiviral":"#0891B2","Suplemento":"#10B981","Antídoto":"#DC2626" };
+
+// ─── Conversor de equivalência de corticosteroides sistêmicos ─────────────────
+// Doses equivalentes (potência anti-inflamatória/glicocorticoide), referência
+// clássica amplamente citada (Harriet Lane, UpToDate): 20mg hidrocortisona ≈
+// 5mg prednisona ≈ 5mg prednisolona ≈ 4mg metilprednisolona ≈ 0,75mg dexametasona
+const CORTICOIDES_EQUIV = [
+  { id: "hidrocortisona", nome: "Hidrocortisona", doseEquiv: 20,   duracao: "Curta (8–12h)",        mineralocorticoide: "Significativa" },
+  { id: "prednisona",     nome: "Prednisona",      doseEquiv: 5,    duracao: "Intermediária (12–36h)", mineralocorticoide: "Leve" },
+  { id: "prednisolona",   nome: "Prednisolona",    doseEquiv: 5,    duracao: "Intermediária (12–36h)", mineralocorticoide: "Leve" },
+  { id: "metilprednisolona", nome: "Metilprednisolona", doseEquiv: 4, duracao: "Intermediária (12–36h)", mineralocorticoide: "Mínima" },
+  { id: "dexametasona",   nome: "Dexametasona",    doseEquiv: 0.75, duracao: "Longa (36–72h)",       mineralocorticoide: "Nenhuma" },
+];
+
+function CorticoideConversor() {
+  const [origemId, setOrigemId] = useState("prednisolona");
+  const [doseRaw, setDoseRaw]   = useState("");
+  const dose = parseDose(doseRaw);
+  const origem = CORTICOIDES_EQUIV.find(c => c.id === origemId);
+
+  return (
+    <div>
+      <p style={{ fontSize: 11, color: "#6B7280", margin: "0 0 10px", lineHeight: 1.5 }}>
+        Converte a dose entre corticosteroides sistêmicos pela <strong>potência anti-inflamatória equivalente</strong> — útil ao trocar via (ex: hidrocortisona IV → prednisolona VO no desmame).
+      </p>
+
+      <label style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>CORTICOIDE DE ORIGEM</label>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+        {CORTICOIDES_EQUIV.map(c => (
+          <button
+            key={c.id}
+            onClick={() => setOrigemId(c.id)}
+            style={{
+              padding: "6px 12px", borderRadius: 20, fontSize: 11,
+              fontWeight: origemId === c.id ? 700 : 500, cursor: "pointer", border: "none",
+              background: origemId === c.id ? PRIMARY : "#F3F4F6",
+              color: origemId === c.id ? "#fff" : "#6B7280",
+            }}
+          >
+            {c.nome}
+          </button>
+        ))}
+      </div>
+
+      <label style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>DOSE ATUAL (mg)</label>
+      <input
+        type="text"
+        inputMode="decimal"
+        placeholder="Ex: 20"
+        value={doseRaw}
+        onChange={e => setDoseRaw(e.target.value)}
+        style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "#fff", boxSizing: "border-box", marginBottom: 12 }}
+      />
+
+      {dose ? (
+        <>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", margin: "0 0 8px", letterSpacing: "0.04em" }}>DOSES EQUIVALENTES</p>
+          {CORTICOIDES_EQUIV.map(c => {
+            const equivDose = parseFloat((dose * (c.doseEquiv / origem.doseEquiv)).toFixed(2));
+            const isOrigem = c.id === origemId;
+            return (
+              <div
+                key={c.id}
+                style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: "8px 12px", borderRadius: 8, marginBottom: 6,
+                  background: isOrigem ? PRIMARY + "15" : "#F9FAFB",
+                  border: "1px solid " + (isOrigem ? PRIMARY + "40" : "#E5E7EB"),
+                }}
+              >
+                <div>
+                  <p style={{ fontSize: 12, fontWeight: isOrigem ? 700 : 600, color: isOrigem ? PRIMARY : "#111827", margin: 0 }}>
+                    {c.nome}{isOrigem && " (origem)"}
+                  </p>
+                  <p style={{ fontSize: 10, color: "#9CA3AF", margin: "1px 0 0" }}>{c.duracao} · Mineralocorticoide: {c.mineralocorticoide}</p>
+                </div>
+                <p style={{ fontSize: 16, fontWeight: 800, color: isOrigem ? PRIMARY : "#374151", margin: 0 }}>{equivDose} mg</p>
+              </div>
+            );
+          })}
+          <div style={{ background: "#FFF7ED", borderRadius: 8, padding: "10px 12px", marginTop: 8, borderLeft: "3px solid #F97316" }}>
+            <p style={{ fontSize: 11, color: "#374151", margin: 0, lineHeight: 1.5 }}>
+              <strong>⚠ A equivalência é só de potência glicocorticoide/anti-inflamatória.</strong> Hidrocortisona tem atividade mineralocorticoide significativa (relevante em insuficiência adrenal) que os demais não replicam — não usar esta tabela para substituir hidrocortisona em reposição adrenal sem ajustar mineralocorticoide separadamente (fludrocortisona, se indicado).
+            </p>
+          </div>
+        </>
+      ) : (
+        <p style={{ fontSize: 11, color: "#9CA3AF", textAlign: "center", padding: 8 }}>Informe a dose atual para ver as equivalências</p>
+      )}
+    </div>
+  );
+}
 
 function DrugCard({ drug, peso }) {
   const cor = CAT_CORES[drug.cat] || PRIMARY;
@@ -106,6 +202,7 @@ export default function Pedfarma() {
   const [busca, setBusca] = useState("");
   const [cat, setCat]     = useState("Todos");
   const [pesoRaw, setPesoRaw] = useState("");
+  const [mostrarConversor, setMostrarConversor] = useState(false);
   const peso = parsePeso(pesoRaw);
 
   const filtered = DRUGS.filter(d => {
@@ -118,7 +215,7 @@ export default function Pedfarma() {
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>PedFarma</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>47 medicamentos · dose por peso</p>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>48 medicamentos · dose por peso</p>
       </div>
 
       <div style={{ padding: "12px 16px", background: "#FAF5FF", borderBottom: "1px solid #DDD6FE" }}>
@@ -127,6 +224,29 @@ export default function Pedfarma() {
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "#fff", boxSizing: "border-box" }} />
         {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {peso} kg — use a dose como referência para calcular</p>}
+      </div>
+
+      {/* Conversor de equivalência de corticosteroides */}
+      <div style={{ padding: "12px 16px", borderBottom: "1px solid #F3F4F6" }}>
+        <button
+          onClick={() => setMostrarConversor(v => !v)}
+          style={{
+            width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+            background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 10,
+            padding: "10px 12px", cursor: "pointer",
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "#C2410C" }}>
+            <ArrowLeftRight size={15} />
+            Conversor de Corticosteroides
+          </span>
+          {mostrarConversor ? <ChevronUp size={16} color="#C2410C" /> : <ChevronDown size={16} color="#C2410C" />}
+        </button>
+        {mostrarConversor && (
+          <div style={{ marginTop: 10, background: "#F9FAFB", borderRadius: 10, padding: "12px", border: "1px solid #E5E7EB" }}>
+            <CorticoideConversor />
+          </div>
+        )}
       </div>
 
       <div style={{ padding: "10px 16px" }}>
