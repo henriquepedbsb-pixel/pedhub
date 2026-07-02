@@ -62,6 +62,7 @@ const MODULOS = [
   { rota: "/antibioticos",     label: "Antibioticoterapia",   desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope,   cor: "#0D9488", grupo: "Pediatria Geral" },
   { rota: "/sedacao",          label: "Sedação",              desc: "Cetamina · Midazolam · Fentanil · Checklist", Icon: Syringe, cor: "#6366F1", grupo: "Pediatria Geral" },
   { rota: "/exames-lab",       label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9", grupo: "Pediatria Geral" },
+  { rota: "/torchs",           label: "Infecções Congênitas", desc: "TORCHS · sífilis, toxo, CMV, herpes, rubéola", Icon: Bug,     cor: "#E11D48", grupo: "Pediatria Geral" },
 
   /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
@@ -89,7 +90,6 @@ const EM_BREVE = [
   { label: "Intoxicações",           desc: "Ingestão acidental · CIATOX · antídotos",       Icon: AlertOctagon, cor: "#DC2626" },
   { label: "Oftalmologia",           desc: "Reflexo vermelho · triagem visual",             Icon: Eye,          cor: "#0EA5E9" },
   { label: "Triagem Neonatal",       desc: "Pezinho · olhinho · orelhinha · coraçãozinho",  Icon: Footprints,   cor: "#0D9488" },
-  { label: "Infecções Congênitas",   desc: "STORCH · sífilis · toxoplasmose · CMV",         Icon: Bug,          cor: "#8B5CF6" },
   { label: "Doenças Exantemáticas",  desc: "Sarampo · rubéola · exantema súbito e outros",  Icon: Thermometer,  cor: "#F59E0B" },
 ];
 
