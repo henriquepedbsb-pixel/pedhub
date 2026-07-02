@@ -9,6 +9,7 @@ import {
   Droplets,
   Heart,
   Info,
+  Ruler,
   Wind,
   Zap,
 } from "lucide-react";
@@ -19,6 +20,31 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 150 ? v : null;
+}
+
+/* ─── Fita de Broselow — estimativa de peso por comprimento ────────────────
+   Faixas de comprimento e peso conforme fita de Broselow-Luten (uso PALS).
+   Estimativa para emergência quando o peso real não pode ser obtido —
+   peso real medido sempre tem prioridade sobre esta estimativa.          */
+const BROSELOW = [
+  { nome: "Cinza",   hex: "#6B7280", compMin: 46,  compMax: 52.4, pesoMin: 3,  pesoMax: 5,  pesoEstimado: 4,    tot: "3,5" },
+  { nome: "Rosa",    hex: "#EC4899", compMin: 52.5, compMax: 66.7, pesoMin: 6,  pesoMax: 7,  pesoEstimado: 6.5,  tot: "3,5–4,0" },
+  { nome: "Vermelho",hex: "#EF4444", compMin: 66.8, compMax: 74.5, pesoMin: 8,  pesoMax: 9,  pesoEstimado: 8.5,  tot: "4,0" },
+  { nome: "Roxo",    hex: "#8B5CF6", compMin: 74.6, compMax: 84.6, pesoMin: 10, pesoMax: 11, pesoEstimado: 10.5, tot: "4,5" },
+  { nome: "Amarelo", hex: "#D97706", compMin: 84.7, compMax: 97.7, pesoMin: 12, pesoMax: 14, pesoEstimado: 13,   tot: "5,0" },
+  { nome: "Branco",  hex: "#9CA3AF", compMin: 97.8, compMax: 108.6, pesoMin: 15, pesoMax: 18, pesoEstimado: 16.5, tot: "5,5" },
+  { nome: "Azul",    hex: "#2563EB", compMin: 108.7, compMax: 121.7, pesoMin: 19, pesoMax: 23, pesoEstimado: 21,   tot: "6,0" },
+  { nome: "Laranja", hex: "#EA580C", compMin: 121.8, compMax: 137.7, pesoMin: 24, pesoMax: 29, pesoEstimado: 26.5, tot: "6,5" },
+  { nome: "Verde",   hex: "#059669", compMin: 137.8, compMax: 150,  pesoMin: 30, pesoMax: 36, pesoEstimado: 33,   tot: "7,0" },
+];
+
+function parseAltura(s) {
+  const v = parseFloat(String(s).replace(",", "."));
+  return !isNaN(v) && v > 0 && v <= 220 ? v : null;
+}
+
+function estimarBroselow(alturaCm) {
+  return BROSELOW.find((z) => alturaCm >= z.compMin && alturaCm <= z.compMax) || null;
 }
 
 function calcDoses(w) {
@@ -1024,9 +1050,14 @@ export default function Urgencias() {
   const [criseAtiva, setCrise]    = useState(null);       // id da crise aberta
   const [tab, setTab]             = useState(0);
   const [pesoRaw, setPesoRaw]     = useState("");
+  const [alturaRaw, setAlturaRaw] = useState("");
+  const [mostrarBroselow, setMostrarBroselow] = useState(false);
 
   const peso = parsePeso(pesoRaw);
   const d    = peso ? calcDoses(peso) : null;
+
+  const altura = parseAltura(alturaRaw);
+  const zonaBroselow = altura ? estimarBroselow(altura) : null;
 
   const criseObj = CRISES.find((c) => c.id === criseAtiva) || null;
 
@@ -1102,6 +1133,77 @@ export default function Urgencias() {
         </div>
         {!peso && pesoRaw.length > 0 && (
           <p style={{ fontSize: 11, color: "#DC2626", margin: "4px 0 0" }}>Peso inválido · Use vírgula ou ponto decimal (ex: 12,5)</p>
+        )}
+
+        {/* ── Estimador de peso por altura — Fita de Broselow ── */}
+        <button
+          onClick={() => setMostrarBroselow((v) => !v)}
+          style={{
+            display: "flex", alignItems: "center", gap: 6, background: "none",
+            border: "none", cursor: "pointer", color: "#991B1B", fontSize: 12,
+            fontWeight: 700, padding: 0, marginTop: 10,
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          <Ruler size={14} />
+          {mostrarBroselow ? "Ocultar estimador por altura" : "Não sabe o peso? Estimar por altura (fita de Broselow)"}
+        </button>
+
+        {mostrarBroselow && (
+          <div style={{ marginTop: 10, background: "#fff", border: "1px solid #FECACA", borderRadius: 10, padding: "12px 14px" }}>
+            <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
+              ALTURA / COMPRIMENTO (cm)
+            </label>
+            <input
+              type="text"
+              inputMode="decimal"
+              placeholder="Ex: 95"
+              value={alturaRaw}
+              onChange={(e) => setAlturaRaw(e.target.value)}
+              style={{
+                width: "100%", padding: "10px 14px", borderRadius: 8, fontSize: 16,
+                border: "1.5px solid #FCA5A5", outline: "none", background: "#fff", color: "#111827",
+                boxSizing: "border-box",
+              }}
+            />
+            {altura && !zonaBroselow && (
+              <p style={{ fontSize: 11, color: "#DC2626", margin: "8px 0 0" }}>
+                Fora da faixa coberta pela fita (aprox. 46–150 cm). Use o peso real, se possível, ou estimativa por idade.
+              </p>
+            )}
+            {zonaBroselow && (
+              <div style={{ marginTop: 10 }}>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 10, background: zonaBroselow.hex + "18",
+                  border: "1.5px solid " + zonaBroselow.hex, borderRadius: 10, padding: "10px 12px",
+                }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, background: zonaBroselow.hex, flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: 0 }}>Faixa {zonaBroselow.nome}</p>
+                    <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
+                      {zonaBroselow.pesoMin}–{zonaBroselow.pesoMax} kg · peso estimado {zonaBroselow.pesoEstimado} kg
+                    </p>
+                  </div>
+                </div>
+                <p style={{ fontSize: 11, color: "#6B7280", margin: "8px 0 8px" }}>
+                  TOT sugerido: {zonaBroselow.tot} mm (sem balonete, referência) · Desfibrilação: {Math.round(zonaBroselow.pesoEstimado * 2)} J (1º choque) · {Math.round(zonaBroselow.pesoEstimado * 4)} J (2º choque) — sempre ter 1 tamanho de tubo acima/abaixo disponível.
+                </p>
+                <button
+                  onClick={() => { setPesoRaw(String(zonaBroselow.pesoEstimado).replace(".", ",")); setMostrarBroselow(false); }}
+                  style={{
+                    width: "100%", padding: "10px", borderRadius: 8, border: "none",
+                    background: "#DC2626", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  Usar peso estimado ({zonaBroselow.pesoEstimado} kg) nas calculadoras
+                </button>
+              </div>
+            )}
+            <p style={{ fontSize: 10, color: "#9CA3AF", margin: "8px 0 0", lineHeight: 1.4 }}>
+              Estimativa para uso emergencial quando o peso real não pode ser obtido de imediato (ex.: paciente inconsciente, sem acompanhante). Pesar a criança assim que possível — o peso real medido sempre tem prioridade sobre esta estimativa.
+            </p>
+          </div>
         )}
       </div>
 
