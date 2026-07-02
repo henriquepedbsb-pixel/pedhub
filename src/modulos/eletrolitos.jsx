@@ -84,6 +84,8 @@ export default function Eletrolitos() {
   const [kVal,   setKVal]   = useState('');
   const [caVal,  setCaVal]  = useState('');
   const [mgVal,  setMgVal]  = useState('');
+  const [glicoseVal, setGlicoseVal] = useState('');
+  const [ureiaVal,   setUreiaVal]   = useState('');
   const [aberto, setAberto] = useState(null);
 
   const p   = parseNum(peso);
@@ -92,6 +94,8 @@ export default function Eletrolitos() {
   const k   = parseNum(kVal);
   const ca  = parseNum(caVal);
   const mg  = parseNum(mgVal);
+  const glic   = parseNum(glicoseVal);
+  const ureiaN = parseNum(ureiaVal);
   const fat = getFator(id);
 
   const calcs = useMemo(() => {
@@ -160,8 +164,28 @@ export default function Eletrolitos() {
       mgC = { mg, dose25, dose50, vol25, vol50 };
     }
 
-    return { naC, kC, caC, mgC };
-  }, [p, na, k, ca, mg, fat]);
+    // ── Sódio corrigido (hiperglicemia) + Osmolaridade sérica ─────────────────
+    // Katz 1973: Na + 1.6 × [(glicose-100)/100] · Hillier 1999 (revisado,
+    // mais preciso em glicemias muito altas): Na + 2.4 × [(glicose-100)/100]
+    // Osmolaridade calculada: 2×Na + Glicose/18 + Ureia/6
+    // (usa UREIA sérica em mg/dL — padrão dos laboratórios brasileiros —
+    // não BUN; se o valor de origem for BUN, o divisor correto é 2,8)
+    let correcao = null;
+    if (na > 0) {
+      const naKatz    = glic > 100 ? parseFloat((na + 1.6 * ((glic - 100) / 100)).toFixed(1)) : null;
+      const naHillier = glic > 100 ? parseFloat((na + 2.4 * ((glic - 100) / 100)).toFixed(1)) : null;
+      let osm = null, osmClass = null, osmCor = null;
+      if (glic > 0 && ureiaN > 0) {
+        osm = parseFloat((2 * na + glic / 18 + ureiaN / 6).toFixed(1));
+        if (osm < 275)      { osmClass = 'Hipo-osmolar';  osmCor = '#3B82F6'; }
+        else if (osm <= 295) { osmClass = 'Normal';        osmCor = '#10B981'; }
+        else                  { osmClass = 'Hiperosmolar';  osmCor = '#DC2626'; }
+      }
+      correcao = { naKatz, naHillier, osm, osmClass, osmCor };
+    }
+
+    return { naC, kC, caC, mgC, correcao };
+  }, [p, na, k, ca, mg, fat, glic, ureiaN]);
 
   const toggle = (key) => setAberto(aberto === key ? null : key);
 
@@ -289,6 +313,60 @@ export default function Eletrolitos() {
                   </>
                 ) : (
                   <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', padding: '8px' }}>Insira o peso acima para calcular</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Sódio corrigido (hiperglicemia) + Osmolaridade sérica */}
+          <div style={card({ border: `1px solid ${CBR}` })}>
+            <button style={accordBtn()} onClick={() => toggle('na-correcao')}>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🧮 Sódio Corrigido & Osmolaridade</p>
+              {aberto === 'na-correcao' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+            </button>
+            {aberto === 'na-correcao' && (
+              <div style={{ marginTop: '10px' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#6B7280' }}>
+                  Usa o <strong>sódio já preenchido</strong> na calculadora acima — informe também glicose e ureia.
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+                  <Field label="GLICOSE" val={glicoseVal} set={setGlicoseVal} ph="400" unit="mg/dL" />
+                  <Field label="UREIA" val={ureiaVal} set={setUreiaVal} ph="30" unit="mg/dL" />
+                </div>
+
+                {na > 0 && glic > 100 && calcs.correcao && (
+                  <div style={{ marginBottom: '14px' }}>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>SÓDIO CORRIGIDO PARA HIPERGLICEMIA</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                      <ResultBox label="Katz (fator 1,6)" valor={calcs.correcao.naKatz} unit="mEq/L" />
+                      <ResultBox label="Hillier (fator 2,4)" valor={calcs.correcao.naHillier} unit="mEq/L" cor="#D97706" />
+                    </div>
+                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                        Katz: Na + 1,6 × [(glicose − 100) / 100] · Hillier (mais preciso em glicemias muito altas, ex. CAD): Na + 2,4 × [(glicose − 100) / 100]<br />
+                        <span style={{ color: '#D97706', fontWeight: '700' }}>⚠ Hiperglicemia mascara hiponatremia por efeito osmótico — use o valor CORRIGIDO para decidir tratamento, não o valor medido.</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {na > 0 && glicoseVal.length > 0 && glic <= 100 && (
+                  <p style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '10px' }}>Glicemia ≤ 100 mg/dL — fórmula de correção não se aplica (é específica para hiperglicemia)</p>
+                )}
+
+                {na > 0 && glic > 0 && ureiaN > 0 && calcs.correcao?.osm && (
+                  <div>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>OSMOLARIDADE SÉRICA CALCULADA</p>
+                    <ResultBox label="Osmolaridade" valor={calcs.correcao.osm} unit="mOsm/L" sub={calcs.correcao.osmClass} cor={calcs.correcao.osmCor} />
+                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', marginTop: '8px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                        Fórmula: 2 × Na + Glicose/18 + Ureia/6 (ureia sérica em mg/dL — padrão dos laboratórios brasileiros; se o valor de origem for BUN, o divisor correto é 2,8, não 6)<br />
+                        Normal: 275–295 mOsm/L
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {(!na || na === 0) && (
+                  <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', padding: '8px' }}>Preencha o sódio no campo "Calculadora" acima primeiro</p>
                 )}
               </div>
             )}
@@ -598,7 +676,7 @@ export default function Eletrolitos() {
       {/* Disclaimer */}
       <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
         <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
-          Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024.<br />
+          Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>
       </div>
