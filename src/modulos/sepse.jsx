@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -105,6 +105,48 @@ const calcDiluicao = (droga, p) => {
 
 const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
 
+// ─── Score de Rodwell — triagem hematológica de sepse neonatal precoce ──────
+// Rodwell et al. 1988 · 7 critérios hematológicos, 1 ponto cada.
+// Contexto DIFERENTE do Phoenix: Rodwell é para RN nas primeiras ~72h de
+// vida (triagem de sepse precoce por hemograma), enquanto Phoenix é critério
+// de disfunção orgânica para toda a faixa pediátrica (0-18 anos).
+// Valores de referência de leucócitos/neutrófilos variam por HORAS DE VIDA
+// (curvas de Manroe/Mouzinho) — por isso os itens abaixo pedem para marcar
+// "alterado" com base na tabela de referência institucional, em vez de um
+// número fixo único que seria impreciso para RN de idades diferentes.
+const RODWELL_ITEMS = [
+  "Leucometria total anormal (< 5.000 ou > 25.000/mm³ — conforme faixa de referência por horas de vida)",
+  "Contagem total de neutrófilos anormal (fora da faixa de referência por horas de vida — Manroe/Mouzinho)",
+  "Contagem de neutrófilos imaturos elevada (acima da faixa de referência por horas de vida)",
+  "Relação neutrófilos imaturos/totais (I:T) ≥ 0,2",
+  "Relação neutrófilos imaturos/maduros (I:M) ≥ 0,3",
+  "Alterações degenerativas em neutrófilos (vacuolização, granulação tóxica, corpúsculos de Döhle)",
+  "Plaquetopenia (≤ 150.000/mm³)",
+];
+
+function rodwellResult(score) {
+  if (score <= 2) {
+    return {
+      grau: "Baixa probabilidade de sepse",
+      color: "#10B981",
+      condutas: [
+        "Bom valor preditivo negativo — reforça decisão de não tratar se clínica também for tranquilizadora",
+        "Não substitui avaliação clínica seriada nem hemocultura já coletada",
+        "Repetir hemograma em 6-12h se persistir suspeita clínica",
+      ],
+    };
+  }
+  return {
+    grau: "Alta probabilidade de sepse",
+    color: "#EF4444",
+    condutas: [
+      "Correlacionar obrigatoriamente com quadro clínico e hemocultura",
+      "Score elevado reforça indicação de antibioticoterapia empírica, não substitui julgamento clínico",
+      "Repetir hemograma conforme evolução — score isolado não define duração do tratamento",
+    ],
+  };
+}
+
 // ─── Constantes de UI ────────────────────────────────────────────────────────
 const TABS = [
   { id: 'suspeitar', label: 'Suspeitar', icon: AlertTriangle },
@@ -132,12 +174,17 @@ export default function Sepse() {
   const [comUTI,   setComUTI]  = useState(true);
   const [aberto,   setAberto]  = useState(null);
   const [drugSel,  setDrugSel] = useState('epi');
+  const [rodwellVals, setRodwellVals] = useState(Array(7).fill(false));
 
   const p     = parseNum(peso);
   const lac   = parseNum(lactato);
   const trcN  = parseNum(trc);
   const spo2N = parseNum(spo2);
   const tempN = parseNum(temp);
+
+  const rodwellTotal = rodwellVals.filter(Boolean).length;
+  const rodwellRes   = rodwellResult(rodwellTotal);
+  const toggleRodwell = (i) => setRodwellVals(prev => prev.map((v, idx) => idx === i ? !v : v));
 
   const calc = useMemo(() => {
     if (p <= 0) return null;
@@ -422,6 +469,64 @@ export default function Sepse() {
                 {e.urg && <strong style={{ color: C, flexShrink: 0 }}>[Urgente]</strong>}{' '}{e.txt}
               </div>
             ))}
+          </div>
+
+          {/* Score de Rodwell — ferramenta complementar, sepse neonatal precoce */}
+          <div style={card({ border: '1px solid #A7F3D0' })}>
+            <button style={accordionBtn()} onClick={() => toggle('rodwell')}>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#065F46' }}>🩸 Score de Rodwell — Sepse Neonatal Precoce</p>
+              {aberto === 'rodwell' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+            </button>
+            {aberto === 'rodwell' && (
+              <div style={{ marginTop: '10px' }}>
+                <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981', marginBottom: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: '#065F46', lineHeight: 1.5 }}>
+                    <strong>Contexto diferente do Phoenix acima.</strong> Rodwell (1988) é uma triagem <strong>hematológica</strong> (hemograma) para sepse neonatal <strong>precoce</strong> — RN nas primeiras ~72h de vida. Phoenix é critério de <strong>disfunção orgânica</strong> para toda a faixa pediátrica. Use Rodwell como apoio à decisão de iniciar/manter antibiótico em RN com hemograma disponível; use Phoenix para classificar gravidade em qualquer idade pediátrica.
+                  </p>
+                </div>
+                <p style={{ fontWeight: 700, color: '#111827', fontSize: 13, margin: '0 0 8px' }}>Marque os critérios presentes no hemograma:</p>
+                {RODWELL_ITEMS.map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={() => toggleRodwell(i)}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'flex-start', gap: 10,
+                      padding: '9px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer',
+                      background: rodwellVals[i] ? '#ECFDF510' : '#F9FAFB',
+                      border: '1.5px solid ' + (rodwellVals[i] ? '#10B981' : '#E5E7EB'),
+                      textAlign: 'left',
+                    }}
+                  >
+                    <div style={{
+                      width: 20, height: 20, borderRadius: 6, marginTop: 1,
+                      background: rodwellVals[i] ? '#10B981' : '#E5E7EB',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      {rodwellVals[i] && <CheckCircle size={13} color="#fff" />}
+                    </div>
+                    <span style={{ fontSize: 12, color: '#374151', lineHeight: 1.45 }}>{item}</span>
+                  </button>
+                ))}
+                <div style={{ background: '#F3F4F6', borderRadius: 10, padding: '10px 14px', margin: '8px 0', display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontWeight: 600, fontSize: 13, color: '#374151' }}>Pontuação total</span>
+                  <span style={{ fontWeight: 800, fontSize: 17, color: '#111827' }}>{rodwellTotal} / 7</span>
+                </div>
+                <div style={{ borderRadius: 10, border: '2px solid ' + rodwellRes.color, overflow: 'hidden' }}>
+                  <div style={{ background: rodwellRes.color, padding: '10px 14px' }}>
+                    <p style={{ fontWeight: 700, color: '#fff', fontSize: 14, margin: 0 }}>{rodwellRes.grau}</p>
+                  </div>
+                  <div style={{ padding: '10px 14px', background: rodwellRes.color + '10' }}>
+                    <p style={{ fontWeight: 800, fontSize: 16, color: rodwellRes.color, margin: '0 0 8px' }}>Rodwell: {rodwellTotal}</p>
+                    {rodwellRes.condutas.map((c, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+                        <CheckCircle size={12} color={rodwellRes.color} style={{ flexShrink: 0, marginTop: 2 }} />
+                        <span style={{ fontSize: 11, color: '#1F2937', lineHeight: 1.4 }}>{c}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -761,7 +866,7 @@ export default function Sepse() {
       {/* Disclaimer */}
       <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
         <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
-          Weiss SL et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med / Pediatr Crit Care Med (2026).<br />
+          Weiss SL et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med / Pediatr Crit Care Med (2026). Rodwell JD et al. J Pediatr 1988;112:761-767.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>
       </div>
