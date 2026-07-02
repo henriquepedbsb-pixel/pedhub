@@ -37,6 +37,7 @@ const SECOES = [
       { rota: "/tce-leve",       label: "TCE Leve",          desc: "PECARN · TC vs Observação",              Icon: Brain,         cor: "#7C3AED" },
       { rota: "/sepse",          label: "Sepse Pediátrica",  desc: "SSC 2026 · BIC e diluição · Phoenix",    Icon: Activity,      cor: "#DC2626" },
       { rota: "/bronquiolite",   label: "Bronquiolite",      desc: "Gravidade · OAF · nirsevimab",           Icon: Stethoscope,   cor: "#0D9488" },
+      { rota: "/intoxicacoes",   label: "Intoxicações",      desc: "Ingestão acidental · CIATOX · antídotos",Icon: AlertTriangle, cor: "#65A30D" },
     ],
   },
   {
