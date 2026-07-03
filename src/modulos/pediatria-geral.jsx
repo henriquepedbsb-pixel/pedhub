@@ -24,6 +24,7 @@ import {
   Bug,
   Milk,
   Eye,
+  Heart,
 } from "lucide-react";
 
 const COR_HUB = "#1E40AF";
@@ -86,6 +87,7 @@ const SECOES = [
       { rota: "/aleitamento",     label: "Aleitamento", desc: "Amamentação · técnica · introdução alimentar", Icon: Milk, cor: "#F43F5E" },
       { rota: "/oftalmologia",    label: "Oftalmologia", desc: "Reflexo vermelho · triagem visual", Icon: Eye,        cor: "#1E3A8A" },
       { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D" },
+      { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C" },
     ],
   },
 ];
