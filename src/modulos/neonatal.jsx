@@ -38,6 +38,7 @@ const SECOES = [
       { rota: "/neonatologia-4",   label: "Scores Neonatais",     desc: "Apgar · Capurro · Silverman",    Icon: Calculator, cor: "#7C3AED" },
       { rota: "/classificacao-rn", label: "Classificação do RN",  desc: "IG · Peso · Estatura ao nascer", Icon: Ruler,      cor: "#DB2777" },
       { rota: "/sala-de-parto",    label: "Sala de Parto",        desc: "TOT · Sonda · Cateteres umbilicais", Icon: Syringe, cor: "#B45309" },
+      { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: AlertTriangle, cor: "#047857" },
     ],
   },
   {
