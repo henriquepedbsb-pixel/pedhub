@@ -35,6 +35,7 @@ const Aleitamento      = lazy(() => import("./modulos/aleitamento"));
 const Oftalmologia     = lazy(() => import("./modulos/oftalmologia"));
 const DoencasExantematicas = lazy(() => import("./modulos/doencas-exantematicas"));
 const ConvulsaoFebril  = lazy(() => import("./modulos/convulsao-febril"));
+const CardiologiaPediatricaBasica = lazy(() => import("./modulos/cardiologia-pediatrica-basica"));
 const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
@@ -59,6 +60,7 @@ const NEC              = lazy(() => import("./modulos/nec"));
 const SalaDeParto      = lazy(() => import("./modulos/sala-de-parto"));
 const TriagemNeonatal  = lazy(() => import("./modulos/triagem-neonatal"));
 const Pca              = lazy(() => import("./modulos/pca"));
+const MalformacoesCirurgicasNeonatais = lazy(() => import("./modulos/malformacoes-cirurgicas-neonatais"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 /* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
@@ -96,6 +98,7 @@ const MODULO_MAP = {
   "/oftalmologia":      { label: "Oftalmologia",              cor: "#1E3A8A", voltar: "/pediatria-geral" },
   "/doencas-exantematicas": { label: "Doenças Exantemáticas", cor: "#7F1D1D", voltar: "/pediatria-geral" },
   "/convulsao-febril":  { label: "Convulsão Febril",          cor: "#D946EF", voltar: "/pediatria-geral" },
+  "/cardiologia-pediatrica-basica": { label: "Cardiologia Pediátrica", cor: "#BE123C", voltar: "/pediatria-geral" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
@@ -119,6 +122,7 @@ const MODULO_MAP = {
   "/sala-de-parto":     { label: "Sala de Parto",             cor: "#B45309", voltar: "/neonatal" },
   "/triagem-neonatal":  { label: "Triagem Neonatal",          cor: "#14B8A6", voltar: "/neonatal" },
   "/pca":               { label: "PCA",                       cor: "#BE185D", voltar: "/neonatal" },
+  "/malformacoes-cirurgicas-neonatais": { label: "Malformações Cirúrgicas", cor: "#047857", voltar: "/neonatal" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -232,6 +236,7 @@ export default function App() {
           <Route path="/oftalmologia"      element={<Oftalmologia />} />
           <Route path="/doencas-exantematicas" element={<DoencasExantematicas />} />
           <Route path="/convulsao-febril"  element={<ConvulsaoFebril />} />
+          <Route path="/cardiologia-pediatrica-basica" element={<CardiologiaPediatricaBasica />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
@@ -255,6 +260,7 @@ export default function App() {
           <Route path="/sala-de-parto"     element={<SalaDeParto />} />
           <Route path="/triagem-neonatal"  element={<TriagemNeonatal />} />
           <Route path="/pca"               element={<Pca />} />
+          <Route path="/malformacoes-cirurgicas-neonatais" element={<MalformacoesCirurgicasNeonatais />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
