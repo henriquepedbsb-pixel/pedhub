@@ -36,6 +36,7 @@ const SECOES = [
     mods: [
       { rota: "/urgencias",      label: "Urgências",         desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444" },
       { rota: "/febre-sem-foco", label: "Febre Sem Foco",    desc: "Fluxo por faixa etária · PECARN",        Icon: Thermometer,   cor: "#EF4444" },
+      { rota: "/convulsao-febril", label: "Convulsão Febril", desc: "Simples × complexa · critérios de PL",  Icon: Zap,           cor: "#D946EF" },
       { rota: "/tce-leve",       label: "TCE Leve",          desc: "PECARN · TC vs Observação",              Icon: Brain,         cor: "#7C3AED" },
       { rota: "/sepse",          label: "Sepse Pediátrica",  desc: "SSC 2026 · BIC e diluição · Phoenix",    Icon: Activity,      cor: "#DC2626" },
       { rota: "/bronquiolite",   label: "Bronquiolite",      desc: "Gravidade · OAF · nirsevimab",           Icon: Stethoscope,   cor: "#0D9488" },
