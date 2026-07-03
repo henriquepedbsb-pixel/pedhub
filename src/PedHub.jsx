@@ -63,6 +63,9 @@ const MODULOS = [
   { rota: "/exames-lab",       label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9", grupo: "Pediatria Geral" },
   { rota: "/torchs",           label: "Infecções Congênitas", desc: "TORCHS · sífilis, toxo, CMV, herpes, rubéola", Icon: Bug,     cor: "#E11D48", grupo: "Pediatria Geral" },
   { rota: "/intoxicacoes",     label: "Intoxicações",         desc: "Ingestão acidental · CIATOX · antídotos", Icon: AlertTriangle, cor: "#65A30D", grupo: "Pediatria Geral" },
+  { rota: "/aleitamento",      label: "Aleitamento",          desc: "Amamentação · técnica · introdução alimentar", Icon: Milk, cor: "#F43F5E", grupo: "Pediatria Geral" },
+  { rota: "/oftalmologia",     label: "Oftalmologia",         desc: "Reflexo vermelho · triagem visual",     Icon: Eye,           cor: "#1E3A8A", grupo: "Pediatria Geral" },
+  { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D", grupo: "Pediatria Geral" },
 
   /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
@@ -83,15 +86,11 @@ const MODULOS = [
   { rota: "/idade-gestacional", label: "Idade Gestacional",       desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB", grupo: "Neonatologia" },
   { rota: "/percentis",        label: "Percentis (completo)",    desc: "OMS · Intergrowth · Fenton",          Icon: Scale,       cor: "#3B82F6", grupo: "Neonatologia" },
   { rota: "/sala-de-parto",    label: "Sala de Parto",           desc: "TOT · Sonda · Cateteres umbilicais",  Icon: Syringe,     cor: "#B45309", grupo: "Neonatologia" },
+  { rota: "/triagem-neonatal", label: "Triagem Neonatal",        desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6", grupo: "Neonatologia" },
 ];
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
-const EM_BREVE = [
-  { label: "Aleitamento",            desc: "Amamentação · ALERV · introdução alimentar",   Icon: Milk,         cor: "#EC4899" },
-  { label: "Oftalmologia",           desc: "Reflexo vermelho · triagem visual",             Icon: Eye,          cor: "#0EA5E9" },
-  { label: "Triagem Neonatal",       desc: "Pezinho · olhinho · orelhinha · coraçãozinho",  Icon: Footprints,   cor: "#0D9488" },
-  { label: "Doenças Exantemáticas",  desc: "Sarampo · rubéola · exantema súbito e outros",  Icon: Thermometer,  cor: "#F59E0B" },
-];
+const EM_BREVE = [];
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
@@ -425,23 +424,25 @@ export default function PedHub() {
               </div>
             </div>
 
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <p style={{
-                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
-                  letterSpacing: "0.07em", textTransform: "uppercase",
-                }}>
-                  Em breve
-                </p>
-                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{EM_BREVE.length}</span>
+            {EM_BREVE.length > 0 && (
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                  <p style={{
+                    fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                    letterSpacing: "0.07em", textTransform: "uppercase",
+                  }}>
+                    Em breve
+                  </p>
+                  <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
+                  <span style={{ fontSize: 11, color: "#9CA3AF" }}>{EM_BREVE.length}</span>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  {EM_BREVE.map(m => (
+                    <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
+                  ))}
+                </div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {EM_BREVE.map(m => (
-                  <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
-                ))}
-              </div>
-            </div>
+            )}
           </>
         )}
       </div>
