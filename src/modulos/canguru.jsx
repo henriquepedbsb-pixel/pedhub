@@ -309,7 +309,6 @@ export default function Canguru() {
         <p style={{ margin: 0 }}>
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>
-        <p style={{ margin: 0 }}>PedHub · Dr. Henrique Flávio G. Gomes · CRM-DF 14.611</p>
         <p style={{ margin: 0 }}>Ref: ESPGHAN/ESPEN 2018 · NeoFax 2023 · SBP</p>
       </footer>
     </div>
@@ -1044,11 +1043,8 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
 
           <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 16, marginTop: 16 }}>
             <div style={{ height: 44, borderBottom: `1.5px solid ${COR.borda}`, marginBottom: 6 }} />
-            <div style={{ fontSize: 12.5, fontWeight: 700, color: COR.det }}>
-              Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
-            </div>
             <div style={{ fontSize: 11, color: COR.muted }}>
-              Pediatra · Gastropediatra · Neonatologista
+              Assinatura e carimbo do médico responsável
             </div>
           </div>
         </div>
