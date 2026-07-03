@@ -22,6 +22,7 @@ import {
   Ruler,
   Syringe,
   Footprints,
+  Waves,
 } from "lucide-react";
 
 const COR_HUB = "#0E7490";
@@ -47,6 +48,7 @@ const SECOES = [
       { rota: "/surfactante",      label: "Surfactante",             desc: "LISA · INSURE · dose por peso",  Icon: BookOpen,       cor: "#059669" },
       { rota: "/nec",              label: "Enterocolite Necrosante", desc: "Bell · ATB por peso/IG · cirurgia", Icon: AlertTriangle, cor: "#92400E" },
       { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",   Icon: Pill,           cor: "#0891B2" },
+      { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D" },
     ],
   },
   {
