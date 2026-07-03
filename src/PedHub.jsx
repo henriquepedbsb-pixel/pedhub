@@ -33,6 +33,8 @@ import {
   Zap,
   Wind,
   Waves,
+  Users,
+  ScanEye,
 } from "lucide-react";
 
 /* ─── Catálogo completo de módulos ───────────────────────────────────────── */
@@ -69,6 +71,7 @@ const MODULOS = [
   { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D", grupo: "Pediatria Geral" },
   { rota: "/convulsao-febril", label: "Convulsão Febril",     desc: "Classificação simples × complexa · critérios de PL", Icon: Zap, cor: "#D946EF", grupo: "Pediatria Geral" },
   { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
+  { rota: "/adolescencia",     label: "Adolescência",            desc: "Tanner · saúde mental · contracepção",  Icon: Users,       cor: "#7E22CE", grupo: "Pediatria Geral" },
 
   /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
@@ -92,6 +95,7 @@ const MODULOS = [
   { rota: "/triagem-neonatal", label: "Triagem Neonatal",        desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6", grupo: "Neonatologia" },
   { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D", grupo: "Neonatologia" },
   { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: Wind, cor: "#047857", grupo: "Neonatologia" },
+  { rota: "/rop",              label: "Retinopatia da Prematuridade", desc: "Triagem · momento do exame · seguimento", Icon: ScanEye, cor: "#0369A1", grupo: "Neonatologia" },
 ];
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
