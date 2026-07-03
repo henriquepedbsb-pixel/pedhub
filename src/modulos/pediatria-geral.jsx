@@ -25,6 +25,7 @@ import {
   Milk,
   Eye,
   Heart,
+  Users,
 } from "lucide-react";
 
 const COR_HUB = "#1E40AF";
@@ -73,6 +74,7 @@ const SECOES = [
       { rota: "/scores",        label: "Scores",               desc: "Gorelick · Westley · PEWS",             Icon: ClipboardList, cor: "#F97316" },
       { rota: "/dor",           label: "Escalas de Dor",       desc: "FLACC · Wong-Baker · NRS · Escada",     Icon: Activity,      cor: "#F97316" },
       { rota: "/exames-lab",    label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9" },
+      { rota: "/adolescencia",  label: "Adolescência",         desc: "Tanner · saúde mental · contracepção",  Icon: Users,         cor: "#7E22CE" },
     ],
   },
   {
