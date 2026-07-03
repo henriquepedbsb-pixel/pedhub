@@ -23,6 +23,7 @@ import {
   Syringe,
   Footprints,
   Waves,
+  ScanEye,
 } from "lucide-react";
 
 const COR_HUB = "#0E7490";
@@ -73,6 +74,7 @@ const SECOES = [
       { rota: "/cuidados-pele-rn",label: "Pele do RN",         desc: "SBP GPA 140 · Higiene · Emolientes", Icon: Leaf,        cor: "#0891B2" },
       { rota: "/dilucao-bic",     label: "Diluição e BIC",     desc: "Vasoativas · Sedoanalgesia · PGE1",  Icon: Activity,    cor: "#F97316" },
       { rota: "/triagem-neonatal", label: "Triagem Neonatal",  desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6" },
+      { rota: "/rop",             label: "Retinopatia (ROP)",  desc: "Triagem · momento do exame · seguimento", Icon: ScanEye,   cor: "#0369A1" },
     ],
   },
 ];
