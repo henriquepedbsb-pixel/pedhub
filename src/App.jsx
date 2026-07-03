@@ -31,6 +31,9 @@ const ExamesLab        = lazy(() => import("./modulos/exames-lab"));
 const IdadeGestacional = lazy(() => import("./modulos/idade-gestacional"));
 const Torchs           = lazy(() => import("./modulos/torchs"));
 const Intoxicacoes     = lazy(() => import("./modulos/intoxicacoes"));
+const Aleitamento      = lazy(() => import("./modulos/aleitamento"));
+const Oftalmologia     = lazy(() => import("./modulos/oftalmologia"));
+const DoencasExantematicas = lazy(() => import("./modulos/doencas-exantematicas"));
 const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
@@ -53,6 +56,7 @@ const Hipotermia       = lazy(() => import("./modulos/hipotermia"));
 const Surfactante      = lazy(() => import("./modulos/surfactante"));
 const NEC              = lazy(() => import("./modulos/nec"));
 const SalaDeParto      = lazy(() => import("./modulos/sala-de-parto"));
+const TriagemNeonatal  = lazy(() => import("./modulos/triagem-neonatal"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 /* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
@@ -86,6 +90,9 @@ const MODULO_MAP = {
   "/idade-gestacional": { label: "Idade Gestacional",         cor: "#2563EB", voltar: "/neonatal" },
   "/torchs":            { label: "Infecções Congênitas",      cor: "#E11D48", voltar: "/pediatria-geral" },
   "/intoxicacoes":      { label: "Intoxicações",              cor: "#65A30D", voltar: "/pediatria-geral" },
+  "/aleitamento":       { label: "Aleitamento Materno",       cor: "#F43F5E", voltar: "/pediatria-geral" },
+  "/oftalmologia":      { label: "Oftalmologia",              cor: "#1E3A8A", voltar: "/pediatria-geral" },
+  "/doencas-exantematicas": { label: "Doenças Exantemáticas", cor: "#7F1D1D", voltar: "/pediatria-geral" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
@@ -107,6 +114,7 @@ const MODULO_MAP = {
   "/surfactante":       { label: "Surfactante",               cor: "#059669", voltar: "/neonatal" },
   "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E", voltar: "/neonatal" },
   "/sala-de-parto":     { label: "Sala de Parto",             cor: "#B45309", voltar: "/neonatal" },
+  "/triagem-neonatal":  { label: "Triagem Neonatal",          cor: "#14B8A6", voltar: "/neonatal" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -216,6 +224,9 @@ export default function App() {
           <Route path="/idade-gestacional" element={<IdadeGestacional />} />
           <Route path="/torchs"            element={<Torchs />} />
           <Route path="/intoxicacoes"      element={<Intoxicacoes />} />
+          <Route path="/aleitamento"       element={<Aleitamento />} />
+          <Route path="/oftalmologia"      element={<Oftalmologia />} />
+          <Route path="/doencas-exantematicas" element={<DoencasExantematicas />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
@@ -237,6 +248,7 @@ export default function App() {
           <Route path="/surfactante"       element={<Surfactante />} />
           <Route path="/nec"               element={<NEC />} />
           <Route path="/sala-de-parto"     element={<SalaDeParto />} />
+          <Route path="/triagem-neonatal"  element={<TriagemNeonatal />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
