@@ -68,6 +68,7 @@ const MODULOS = [
   { rota: "/oftalmologia",     label: "Oftalmologia",         desc: "Reflexo vermelho · triagem visual",     Icon: Eye,           cor: "#1E3A8A", grupo: "Pediatria Geral" },
   { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D", grupo: "Pediatria Geral" },
   { rota: "/convulsao-febril", label: "Convulsão Febril",     desc: "Classificação simples × complexa · critérios de PL", Icon: Zap, cor: "#D946EF", grupo: "Pediatria Geral" },
+  { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
 
   /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
@@ -90,6 +91,7 @@ const MODULOS = [
   { rota: "/sala-de-parto",    label: "Sala de Parto",           desc: "TOT · Sonda · Cateteres umbilicais",  Icon: Syringe,     cor: "#B45309", grupo: "Neonatologia" },
   { rota: "/triagem-neonatal", label: "Triagem Neonatal",        desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6", grupo: "Neonatologia" },
   { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D", grupo: "Neonatologia" },
+  { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: Wind, cor: "#047857", grupo: "Neonatologia" },
 ];
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
