@@ -202,6 +202,30 @@ function Loading() {
   );
 }
 
+/* ─── Rodapé global — sugestões/reclamações ──────────────────────────────── */
+function RodapeGlobal() {
+  return (
+    <div style={{
+      textAlign: "center",
+      padding: "10px 16px 14px",
+      borderTop: "1px solid #F3F4F6",
+      background: "#fff",
+    }}>
+      <a
+        href="mailto:henriquepedbsb@gmail.com?subject=Sugest%C3%A3o%20ou%20reclama%C3%A7%C3%A3o%20-%20PedHub"
+        style={{
+          fontSize: 11,
+          color: "#9CA3AF",
+          textDecoration: "underline",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        Sugestões ou reclamações? Envie um e-mail
+      </a>
+    </div>
+  );
+}
+
 /* ─── App principal ──────────────────────────────────────────────────────── */
 export default function App() {
   return (
@@ -278,6 +302,7 @@ export default function App() {
           <Route path="*"                  element={<PedHub />} />
         </Routes>
       </Suspense>
+      <RodapeGlobal />
     </>
   );
 }
