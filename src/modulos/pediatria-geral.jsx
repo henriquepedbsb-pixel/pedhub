@@ -75,6 +75,7 @@ const SECOES = [
       { rota: "/dor",           label: "Escalas de Dor",       desc: "FLACC · Wong-Baker · NRS · Escada",     Icon: Activity,      cor: "#F97316" },
       { rota: "/exames-lab",    label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9" },
       { rota: "/adolescencia",  label: "Adolescência",         desc: "Tanner · saúde mental · contracepção",  Icon: Users,         cor: "#7E22CE" },
+      { rota: "/teste-tea-tdah", label: "Rastreio TEA/TDAH",   desc: "M-CHAT-R/F · DSM-5 · encaminhamento",   Icon: Brain,         cor: "#3730A3" },
     ],
   },
   {
