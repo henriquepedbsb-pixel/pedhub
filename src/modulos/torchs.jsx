@@ -13,9 +13,12 @@ import {
   Brain,
   Heart,
   Bug,
+  Biohazard,
+  Layers,
+  ArrowLeftRight,
 } from "lucide-react";
 
-const COR = "#E11D48"; // rose-600 — cor do módulo TORCHS
+const COR = "#6366F1"; // indigo-500 — cor do módulo TORCHS
 
 // ─────────────────────────────────────────────────────────
 // Sub-componentes (definidos FORA do componente principal —
@@ -28,6 +31,7 @@ function Section({ title, icon: Icon, open, onToggle, children }) {
       <button
         type="button"
         onClick={onToggle}
+        aria-expanded={open}
         className="w-full flex items-center justify-between px-4 py-3 text-left"
       >
         <span className="flex items-center gap-2 font-semibold text-gray-800 text-sm">
@@ -94,6 +98,34 @@ function FonteTag({ children }) {
   );
 }
 
+function DiferencialCard({ icon: Icon, label, sublabel, achadoImagem, achadoClinico, confirmacao, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left rounded-xl bg-gray-50 border border-gray-200 px-3 py-2.5 hover:border-indigo-300 transition-colors"
+    >
+      <span className="flex items-center gap-1.5 mb-1.5">
+        <Icon size={15} style={{ color: COR }} />
+        <span className="font-semibold text-gray-800 text-sm">{label}</span>
+        {sublabel && <span className="text-[11px] text-gray-400">· {sublabel}</span>}
+      </span>
+      <p className="text-xs text-gray-600 leading-relaxed">
+        <span className="font-medium text-gray-700">Imagem/SNC: </span>
+        {achadoImagem}
+      </p>
+      <p className="text-xs text-gray-600 leading-relaxed mt-1">
+        <span className="font-medium text-gray-700">Achado-chave: </span>
+        {achadoClinico}
+      </p>
+      <p className="text-xs text-gray-600 leading-relaxed mt-1">
+        <span className="font-medium text-gray-700">Confirmação: </span>
+        {confirmacao}
+      </p>
+    </button>
+  );
+}
+
 // ─────────────────────────────────────────────────────────
 // Componente principal
 // ─────────────────────────────────────────────────────────
@@ -104,17 +136,99 @@ const PATOGENOS = [
   { id: "cmv", label: "CMV", icon: Ear },
   { id: "herpes", label: "Herpes", icon: Brain },
   { id: "sifilis", label: "Sífilis", icon: Heart },
+  { id: "zika", label: "Zika", icon: Biohazard },
+  { id: "outros", label: "Outros agentes", icon: Layers },
+];
+
+const DIFERENCIAL = [
+  {
+    aba: "toxo",
+    icon: Bug,
+    label: "Toxoplasmose",
+    achadoImagem: "Calcificações intracranianas difusas + hidrocefalia",
+    achadoClinico: "Coriorretinite macular, geralmente bilateral",
+    confirmacao: "IgM/IgA específicas + PCR em sangue/LCR",
+  },
+  {
+    aba: "rubeola",
+    icon: Baby,
+    label: "Rubéola",
+    achadoImagem: "Cardiopatia (PCA, estenose de artéria pulmonar periférica)",
+    achadoClinico: "Catarata + surdez neurossensorial (tríade de Gregg)",
+    confirmacao: "IgM específica + isolamento viral/PCR",
+  },
+  {
+    aba: "cmv",
+    icon: Ear,
+    label: "CMV",
+    achadoImagem: "Calcificações periventriculares",
+    achadoClinico: "Surdez neurossensorial — principal causa infecciosa isolada",
+    confirmacao: "PCR de urina/saliva nas 3 primeiras semanas de vida",
+  },
+  {
+    aba: "herpes",
+    icon: Brain,
+    label: "Herpes",
+    achadoImagem: "Encefalite (pode ocorrer sem lesão de pele)",
+    achadoClinico: "Início entre 5–17 dias; vesículas ou quadro séptico sem foco",
+    confirmacao: "PCR de lesão cutânea, sangue e LCR",
+  },
+  {
+    aba: "sifilis",
+    icon: Heart,
+    label: "Sífilis",
+    achadoImagem: "Periostite/osteocondrite em Rx de ossos longos",
+    achadoClinico: "Pênfigo palmoplantar + coriza sanguinolenta",
+    confirmacao: "VDRL comparado ao materno + avaliação de LCR",
+  },
+  {
+    aba: "zika",
+    icon: Biohazard,
+    label: "Zika",
+    achadoImagem: "Calcificações córtico-subcorticais (não periventriculares) + microcefalia desproporcional",
+    achadoClinico: "Artrogripose e espasticidade por comprometimento motor",
+    confirmacao: "RT-PCR em sangue/urina/LCR nas primeiras 48–72h",
+  },
+  {
+    aba: "outros",
+    icon: Layers,
+    label: "Varicela congênita",
+    sublabel: "infecção materna 8–20 sem",
+    achadoImagem: "Atrofia cortical cerebral, microcefalia",
+    achadoClinico: "Cicatrizes cutâneas em padrão dermatomal + hipoplasia de membro",
+    confirmacao: "Predominantemente clínico + história materna",
+  },
+  {
+    aba: "outros",
+    icon: Layers,
+    label: "Parvovírus B19",
+    sublabel: "sem síndrome malformativa clássica",
+    achadoImagem: "Sem padrão de calcificação típico — risco é hidropsia, não malformação",
+    achadoClinico: "Anemia fetal grave por aplasia eritroide → hidropsia não imune",
+    confirmacao: "PCR + sorologia materna + Doppler de artéria cerebral média fetal",
+  },
 ];
 
 export default function Torchs() {
   const [aba, setAba] = useState("toxo");
   const [pesoStr, setPesoStr] = useState("");
-  const [abertas, setAbertas] = useState({ rastreio: false, diagnostico: true, tratamento: false, seguimento: false });
+  const [abertas, setAbertas] = useState({
+    diferencial: false,
+    rastreio: false,
+    diagnostico: true,
+    tratamento: false,
+    seguimento: false,
+  });
 
   const peso = parseFloat(pesoStr.replace(",", "."));
   const pesoValido = !Number.isNaN(peso) && peso > 0;
 
   const toggle = (chave) => setAbertas((prev) => ({ ...prev, [chave]: !prev[chave] }));
+
+  const irParaAba = (idAba) => {
+    setAba(idAba);
+    setAbertas((prev) => ({ ...prev, diagnostico: true }));
+  };
 
   const round = (n, casas = 1) => {
     if (!pesoValido) return null;
@@ -125,13 +239,13 @@ export default function Torchs() {
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
       {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #9F1239)` }}>
+      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #4F46E5)` }}>
         <h1 className="text-white text-lg font-bold flex items-center gap-2">
           <Baby size={22} />
-          Infecções Congênitas
+          TORCHS — Infecções Congênitas
         </h1>
-        <p className="text-rose-100 text-xs mt-1">
-          Toxoplasmose · Rubéola · Citomegalovírus · Herpes · Sífilis congênita
+        <p className="text-indigo-100 text-xs mt-1">
+          Toxoplasmose · Rubéola · Citomegalovírus · Herpes · Sífilis · Zika · Outros agentes
         </p>
       </div>
 
@@ -146,12 +260,43 @@ export default function Torchs() {
           value={pesoStr}
           onChange={(e) => setPesoStr(e.target.value)}
           placeholder="Ex: 3,2"
-          className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-rose-400"
+          className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-indigo-400"
         />
       </div>
 
-      {/* Abas por patógeno */}
+      {/* Diagnóstico diferencial rápido — visão comparativa entre todos os agentes */}
       <div className="px-4 pt-4">
+        <Section
+          title="Diagnóstico diferencial rápido"
+          icon={ArrowLeftRight}
+          open={abertas.diferencial}
+          onToggle={() => toggle("diferencial")}
+        >
+          <p className="text-xs text-gray-500">
+            Toque em um agente para abrir a aba completa com achados, confirmação e conduta.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {DIFERENCIAL.map((item, idx) => (
+              <DiferencialCard
+                key={`${item.aba}-${idx}`}
+                icon={item.icon}
+                label={item.label}
+                sublabel={item.sublabel}
+                achadoImagem={item.achadoImagem}
+                achadoClinico={item.achadoClinico}
+                confirmacao={item.confirmacao}
+                onClick={() => irParaAba(item.aba)}
+              />
+            ))}
+          </div>
+          <AlertaBox tone="blue">
+            Ferramenta de orientação rápida — a confirmação diagnóstica sempre depende da correlação clínico-laboratorial completa, não apenas de um achado isolado.
+          </AlertaBox>
+        </Section>
+      </div>
+
+      {/* Abas por patógeno */}
+      <div className="px-4 pt-2">
         <div className="flex gap-2 overflow-x-auto pb-1">
           {PATOGENOS.map((p) => {
             const ativo = aba === p.id;
@@ -163,7 +308,7 @@ export default function Torchs() {
                 onClick={() => setAba(p.id)}
                 className={
                   ativo
-                    ? "!bg-rose-600 !text-white flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
+                    ? "!bg-indigo-500 !text-white flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
                     : "bg-white text-gray-600 border border-gray-200 flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold shrink-0"
                 }
               >
@@ -455,6 +600,121 @@ export default function Torchs() {
             </Section>
           </>
         )}
+
+        {aba === "zika" && (
+          <>
+            <Section title="Rastreio materno" icon={TestTube} open={abertas.rastreio} onToggle={() => toggle("rastreio")}>
+              <ul className="space-y-1.5">
+                <Bullet>Notificar síndrome exantemática suspeita: exantema pruriginoso + pelo menos 2 de: febre baixa, artralgia/artrite, conjuntivite não purulenta, edema periarticular.</Bullet>
+                <Bullet>Diagnóstico na fase aguda por RT-PCR em sangue e urina (viremia curta, mais prolongada na urina).</Bullet>
+                <Bullet>Sorologia (IgM/IgG) tem reação cruzada com outros flavivírus (dengue, febre amarela) — interpretar com cautela em áreas de cocirculação.</Bullet>
+                <Bullet>USG obstétrica seriada após suspeita/confirmação, à procura de sinais de acometimento fetal.</Bullet>
+              </ul>
+              <FonteTag>MS — Protocolo de Vigilância da Síndrome Congênita do Zika</FonteTag><FonteTag>SBP</FonteTag>
+            </Section>
+
+            <Section title="Diagnóstico do RN" icon={Stethoscope} open={abertas.diagnostico} onToggle={() => toggle("diagnostico")}>
+              <p>Conjunto de achados conhecido como <strong>Síndrome Congênita do Zika (SCZ)</strong>, com espectro de gravidade variável:</p>
+              <ul className="space-y-1.5">
+                <Bullet>Microcefalia grave, frequentemente com desproporção craniofacial</Bullet>
+                <Bullet>Calcificações corticais/subcorticais e ventriculomegalia</Bullet>
+                <Bullet>Simplificação do padrão giral (lisencefalia/paquigiria) e disgenesia de corpo caloso</Bullet>
+                <Bullet>Artrogripose e hipertonia/espasticidade por comprometimento de neurônio motor</Bullet>
+                <Bullet>Alterações oculares: atrofia coriorretiniana macular focal, mosqueado pigmentar, microftalmia</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800">Confirmação:</p>
+              <ul className="space-y-1.5">
+                <Bullet>RT-PCR em sangue, urina e LCR do RN, idealmente nas primeiras 48–72h (viremia breve — resultado negativo não exclui SCZ)</Bullet>
+                <Bullet>Sorologia IgM (mesma limitação de reação cruzada da sorologia materna)</Bullet>
+                <Bullet>Correlação obrigatória com neuroimagem (USTF ou RM de crânio)</Bullet>
+              </ul>
+              <AlertaBox tone="amber">Diferente do CMV, as calcificações da SCZ tendem a ser córtico-subcorticais, não periventriculares — achado útil no diagnóstico diferencial de imagem.</AlertaBox>
+            </Section>
+
+            <Section title="Tratamento" icon={Pill} open={abertas.tratamento} onToggle={() => toggle("tratamento")}>
+              <AlertaBox tone="blue">Não existe terapia antiviral específica para Zika congênito. O manejo é de suporte, multidisciplinar, e deve começar o mais precocemente possível.</AlertaBox>
+              <ul className="space-y-1.5">
+                <Bullet>Fisioterapia motora precoce para espasticidade/artrogripose</Bullet>
+                <Bullet>Manejo de epilepsia se convulsões (alta prevalência em SCZ)</Bullet>
+                <Bullet>Avaliação e suporte para disfagia/risco de aspiração</Bullet>
+                <Bullet>Estimulação precoce do desenvolvimento com equipe multiprofissional</Bullet>
+              </ul>
+            </Section>
+
+            <Section title="Seguimento" icon={CalendarClock} open={abertas.seguimento} onToggle={() => toggle("seguimento")}>
+              <ul className="space-y-1.5">
+                <Bullet>Neuroimagem e avaliação neurológica seriada</Bullet>
+                <Bullet>Avaliação oftalmológica e auditiva (BERA) periódicas</Bullet>
+                <Bullet>Acompanhamento de DNPM multidisciplinar prolongado</Bullet>
+                <Bullet>Vigilância ativa para epilepsia de início tardio</Bullet>
+              </ul>
+            </Section>
+          </>
+        )}
+
+        {aba === "outros" && (
+          <>
+            <Section title="Rastreio materno" icon={TestTube} open={abertas.rastreio} onToggle={() => toggle("rastreio")}>
+              <p className="font-semibold text-gray-800">Varicela congênita</p>
+              <ul className="space-y-1.5">
+                <Bullet>Risco de síndrome fetal é maior quando a infecção materna ocorre entre 8–20 semanas (pico relatado entre 13–20 semanas).</Bullet>
+                <Bullet>Confirmar histórico vacinal/imunidade prévia — vacina de vírus vivo é contraindicada na gestação.</Bullet>
+                <Bullet>Gestante suscetível exposta a caso de varicela: considerar imunoglobulina específica (VZIG), dentro da janela recomendada pelo protocolo institucional.</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800 pt-2">Parvovírus B19</p>
+              <ul className="space-y-1.5">
+                <Bullet>Investigar diante de exantema "face esbofeteada" em gestante ou contato com caso confirmado, sobretudo na 1ª metade da gestação.</Bullet>
+                <Bullet>Sorologia materna (IgM/IgG) para confirmar infecção aguda.</Bullet>
+                <Bullet>USG obstétrica seriada com Doppler de artéria cerebral média para rastrear anemia fetal após infecção confirmada.</Bullet>
+              </ul>
+              <FonteTag>SBP</FonteTag><FonteTag>AAP Red Book</FonteTag><FonteTag>MS</FonteTag>
+            </Section>
+
+            <Section title="Diagnóstico do RN" icon={Stethoscope} open={abertas.diagnostico} onToggle={() => toggle("diagnostico")}>
+              <p className="font-semibold text-gray-800">Varicela congênita (Síndrome da Varicela Congênita)</p>
+              <ul className="space-y-1.5">
+                <Bullet>Cicatrizes cutâneas em padrão dermatomal (zigue-zague) e hipoplasia de membro</Bullet>
+                <Bullet>Microftalmia, catarata, coriorretinite</Bullet>
+                <Bullet>Atrofia cortical cerebral, microcefalia</Bullet>
+                <Bullet>Diagnóstico predominantemente clínico + história materna; PCR de lesão cutânea pode auxiliar, mas IgM no RN é frequentemente inconclusiva</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800 pt-2">Parvovírus B19</p>
+              <ul className="space-y-1.5">
+                <Bullet>Não costuma causar síndrome malformativa clássica — o principal risco é anemia fetal grave por aplasia eritroide transitória, podendo evoluir a hidropsia fetal não imune</Bullet>
+                <Bullet>RN pode nascer com anemia, edema generalizado e derrames cavitários se a hidropisia não foi resolvida antes do parto</Bullet>
+                <Bullet>Confirmação: PCR para parvovírus B19 em sangue do RN + sorologia materna compatível</Bullet>
+              </ul>
+            </Section>
+
+            <Section title="Tratamento" icon={Pill} open={abertas.tratamento} onToggle={() => toggle("tratamento")}>
+              <p className="font-semibold text-gray-800">Varicela congênita</p>
+              <AlertaBox tone="blue">Sem terapia antiviral específica para a síndrome já estabelecida — manejo de suporte conforme sequelas (oftalmológico, ortopédico, neurológico).</AlertaBox>
+              <p className="text-xs text-gray-500 mt-2">
+                Atenção: varicela materna entre 5 dias antes e 2 dias após o parto configura risco de varicela neonatal grave (cenário distinto da síndrome congênita) — conduta com VZIG/aciclovir IV segue protocolo institucional de infecções neonatais.
+              </p>
+              <p className="font-semibold text-gray-800 pt-3">Parvovírus B19</p>
+              <ul className="space-y-1.5">
+                <Bullet>Hidropsia fetal por anemia grave: transfusão intrauterina, conduzida pela medicina fetal antes do nascimento</Bullet>
+                <Bullet>Ao nascimento: suporte hemodinâmico e transfusional se anemia persistente</Bullet>
+                <Bullet>Sem antiviral específico disponível</Bullet>
+              </ul>
+            </Section>
+
+            <Section title="Seguimento" icon={CalendarClock} open={abertas.seguimento} onToggle={() => toggle("seguimento")}>
+              <p className="font-semibold text-gray-800">Varicela congênita</p>
+              <ul className="space-y-1.5">
+                <Bullet>Avaliação oftalmológica, ortopédica (membro hipoplásico) e neurológica seriadas</Bullet>
+                <Bullet>Acompanhamento do DNPM</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800 pt-2">Parvovírus B19</p>
+              <ul className="space-y-1.5">
+                <Bullet>Hemograma seriado se houve anemia neonatal</Bullet>
+                <Bullet>Avaliação cardiológica (função miocárdica) se houve hidropsia</Bullet>
+                <Bullet>Acompanhamento do DNPM</Bullet>
+              </ul>
+            </Section>
+          </>
+        )}
       </div>
 
       {/* Alertas gerais — visíveis em qualquer aba */}
@@ -462,7 +722,7 @@ export default function Torchs() {
         <AlertaBox tone="blue">
           <span className="flex items-start gap-1">
             <Info size={13} className="mt-0.5 shrink-0" />
-            Notificação compulsória obrigatória para sífilis congênita, toxoplasmose gestacional/congênita e demais agravos conforme lista vigente do Ministério da Saúde.
+            Notificação compulsória obrigatória para sífilis congênita, toxoplasmose gestacional/congênita, síndrome congênita associada à infecção por Zika vírus e demais agravos conforme lista vigente do Ministério da Saúde.
           </span>
         </AlertaBox>
       </div>
