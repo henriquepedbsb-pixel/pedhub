@@ -72,6 +72,7 @@ const MODULOS = [
   { rota: "/convulsao-febril", label: "Convulsão Febril",     desc: "Classificação simples × complexa · critérios de PL", Icon: Zap, cor: "#D946EF", grupo: "Pediatria Geral" },
   { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
   { rota: "/adolescencia",     label: "Adolescência",            desc: "Tanner · saúde mental · contracepção",  Icon: Users,       cor: "#7E22CE", grupo: "Pediatria Geral" },
+  { rota: "/teste-tea-tdah",   label: "Rastreio TEA/TDAH",       desc: "M-CHAT-R/F · DSM-5 · fluxo de encaminhamento", Icon: Brain, cor: "#3730A3", grupo: "Pediatria Geral" },
 
   /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
   { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
@@ -96,6 +97,7 @@ const MODULOS = [
   { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D", grupo: "Neonatologia" },
   { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: Wind, cor: "#047857", grupo: "Neonatologia" },
   { rota: "/rop",              label: "Retinopatia da Prematuridade", desc: "Triagem · momento do exame · seguimento", Icon: ScanEye, cor: "#0369A1", grupo: "Neonatologia" },
+  { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D", grupo: "Neonatologia" },
 ];
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
