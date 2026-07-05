@@ -37,6 +37,7 @@ const DoencasExantematicas = lazy(() => import("./modulos/doencas-exantematicas"
 const ConvulsaoFebril  = lazy(() => import("./modulos/convulsao-febril"));
 const CardiologiaPediatricaBasica = lazy(() => import("./modulos/cardiologia-pediatrica-basica"));
 const Adolescencia     = lazy(() => import("./modulos/adolescencia"));
+const TesteTeaTdah     = lazy(() => import("./modulos/teste-tea-tdah"));
 const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
@@ -63,6 +64,7 @@ const TriagemNeonatal  = lazy(() => import("./modulos/triagem-neonatal"));
 const Pca              = lazy(() => import("./modulos/pca"));
 const MalformacoesCirurgicasNeonatais = lazy(() => import("./modulos/malformacoes-cirurgicas-neonatais"));
 const Rop              = lazy(() => import("./modulos/rop"));
+const SeguimentoPrematuroRisco = lazy(() => import("./modulos/seguimento-prematuro-risco"));
 
 /* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
 /* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
@@ -102,6 +104,7 @@ const MODULO_MAP = {
   "/convulsao-febril":  { label: "Convulsão Febril",          cor: "#D946EF", voltar: "/pediatria-geral" },
   "/cardiologia-pediatrica-basica": { label: "Cardiologia Pediátrica", cor: "#BE123C", voltar: "/pediatria-geral" },
   "/adolescencia":      { label: "Adolescência",              cor: "#7E22CE", voltar: "/pediatria-geral" },
+  "/teste-tea-tdah":    { label: "Rastreio TEA/TDAH",          cor: "#3730A3", voltar: "/pediatria-geral" },
   // Neonatologia — hub
   "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
   // Neonatologia — módulos (voltam ao hub)
@@ -127,6 +130,7 @@ const MODULO_MAP = {
   "/pca":               { label: "PCA",                       cor: "#BE185D", voltar: "/neonatal" },
   "/malformacoes-cirurgicas-neonatais": { label: "Malformações Cirúrgicas", cor: "#047857", voltar: "/neonatal" },
   "/rop":               { label: "Retinopatia da Prematuridade", cor: "#0369A1", voltar: "/neonatal" },
+  "/seguimento-prematuro-risco": { label: "Seguimento do Prematuro", cor: "#15803D", voltar: "/neonatal" },
 };
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
@@ -242,6 +246,7 @@ export default function App() {
           <Route path="/convulsao-febril"  element={<ConvulsaoFebril />} />
           <Route path="/cardiologia-pediatrica-basica" element={<CardiologiaPediatricaBasica />} />
           <Route path="/adolescencia"      element={<Adolescencia />} />
+          <Route path="/teste-tea-tdah"    element={<TesteTeaTdah />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
@@ -267,6 +272,7 @@ export default function App() {
           <Route path="/pca"               element={<Pca />} />
           <Route path="/malformacoes-cirurgicas-neonatais" element={<MalformacoesCirurgicasNeonatais />} />
           <Route path="/rop"               element={<Rop />} />
+          <Route path="/seguimento-prematuro-risco" element={<SeguimentoPrematuroRisco />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />
