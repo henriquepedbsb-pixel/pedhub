@@ -1,26 +1,27 @@
+// src/modulos/pedfarma.jsx
 import { useState } from "react";
-import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight } from "lucide-react";
+import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle } from "lucide-react";
 
 const PRIMARY = "#8B5CF6";
 
 const DRUGS = [
   // ─── Antibióticos ───────────────────────────────────────────────────────────
-  { id:"amoxicilina",     cat:"Antibiótico", nome:"Amoxicilina",                 via:"VO",    dose:"40–90 mg/kg/dia",   freq:"8/8h ou 12/12h",  max:"3 g/dia",   obs:"90 mg/kg/dia para pneumonia/otite de alto risco · Suspensão 250mg/5mL ou 500mg/5mL" },
-  { id:"amoxiclav",       cat:"Antibiótico", nome:"Amoxicilina+Clavulanato",     via:"VO",    dose:"45 mg/kg/dia (comp amox)", freq:"12/12h",   max:"3 g/dia",   obs:"Fração amoxicilina. Suspensão 400/57 mg por 5 mL · Indicado se falha amoxicilina" },
-  { id:"azitromicina",    cat:"Antibiótico", nome:"Azitromicina",                via:"VO",    dose:"10 mg/kg/dia",       freq:"1x/dia",          max:"500 mg/dia",obs:"Dose única diária por 3–5 dias · Faringite, pneumonia atípica" },
-  { id:"claritromicina",  cat:"Antibiótico", nome:"Claritromicina",              via:"VO",    dose:"15 mg/kg/dia",       freq:"12/12h",          max:"1 g/dia",   obs:"Atípicos, H. pylori, pertussis" },
-  { id:"cefalexina",      cat:"Antibiótico", nome:"Cefalexina",                  via:"VO",    dose:"25–100 mg/kg/dia",   freq:"6/6h ou 8/8h",    max:"4 g/dia",   obs:"1ª geração · Infecções cutâneas, ITU não complicada" },
-  { id:"ceftriaxona",     cat:"Antibiótico", nome:"Ceftriaxona",                 via:"IV/IM", dose:"50–100 mg/kg/dia",   freq:"1x/dia",          max:"4 g/dia",   obs:"100 mg/kg para meningite · Diluir em 100 mL SF · Infundir em 30–60 min" },
-  { id:"cefuroxima",      cat:"Antibiótico", nome:"Cefuroxima",                  via:"VO",    dose:"20–30 mg/kg/dia",    freq:"12/12h",          max:"500 mg/dose",obs:"2ª geração · Sinusite, pneumonia leve" },
-  { id:"tmpsmt",          cat:"Antibiótico", nome:"Sulfametoxazol + TMP",        via:"VO",    dose:"8–12 mg/kg/dia (TMP)",freq:"12/12h",         max:"160 mg TMP/dose",obs:"ITU · Pneumocistose: 15–20 mg/kg/dia TMP · Evitar < 2 meses" },
-  { id:"metronidazol",    cat:"Antibiótico", nome:"Metronidazol",                via:"VO/IV", dose:"30 mg/kg/dia",       freq:"8/8h",            max:"2 g/dia",   obs:"Giardia, ameba, Clostridioides, anaeróbios · IV: infundir em 30–60 min" },
-  { id:"clindamicina",    cat:"Antibiótico", nome:"Clindamicina",                via:"VO/IV", dose:"20–40 mg/kg/dia",    freq:"6/6h ou 8/8h",    max:"1,8 g/dia", obs:"MRSA comunitário, celulite periorbitária · Monitorar colite pseudomembranosa" },
-  { id:"penicvk",         cat:"Antibiótico", nome:"Fenoximetilpenicilina (Pen V)", via:"VO",  dose:"25–50 mg/kg/dia",    freq:"6/6h ou 8/8h",    max:"3 g/dia",   obs:"Faringite estreptocócica, escarlatina · Administrar em jejum" },
-  { id:"nitrofurantoina", cat:"Antibiótico", nome:"Nitrofurantoína",             via:"VO",    dose:"5–7 mg/kg/dia",      freq:"6/6h",            max:"400 mg/dia",obs:"ITU baixa · NÃO usar < 3 meses · Profilaxia: 1–2 mg/kg/dia" },
+  { id:"amoxicilina",     cat:"Antibiótico", nome:"Amoxicilina",                 via:"VO",    dose:"40–90 mg/kg/dia",   freq:"8/8h ou 12/12h",  max:"3 g/dia",   obs:"90 mg/kg/dia para pneumonia/otite de alto risco · Suspensão 250mg/5mL ou 400mg/5mL", calc:{min:40,max:90,unidade:"dia",tomadas:[2,3],tetoMg:3000,tetoTipo:"dia",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:3,freqLabel:"8/8h"},{label:"400 mg/5 mL",mgPer5:400,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"amoxiclav",       cat:"Antibiótico", nome:"Amoxicilina+Clavulanato",     via:"VO",    dose:"40–90 mg/kg/dia (fração amox)", freq:"8/8h ou 12/12h",   max:"3 g/dia",   obs:"Dose pela fração amoxicilina (igual à amoxicilina). 250 mg/5 mL: 8/8h · 400 mg/5 mL: 12/12h · Alta dose (90 mg/kg/dia) preferir formulação 400 (ES) pela menor carga de clavulanato", calc:{min:40,max:90,unidade:"dia",tomadas:[2,3],tetoMg:3000,tetoTipo:"dia",susp:[{label:"250/62,5 por 5 mL (amox 250)",mgPer5:250,tomadas:3,freqLabel:"8/8h"},{label:"400/57 por 5 mL (amox 400)",mgPer5:400,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"azitromicina",    cat:"Antibiótico", nome:"Azitromicina",                via:"VO",    dose:"10 mg/kg/dia",       freq:"1x/dia",          max:"500 mg/dia",obs:"Dose única diária por 3–5 dias · Faringite, pneumonia atípica", calc:{min:10,max:10,unidade:"dia",tomadas:[1],tetoMg:500,tetoTipo:"dia",susp:[{label:"200 mg/5 mL",mgPer5:200,tomadas:1,freqLabel:"1x/dia"}]} },
+  { id:"claritromicina",  cat:"Antibiótico", nome:"Claritromicina",              via:"VO",    dose:"15 mg/kg/dia",       freq:"12/12h",          max:"1 g/dia",   obs:"Atípicos, H. pylori, pertussis", calc:{min:15,max:15,unidade:"dia",tomadas:[2],tetoMg:1000,tetoTipo:"dia",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"cefalexina",      cat:"Antibiótico", nome:"Cefalexina",                  via:"VO",    dose:"25–100 mg/kg/dia",   freq:"6/6h ou 8/8h",    max:"4 g/dia",   obs:"1ª geração · Infecções cutâneas, ITU não complicada", calc:{min:25,max:100,unidade:"dia",tomadas:[3,4],tetoMg:4000,tetoTipo:"dia",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:4,freqLabel:"6/6h"}]} },
+  { id:"ceftriaxona",     cat:"Antibiótico", nome:"Ceftriaxona",                 via:"IV/IM", dose:"50–100 mg/kg/dia",   freq:"1x/dia",          max:"4 g/dia",   obs:"100 mg/kg para meningite · Diluir em 100 mL SF · Infundir em 30–60 min", calc:{min:50,max:100,unidade:"dia",tomadas:[1],tetoMg:4000,tetoTipo:"dia",susp:[]} },
+  { id:"cefuroxima",      cat:"Antibiótico", nome:"Cefuroxima",                  via:"VO",    dose:"20–30 mg/kg/dia",    freq:"12/12h",          max:"500 mg/dose",obs:"2ª geração · Sinusite, pneumonia leve", calc:{min:20,max:30,unidade:"dia",tomadas:[2],tetoMg:500,tetoTipo:"dose",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"tmpsmt",          cat:"Antibiótico", nome:"Sulfametoxazol + TMP",        via:"VO",    dose:"8–12 mg/kg/dia (TMP)",freq:"12/12h",         max:"160 mg TMP/dose",obs:"ITU · Pneumocistose: 15–20 mg/kg/dia TMP · Evitar < 2 meses", calc:{min:8,max:12,unidade:"dia",tomadas:[2],tetoMg:160,tetoTipo:"dose",susp:[{label:"TMP 40 mg/5 mL",mgPer5:40,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"metronidazol",    cat:"Antibiótico", nome:"Metronidazol",                via:"VO/IV", dose:"30 mg/kg/dia",       freq:"8/8h",            max:"2 g/dia",   obs:"Giardia, ameba, Clostridioides, anaeróbios · IV: infundir em 30–60 min", calc:{min:30,max:30,unidade:"dia",tomadas:[3],tetoMg:2000,tetoTipo:"dia",susp:[{label:"200 mg/5 mL (benzoil)",mgPer5:200,tomadas:3,freqLabel:"8/8h"}]} },
+  { id:"clindamicina",    cat:"Antibiótico", nome:"Clindamicina",                via:"VO/IV", dose:"20–40 mg/kg/dia",    freq:"6/6h ou 8/8h",    max:"1,8 g/dia", obs:"MRSA comunitário, celulite periorbitária · Monitorar colite pseudomembranosa", calc:{min:20,max:40,unidade:"dia",tomadas:[3,4],tetoMg:1800,tetoTipo:"dia",susp:[{label:"75 mg/5 mL",mgPer5:75,tomadas:4,freqLabel:"6/6h"}]} },
+  { id:"penicvk",         cat:"Antibiótico", nome:"Fenoximetilpenicilina (Pen V)", via:"VO",  dose:"25–50 mg/kg/dia",    freq:"6/6h ou 8/8h",    max:"3 g/dia",   obs:"Faringite estreptocócica, escarlatina · Administrar em jejum", calc:{min:25,max:50,unidade:"dia",tomadas:[3,4],tetoMg:3000,tetoTipo:"dia",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:4,freqLabel:"6/6h"}]} },
+  { id:"nitrofurantoina", cat:"Antibiótico", nome:"Nitrofurantoína",             via:"VO",    dose:"5–7 mg/kg/dia",      freq:"6/6h",            max:"400 mg/dia",obs:"ITU baixa · NÃO usar < 3 meses · Profilaxia: 1–2 mg/kg/dia", calc:{min:5,max:7,unidade:"dia",tomadas:[4],tetoMg:400,tetoTipo:"dia",susp:[{label:"25 mg/5 mL",mgPer5:25,tomadas:4,freqLabel:"6/6h"}]} },
   // ─── Analgésicos/Antipiréticos ──────────────────────────────────────────────
-  { id:"paracetamol",     cat:"Analgésico",  nome:"Paracetamol (Acetaminofeno)", via:"VO/VR", dose:"10–15 mg/kg/dose",   freq:"4/4h–6/6h",       max:"75 mg/kg/dia ou 4 g/dia", obs:"Intervalo mínimo 4h · VR: 20 mg/kg/dose · Acetilcisteína se superdose > 150 mg/kg" },
-  { id:"dipirona",        cat:"Analgésico",  nome:"Dipirona (Metamizol)",        via:"VO/IV", dose:"10–15 mg/kg/dose",   freq:"6/6h",            max:"1 g/dose",  obs:"IV: infundir lentamente (risco de hipotensão) · Evitar < 3 meses de vida" },
-  { id:"ibuprofeno",      cat:"Analgésico",  nome:"Ibuprofeno",                  via:"VO",    dose:"5–10 mg/kg/dose",    freq:"6/6h–8/8h",       max:"40 mg/kg/dia", obs:"Com alimentos · Evitar em desidratados, < 6 meses, varicela · Contraindicado em dengue" },
+  { id:"paracetamol",     cat:"Analgésico",  nome:"Paracetamol (Acetaminofeno)", via:"VO/VR", dose:"10–15 mg/kg/dose",   freq:"6/6h",       max:"75 mg/kg/dia ou 4 g/dia", obs:"Intervalo mínimo 4h · VR: 20 mg/kg/dose · Acetilcisteína se superdose > 150 mg/kg", calc:{min:10,max:15,unidade:"dose",tomadasDiaMax:4,tetoMgDia:4000,susp:[{label:"Gotas 200 mg/mL",mgPerMl:200,gotas:true},{label:"Suspensão 32 mg/mL",mgPerMl:32}]} },
+  { id:"dipirona",        cat:"Analgésico",  nome:"Dipirona (Metamizol)",        via:"VO/IV", dose:"10–15 mg/kg/dose",   freq:"6/6h",            max:"1 g/dose",  obs:"IV: infundir lentamente (risco de hipotensão) · Evitar < 3 meses de vida", calc:{min:10,max:15,unidade:"dose",tomadasDiaMax:4,tetoMg:1000,tetoTipo:"dose",susp:[{label:"Gotas 500 mg/mL",mgPerMl:500,gotas:true},{label:"Solução 50 mg/mL",mgPerMl:50}]} },
+  { id:"ibuprofeno",      cat:"Analgésico",  nome:"Ibuprofeno",                  via:"VO",    dose:"5–10 mg/kg/dose",    freq:"6/6h–8/8h",       max:"40 mg/kg/dia", obs:"Com alimentos · Evitar em desidratados, < 6 meses, varicela · Contraindicado em dengue", calc:{min:5,max:10,unidade:"dose",tomadasDiaMax:4,tetoMgKgDia:40,susp:[{label:"Gotas 100 mg/mL",mgPerMl:100,gotas:true},{label:"Suspensão 20 mg/mL",mgPerMl:20}]} },
   // ─── Anti-inflamatórios / Corticoides ──────────────────────────────────────
   { id:"prednisolona",    cat:"Corticoide",  nome:"Prednisolona",                via:"VO",    dose:"1–2 mg/kg/dia",      freq:"1x/dia",          max:"40–60 mg/dia",obs:"Asma: 1–2 mg/kg/dia 3–5 dias · APLV: 1 mg/kg/dia · Dose única matinal" },
   { id:"dexametasona",    cat:"Corticoide",  nome:"Dexametasona",                via:"VO/IM/IV", dose:"0,15–0,6 mg/kg/dia", freq:"1x/dia",      max:"10 mg/dia", obs:"Crupe: 0,15–0,6 mg/kg dose única · Meningite bacteriana: 0,15 mg/kg 6/6h × 4 dias" },
@@ -157,12 +158,195 @@ function CorticoideConversor() {
           })}
           <div style={{ background: "#FFF7ED", borderRadius: 8, padding: "10px 12px", marginTop: 8, borderLeft: "3px solid #F97316" }}>
             <p style={{ fontSize: 11, color: "#374151", margin: 0, lineHeight: 1.5 }}>
-              <strong>⚠ A equivalência é só de potência glicocorticoide/anti-inflamatória.</strong> Hidrocortisona tem atividade mineralocorticoide significativa (relevante em insuficiência adrenal) que os demais não replicam — não usar esta tabela para substituir hidrocortisona em reposição adrenal sem ajustar mineralocorticoide separadamente (fludrocortisona, se indicado).
+              <strong style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><AlertTriangle size={13} style={{ flexShrink: 0 }} />A equivalência é só de potência glicocorticoide/anti-inflamatória.</strong> Hidrocortisona tem atividade mineralocorticoide significativa (relevante em insuficiência adrenal) que os demais não replicam — não usar esta tabela para substituir hidrocortisona em reposição adrenal sem ajustar mineralocorticoide separadamente (fludrocortisona, se indicado).
             </p>
           </div>
         </>
       ) : (
         <p style={{ fontSize: 11, color: "#9CA3AF", textAlign: "center", padding: 8 }}>Informe a dose atual para ver as equivalências</p>
+      )}
+    </div>
+  );
+}
+
+// ─── Cálculo de dose por peso (bloco Antibióticos; demais blocos usam mesmo schema) ───
+// Fórmula pura peso × dose — os valores de dose/kg e teto vêm do próprio DRUGS
+// (Harriet Lane/SBP), sem alteração. parseFld: decimal-BR (regra 9).
+const parseFld = (v) => {
+  if (v === null || v === undefined || v === "") return null;
+  const n = parseFloat(String(v).replace(",", "."));
+  return isNaN(n) ? null : n;
+};
+
+function calcularDose(c, peso, alvo) {
+  if (!c || !peso || peso <= 0) return null;
+
+  // ── Fármacos dosados por DOSE (mg/kg/dose): analgésicos, alguns outros ──
+  if (c.unidade === "dose") {
+    const doseMin = +(c.min * peso).toFixed(1);
+    const doseMax = +(c.max * peso).toFixed(1);
+    const doseAlvo = alvo != null ? +(alvo * peso).toFixed(1) : null;
+    const ref = doseAlvo != null ? doseAlvo : doseMax;
+    // teto absoluto por dose (mg)
+    let excedeuTeto = c.tetoMg != null && c.tetoTipo === "dose" && ref > c.tetoMg;
+    // teto por kg/dia (ex.: paracetamol 75 mg/kg/dia) e teto absoluto/dia (4 g/dia)
+    // usa a frequência máxima (menor intervalo) para estimar o total diário
+    const tomadasDia = c.tomadasDiaMax || 1;
+    const totalDiaKg = (alvo != null ? alvo : c.max) * tomadasDia;
+    const totalDiaMg = ref * tomadasDia;
+    if (c.tetoMgKgDia != null && totalDiaKg > c.tetoMgKgDia) excedeuTeto = true;
+    if (c.tetoMgDia != null && totalDiaMg > c.tetoMgDia) excedeuTeto = true;
+    const volumes = (c.susp || []).map((s) => {
+      const mlMin = +(((doseAlvo != null ? doseAlvo : doseMin) / s.mgPerMl)).toFixed(2);
+      const mlMax = +(((doseAlvo != null ? doseAlvo : doseMax) / s.mgPerMl)).toFixed(2);
+      return {
+        label: s.label,
+        freqLabel: s.freqLabel || null,
+        gotas: !!s.gotas,
+        mlMin, mlMax,
+        gtMin: s.gotas ? +(mlMin * 20).toFixed(1) : null,
+        gtMax: s.gotas ? +(mlMax * 20).toFixed(1) : null,
+      };
+    });
+    return { modo: "dose", doseMin, doseMax, doseAlvo, excedeuTeto, volumes };
+  }
+
+  // ── Fármacos dosados por DIA (mg/kg/dia): antibióticos ──
+  const diaMin = +(c.min * peso).toFixed(1);
+  const diaMax = +(c.max * peso).toFixed(1);
+  const diaAlvo = alvo != null ? +(alvo * peso).toFixed(1) : null;
+  const porTomada = c.tomadas.map((t) => ({
+    tomadas: t,
+    min: +(diaMin / t).toFixed(1),
+    max: +(diaMax / t).toFixed(1),
+    alvo: diaAlvo != null ? +(diaAlvo / t).toFixed(1) : null,
+  }));
+  const totalDia = diaAlvo != null ? diaAlvo : diaMax;
+  let excedeuTeto =
+    c.tetoTipo === "dia" ? totalDia > c.tetoMg : porTomada[0].max > c.tetoMg;
+  const volumes = (c.susp || []).map((s) => {
+    const t = s.tomadas || c.tomadas[0];
+    const refMin = (diaAlvo != null ? diaAlvo : diaMin) / t;
+    const refMax = (diaAlvo != null ? diaAlvo : diaMax) / t;
+    return {
+      label: s.label,
+      freqLabel: s.freqLabel || null,
+      tomadas: t,
+      mlMin: +((refMin / s.mgPer5) * 5).toFixed(1),
+      mlMax: +((refMax / s.mgPer5) * 5).toFixed(1),
+    };
+  });
+  return { modo: "dia", diaMin, diaMax, diaAlvo, porTomada, excedeuTeto, volumes };
+}
+
+// Definido FORA do componente principal (regra 5 — sem remount/perda de foco).
+function CalcDose({ calc, peso, cor }) {
+  const [alvoRaw, setAlvoRaw] = useState("");
+  const alvo = parseFld(alvoRaw);
+  const alvoValido = alvo != null && alvo >= calc.min && alvo <= calc.max;
+  const r = calcularDose(calc, peso, alvoValido ? alvo : null);
+  if (!r) return null;
+
+  const box = { background: "#fff", borderRadius: 8, padding: "8px 10px", border: "1px solid #E5E7EB" };
+  const fmt = (mg) => (mg >= 1000 ? `${(mg / 1000).toFixed(mg % 1000 === 0 ? 0 : 2)} g` : `${mg} mg`);
+
+  return (
+    <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 5 }}>
+        <Pill size={13} /> Dose calculada para {peso} kg
+      </p>
+
+      {r.modo === "dose" ? (
+        <>
+          <div style={{ ...box, marginBottom: 6 }}>
+            <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Por dose (faixa)</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", margin: 0 }}>
+              {fmt(r.doseMin)} – {fmt(r.doseMax)}/dose
+              {r.doseAlvo != null && <span style={{ color: cor }}> · alvo {fmt(r.doseAlvo)}/dose</span>}
+            </p>
+          </div>
+          {r.volumes.length > 0 && (
+            <div style={{ marginBottom: 6 }}>
+              {r.volumes.map((v) => (
+                <div key={v.label} style={{ ...box, marginBottom: 4 }}>
+                  <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Volume · {v.label}</p>
+                  {v.gotas ? (
+                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
+                      {r.doseAlvo != null
+                        ? `${v.gtMin} gotas`
+                        : `${v.gtMin} – ${v.gtMax} gotas`}
+                      <span style={{ fontSize: 11, fontWeight: 500, color: "#9CA3AF" }}>
+                        {" "}({r.doseAlvo != null ? `${v.mlMin} mL` : `${v.mlMin} – ${v.mlMax} mL`})
+                      </span>
+                    </p>
+                  ) : (
+                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
+                      {r.doseAlvo != null ? `${v.mlMin} mL/dose` : `${v.mlMin} – ${v.mlMax} mL/dose`}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          {r.volumes.some((v) => v.gotas) && (
+            <p style={{ fontSize: 9, color: "#9CA3AF", margin: "0 0 6px", fontStyle: "italic" }}>
+              Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          <div style={{ ...box, marginBottom: 6 }}>
+            <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Total por dia (faixa)</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", margin: 0 }}>
+              {fmt(r.diaMin)} – {fmt(r.diaMax)}/dia
+              {r.diaAlvo != null && <span style={{ color: cor }}> · alvo {fmt(r.diaAlvo)}/dia</span>}
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: r.porTomada.length > 1 ? "1fr 1fr" : "1fr", gap: 6, marginBottom: 6 }}>
+            {r.porTomada.map((pt) => (
+              <div key={pt.tomadas} style={box}>
+                <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>{pt.tomadas === 1 ? "Dose única" : `${pt.tomadas}x/dia (${24 / pt.tomadas}/${24 / pt.tomadas}h)`}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#111827", margin: 0 }}>
+                  {pt.alvo != null ? `${fmt(pt.alvo)}/tomada` : `${fmt(pt.min)} – ${fmt(pt.max)}/tomada`}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {r.volumes.length > 0 && (
+            <div style={{ marginBottom: 6 }}>
+              {r.volumes.map((v) => (
+                <div key={v.label} style={{ ...box, marginBottom: 4 }}>
+                  <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Volume · {v.label}{v.freqLabel ? ` · ${v.freqLabel}` : ""}</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
+                    {r.diaAlvo != null ? `${v.mlMin} mL/tomada` : `${v.mlMin} – ${v.mlMax} mL/tomada`}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: r.excedeuTeto ? 6 : 0 }}>
+        <input
+          type="text" inputMode="decimal" value={alvoRaw}
+          onChange={(e) => setAlvoRaw(e.target.value)}
+          placeholder={`dose-alvo (${calc.min}–${calc.max} mg/kg)`}
+          style={{ flex: 1, padding: "6px 9px", borderRadius: 7, fontSize: 12, border: "1px solid " + (alvoRaw && !alvoValido ? "#DC2626" : "#D1D5DB"), outline: "none", boxSizing: "border-box" }}
+        />
+        <span style={{ fontSize: 10, color: "#9CA3AF", whiteSpace: "nowrap" }}>{calc.unidade === "dose" ? "mg/kg/dose" : "mg/kg/dia"}</span>
+      </div>
+      {alvoRaw && !alvoValido && (
+        <p style={{ fontSize: 10, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({calc.min}–{calc.max} mg/kg/{calc.unidade === "dose" ? "dose" : "dia"}).</p>
+      )}
+
+      {r.excedeuTeto && (
+        <p style={{ fontSize: 11, color: "#DC2626", fontWeight: 700, margin: 0, display: "flex", alignItems: "center", gap: 4 }}>
+          <AlertTriangle size={12} style={{ flexShrink: 0 }} /> Excede o máximo recomendado — revisar dose.
+        </p>
       )}
     </div>
   );
@@ -191,6 +375,7 @@ function DrugCard({ drug, peso }) {
           </div>
         ))}
       </div>
+      {peso && drug.calc && <CalcDose calc={drug.calc} peso={peso} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "#6B7280", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid #F3F4F6", paddingTop: 6 }}>{drug.obs}</p>
       )}
