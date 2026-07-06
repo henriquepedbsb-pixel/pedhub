@@ -3,7 +3,7 @@ import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp, Info } from 'lucide
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function interpretarDor(score) {
+export function interpretarDor(score) {
   if (score === 0) return { texto: 'Sem dor detectada', cor: '#10B981', degrau: 0 };
   if (score <= 3) return { texto: 'Dor leve', cor: '#22C55E', degrau: 1 };
   if (score <= 6) return { texto: 'Dor moderada', cor: '#F59E0B', degrau: 2 };
@@ -57,7 +57,7 @@ function FaceSVG({ valor }) {
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const FLACC_CATS = [
+export const FLACC_CATS = [
   {
     id: 'face',
     nome: 'Face',
