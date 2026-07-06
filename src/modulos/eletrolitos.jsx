@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp } from 'lucide-react';
+import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -251,7 +251,7 @@ export default function Eletrolitos() {
 
           {/* Classificação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Sódio · Normal 135-145 mEq/L</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio · Normal 135-145 mEq/L</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
               <SeverityBadge label="Leve" range="130-134" cor="#D97706" bg="#FFF7ED" />
               <SeverityBadge label="Moderada" range="125-129" cor="#F97316" bg="#FFF7ED" />
@@ -262,7 +262,7 @@ export default function Eletrolitos() {
 
           {/* Calculadora Na */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>🧮 Calculadora</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Calculadora</p>
             <Field label="SÓDIO ATUAL" val={naVal} set={setNaVal} ph="125" unit="mEq/L" />
 
             {na > 0 && na < 135 && (
@@ -282,7 +282,7 @@ export default function Eletrolitos() {
                     <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
                       <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
                         <strong>NaCl 3%</strong> = 0,513 mEq/mL · Fórmula: ΔNa × {p} kg × {fat} / 0,513<br />
-                        <span style={{ color: '#DC2626', fontWeight: '700' }}>⚠ Nunca corrigir &gt; 10 mEq/L em 24h (risco SDO)</span>
+                        <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Nunca corrigir &gt; 10 mEq/L em 24h (risco SDO)</span>
                       </p>
                     </div>
                   </>
@@ -321,7 +321,7 @@ export default function Eletrolitos() {
           {/* Sódio corrigido (hiperglicemia) + Osmolaridade sérica */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <button style={accordBtn()} onClick={() => toggle('na-correcao')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🧮 Sódio Corrigido & Osmolaridade</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio Corrigido & Osmolaridade</p>
               {aberto === 'na-correcao' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'na-correcao' && (
@@ -344,7 +344,7 @@ export default function Eletrolitos() {
                     <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
                       <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
                         Katz: Na + 1,6 × [(glicose − 100) / 100] · Hillier (mais preciso em glicemias muito altas, ex. CAD): Na + 2,4 × [(glicose − 100) / 100]<br />
-                        <span style={{ color: '#D97706', fontWeight: '700' }}>⚠ Hiperglicemia mascara hiponatremia por efeito osmótico — use o valor CORRIGIDO para decidir tratamento, não o valor medido.</span>
+                        <span style={{ color: '#D97706', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hiperglicemia mascara hiponatremia por efeito osmótico — use o valor CORRIGIDO para decidir tratamento, não o valor medido.</span>
                       </p>
                     </div>
                   </div>
@@ -375,7 +375,7 @@ export default function Eletrolitos() {
           {/* Sintomas + Etiologias */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('na-etiol')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💡 Sintomas e Etiologias</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Etiologias</p>
               {aberto === 'na-etiol' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'na-etiol' && (
@@ -410,7 +410,7 @@ export default function Eletrolitos() {
 
           {/* Classificação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Potássio · Normal 3,5-5,0 mEq/L</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Potássio · Normal 3,5-5,0 mEq/L</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
               <SeverityBadge label="Hipo leve" range="3,0-3,5" cor="#D97706" bg="#FFF7ED" />
               <SeverityBadge label="Hipo mod" range="2,5-3,0" cor="#F97316" bg="#FFF7ED" />
@@ -424,7 +424,7 @@ export default function Eletrolitos() {
 
           {/* Calculadora K */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>🧮 Calculadora</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Calculadora</p>
             <Field label="POTÁSSIO ATUAL" val={kVal} set={setKVal} ph="3,2" unit="mEq/L" />
 
             {k > 0 && k < 3.5 && p > 0 && calcs.kC && (
@@ -440,7 +440,7 @@ export default function Eletrolitos() {
                   <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
                     KCl 10% = 1,341 mEq/mL · Infundir em 1-2h com monitor cardíaco<br />
                     Concentração máxima: <strong>40 mEq/100 mL</strong> periférico · <strong>80 mEq/100 mL</strong> central<br />
-                    <span style={{ color: '#D97706', fontWeight: '700' }}>⚠ Hipocalemia refratária → descartar hipomagnesemia primeiro!</span>
+                    <span style={{ color: '#D97706', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipocalemia refratária → descartar hipomagnesemia primeiro!</span>
                   </p>
                 </div>
               </div>
@@ -450,7 +450,7 @@ export default function Eletrolitos() {
               <div style={{ marginTop: '12px' }}>
                 <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #DC2626' }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '800', color: '#DC2626' }}>
-                    {k >= 7 ? '🚨 HIPERCALEMIA GRAVE — Risco de FV' : '⚠ Hipercalemia — Iniciar protocolo'}
+                    {k >= 7 ? 'HIPERCALEMIA GRAVE — Risco de FV' : 'Hipercalemia — Iniciar protocolo'}
                   </p>
                 </div>
                 <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>1. ESTABILIZAÇÃO DE MEMBRANA (imediato)</p>
@@ -490,7 +490,7 @@ export default function Eletrolitos() {
 
             {k > 0 && k >= 3.5 && k < 5.5 && (
               <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}>✅ K+ {k} mEq/L — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />K+ {k} mEq/L — dentro do normal</p>
               </div>
             )}
           </div>
@@ -498,7 +498,7 @@ export default function Eletrolitos() {
           {/* ECG hipercalemia */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('k-ecg')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💗 Alterações de ECG — Hipercalemia</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Alterações de ECG — Hipercalemia</p>
               {aberto === 'k-ecg' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'k-ecg' && (
@@ -508,7 +508,7 @@ export default function Eletrolitos() {
                   { k: '> 6,0', ecg: 'Prolongamento do PR · Achatamento da onda P', cor: '#F97316' },
                   { k: '> 6,5', ecg: 'Alargamento do QRS · Bloqueios de ramo', cor: '#EF4444' },
                   { k: '> 7,0', ecg: 'Onda sinusoidal (fusão QRS-T) · Bradicardia grave', cor: '#DC2626' },
-                  { k: '> 8,0', ecg: '⚡ Fibrilação ventricular · PCR', cor: '#7F1D1D' },
+                  { k: '> 8,0', ecg: 'Fibrilação ventricular · PCR', cor: '#7F1D1D' },
                 ].map((row, i) => (
                   <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '7px 10px', backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#FFF', borderRadius: '6px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '800', color: row.cor, width: '50px', flexShrink: 0 }}>K {row.k}</span>
@@ -526,7 +526,7 @@ export default function Eletrolitos() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Cálcio · Valores de Referência</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Cálcio · Valores de Referência</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {[
                 { param: 'Ca total', valor: '8,5-10,5 mg/dL', normal: true },
@@ -549,7 +549,7 @@ export default function Eletrolitos() {
 
           {/* Calculadora Ca */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>🧮 Hipocalcemia — Gluconato Ca 10%</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Hipocalcemia — Gluconato Ca 10%</p>
             <Field label="Ca TOTAL ATUAL" val={caVal} set={setCaVal} ph="7,2" unit="mg/dL" />
 
             {ca > 0 && ca < 8.5 && p > 0 && calcs.caC ? (
@@ -562,7 +562,7 @@ export default function Eletrolitos() {
                   <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
                     Gluconato Ca 10% = 9,3 mg Ca elementar/mL · Infundir lentamente (10-30 min)<br />
                     Urgência/tetania/convulsão: pode dar em 5-10 min · Monitor cardíaco obrigatório<br />
-                    <span style={{ color: '#DC2626', fontWeight: '700' }}>⚠ Não infundir junto com bicarbonato (precipita)</span>
+                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Não infundir junto com bicarbonato (precipita)</span>
                   </p>
                 </div>
               </div>
@@ -570,7 +570,7 @@ export default function Eletrolitos() {
               <p style={{ marginTop: '8px', fontSize: '11px', color: '#9CA3AF', textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : ca >= 8.5 && ca > 0 ? (
               <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}>✅ Ca {ca} mg/dL — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Ca {ca} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>
@@ -578,7 +578,7 @@ export default function Eletrolitos() {
           {/* Sintomas e causas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('ca-sint')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💡 Sintomas e Causas</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Causas</p>
               {aberto === 'ca-sint' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'ca-sint' && (
@@ -603,14 +603,14 @@ export default function Eletrolitos() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Magnésio · Normal 1,5-2,5 mg/dL</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Magnésio · Normal 1,5-2,5 mg/dL</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
               <SeverityBadge label="Leve" range="1,2-1,5" cor="#D97706" bg="#FFF7ED" />
               <SeverityBadge label="Moderada" range="0,8-1,2" cor="#F97316" bg="#FFF7ED" />
               <SeverityBadge label="Grave" range="< 0,8" cor="#DC2626" bg="#FEF2F2" />
             </div>
             <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>⚠ Mg e outros eletrólitos</p>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Mg e outros eletrólitos</p>
               <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
                 Hipomagnesemia → Hipocalemia REFRATÁRIA (Mg necessário para ATPase Na/K na bomba tubular renal)<br />
                 Hipomagnesemia → Hipocalcemia REFRATÁRIA (Mg necessário para secreção de PTH)<br />
@@ -621,7 +621,7 @@ export default function Eletrolitos() {
 
           {/* Calculadora Mg */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>🧮 Hipomagnesemia — MgSO₄ 50%</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Hipomagnesemia — MgSO₄ 50%</p>
             <Field label="MAGNÉSIO ATUAL" val={mgVal} set={setMgVal} ph="1,2" unit="mg/dL" />
 
             {mg > 0 && mg < 1.5 && p > 0 && calcs.mgC ? (
@@ -635,7 +635,7 @@ export default function Eletrolitos() {
                     MgSO₄ 50% = 500 mg/mL · Diluir 1:10 em NS ou SG5% antes de infundir<br />
                     Velocidade: 25-50 mg/kg em <strong>15-60 min</strong> (mais rápido no broncoespasmo)<br />
                     Máx: 2g (4 mL de 50%) por dose<br />
-                    <span style={{ color: '#DC2626', fontWeight: '700' }}>⚠ Hipermagnesemia: perda de reflexos → apneia. Ter gluconato Ca pronto.</span>
+                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipermagnesemia: perda de reflexos → apneia. Ter gluconato Ca pronto.</span>
                   </p>
                 </div>
               </div>
@@ -643,7 +643,7 @@ export default function Eletrolitos() {
               <p style={{ marginTop: '8px', fontSize: '11px', color: '#9CA3AF', textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : mg >= 1.5 && mg > 0 ? (
               <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}>✅ Mg {mg} mg/dL — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Mg {mg} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>
@@ -651,7 +651,7 @@ export default function Eletrolitos() {
           {/* Indicações e usos clínicos */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('mg-ind')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💡 Usos Clínicos do MgSO₄</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Usos Clínicos do MgSO₄</p>
               {aberto === 'mg-ind' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'mg-ind' && (
