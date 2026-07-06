@@ -1,5 +1,5 @@
 /**
- * neonatologia-6.jsx — PedHub
+ * dilucao-bic.jsx — PedHub
  * BIC Neonatal — Drogas de Infusão Contínua
  * Ref: NeoFax 2023 · Harriet Lane · SBP
  */
@@ -204,7 +204,7 @@ function TabBIC() {
       "",
       `Apresentação: ${d.amp}`,
       `Acesso: ${d.acesso}`,
-      d.alertas.length ? "⚠ " + d.alertas.join("  ⚠ ") : "",
+      d.alertas.length ? "! " + d.alertas.join("  ! ") : "",
       "",
       "Ref: NeoFax 2023 · Harriet Lane · PedHub",
     ].filter(l => l !== undefined).join("\n");
