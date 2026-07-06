@@ -14,6 +14,8 @@ import {
   Brain,
   Heart,
   Bug,
+  Biohazard,
+  Layers,
   ListChecks,
   Check,
   ChevronRight,
@@ -109,6 +111,8 @@ const PATOGENOS = [
   { id: "cmv", label: "CMV", icon: Ear },
   { id: "herpes", label: "Herpes", icon: Brain },
   { id: "sifilis", label: "Sífilis", icon: Heart },
+  { id: "zika", label: "Zika", icon: Biohazard },
+  { id: "outros", label: "Outros agentes", icon: Layers },
 ];
 
 const NOME_PATOGENO = {
@@ -117,6 +121,8 @@ const NOME_PATOGENO = {
   cmv: "CMV",
   herpes: "Herpes",
   sifilis: "Sífilis",
+  zika: "Zika",
+  outros: "Outros agentes",
 };
 
 /* ─── Diferencial rápido por achado ───────────────────────────────────────
@@ -142,7 +148,11 @@ const ACHADOS = [
   { id: "penfigo",        label: "Pênfigo palmoplantar",                           mapa: { sifilis: "pat" } },
   { id: "coriza_sang",    label: "Coriza sanguinolenta",                           mapa: { sifilis: "forte" } },
   { id: "periostite",     label: "Periostite / pseudoparalisia de Parrot",         mapa: { sifilis: "forte" } },
-  { id: "microcefalia",   label: "Microcefalia",                                   mapa: { cmv: "sugestivo", toxo: "sugestivo" } },
+  { id: "microcefalia",   label: "Microcefalia",                                   mapa: { cmv: "sugestivo", toxo: "sugestivo", zika: "forte" } },
+  { id: "calc_subcort",   label: "Calcificações subcorticais / córtico-subcorticais", mapa: { zika: "pat" } },
+  { id: "artrogripose",   label: "Artrogripose (contraturas congênitas múltiplas)", mapa: { zika: "forte" } },
+  { id: "hidropsia",      label: "Hidropsia fetal / anemia fetal grave",           mapa: { outros: "forte" } },
+  { id: "cicatriz_derm",  label: "Cicatrizes cutâneas em dermátomo (zig-zag)",     mapa: { outros: "forte" } },
   { id: "blueberry",      label: 'Púrpura em "blueberry muffin"',                  mapa: { rubeola: "sugestivo", cmv: "sugestivo" } },
   { id: "hepatoesple",    label: "Hepatoesplenomegalia",                           mapa: { toxo: "sugestivo", rubeola: "sugestivo", cmv: "sugestivo", sifilis: "sugestivo" } },
 ];
@@ -269,6 +279,110 @@ function DiferencialAchados({ onSelecionar }) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Outros agentes (O de "Others" do TORCH) ─────────────────────────────
+   Formato compacto: acordeão por agente. Conduta CITADA (não calculada) —
+   doses específicas ficam nos protocolos/módulos próprios. Fontes: SBP,
+   AAP Red Book, MS. */
+const OUTROS_AGENTES = [
+  {
+    id: "parvo",
+    nome: "Parvovírus B19",
+    achado: "Hidropsia fetal não imune · anemia fetal grave (aplasia eritroide transitória).",
+    diagnostico: "PCR materno/fetal · USG (hidropsia, ascite) · Doppler da ACM (pico de velocidade sistólica estima anemia fetal).",
+    conduta: "Transfusão intrauterina se anemia fetal grave; manejo de suporte. Não é teratógeno clássico — a maioria dos sobreviventes evolui sem sequela.",
+    atencao: "O risco principal é hematológico (anemia/hidropsia), não malformação estrutural.",
+  },
+  {
+    id: "varicela",
+    nome: "Varicela (VZV)",
+    achado: "Síndrome da varicela congênita (infecção materna < 20 sem): cicatrizes cutâneas em dermátomo (zig-zag), hipoplasia de membro, alterações oculares e neurológicas. Varicela neonatal: mãe com quadro de 5 dias antes a 2 dias após o parto.",
+    diagnostico: "Clínico + história materna; PCR de lesões quando presentes.",
+    conduta: "RN exposto periparto: imunoglobulina antivaricela-zóster (VZIG). Doença neonatal: aciclovir IV (dose no PedFarma). Síndrome congênita: suporte multidisciplinar.",
+    atencao: "Distinguir síndrome congênita (embriopatia < 20 sem) de varicela neonatal (transmissão periparto, risco de doença disseminada grave).",
+  },
+  {
+    id: "hiv",
+    nome: "HIV",
+    achado: "Assintomático ao nascer na maioria. Transmissão vertical: intraútero, periparto (maior fração) e aleitamento.",
+    diagnostico: "Carga viral (RNA/DNA por PCR) em momentos definidos — sorologia NÃO serve no RN (anticorpos maternos atravessam a placenta).",
+    conduta: "Profilaxia antirretroviral no RN iniciada precocemente (esquema conforme risco); TARV materna e carga viral indetectável reduzem a transmissão. No Brasil, NÃO amamentar.",
+    atencao: "Início precoce da profilaxia é tempo-dependente — ver protocolo/PCDT vigente.",
+  },
+  {
+    id: "hepb",
+    nome: "Hepatite B",
+    achado: "Assintomático ao nascer. Transmissão vertical predominantemente periparto; risco de cronificação alto quanto mais precoce a infecção.",
+    diagnostico: "HBsAg materno no pré-natal define a conduta no RN.",
+    conduta: "RN de mãe HBsAg+: vacina para hepatite B + imunoglobulina (HBIG) nas primeiras 12–24 h de vida (locais anatômicos diferentes). Amamentação permitida após a imunoprofilaxia.",
+    atencao: "A imunoprofilaxia precoce é altamente eficaz — janela das primeiras horas de vida.",
+  },
+  {
+    id: "chagas",
+    nome: "Chagas (T. cruzi)",
+    achado: "Maioria assintomática. Pode cursar com prematuridade, baixo peso, hepatoesplenomegalia, meningoencefalite ou miocardite. Relevante no contexto brasileiro.",
+    diagnostico: "Parasitológico direto (micro-hematócrito) nos primeiros meses · PCR. Sorologia só após 8–9 meses (antes reflete anticorpo materno).",
+    conduta: "Benznidazol — alta taxa de cura quando o Chagas congênito é tratado precocemente (ver protocolo/PedFarma para dose).",
+    atencao: "Tratamento precoce = alta chance de cura; não aguardar a sorologia dos 9 meses se o parasitológico for positivo.",
+  },
+  {
+    id: "chik",
+    nome: "Chikungunya",
+    achado: "Transmissão vertical periparto (mãe virêmica no parto). RN: febre, dor, exantema, edema de extremidades, e — nas formas graves — encefalopatia/encefalite e miocardite.",
+    diagnostico: "RT-PCR no RN sintomático.",
+    conduta: "Suporte. Vigilância neurológica — o acometimento de SNC neonatal pode deixar sequela.",
+    atencao: "Não é teratógeno clássico; o risco é a doença neonatal por transmissão intraparto.",
+  },
+];
+
+// Definido FORA do componente principal (decisão arquitetural fixa 5).
+function OutrosAgentes() {
+  const [aberto, setAberto] = useState(null);
+  const toggle = (id) => setAberto(aberto === id ? null : id);
+
+  return (
+    <div>
+      <AlertaBox tone="blue">
+        O "O" de TORCH ("Others"): agentes menos frequentes ou de manejo
+        preventivo. Formato de referência rápida — ver protocolo específico
+        para conduta detalhada.
+      </AlertaBox>
+
+      <div className="mt-3">
+        {OUTROS_AGENTES.map((a) => {
+          const open = aberto === a.id;
+          return (
+            <div key={a.id} className="border border-gray-200 rounded-2xl overflow-hidden bg-white mb-3">
+              <button
+                type="button"
+                onClick={() => toggle(a.id)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+              >
+                <span className="flex items-center gap-2 font-semibold text-gray-800 text-sm">
+                  <Layers size={18} style={{ color: COR }} />
+                  {a.nome}
+                </span>
+                {open ? (
+                  <ChevronUp size={18} className="text-gray-400" />
+                ) : (
+                  <ChevronDown size={18} className="text-gray-400" />
+                )}
+              </button>
+              {open && (
+                <div className="px-4 pb-4 pt-0 text-sm text-gray-700 space-y-2">
+                  <p><span className="font-semibold text-gray-800">Achado-chave: </span>{a.achado}</p>
+                  <p><span className="font-semibold text-gray-800">Diagnóstico: </span>{a.diagnostico}</p>
+                  <p><span className="font-semibold text-gray-800">Conduta: </span>{a.conduta}</p>
+                  <AlertaBox tone="amber">{a.atencao}</AlertaBox>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -640,6 +754,60 @@ export default function Torchs() {
             </Section>
           </>
         )}
+
+        {aba === "zika" && (
+          <>
+            <Section title="Rastreio materno" icon={TestTube} open={abertas.rastreio} onToggle={() => toggle("rastreio")}>
+              <ul className="space-y-1.5">
+                <Bullet>Investigar exantema, febre, artralgia ou conjuntivite na gestação, sobretudo em área de circulação do vírus.</Bullet>
+                <Bullet>RT-PCR (soro e urina) na fase aguda; sorologia tem valor limitado pela reação cruzada com dengue e outros flavivírus.</Bullet>
+                <Bullet>USG fetal: microcefalia, ventriculomegalia, calcificações, restrição de crescimento — indica investigação dirigida.</Bullet>
+              </ul>
+              <FonteTag>MS</FonteTag><FonteTag>SBP</FonteTag>
+            </Section>
+
+            <Section title="Diagnóstico do RN" icon={Stethoscope} open={abertas.diagnostico} onToggle={() => toggle("diagnostico")}>
+              <p>Espectro da <strong>Síndrome Congênita do Zika</strong> — nem todo RN infectado tem microcefalia. Achados característicos:</p>
+              <ul className="space-y-1.5">
+                <Bullet><strong>Calcificações subcorticais / na junção córtico-subcortical</strong> — padrão que ajuda a distinguir do CMV (periventricular) e da toxoplasmose (difusa)</Bullet>
+                <Bullet>Microcefalia (quando presente, frequentemente grave) com desproporção craniofacial e redundância de pele no couro cabeludo</Bullet>
+                <Bullet>Ventriculomegalia, alterações de migração/giração, hipoplasia de cerebelo e tronco</Bullet>
+                <Bullet>Artrogripose (contraturas congênitas múltiplas)</Bullet>
+                <Bullet>Alterações oculares: atrofia macular, mosqueamento pigmentar retiniano, atrofia do nervo óptico</Bullet>
+                <Bullet>Hipertonia/espasticidade, irritabilidade, disfagia, convulsões</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800">Confirmação:</p>
+              <ul className="space-y-1.5">
+                <Bullet>RT-PCR (sangue, urina e líquor) nos primeiros dias de vida</Bullet>
+                <Bullet>Sorologia IgM (ELISA) interpretada com cautela pela reação cruzada com outros flavivírus</Bullet>
+                <Bullet>Neuroimagem (USTF/TC) e avaliação oftalmológica e auditiva</Bullet>
+              </ul>
+              <AlertaBox tone="blue">Todo RN com suspeita deve ser investigado mesmo sem microcefalia — o espectro é amplo e há formas sem redução do perímetro cefálico ao nascer.</AlertaBox>
+            </Section>
+
+            <Section title="Manejo" icon={Pill} open={abertas.tratamento} onToggle={() => toggle("tratamento")}>
+              <AlertaBox tone="blue">Não existe terapia antiviral específica para a infecção congênita pelo Zika. O manejo é de suporte e multidisciplinar.</AlertaBox>
+              <ul className="space-y-1.5">
+                <Bullet>Estimulação precoce e reabilitação neuromotora</Bullet>
+                <Bullet>Ortopedia/fisiatria para artrogripose e contraturas</Bullet>
+                <Bullet>Controle de convulsões e da irritabilidade conforme necessidade</Bullet>
+                <Bullet>Fonoaudiologia para disfagia; avaliação nutricional</Bullet>
+                <Bullet>Acompanhamento oftalmológico e auditivo</Bullet>
+              </ul>
+            </Section>
+
+            <Section title="Seguimento" icon={CalendarClock} open={abertas.seguimento} onToggle={() => toggle("seguimento")}>
+              <ul className="space-y-1.5">
+                <Bullet>Avaliação seriada do DNPM e do perímetro cefálico</Bullet>
+                <Bullet>Neuroimagem e acompanhamento neurológico</Bullet>
+                <Bullet>Avaliação oftalmológica e auditiva (BERA) seriadas</Bullet>
+                <Bullet>Acompanhamento ortopédico/motor e da deglutição</Bullet>
+              </ul>
+            </Section>
+          </>
+        )}
+
+        {aba === "outros" && <OutrosAgentes />}
       </div>
 
       {/* Alertas gerais — visíveis em qualquer aba */}
