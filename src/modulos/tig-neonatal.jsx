@@ -554,7 +554,7 @@ export default function TigNeonatal() {
                 {[
                   { color: "#dc2626", label: "<4 baixo"        },
                   { color: "#d97706", label: "4–6 início RNPT" },
-                  { color: "#16a34a", label: "6–8 alvo ✓"      },
+                  { color: "#16a34a", label: "6–8 alvo"      },
                   { color: "#d97706", label: "8–10 monitorar"   },
                   { color: "#dc2626", label: ">10 muito alto"   },
                 ].map(({ color, label }) => (
