@@ -414,7 +414,7 @@ export default function IctericiaNeonatal() {
      FUNÇÕES DE EDIÇÃO DE TABELA
   ──────────────────────────────────────── */
   function commitEdit(key, ri, ci, val, field) {
-    const n = parseFloat(val);
+    const n = parseFld(val);
     if (isNaN(n)) { setEditCell(null); return; }
     setTableData(prev => {
       const next = { ...prev };
