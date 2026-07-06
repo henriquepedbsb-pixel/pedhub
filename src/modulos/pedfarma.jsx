@@ -1,3 +1,4 @@
+// src/modulos/pedfarma.jsx
 import { useState } from "react";
 import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 
