@@ -1,5 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Activity, Pill, Moon, TrendingDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { Activity, Pill, Moon, TrendingDown, ChevronDown, ChevronUp, RotateCcw, ClipboardList, Check, Search, Brain, AlertTriangle } from 'lucide-react';
+// FLACC — fonte única: itens e cortes vêm do módulo Dor (dono do domínio
+// "escalas de dor"). Este módulo consome, não redefine. (ver regra de
+// não-redundância + precedente classificacao-rn ↔ percentis)
+import { FLACC_CATS, interpretarDor } from './dor';
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -75,7 +79,7 @@ const DROGAS = {
       mgKgDil:null, volDil:null, concAmpola:10, fator:null, unidade:'mg/kg/h',
       bic:null, start:null,
       indicacao:'Procedimentos em > 3 anos · sedação de curta duração · status epilepticus refratário',
-      alerta:'⚠ NÃO usar infusão prolongada (> 48h) em crianças — risco de síndrome de infusão do propofol (PRIS): acidose, rabdomiólise, óbito',
+      alerta:'NÃO usar infusão prolongada (> 48h) em crianças — risco de síndrome de infusão do propofol (PRIS): acidose, rabdomiólise, óbito',
     },
     {
       id:'clonidina', nome:'Clonidina', tipo:'α₂-agonista oral', cor:'#065F46', corBg:'#ECFDF5', corBd:'#6EE7B7',
@@ -89,14 +93,6 @@ const DROGAS = {
   ],
 };
 
-// FLACC score items
-const FLACC = [
-  { id:'face',    label:'Face',        opcoes:['Relaxada','Careta ocasional','Careta persistente/maxilar tenso'] },
-  { id:'pernas',  label:'Pernas',      opcoes:['Relaxadas','Tensas/inquietas','Chutando/fletidas'] },
-  { id:'ativ',    label:'Atividade',   opcoes:['Deitado quieto','Agitado/rodando','Arqueado/rígido'] },
-  { id:'choro',   label:'Choro',       opcoes:['Sem choro','Geme/chora baixo','Choro intenso'] },
-  { id:'consolo', label:'Consolação',  opcoes:['Satisfeito','Acalma com toque','Difícil de consolar'] },
-];
 
 const calcDil = (droga, p) => {
   if (!droga.mgKgDil || p <= 0) return null;
@@ -134,14 +130,19 @@ export default function AnalgesiaSedacao() {
 
   const flaccTotal = useMemo(() => {
     const vals = Object.values(flacc);
-    if (vals.length < FLACC.length) return null;
+    if (vals.length < FLACC_CATS.length) return null;
     return vals.reduce((s, v) => s + v, 0);
   }, [flacc]);
 
-  const flaccClass = flaccTotal === null ? null
-    : flaccTotal <= 3 ? { label:'Dor Leve', cor:'#10B981', bg:'#ECFDF5' }
-    : flaccTotal <= 6 ? { label:'Dor Moderada', cor:'#D97706', bg:'#FFF7ED' }
-    : { label:'Dor Grave', cor:'#DC2626', bg:'#FEF2F2' };
+  // Cortes canônicos vêm de interpretarDor (dor.jsx); aqui só mapeamos o
+  // degrau para as cores/rótulo próprios deste módulo (camada visual local).
+  const FLACC_UI = [
+    { label:'Sem dor',      cor:'#10B981', bg:'#ECFDF5' }, // degrau 0
+    { label:'Dor Leve',     cor:'#10B981', bg:'#ECFDF5' }, // degrau 1
+    { label:'Dor Moderada', cor:'#D97706', bg:'#FFF7ED' }, // degrau 2
+    { label:'Dor Grave',    cor:'#DC2626', bg:'#FEF2F2' }, // degrau 3
+  ];
+  const flaccClass = flaccTotal === null ? null : FLACC_UI[interpretarDor(flaccTotal).degrau];
 
   const drogaA = DROGAS.analgesia.find(d => d.id === drugA);
   const drogaS = DROGAS.sedacao.find(d => d.id === drugS);
@@ -262,7 +263,7 @@ export default function AnalgesiaSedacao() {
         {/* Alerta */}
         {droga.alerta && (
           <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'8px 10px', borderLeft:'3px solid #F97316' }}>
-            <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'600' }}>⚠ {droga.alerta}</p>
+            <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'600' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />{droga.alerta}</p>
           </div>
         )}
       </div>
@@ -311,25 +312,25 @@ export default function AnalgesiaSedacao() {
           {/* FLACC interativo */}
           <div style={card()}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'12px' }}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>📊 FLACC — 2 meses a 7 anos / não-verbal</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Activity size={15} /> FLACC — 2 meses a 7 anos / não-verbal</p>
               {flaccTotal !== null && (
                 <span style={{ backgroundColor:flaccClass.cor, color:'#FFF', borderRadius:'16px', padding:'3px 10px', fontSize:'13px', fontWeight:'800' }}>{flaccTotal}/10</span>
               )}
             </div>
 
-            {FLACC.map(item => (
+            {FLACC_CATS.map(item => (
               <div key={item.id} style={{ marginBottom:'10px' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'4px' }}>
-                  <span style={{ fontSize:'12px', fontWeight:'700', color:'#374151' }}>{item.label}</span>
+                  <span style={{ fontSize:'12px', fontWeight:'700', color:'#374151' }}>{item.nome}</span>
                   {flacc[item.id] !== undefined && (
                     <span style={{ fontSize:'12px', fontWeight:'800', color: flacc[item.id]===0?'#10B981':flacc[item.id]===1?'#D97706':'#DC2626' }}>+{flacc[item.id]}</span>
                   )}
                 </div>
-                <div style={{ display:'flex', gap:'4px' }}>
-                  {item.opcoes.map((op, idx) => (
-                    <button key={idx} onClick={()=>setFlacc(prev=>({...prev,[item.id]:idx}))}
-                      style={{ flex:'1 1 auto', padding:'5px 4px', borderRadius:'6px', border:'none', cursor:'pointer', fontSize:'10px', fontWeight: flacc[item.id]===idx?'700':'400', backgroundColor: flacc[item.id]===idx?(idx===0?'#10B981':idx===1?'#D97706':'#DC2626'):'#F3F4F6', color: flacc[item.id]===idx?'#FFF':'#374151', textAlign:'center' }}>
-                      {op}
+                <div style={{ display:'flex', flexDirection:'column', gap:'4px' }}>
+                  {item.opcoes.map(op => (
+                    <button key={op.v} onClick={()=>setFlacc(prev=>({...prev,[item.id]:op.v}))}
+                      style={{ width:'100%', padding:'8px 10px', borderRadius:'6px', border:'none', cursor:'pointer', fontSize:'11px', fontWeight: flacc[item.id]===op.v?'700':'400', backgroundColor: flacc[item.id]===op.v?(op.v===0?'#10B981':op.v===1?'#D97706':'#DC2626'):'#F3F4F6', color: flacc[item.id]===op.v?'#FFF':'#374151', textAlign:'left', lineHeight:1.35 }}>
+                      <span style={{ fontWeight:'800', marginRight:'6px' }}>{op.v}</span>{op.texto}
                     </button>
                   ))}
                 </div>
@@ -347,15 +348,15 @@ export default function AnalgesiaSedacao() {
               </div>
             )}
 
-            <button onClick={()=>setFlacc({})} style={{ marginTop:'8px', width:'100%', padding:'7px', borderRadius:'8px', border:'1px solid #E5E7EB', backgroundColor:'#F9FAFB', cursor:'pointer', fontSize:'11px', color:'#6B7280' }}>
-              🔄 Limpar FLACC
+            <button onClick={()=>setFlacc({})} style={{ marginTop:'8px', width:'100%', padding:'7px', borderRadius:'8px', border:'1px solid #E5E7EB', backgroundColor:'#F9FAFB', cursor:'pointer', fontSize:'11px', color:'#6B7280', display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+              <RotateCcw size={13} /> Limpar FLACC
             </button>
           </div>
 
           {/* Outras escalas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('escalas')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>📋 Outras Escalas de Referência</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><ClipboardList size={14} style={{verticalAlign:'-2px', marginRight:6}} />Outras Escalas de Referência</p>
               {aberto==='escalas'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='escalas' && (
@@ -436,7 +437,7 @@ export default function AnalgesiaSedacao() {
 
           {/* Quando desmamar */}
           <div style={card({ border:`1px solid ${CBR}` })}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C }}>📋 Quando Iniciar Desmame</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C }}><ClipboardList size={14} style={{verticalAlign:'-2px', marginRight:6}} />Quando Iniciar Desmame</p>
             {['Melhora da condição de base — doença controlada',
               'Extubação planejada ou realizada',
               'Score de sedação dentro da meta por > 12-24h',
@@ -444,7 +445,7 @@ export default function AnalgesiaSedacao() {
               'Opioides/BZD por > 5-7 dias: risco de síndrome de abstinência',
             ].map((item, i) => (
               <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:'#374151', marginBottom:'5px', alignItems:'flex-start' }}>
-                <span style={{ color:C, flexShrink:0 }}>✓</span>{item}
+                <span style={{ color:C, flexShrink:0 }}><Check size={13} /></span>{item}
               </div>
             ))}
           </div>
@@ -452,7 +453,7 @@ export default function AnalgesiaSedacao() {
           {/* WAT-1 */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('wat')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🔍 WAT-1 — Síndrome de Abstinência</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><Search size={14} style={{verticalAlign:'-2px', marginRight:6}} />WAT-1 — Síndrome de Abstinência</p>
               {aberto==='wat'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='wat' && (
@@ -476,7 +477,7 @@ export default function AnalgesiaSedacao() {
 
           {/* Protocolo desmame */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>📉 Protocolo de Desmame</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><TrendingDown size={14} style={{verticalAlign:'-2px', marginRight:6}} />Protocolo de Desmame</p>
             {[
               { titulo:'Calcular dose total diária', desc:'Soma de toda a infusão do dia anterior (mg ou mcg totais)' },
               { titulo:'Converter para oral/enteral', desc:'Morfina IV:VO = 1:3 · Midazolam IV → Diazepam VO (fator 1:1 mg a mg aproximado)' },
@@ -497,7 +498,7 @@ export default function AnalgesiaSedacao() {
           {/* Delírio pediátrico */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('delirio')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🧠 Delírio em UTI Pediátrica (PICU-pCAM)</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><Brain size={14} style={{verticalAlign:'-2px', marginRight:6}} />Delírio em UTI Pediátrica (PICU-pCAM)</p>
               {aberto==='delirio'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='delirio' && (
