@@ -54,7 +54,6 @@ const DilucaoBic       = lazy(() => import("./modulos/dilucao-bic"));
 const TigNeonatal      = lazy(() => import("./modulos/tig-neonatal"));
 const Canguru          = lazy(() => import("./modulos/canguru"));
 const DexametasonaDbp  = lazy(() => import("./modulos/dexametasona-dbp"));
-const GuiaVacinal2026  = lazy(() => import("./modulos/guia-vacinal-2026"));
 const DorNeonatal      = lazy(() => import("./modulos/DorNeonatal"));
 const Hipotermia       = lazy(() => import("./modulos/hipotermia"));
 const Surfactante      = lazy(() => import("./modulos/surfactante"));
@@ -120,7 +119,6 @@ const MODULO_MAP = {
   "/tig-neonatal":      { label: "TIG Neonatal",              cor: "#0891B2", voltar: "/neonatal" },
   "/canguru":           { label: "Canguru",                   cor: "#10B981", voltar: "/neonatal" },
   "/dexametasona-dbp":  { label: "Dexa DBP",                  cor: "#0891B2", voltar: "/neonatal" },
-  "/guia-vacinal-2026": { label: "Guia Vacinal 2026",         cor: "#06B6D4", voltar: "/neonatal" },
   "/dor-neonatal":      { label: "Dor Neonatal",              cor: "#EF4444", voltar: "/neonatal" },
   "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5", voltar: "/neonatal" },
   "/surfactante":       { label: "Surfactante",               cor: "#059669", voltar: "/neonatal" },
@@ -286,7 +284,6 @@ export default function App() {
           <Route path="/tig-neonatal"      element={<TigNeonatal />} />
           <Route path="/canguru"           element={<Canguru />} />
           <Route path="/dexametasona-dbp"  element={<DexametasonaDbp />} />
-          <Route path="/guia-vacinal-2026" element={<GuiaVacinal2026 />} />
           <Route path="/dor-neonatal"      element={<DorNeonatal />} />
           <Route path="/hipotermia"        element={<Hipotermia />} />
           <Route path="/surfactante"       element={<Surfactante />} />
