@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp } from 'lucide-react';
+import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield } from 'lucide-react';
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -17,7 +17,7 @@ const BELL_STAGES = {
   'IIIA': { label:'IIIA — Avançada com perfuração iminente', cor:'#DC2626', bg:'#FEF2F2', borda:'#FECACA',
              manejo:'UTI · VM · vasopressores · ATB máximo (+ metronidazol) · cirurgia urgente × drenagem peritoneal', duracao:'ATB 14 dias ou mais' },
   'IIIB': { label:'IIIB — Perfuração intestinal confirmada', cor:'#7F1D1D', bg:'#FEF2F2', borda:'#FECACA',
-             manejo:'🔴 CIRURGIA EMERGÊNCIA · estabilizar e operar · laparotomia × drenagem peritoneal por peso', duracao:'ATB ≥ 14 dias pós-operatório' },
+             manejo:'CIRURGIA DE EMERGÊNCIA · estabilizar e operar · laparotomia × drenagem peritoneal por peso', duracao:'ATB ≥ 14 dias pós-operatório' },
 };
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -171,7 +171,7 @@ export default function NEC() {
 
           {/* Definição */}
           <div style={card({ border:`1px solid ${CBR}` })}>
-            <p style={{ margin:'0 0 8px 0', fontSize:'14px', fontWeight:'700', color:C }}>📋 Enterocolite Necrosante (NEC)</p>
+            <p style={{ margin:'0 0 8px 0', fontSize:'14px', fontWeight:'700', color:C, display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Enterocolite Necrosante (NEC)</p>
             <div style={{ backgroundColor:CLT, borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
               <p style={{ margin:0, fontSize:'12px', color:'#92400E' }}>
                 <strong>Definição:</strong> Inflamação intestinal necrosante em neonatos · emergência GI mais comum em prematuros · mortalidade 20-30% (acima de 50% na forma cirúrgica)
@@ -190,7 +190,7 @@ export default function NEC() {
 
           {/* Sinais clínicos */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🔍 Sinais e Sintomas</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Search size={15} />Sinais e Sintomas</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
               <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
                 <p style={{ margin:'0 0 6px 0', fontSize:'12px', fontWeight:'700', color:'#C2410C' }}>Sistêmicos</p>
@@ -213,10 +213,10 @@ export default function NEC() {
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'6px' }}>
                 {[
                   { achado:'Distensão de alças', sig:'Inespecífico · estágio I', cor:'#6B7280' },
-                  { achado:'Pneumatose intestinal', sig:'🔴 PATOGNOMÔNICO de NEC · gás na parede intestinal · Estágio IIA', cor:'#F97316' },
-                  { achado:'Gás na veia porta', sig:'⚠ Sinal grave · estágio IIB-IIIA · ramificações hiperecoicas no fígado (USG)', cor:'#EF4444' },
+                  { achado:'Pneumatose intestinal', sig:'PATOGNOMÔNICO de NEC · gás na parede intestinal · Estágio IIA', cor:'#F97316' },
+                  { achado:'Gás na veia porta', sig:'Sinal grave · estágio IIB-IIIA · ramificações hiperecoicas no fígado (USG)', cor:'#EF4444' },
                   { achado:'Alça fixa (serial)', sig:'Mesma alça dilatada em RX seriados = isquemia/necrose · indicação cirúrgica relativa', cor:'#DC2626' },
-                  { achado:'Pneumoperitônio', sig:'🚨 PERFURAÇÃO INTESTINAL · cirurgia emergência · Estágio IIIB', cor:'#7F1D1D' },
+                  { achado:'Pneumoperitônio', sig:'PERFURAÇÃO INTESTINAL · cirurgia emergência · Estágio IIIB', cor:'#7F1D1D' },
                 ].map((row, i) => (
                   <div key={i} style={{ padding:'8px 10px', backgroundColor:i%2===0?'#F9FAFB':'#FFF', borderRadius:'8px', borderLeft:`3px solid ${row.cor}` }}>
                     <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:row.cor }}>{row.achado}</p>
@@ -233,7 +233,7 @@ export default function NEC() {
           {/* Laboratório */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('lab')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🧪 Laboratório</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><FlaskConical size={15} />Laboratório</p>
               {aberto==='lab'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='lab' && (
@@ -273,9 +273,9 @@ export default function NEC() {
             <div style={{ display:'flex', flexDirection:'column', gap:'5px' }}>
               {[
                 { id:'normal',          label:'Normal / Distensão inespecífica', cor:'#6B7280' },
-                { id:'pneumatose',      label:'🟠 Pneumatose intestinal', cor:'#F97316' },
-                { id:'portal_gas',      label:'🔴 Gás portal / Ascite', cor:'#EF4444' },
-                { id:'pneumoperitoneum',label:'🚨 Pneumoperitônio — perfuração confirmada', cor:'#7F1D1D' },
+                { id:'pneumatose',      label:'Pneumatose intestinal', cor:'#F97316' },
+                { id:'portal_gas',      label:'Gás portal / Ascite', cor:'#EF4444' },
+                { id:'pneumoperitoneum',label:'Pneumoperitônio — perfuração confirmada', cor:'#7F1D1D' },
               ].map(opt=>(
                 <button key={opt.id} onClick={()=>setRx(opt.id)}
                   style={{ padding:'8px 12px', borderRadius:'8px', border:`2px solid ${rx===opt.id?opt.cor:'#E5E7EB'}`, backgroundColor:rx===opt.id?opt.cor+'15':'#F9FAFB', cursor:'pointer', textAlign:'left', fontSize:'12px', fontWeight:rx===opt.id?'700':'400', color:rx===opt.id?opt.cor:'#374151' }}>
@@ -332,7 +332,7 @@ export default function NEC() {
           {/* Referência rápida de todos os estágios */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('allstages')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>📋 Todos os Estágios — Referência Rápida</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Todos os Estágios — Referência Rápida</p>
               {aberto==='allstages'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='allstages' && (
@@ -362,7 +362,7 @@ export default function NEC() {
 
           {/* Medidas gerais */}
           <div style={card({ border:`1px solid ${CBR}` })}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C }}>🛑 Medidas Imediatas (todos os estágios)</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C, display:'flex', alignItems:'center', gap:6 }}><OctagonX size={15} />Medidas Imediatas (todos os estágios)</p>
             {['Suspender alimentação enteral (NPO) imediatamente',
               'Sonda nasogástrica aberta para descompressão',
               'Acesso venoso · colher hemoculturas (≥ 2 sítios)',
@@ -381,7 +381,7 @@ export default function NEC() {
 
           {/* Calculadora ATB */}
           <div style={card()}>
-            <p style={{ margin:'0 0 12px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>💊 Calculadora de Antibióticos</p>
+            <p style={{ margin:'0 0 12px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Pill size={15} />Calculadora de Antibióticos</p>
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'10px' }}>
               <div>
@@ -420,7 +420,7 @@ export default function NEC() {
           {/* Nutrição e Alimentação */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('nutri')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🥛 Nutrição e Reintrodução Alimentar</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Milk size={15} />Nutrição e Reintrodução Alimentar</p>
               {aberto==='nutri'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='nutri' && (
@@ -451,7 +451,7 @@ export default function NEC() {
 
           {/* Indicações absolutas e relativas */}
           <div style={{ backgroundColor:'#FEF2F2', borderRadius:'12px', padding:'14px', border:'1px solid #FECACA' }}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'800', color:'#DC2626' }}>🚨 Indicações Cirúrgicas</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'800', color:'#DC2626', display:'flex', alignItems:'center', gap:6 }}><AlertTriangle size={15} />Indicações Cirúrgicas</p>
             <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#DC2626' }}>ABSOLUTAS:</p>
             {['Pneumoperitônio confirmado no RX (perfuração intestinal)',
               'Paracentese positiva (líquido marrom/esverdeado)',
@@ -476,7 +476,7 @@ export default function NEC() {
 
           {/* Drenagem × Laparotomia */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>⚖️ Drenagem Peritoneal × Laparotomia</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Scale size={15} />Drenagem Peritoneal × Laparotomia</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
               <div style={{ backgroundColor:'#EFF6FF', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #3B82F6' }}>
                 <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:'#1D4ED8' }}>Drenagem Peritoneal (DP)</p>
@@ -499,7 +499,7 @@ export default function NEC() {
           {/* Complicações e sequelas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('seq')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>📈 Complicações e Sequelas</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><TrendingUp size={15} />Complicações e Sequelas</p>
               {aberto==='seq'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='seq' && (
@@ -523,7 +523,7 @@ export default function NEC() {
           {/* Prevenção */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('prev')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>🛡️ Prevenção da NEC</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Shield size={15} />Prevenção da NEC</p>
               {aberto==='prev'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
             </button>
             {aberto==='prev' && (
