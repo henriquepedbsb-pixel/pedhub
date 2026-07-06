@@ -8,6 +8,9 @@ import {
   AlertTriangle,
   Utensils,
   Info,
+  Scale,
+  TrendingDown,
+  CheckCircle2,
 } from "lucide-react";
 
 const COR = "#F43F5E"; // rose-500 — cor do módulo Aleitamento
@@ -67,6 +70,162 @@ function FonteTag({ children }) {
     <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
+  );
+}
+
+// Definido FORA do componente principal para não remontar a cada tecla
+// (preserva o foco dos inputs no teclado mobile — decisão arquitetural fixa 5).
+const parseBR = (v) => {
+  if (v === null || v === undefined || v === "") return null;
+  const n = parseFloat(String(v).replace(",", "."));
+  return isNaN(n) ? null : n;
+};
+
+function CalcPerdaPeso() {
+  const [nasc, setNasc] = useState("");
+  const [atual, setAtual] = useState("");
+  const [dias, setDias] = useState("");
+
+  const pn = parseBR(nasc);
+  const pa = parseBR(atual);
+  const dv = parseBR(dias);
+
+  const valido = pn !== null && pa !== null && pn > 0 && pa > 0;
+  // Perda positiva = perdeu peso; negativa = já ganhou em relação ao nascimento.
+  const perdaPct = valido ? ((pn - pa) / pn) * 100 : null;
+
+  let classe = null;
+  if (perdaPct !== null) {
+    if (perdaPct <= 0) {
+      classe = {
+        tone: "green",
+        Icon: CheckCircle2,
+        titulo: "Peso recuperado / acima do nascimento",
+        texto:
+          "O peso atual está igual ou acima do peso de nascimento. Acompanhar o ganho conforme a curva.",
+      };
+    } else if (perdaPct <= 7) {
+      classe = {
+        tone: "green",
+        Icon: CheckCircle2,
+        titulo: "Perda fisiológica",
+        texto:
+          "Perda dentro do esperado nos primeiros dias (até 7%). Manter aleitamento em livre demanda e reavaliar.",
+      };
+    } else if (perdaPct <= 10) {
+      classe = {
+        tone: "amber",
+        Icon: TrendingDown,
+        titulo: "Perda limítrofe — atenção",
+        texto:
+          "Perda entre 7% e 10%: avaliar a técnica de amamentação e os indicadores indiretos (diurese, evacuações) antes de qualquer conduta.",
+      };
+    } else {
+      classe = {
+        tone: "red",
+        Icon: AlertTriangle,
+        titulo: "Perda acima do esperado",
+        texto:
+          "Perda > 10% do peso de nascimento: avaliar a técnica de amamentação e investigar causas. Não é indicação automática de fórmula — decisão do médico assistente.",
+      };
+    }
+  }
+
+  // Contexto de dias de vida (recuperação esperada até 10–14 dias)
+  let notaDias = null;
+  if (perdaPct !== null && dv !== null && dv >= 0) {
+    if (perdaPct > 0 && dv > 14) {
+      notaDias =
+        "Ainda abaixo do peso de nascimento após 14 dias de vida — recuperação esperada até o 10º–14º dia. Reavaliar amamentação e investigar.";
+    } else if (perdaPct > 0 && dv >= 10) {
+      notaDias =
+        "Entre o 10º e o 14º dia: janela esperada para recuperar o peso de nascimento. Acompanhar de perto.";
+    }
+  }
+
+  const toneCls = {
+    green: "bg-green-50 border-green-300 text-green-900",
+    amber: "bg-amber-50 border-amber-300 text-amber-900",
+    red: "bg-red-50 border-red-300 text-red-900",
+  };
+
+  const campo =
+    "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-rose-400";
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 mb-3">
+      <div className="flex items-center gap-2 font-semibold text-gray-800 text-sm mb-3">
+        <Scale size={18} style={{ color: COR }} />
+        Calculadora de perda de peso
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <label className="text-xs font-medium text-gray-600">
+          Peso ao nascer (g)
+          <input
+            type="text"
+            inputMode="decimal"
+            value={nasc}
+            onChange={(e) => setNasc(e.target.value)}
+            placeholder="ex: 3200"
+            className={`${campo} mt-1`}
+          />
+        </label>
+        <label className="text-xs font-medium text-gray-600">
+          Peso atual (g)
+          <input
+            type="text"
+            inputMode="decimal"
+            value={atual}
+            onChange={(e) => setAtual(e.target.value)}
+            placeholder="ex: 2950"
+            className={`${campo} mt-1`}
+          />
+        </label>
+        <label className="text-xs font-medium text-gray-600 col-span-2">
+          Dias de vida (opcional)
+          <input
+            type="text"
+            inputMode="numeric"
+            value={dias}
+            onChange={(e) => setDias(e.target.value)}
+            placeholder="ex: 4"
+            className={`${campo} mt-1`}
+          />
+        </label>
+      </div>
+
+      {valido && classe && (
+        <div className={`mt-3 rounded-xl border px-3 py-3 ${toneCls[classe.tone]}`}>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="flex items-center gap-1.5 font-bold text-sm">
+              <classe.Icon size={16} className="shrink-0" />
+              {classe.titulo}
+            </span>
+            <span className="text-lg font-extrabold tabular-nums">
+              {perdaPct <= 0
+                ? `+${Math.abs(perdaPct).toFixed(1)}%`
+                : `−${perdaPct.toFixed(1)}%`}
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed mt-1.5">{classe.texto}</p>
+          {notaDias && (
+            <p className="text-xs leading-relaxed mt-1.5 font-medium">{notaDias}</p>
+          )}
+        </div>
+      )}
+
+      {!valido && (
+        <p className="text-[11px] text-gray-400 mt-2">
+          Informe o peso ao nascer e o peso atual para calcular a variação ponderal.
+        </p>
+      )}
+
+      <p className="text-[10px] text-gray-400 mt-2 leading-relaxed">
+        Referência: perda até 7–10% esperada nos primeiros dias · recuperação do peso
+        de nascimento até o 10º–14º dia (SBP/OMS).
+      </p>
+    </div>
   );
 }
 
@@ -169,6 +328,8 @@ export default function Aleitamento() {
                 Perda de peso &gt; 10% ou ausência de recuperação até 14 dias exige avaliação da técnica de amamentação e investigação de causas — não é indicação automática de suplementação com fórmula.
               </AlertaBox>
             </Section>
+
+            <CalcPerdaPeso />
           </>
         )}
 
