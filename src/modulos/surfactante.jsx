@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp } from 'lucide-react';
+import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw } from 'lucide-react';
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -108,7 +108,7 @@ export default function Surfactante() {
 
           {/* SDR — diagnóstico */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>🫁 Síndrome do Desconforto Respiratório (SDR)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Wind size={15} style={{ marginRight: 6, flexShrink: 0 }} />Síndrome do Desconforto Respiratório (SDR)</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Diagnóstico clínico</p>
@@ -126,7 +126,7 @@ export default function Surfactante() {
 
           {/* Indicações por IG */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📋 Indicações por Idade Gestacional</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6, flexShrink: 0 }} />Indicações por Idade Gestacional</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>{'< 26 semanas'} — Profilático / Resgate precoce</p>
@@ -173,7 +173,7 @@ export default function Surfactante() {
                     <span style={{ fontSize: '11px', color: '#6B7280' }}>{t.nome}</span>
                   </div>
                   <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>{t.desc}</p>
-                  <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: t.cor, fontWeight: '600' }}>✓ {t.vant}</p>
+                  <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: t.cor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={11} style={{ flexShrink: 0 }} />{t.vant}</p>
                 </div>
               ))}
             </div>
@@ -182,7 +182,7 @@ export default function Surfactante() {
           {/* Surfactantes disponíveis */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('surfs')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💊 Surfactantes Disponíveis no Brasil</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Pill size={15} style={{ marginRight: 6, flexShrink: 0 }} />Surfactantes Disponíveis no Brasil</p>
               {aberto === 'surfs' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'surfs' && (
@@ -288,7 +288,7 @@ export default function Surfactante() {
 
                   {/* Tabela de doses rápidas */}
                   <div style={card()}>
-                    <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Tabela Rápida — Curosurf® (100 mg/mL)</p>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Tabela Rápida — Curosurf® (100 mg/mL)</p>
                     <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: CLT, padding: '7px 10px' }}>
                         {['Peso', '1ª dose (2 mL/kg)', '2ª dose (1 mL/kg)'].map((h, i) => (
@@ -370,7 +370,7 @@ export default function Surfactante() {
 
           {/* Preparo comum */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🌡️ Preparo do Surfactante (todas as técnicas)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Thermometer size={15} style={{ marginRight: 6, flexShrink: 0 }} />Preparo do Surfactante (todas as técnicas)</p>
             {['Retirar da geladeira 5 min antes — aquecer na palma da mão ou banho-maria 37°C',
               'Girar suavemente o frasco para homogeneizar — NÃO agitar vigorosamente',
               'Aspirar volume calculado com seringa (sem bolhas)',
@@ -453,9 +453,9 @@ export default function Surfactante() {
 
           {/* Monitorização */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>📊 Monitorização Pós-Surfactante</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Monitorização Pós-Surfactante</p>
             <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #D97706' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>⚠ Melhora pode ser rápida — reduzir FiO₂ ativamente para evitar hiperoxia</p>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C', display: 'flex', alignItems: 'flex-start', gap: 5 }}><AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />Melhora pode ser rápida — reduzir FiO₂ ativamente para evitar hiperoxia</p>
             </div>
             {[
               { param: 'SpO₂', meta: '90-95% (prematuros) · reduzir FiO₂ prontamente se ↑', freq: 'Contínuo' },
@@ -477,7 +477,7 @@ export default function Surfactante() {
 
           {/* Critérios de dose adicional */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🔄 Critérios para Dose Adicional</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><RotateCcw size={15} style={{ marginRight: 6, flexShrink: 0 }} />Critérios para Dose Adicional</p>
             <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: `3px solid ${C}` }}>
               <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Curosurf® — 2ª/3ª dose (100 mg/kg)</p>
               <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
@@ -495,7 +495,7 @@ export default function Surfactante() {
           {/* Complicações */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('comp')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>⚠ Complicações e Conduta</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6, flexShrink: 0 }} />Complicações e Conduta</p>
               {aberto === 'comp' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'comp' && (
