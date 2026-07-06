@@ -130,7 +130,11 @@ export default function Eletrolitos() {
         const vol03    = parseFloat((dose03 / KCL10_CONC).toFixed(2));
         const dose05   = parseFloat((0.5 * p).toFixed(1));
         const vol05    = parseFloat((dose05 / KCL10_CONC).toFixed(2));
-        kC = { tipo:'hipo', k, dose03, vol03, dose05, vol05 };
+        // Volume mínimo de SF 0,9% para diluir a dose de 0,5 mEq/kg dentro do
+        // limite de concentração: ≤ 40 mEq/L periférico · ≤ 80 mEq/L central
+        const sfPerif   = Math.ceil((dose05 / 0.04) / 10) * 10;
+        const sfCentral = Math.ceil((dose05 / 0.08) / 10) * 10;
+        kC = { tipo:'hipo', k, dose03, vol03, dose05, vol05, sfPerif, sfCentral };
       } else if (k >= 5.5) {
         // Hipercalemia: gluconato Ca 10% para estabilização de membrana
         const volCa  = parseFloat(Math.min(p * 1.0, 20).toFixed(1)); // 1 mL/kg, máx 20 mL
@@ -280,9 +284,13 @@ export default function Eletrolitos() {
                       <ResultBox label={`CORREÇÃO +${calcs.naC?.dNaMax24h} mEq/L`} valor={calcs.naC?.vol24h} unit="mL de NaCl 3%" sub="em 24h (máx 10 mEq/L/dia)" cor="#D97706" />
                     </div>
                     <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
-                        <strong>NaCl 3%</strong> = 0,513 mEq/mL · Fórmula: ΔNa × {p} kg × {fat} / 0,513<br />
-                        <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Nunca corrigir &gt; 10 mEq/L em 24h (risco SDO)</span>
+                      <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                        <strong>Solução:</strong> NaCl 3% = 0,513 mEq/mL · Fórmula: ΔNa × {p} kg × {fat} / 0,513<br />
+                        <strong>Preparo</strong> (se não houver 3% pronto): 15 mL de NaCl 20% + 85 mL de AD = 100 mL de NaCl 3%<br />
+                        <strong>Via:</strong> bolus sintomático pode ser periférico · infusão contínua → acesso central preferível<br />
+                        <strong>Velocidade:</strong> bolus 2–3 mL/kg em 10–20 min · repetir até cessar a convulsão ou elevar 4–6 mEq/L<br />
+                        <strong>Monitor:</strong> Na sérico a cada 2–4 h na fase aguda · monitor cardíaco<br />
+                        <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Nunca corrigir &gt; 10 mEq/L em 24 h (alguns serviços limitam a 8 em pacientes de risco) — risco de síndrome de desmielinização osmótica</span>
                       </p>
                     </div>
                   </>
@@ -305,9 +313,12 @@ export default function Eletrolitos() {
                       <ResultBox label="TEMPO MÍNIMO" valor={calcs.naC?.horas} unit="horas" sub="máx 0,5 mEq/L/h" cor="#D97706" />
                     </div>
                     <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
-                        Fórmula: {fat} × {p} kg × (Na atual/140 - 1) × 1000<br />
-                        Usar D5W ou NaCl 0,45% · Correção rápida → edema cerebral
+                      <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                        Fórmula do déficit: {fat} × {p} kg × (Na atual/140 − 1) × 1000<br />
+                        <strong>Diluente:</strong> SG 5% (água livre) ou NaCl 0,45% · repor o déficit em 48–72 h<br />
+                        <strong>Via:</strong> periférico<br />
+                        <strong>Velocidade:</strong> reduzir Na ≤ 0,5 mEq/L/h (≤ 10–12 mEq/L/24 h) · Na sérico a cada 2–4 h<br />
+                        <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Correção rápida → edema cerebral</span>
                       </p>
                     </div>
                   </>
@@ -437,9 +448,13 @@ export default function Eletrolitos() {
                   <ResultBox label="DOSE 0,5 mEq/kg" valor={calcs.kC.vol05} unit="mL KCl 10%" sub={`= ${calcs.kC.dose05} mEq`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
-                    KCl 10% = 1,341 mEq/mL · Infundir em 1-2h com monitor cardíaco<br />
-                    Concentração máxima: <strong>40 mEq/100 mL</strong> periférico · <strong>80 mEq/100 mL</strong> central<br />
+                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                    <strong>Diluente:</strong> diluir SEMPRE em SF 0,9% — nunca em soro glicosado (glicose → insulina → shift intracelular → piora a hipocalemia)<br />
+                    KCl 10% = 1,341 mEq/mL<br />
+                    <strong>Concentração máxima:</strong> 40 mEq/L periférico · 80 mEq/L central (com monitor)<br />
+                    <strong>Para a dose de 0,5 mEq/kg ({calcs.kC.dose05} mEq):</strong> diluir em ≥ {calcs.kC.sfPerif} mL de SF (periférico) ou ≥ {calcs.kC.sfCentral} mL (central)<br />
+                    <strong>Velocidade:</strong> 0,3–0,5 mEq/kg/h · máx 1 mEq/kg/h apenas em UTI, com monitor cardíaco e acesso central<br />
+                    <strong>Via:</strong> periférico se ≤ 40 mEq/L · central se concentração maior<br />
                     <span style={{ color: '#D97706', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipocalemia refratária → descartar hipomagnesemia primeiro!</span>
                   </p>
                 </div>
@@ -559,10 +574,12 @@ export default function Eletrolitos() {
                   <ResultBox label="200 mg/kg (2 mL/kg)" valor={calcs.caC.vol2} unit="mL IV" sub={`${calcs.caC.mg2} mg total — máx 20 mL`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
-                    Gluconato Ca 10% = 9,3 mg Ca elementar/mL · Infundir lentamente (10-30 min)<br />
-                    Urgência/tetania/convulsão: pode dar em 5-10 min · Monitor cardíaco obrigatório<br />
-                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Não infundir junto com bicarbonato (precipita)</span>
+                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                    Gluconato de cálcio 10% = 100 mg/mL do sal = 9,3 mg de Ca elementar/mL<br />
+                    <strong>Diluente:</strong> diluir em SG 5% ou SF (ao menos 1:1) antes de infundir<br />
+                    <strong>Via:</strong> acesso central preferível (extravasamento → necrose tecidual) · se periférico, veia calibrosa e vigiar o sítio · NUNCA IM ou SC<br />
+                    <strong>Velocidade:</strong> 10–30 min · urgência (tetania/convulsão): 5–10 min · monitor cardíaco obrigatório (bradicardia/assistolia se rápido)<br />
+                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Não infundir junto com bicarbonato nem fosfato (precipita)</span>
                   </p>
                 </div>
               </div>
@@ -631,11 +648,13 @@ export default function Eletrolitos() {
                   <ResultBox label="50 mg/kg MgSO₄" valor={calcs.mgC.vol50} unit="mL de 50%" sub={`= ${calcs.mgC.dose50} mg — máx 2g`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
-                    MgSO₄ 50% = 500 mg/mL · Diluir 1:10 em NS ou SG5% antes de infundir<br />
-                    Velocidade: 25-50 mg/kg em <strong>15-60 min</strong> (mais rápido no broncoespasmo)<br />
-                    Máx: 2g (4 mL de 50%) por dose<br />
-                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipermagnesemia: perda de reflexos → apneia. Ter gluconato Ca pronto.</span>
+                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                    MgSO₄ 50% = 500 mg/mL<br />
+                    <strong>Diluente:</strong> diluir 1:10 em SF 0,9% ou SG 5% → concentração final 5% (50 mg/mL)<br />
+                    <strong>Via:</strong> periférico (após diluir)<br />
+                    <strong>Velocidade:</strong> 25–50 mg/kg em 15–60 min (broncoespasmo: em 20 min) · máx 2 g (4 mL de 50%) por dose<br />
+                    <strong>Monitor:</strong> PA (hipotensão se rápido), reflexos patelares e FR<br />
+                    <span style={{ color: '#DC2626', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipermagnesemia: perda de reflexos → apneia. Antídoto: gluconato de cálcio pronto à beira do leito.</span>
                   </p>
                 </div>
               </div>
