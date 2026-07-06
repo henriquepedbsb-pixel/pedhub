@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   Heart, Wind, AlertTriangle, CheckCircle,
   ChevronDown, ChevronUp, Activity,
-  Zap, Info, Thermometer, Shield, Plus
+  Zap, Info, Thermometer, Shield, Plus, Droplet
 } from "lucide-react";
 
 const COR_NEO = "#0F766E";
@@ -132,13 +132,13 @@ function TabReanimacao() {
 
       <Secao titulo="1. Vitalidade ao Nascer + Cordão Umbilical" icone={Heart} aberta={s.vit} onToggle={() => t("vit")}>
         <Caixa cor="#F0FDF4" borda="#86EFAC">
-          <p style={{ margin: "0 0 4px", fontSize: 12, fontWeight: 700, color: "#15803D" }}>✅ BOA VITALIDADE — respirando/chorando + tônus em flexão</p>
+          <p style={{ margin: "0 0 4px", fontSize: 12, fontWeight: 700, color: "#15803D", display: "flex", alignItems: "center", gap: 5 }}><CheckCircle size={14} style={{ flexShrink: 0 }} />BOA VITALIDADE — respirando/chorando + tônus em flexão</p>
           <p style={{ margin: "0 0 5px", fontSize: 13, color: "#1e293b" }}>Clampear cordão <strong>≥60 segundos</strong> após o nascimento (de preferência após início da respiração espontânea).</p>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "#1e293b" }}><strong>32–33 semanas:</strong> Pele-a-pele com monitorização contínua. Temperatura axilar a cada 10 min.</p>
           <p style={{ margin: 0, fontSize: 13, color: "#1e293b" }}><strong>&lt;32 semanas:</strong> Mesa de reanimação após o clampeamento.</p>
         </Caixa>
         <Caixa cor="#FFF7ED" borda="#FED7AA">
-          <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "#C2410C" }}>⚠️ SEM BOA VITALIDADE — apneia e/ou tônus flácido</p>
+          <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "#C2410C", display: "flex", alignItems: "center", gap: 5 }}><AlertTriangle size={14} style={{ flexShrink: 0 }} />SEM BOA VITALIDADE — apneia e/ou tônus flácido</p>
           {["Estímulo tátil no dorso: movimentos circulares delicados ~15 s (ANTES do clampeamento)", "Se RESPIROU → clampear ≥60 s após o nascimento", "Se NÃO RESPIROU → clampear imediatamente e levar à mesa de reanimação"].map((item, i) => (
             <div key={i} style={{ display: "flex", gap: 9, marginBottom: 5, alignItems: "flex-start" }}>
               <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#C2410C", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>{i + 1}</div>
@@ -148,7 +148,7 @@ function TabReanimacao() {
           <p style={{ margin: "6px 0 0", fontSize: 12, color: "#9A3412", fontStyle: "italic" }}>Nunca chacoalhar. Estímulos prolongados atrasam a VPP.</p>
         </Caixa>
         <Caixa cor="#EFF6FF" borda="#93C5FD" mb={0}>
-          <p style={{ margin: "0 0 5px", fontSize: 12, fontWeight: 700, color: "#1D4ED8" }}>💧 ORDENHA DO CORDÃO (quando não é possível aguardar 60s)</p>
+          <p style={{ margin: "0 0 5px", fontSize: 12, fontWeight: 700, color: "#1D4ED8", display: "flex", alignItems: "center", gap: 5 }}><Droplet size={14} style={{ flexShrink: 0 }} />ORDENHA DO CORDÃO (quando não é possível aguardar 60s)</p>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "#1e293b" }}>Técnica: comprimir 20 cm do cordão (placenta → RN) durante 2 s, repetir 3×.</p>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "#1e293b" }}>Permitida: RN <strong>≥28 semanas</strong> sem boa vitalidade quando não é possível aguardar 60s.</p>
           <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#DC2626" }}>⛔ CONTRAINDICADA em RN &lt;28 semanas — risco aumentado de HPIV grave.</p>
@@ -181,15 +181,15 @@ function TabReanimacao() {
           </div>
         ))}
         <Caixa cor="#FEF2F2" borda="#FECACA" mb={0}>
-          <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: "#991B1B" }}>⚠️ EVITAR hipertermia &gt;38°C — piora a lesão cerebral em asfixia!</p>
+          <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: "#991B1B", display: "flex", alignItems: "center", gap: 5 }}><AlertTriangle size={14} style={{ flexShrink: 0 }} />EVITAR hipertermia &gt;38°C — piora a lesão cerebral em asfixia!</p>
         </Caixa>
       </Secao>
 
       <Secao titulo="3. FC, Respiração e SpO₂ Alvos" icone={Activity} aberta={s.monitor} onToggle={() => t("monitor")}>
         <Caixa cor="#FEF9C3" borda="#FDE047" mb={10}>
           <p style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 700, color: "#713F12" }}>FC: principal parâmetro que orienta a conduta</p>
-          <p style={{ margin: "0 0 3px", fontSize: 13, color: "#1e293b" }}>✅ Adequada: <strong>≥100 bpm</strong></p>
-          <p style={{ margin: "0 0 3px", fontSize: 13, color: "#1e293b" }}>⚠️ Bradicardia: <strong>&lt;100 bpm</strong></p>
+          <p style={{ margin: "0 0 3px", fontSize: 13, color: "#1e293b", display: "flex", alignItems: "center", gap: 5 }}><CheckCircle size={13} style={{ flexShrink: 0 }} />Adequada: <strong>≥100 bpm</strong></p>
+          <p style={{ margin: "0 0 3px", fontSize: 13, color: "#1e293b", display: "flex", alignItems: "center", gap: 5 }}><AlertTriangle size={13} style={{ flexShrink: 0 }} />Bradicardia: <strong>&lt;100 bpm</strong></p>
           <p style={{ margin: 0, fontSize: 12, color: "#92400E" }}>Melhora da FC = indicador mais sensível de eficácia da reanimação.</p>
         </Caixa>
         <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "#475569" }}>SpO₂ PRÉ-DUCTAL ALVO — Quadro 1 · SBP 2026:</p>
