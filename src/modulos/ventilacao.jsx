@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
+import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -205,7 +205,7 @@ export default function Ventilacao() {
 
           {/* FR por faixa etária */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 FR de Referência por Faixa Etária</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />FR de Referência por Faixa Etária</p>
             <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: CLT, padding: '7px 12px' }}>
                 <span style={{ fontSize: '10px', fontWeight: '700', color: C }}>FAIXA ETÁRIA</span>
@@ -229,7 +229,7 @@ export default function Ventilacao() {
           {/* Indicações */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('ind')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📋 Indicações de VM</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Indicações de VM</p>
               {aberto === 'ind' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'ind' && (
@@ -255,7 +255,7 @@ export default function Ventilacao() {
           {/* Ajustes por patologia */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('pat')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🔧 Ajustes por Patologia</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wrench size={15} style={{ flexShrink: 0 }} />Ajustes por Patologia</p>
               {aberto === 'pat' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'pat' && (
@@ -282,7 +282,7 @@ export default function Ventilacao() {
 
           {/* Inputs básicos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Dados do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />Dados do Paciente</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
@@ -352,7 +352,7 @@ export default function Ventilacao() {
 
           {/* Índice de Oxigenação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🫁 Índice de Oxigenação (IO)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Índice de Oxigenação (IO)</p>
             <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#6B7280' }}>IO = (FiO₂ × P média × 100) / PaO₂ · Requer gasometria arterial</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
               {inputField('FiO₂ (0-1)', fio2, setFio2, '0,6')}
@@ -391,7 +391,7 @@ export default function Ventilacao() {
 
           {/* Driving Pressure + Compliance */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📐 Driving Pressure e Compliance</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Ruler size={15} style={{ flexShrink: 0 }} />Driving Pressure e Compliance</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
               {inputField('Pplat', pplat, setPplat, '22', 'cmH₂O')}
               {inputField('PEEP', peepCm, setPeepCm, '8', 'cmH₂O')}
@@ -403,7 +403,7 @@ export default function Ventilacao() {
                   <div style={{ backgroundColor: calcs.dpAlerta ? '#FEF2F2' : '#ECFDF5', borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : '#065F46', lineHeight: 1 }}>{calcs.dp}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>cmH₂O (DP)</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '⚠ > 15 cmH₂O' : '✓ ≤ 15 cmH₂O'}</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
                   </div>
                   {calcs.cst && (
                     <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
@@ -490,7 +490,7 @@ export default function Ventilacao() {
                     <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{modo.quando}</p>
                   </div>
                   <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px' }}>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#D97706' }}>⚠ ATENÇÃO</p>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#D97706', display: 'flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={12} style={{ flexShrink: 0 }} />ATENÇÃO</p>
                     <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{modo.alerta}</p>
                   </div>
                   <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '8px 10px' }}>
@@ -509,7 +509,7 @@ export default function Ventilacao() {
 
           {/* Critérios diários */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>📋 Avaliação Diária de Desmame</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Avaliação Diária de Desmame</p>
             <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#6B7280' }}>Verificar diariamente. Todos os critérios devem estar presentes para SBT.</p>
             {[
               { ok: true,  txt: 'Causa da intubação resolvida ou em franca melhora' },
@@ -540,7 +540,7 @@ export default function Ventilacao() {
                 </p>
               </div>
               <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46' }}>✅ SBT aprovado se (todos):</p>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46', display: 'flex', alignItems: 'center', gap: 5 }}><CheckCircle size={13} style={{ flexShrink: 0 }} />SBT aprovado se (todos):</p>
                 {['SpO₂ ≥ 95% com FiO₂ ≤ 0,40',
                   'FR dentro do normal para faixa etária (sem taquipneia)',
                   'Ausência de sinais de esforço respiratório aumentado',
@@ -548,7 +548,7 @@ export default function Ventilacao() {
                   'Consciência e conforto adequados',
                 ].map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#10B981', flexShrink: 0 }}>✓</span>{c}
+                    <Check size={13} color="#10B981" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
               </div>
@@ -562,7 +562,7 @@ export default function Ventilacao() {
                   'Agitação ou rebaixamento de consciência',
                 ].map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#DC2626', flexShrink: 0 }}>✗</span>{c}
+                    <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
               </div>
@@ -572,7 +572,7 @@ export default function Ventilacao() {
           {/* Pós-extubação */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('posext')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🌬️ Suporte Pós-extubação</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Suporte Pós-extubação</p>
               {aberto === 'posext' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'posext' && (
@@ -603,7 +603,7 @@ export default function Ventilacao() {
           {/* Alarmes */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('alarmes')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🔔 Alarmes Frequentes e Condutas</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Bell size={15} style={{ flexShrink: 0 }} />Alarmes Frequentes e Condutas</p>
               {aberto === 'alarmes' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'alarmes' && (
