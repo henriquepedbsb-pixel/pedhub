@@ -1,6 +1,6 @@
 // Preview — Reanimação RN ≥34 semanas · Diretrizes SBP 2026
 import { useState } from "react";
-import { Heart, Wind, Activity, AlertTriangle, CheckCircle, Zap, Info } from "lucide-react";
+import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info } from "lucide-react";
 
 const BG  = "#0284C7";
 const BGL = "#F0F9FF";
@@ -80,14 +80,14 @@ function TabAvaliacao({ vitaboa, setVitaboa, meconio, setMeconio }) {
             style={vitaboa === true
               ? { background: "#10B981", borderColor: "#10B981", color: "#fff" }
               : { background: "#f9fafb", borderColor: "#e5e7eb", color: "#4b5563" }}
-          >✓ Sim — Boa vitalidade</button>
+          ><span className="inline-flex items-center justify-center gap-1"><CheckCircle size={15} /> Sim — Boa vitalidade</span></button>
           <button
             onClick={() => setVitaboa(false)}
             className="flex-1 py-3 rounded-2xl text-sm font-bold border-2 transition-all"
             style={vitaboa === false
               ? { background: "#EF4444", borderColor: "#EF4444", color: "#fff" }
               : { background: "#f9fafb", borderColor: "#e5e7eb", color: "#4b5563" }}
-          >✗ Não — Sem vitalidade</button>
+          ><span className="inline-flex items-center justify-center gap-1"><XCircle size={15} /> Não — Sem vitalidade</span></button>
         </div>
         <div className="border-t border-gray-100 pt-3">
           <p className="text-xs text-gray-500 mb-2 font-medium">Líquido amniótico meconial?</p>
@@ -353,11 +353,11 @@ function TabAvancado({ tube, prof, igN }) {
           </div>
           <div className="border border-gray-200 rounded-xl p-3">
             <div className="mb-2">
-              <p className="text-sm font-bold text-emerald-700">✓ Melhora: FC &gt;60 bpm</p>
+              <p className="text-sm font-bold text-emerald-700 flex items-center gap-1"><CheckCircle size={14} /> Melhora: FC &gt;60 bpm</p>
               <p className="text-sm text-gray-600">Parar massagem · Manter VPP · Reduzir O₂ pela SpO₂</p>
             </div>
             <div className="border-t border-gray-100 pt-2">
-              <p className="text-sm font-bold text-red-700">✗ Falha: FC &lt;60 após 60 seg</p>
+              <p className="text-sm font-bold text-red-700 flex items-center gap-1"><XCircle size={14} /> Falha: FC &lt;60 após 60 seg</p>
               <p className="text-sm text-gray-600">Verificar técnica → <strong>Adrenalina IV</strong> (cateter venoso umbilical de urgência)</p>
             </div>
           </div>
