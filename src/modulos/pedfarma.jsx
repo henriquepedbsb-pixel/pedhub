@@ -1,6 +1,5 @@
-// src/modulos/pedfarma.jsx
 import { useState } from "react";
-import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle } from "lucide-react";
+import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 
 const PRIMARY = "#8B5CF6";
 
@@ -23,33 +22,33 @@ const DRUGS = [
   { id:"dipirona",        cat:"Analgésico",  nome:"Dipirona (Metamizol)",        via:"VO/IV", dose:"10–15 mg/kg/dose",   freq:"6/6h",            max:"1 g/dose",  obs:"IV: infundir lentamente (risco de hipotensão) · Evitar < 3 meses de vida", calc:{min:10,max:15,unidade:"dose",tomadasDiaMax:4,tetoMg:1000,tetoTipo:"dose",susp:[{label:"Gotas 500 mg/mL",mgPerMl:500,gotas:true},{label:"Solução 50 mg/mL",mgPerMl:50}]} },
   { id:"ibuprofeno",      cat:"Analgésico",  nome:"Ibuprofeno",                  via:"VO",    dose:"5–10 mg/kg/dose",    freq:"6/6h–8/8h",       max:"40 mg/kg/dia", obs:"Com alimentos · Evitar em desidratados, < 6 meses, varicela · Contraindicado em dengue", calc:{min:5,max:10,unidade:"dose",tomadasDiaMax:4,tetoMgKgDia:40,susp:[{label:"Gotas 100 mg/mL",mgPerMl:100,gotas:true},{label:"Suspensão 20 mg/mL",mgPerMl:20}]} },
   // ─── Anti-inflamatórios / Corticoides ──────────────────────────────────────
-  { id:"prednisolona",    cat:"Corticoide",  nome:"Prednisolona",                via:"VO",    dose:"1–2 mg/kg/dia",      freq:"1x/dia",          max:"40–60 mg/dia",obs:"Asma: 1–2 mg/kg/dia 3–5 dias · APLV: 1 mg/kg/dia · Dose única matinal" },
-  { id:"dexametasona",    cat:"Corticoide",  nome:"Dexametasona",                via:"VO/IM/IV", dose:"0,15–0,6 mg/kg/dia", freq:"1x/dia",      max:"10 mg/dia", obs:"Crupe: 0,15–0,6 mg/kg dose única · Meningite bacteriana: 0,15 mg/kg 6/6h × 4 dias" },
-  { id:"hidrocortisona",  cat:"Corticoide",  nome:"Hidrocortisona",              via:"IV",    dose:"5–10 mg/kg/dose",    freq:"6/6h",            max:"300 mg/dose",obs:"Asma grave, insuficiência adrenal, choque séptico refratário a vasopressor" },
+  { id:"prednisolona",    cat:"Corticoide",  nome:"Prednisolona",                via:"VO",    dose:"1–2 mg/kg/dia",      freq:"1x/dia",          max:"40–60 mg/dia",obs:"Asma: 1–2 mg/kg/dia 3–5 dias · APLV: 1 mg/kg/dia · Dose única matinal", calc:{min:1,max:2,unidade:"dia",tomadas:[1],tetoMg:60,tetoTipo:"dia",susp:[]} },
+  { id:"dexametasona",    cat:"Corticoide",  nome:"Dexametasona",                via:"VO/IM/IV", dose:"0,15–0,6 mg/kg/dia", freq:"1x/dia",      max:"10 mg/dia", obs:"Crupe: 0,15–0,6 mg/kg dose única · Meningite bacteriana: 0,15 mg/kg 6/6h × 4 dias", calc:{min:0.15,max:0.6,unidade:"dia",tomadas:[1],tetoMg:10,tetoTipo:"dia",susp:[]} },
+  { id:"hidrocortisona",  cat:"Corticoide",  nome:"Hidrocortisona",              via:"IV",    dose:"5–10 mg/kg/dose",    freq:"6/6h",            max:"300 mg/dose",obs:"Asma grave, insuficiência adrenal, choque séptico refratário a vasopressor", calc:{min:5,max:10,unidade:"dose",tomadasDiaMax:4,tetoMg:300,tetoTipo:"dose",susp:[]} },
   { id:"budesonida",      cat:"Corticoide",  nome:"Budesonida inalatória",       via:"INH",   dose:"100–400 mcg/dia",    freq:"2x/dia",          max:"800 mcg/dia",obs:"Asma persistente · VNI para crupe: 2 mg nebulização dose única" },
   // ─── Broncodilatadores ──────────────────────────────────────────────────────
-  { id:"salbutamol",      cat:"Respiratório",nome:"Salbutamol (Albuterol)",      via:"INH/NBZ",dose:"0,15 mg/kg/dose (nebu)", freq:"20/20 min × 3", max:"5 mg/dose",obs:"Nebu: mín 2,5 mg, máx 5 mg + SF 3–4 mL · MDI: 2–4 jatos 100 mcg/jato via espaçador" },
+  { id:"salbutamol",      cat:"Respiratório",nome:"Salbutamol (Albuterol)",      via:"INH (spray/MDI)",dose:"Por gravidade da crise", freq:"20/20 min × 3 (1ª hora)", max:"10 jatos/dose",obs:"Spray 100 mcg/jato via espaçador. Dose escalonada pela gravidade da crise — reavaliar a cada ciclo. Nebulização retirada por desuso.", jatos:[{grav:"Leve",jatos:"2–4",freq:"20/20 min × 3"},{grav:"Moderada",jatos:"6",freq:"20/20 min × 3"},{grav:"Grave",jatos:"10",freq:"20/20 min × 3"}] },
   { id:"ipratropio",      cat:"Respiratório",nome:"Brometo de Ipratrópio",       via:"NBZ",   dose:"0,25 mg (< 6 a) / 0,5 mg (≥ 6 a)", freq:"20/20 min × 3", max:"0,5 mg/dose", obs:"Associar ao salbutamol na asma moderada–grave · Não há dose pelo peso" },
   { id:"montelucaste",    cat:"Respiratório",nome:"Montelucaste",                via:"VO",    dose:"4 mg (1–5 a) · 5 mg (6–14 a)", freq:"1x/dia (noite)", max:"10 mg", obs:"Asma leve persistente, rinite alérgica · Atenção: risco de eventos neuropsiquiátricos (FDA 2020)" },
   // ─── Antihistamínicos ───────────────────────────────────────────────────────
-  { id:"loratadina",      cat:"Antihistamínico", nome:"Loratadina",             via:"VO",    dose:"0,2 mg/kg/dia",      freq:"1x/dia",          max:"10 mg/dia", obs:"2–5 anos: 5 mg/dia · ≥ 6 anos: 10 mg/dia · Sem sedação · Siruposo 1 mg/mL" },
-  { id:"cetirizina",      cat:"Antihistamínico", nome:"Cetirizina",             via:"VO",    dose:"0,25 mg/kg/dose",    freq:"1–2x/dia",        max:"10 mg/dia", obs:"< 6 meses: 2,5 mg/dia · 6–12 m: 2,5 mg 12/12h · ≥ 6 a: 5–10 mg/dia · Mínima sedação" },
-  { id:"difenidramina",   cat:"Antihistamínico", nome:"Difenidramina (Benadryl)",via:"VO/IV",dose:"1 mg/kg/dose",       freq:"6/6h",            max:"50 mg/dose",obs:"Sedativo · IV em anafilaxia · Evitar < 2 anos (sedação paradoxal, risco de apneia)" },
-  { id:"hidroxizina",     cat:"Antihistamínico", nome:"Hidroxizina",            via:"VO",    dose:"1–2 mg/kg/dia",      freq:"8/8h–12/12h",     max:"50 mg/dose",obs:"Prurido intenso, urticária · Sedativo · Xarope 10 mg/5 mL" },
+  { id:"loratadina",      cat:"Antihistamínico", nome:"Loratadina",             via:"VO",    dose:"0,2 mg/kg/dia",      freq:"1x/dia",          max:"10 mg/dia", obs:"2–5 anos: 5 mg/dia · ≥ 6 anos: 10 mg/dia · Sem sedação · Siruposo 1 mg/mL", calc:{min:0.2,max:0.2,unidade:"dia",tomadas:[1],tetoMg:10,tetoTipo:"dia",susp:[{label:"Xarope 1 mg/mL",mgPer5:5,tomadas:1,freqLabel:"1x/dia"}]} },
+  { id:"cetirizina",      cat:"Antihistamínico", nome:"Cetirizina",             via:"VO",    dose:"0,25 mg/kg/dose",    freq:"1–2x/dia",        max:"10 mg/dia", obs:"< 6 meses: 2,5 mg/dia · 6–12 m: 2,5 mg 12/12h · ≥ 6 a: 5–10 mg/dia · Mínima sedação", calc:{min:0.25,max:0.25,unidade:"dose",tomadasDiaMax:2,tetoMgDia:10,susp:[{label:"Solução 1 mg/mL",mgPerMl:1}]} },
+  { id:"difenidramina",   cat:"Antihistamínico", nome:"Difenidramina (Benadryl)",via:"VO/IV",dose:"1 mg/kg/dose",       freq:"6/6h",            max:"50 mg/dose",obs:"Sedativo · IV em anafilaxia · Evitar < 2 anos (sedação paradoxal, risco de apneia)", calc:{min:1,max:1,unidade:"dose",tomadasDiaMax:4,tetoMg:50,tetoTipo:"dose",susp:[{label:"Xarope 2,5 mg/mL",mgPerMl:2.5}]} },
+  { id:"hidroxizina",     cat:"Antihistamínico", nome:"Hidroxizina",            via:"VO",    dose:"1–2 mg/kg/dia",      freq:"8/8h–12/12h",     max:"50 mg/dose",obs:"Prurido intenso, urticária · Sedativo · Xarope 10 mg/5 mL", calc:{min:1,max:2,unidade:"dia",tomadas:[3,2],tetoMg:50,tetoTipo:"dose",susp:[{label:"Xarope 10 mg/5 mL",mgPer5:10,tomadas:3,freqLabel:"8/8h"}]} },
   // ─── Gastrointestinal ───────────────────────────────────────────────────────
-  { id:"omeprazol",       cat:"Gastrointestinal", nome:"Omeprazol",             via:"VO",    dose:"1–2 mg/kg/dia",      freq:"1x/dia",          max:"40 mg/dia", obs:"30 min antes do café · Grânulos para lactentes · Uso > 1 ano preferencial" },
-  { id:"esomeprazol",     cat:"Gastrointestinal", nome:"Esomeprazol",           via:"VO/IV", dose:"0,5–1 mg/kg/dia",    freq:"1x/dia",          max:"40 mg/dia", obs:"< 20 kg: máx 20 mg · ≥ 20 kg: máx 40 mg · IV: infundir em 10–30 min" },
-  { id:"ondansetrona",    cat:"Gastrointestinal", nome:"Ondansetrona",          via:"VO/IV", dose:"0,1–0,15 mg/kg/dose",freq:"8/8h prn",        max:"4 mg/dose < 40 kg · 8 mg ≥ 40 kg", obs:"Náusea e vômito · EV: infundir em 15 min · 1ª escolha em GEA" },
+  { id:"omeprazol",       cat:"Gastrointestinal", nome:"Omeprazol",             via:"VO",    dose:"1–2 mg/kg/dia",      freq:"1x/dia",          max:"40 mg/dia", obs:"30 min antes do café · Grânulos para lactentes · Uso > 1 ano preferencial", calc:{min:1,max:2,unidade:"dia",tomadas:[1],tetoMg:40,tetoTipo:"dia",susp:[]} },
+  { id:"esomeprazol",     cat:"Gastrointestinal", nome:"Esomeprazol",           via:"VO/IV", dose:"0,5–1 mg/kg/dia",    freq:"1x/dia",          max:"40 mg/dia", obs:"< 20 kg: máx 20 mg · ≥ 20 kg: máx 40 mg · IV: infundir em 10–30 min", calc:{min:0.5,max:1,unidade:"dia",tomadas:[1],tetoMg:40,tetoTipo:"dia",tetoPorPeso:[{pesoMax:20,tetoMg:20},{pesoMax:999,tetoMg:40}],susp:[]} },
+  { id:"ondansetrona",    cat:"Gastrointestinal", nome:"Ondansetrona",          via:"VO/IV", dose:"0,1–0,15 mg/kg/dose",freq:"8/8h prn",        max:"4 mg/dose < 40 kg · 8 mg ≥ 40 kg", obs:"Náusea e vômito · EV: infundir em 15 min · 1ª escolha em GEA", calc:{min:0.1,max:0.15,unidade:"dose",tomadasDiaMax:3,tetoPorPeso:[{pesoMax:40,tetoMg:4},{pesoMax:999,tetoMg:8}],susp:[]} },
   { id:"peg4000",         cat:"Gastrointestinal", nome:"Macrogol/PEG 4000",     via:"VO",    dose:"0,4–1,5 g/kg/dia",   freq:"1–2x/dia",        max:"Ajuste clínico",obs:"Constipação: manutenção 0,4–0,8 g/kg/dia · Desimpactação: 1–1,5 g/kg/dia × 3–6 dias" },
   { id:"lactulose",       cat:"Gastrointestinal", nome:"Lactulose",             via:"VO",    dose:"1–3 mL/kg/dia",      freq:"1–2x/dia",        max:"60 mL/dia", obs:"Alternativa ao PEG, especialmente < 1 ano · Xarope 667 mg/mL · Flatulência comum" },
   { id:"simeticona",      cat:"Gastrointestinal", nome:"Simeticona",            via:"VO",    dose:"20 mg/dose (< 2 a)", freq:"Após mamadas",     max:"240 mg/dia",obs:"Cólica funcional · Efficácia questionada em estudos · Segura · Gotas 75 mg/mL" },
   { id:"domperidona",     cat:"Gastrointestinal", nome:"Domperidona",           via:"VO",    dose:"0,25 mg/kg/dose",    freq:"3x/dia (a/c refeições)", max:"2,4 mg/kg/dia", obs:"DRGE refratária. ATENÇÃO: risco de QT longo. Não recomendada rotineiramente (ESPGHAN). Suspensa em vários países." },
   // ─── Neurológico / Antiepiléptico ───────────────────────────────────────────
-  { id:"valproato_oral",  cat:"Neurológico",  nome:"Valproato (Ácido Valproico)", via:"VO",  dose:"15–60 mg/kg/dia",    freq:"8/8h ou 12/12h",  max:"60 mg/kg/dia",obs:"Dose inicial 10–15 mg/kg, titular. Xarope 50 mg/mL. Dosar nível sérico: 50–100 mcg/mL. Hepatotóxico < 2 anos." },
-  { id:"fenobarbital_oral",cat:"Neurológico", nome:"Fenobarbital",              via:"VO",    dose:"3–5 mg/kg/dia",      freq:"1x/dia (noite)",   max:"200 mg/dia",obs:"Manutenção de epilepsia. Nível sérico: 15–40 mcg/mL. Sonolência, hiperatividade paradoxal." },
-  { id:"levetiracetam_oral",cat:"Neurológico",nome:"Levetiracetam",             via:"VO",    dose:"10–60 mg/kg/dia",    freq:"12/12h",           max:"3 g/dia",   obs:"Titular de 10 mg/kg/dia. Comprimido, solução 100 mg/mL. Efeito colateral comportamental." },
-  { id:"carbamazepina",   cat:"Neurológico",  nome:"Carbamazepina",             via:"VO",    dose:"10–20 mg/kg/dia",    freq:"8/8h ou 12/12h",   max:"1,2 g/dia", obs:"Epilepsia focal. Nível sérico: 4–12 mcg/mL. Indutor enzimático. Hemograma periódico." },
-  { id:"diazepam_oral",   cat:"Neurológico",  nome:"Diazepam (manutenção)",     via:"VO",    dose:"0,1–0,3 mg/kg/dose", freq:"8/8h prn",         max:"5 mg/dose", obs:"Febre + epilepsia fotossensível. Não usar rotineiramente para febre." },
+  { id:"valproato_oral",  cat:"Neurológico",  nome:"Valproato (Ácido Valproico)", via:"VO",  dose:"15–60 mg/kg/dia",    freq:"8/8h ou 12/12h",  max:"60 mg/kg/dia",obs:"Dose inicial 10–15 mg/kg, titular. Xarope 50 mg/mL. Dosar nível sérico: 50–100 mcg/mL. Hepatotóxico < 2 anos.", calc:{min:15,max:60,unidade:"dia",tomadas:[2,3],tetoMgKgDia:60,susp:[{label:"Xarope 50 mg/mL",mgPer5:250,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"fenobarbital_oral",cat:"Neurológico", nome:"Fenobarbital",              via:"VO",    dose:"3–5 mg/kg/dia",      freq:"1x/dia (noite)",   max:"200 mg/dia",obs:"Manutenção de epilepsia. Nível sérico: 15–40 mcg/mL. Sonolência, hiperatividade paradoxal.", calc:{min:3,max:5,unidade:"dia",tomadas:[1],tetoMg:200,tetoTipo:"dia",susp:[{label:"Gotas 40 mg/mL",mgPer5:200,tomadas:1,freqLabel:"1x/dia",gotas:true}]} },
+  { id:"levetiracetam_oral",cat:"Neurológico",nome:"Levetiracetam",             via:"VO",    dose:"10–60 mg/kg/dia",    freq:"12/12h",           max:"3 g/dia",   obs:"Titular de 10 mg/kg/dia. Comprimido, solução 100 mg/mL. Efeito colateral comportamental.", calc:{min:10,max:60,unidade:"dia",tomadas:[2],tetoMg:3000,tetoTipo:"dia",susp:[{label:"Solução 100 mg/mL",mgPer5:500,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"carbamazepina",   cat:"Neurológico",  nome:"Carbamazepina",             via:"VO",    dose:"10–20 mg/kg/dia",    freq:"8/8h ou 12/12h",   max:"1,2 g/dia", obs:"Epilepsia focal. Nível sérico: 4–12 mcg/mL. Indutor enzimático. Hemograma periódico.", calc:{min:10,max:20,unidade:"dia",tomadas:[2,3],tetoMg:1200,tetoTipo:"dia",susp:[{label:"Suspensão 20 mg/mL",mgPer5:100,tomadas:2,freqLabel:"12/12h"}]} },
+  { id:"diazepam_oral",   cat:"Neurológico",  nome:"Diazepam (manutenção)",     via:"VO",    dose:"0,1–0,3 mg/kg/dose", freq:"8/8h prn",         max:"5 mg/dose", obs:"NÃO usar para prevenir convulsão febril: a profilaxia com anticonvulsivante não é recomendada (AAP/SBP) — a convulsão febril simples é benigna e a sedação pode mascarar sinais de infecção do SNC. Uso oral restrito a indicações de manutenção definidas pelo neurologista.", calc:{min:0.1,max:0.3,unidade:"dose",tomadasDiaMax:3,tetoMg:5,tetoTipo:"dose",susp:[]} },
   // ─── Antifúngico / Antiviral ────────────────────────────────────────────────
   { id:"fluconazol",      cat:"Antifúngico",  nome:"Fluconazol",                via:"VO/IV", dose:"3–12 mg/kg/dia",     freq:"1x/dia",           max:"400 mg/dia",obs:"Candida oral/esofágica: 3–6 mg/kg/dia. Meningite criptocócica: 12 mg/kg/dia." },
   { id:"nistatina",       cat:"Antifúngico",  nome:"Nistatina (oral)",          via:"VO",    dose:"100.000 UI/dose",     freq:"4–6x/dia após mamada", max:"—",   obs:"Candidíase oral em lactentes. 4–6 semanas. Aplicar com cotonete em bochechas e língua." },
@@ -196,6 +195,11 @@ function calcularDose(c, peso, alvo) {
     const totalDiaMg = ref * tomadasDia;
     if (c.tetoMgKgDia != null && totalDiaKg > c.tetoMgKgDia) excedeuTeto = true;
     if (c.tetoMgDia != null && totalDiaMg > c.tetoMgDia) excedeuTeto = true;
+    // teto por faixa de peso (ex.: ondansetrona 4 mg <40 kg / 8 mg ≥40 kg) — limite por dose
+    if (c.tetoPorPeso) {
+      const faixa = c.tetoPorPeso.find((f) => peso < f.pesoMax) || c.tetoPorPeso[c.tetoPorPeso.length - 1];
+      if (faixa && ref > faixa.tetoMg) excedeuTeto = true;
+    }
     const volumes = (c.susp || []).map((s) => {
       const mlMin = +(((doseAlvo != null ? doseAlvo : doseMin) / s.mgPerMl)).toFixed(2);
       const mlMax = +(((doseAlvo != null ? doseAlvo : doseMax) / s.mgPerMl)).toFixed(2);
@@ -224,16 +228,25 @@ function calcularDose(c, peso, alvo) {
   const totalDia = diaAlvo != null ? diaAlvo : diaMax;
   let excedeuTeto =
     c.tetoTipo === "dia" ? totalDia > c.tetoMg : porTomada[0].max > c.tetoMg;
+  // teto por faixa de peso (ex.: esomeprazol 20 mg <20 kg / 40 mg ≥20 kg) — limite por dia
+  if (c.tetoPorPeso) {
+    const faixa = c.tetoPorPeso.find((f) => peso < f.pesoMax) || c.tetoPorPeso[c.tetoPorPeso.length - 1];
+    if (faixa && totalDia > faixa.tetoMg) excedeuTeto = true;
+  }
   const volumes = (c.susp || []).map((s) => {
     const t = s.tomadas || c.tomadas[0];
     const refMin = (diaAlvo != null ? diaAlvo : diaMin) / t;
     const refMax = (diaAlvo != null ? diaAlvo : diaMax) / t;
+    const mlMin = +((refMin / s.mgPer5) * 5).toFixed(1);
+    const mlMax = +((refMax / s.mgPer5) * 5).toFixed(1);
     return {
       label: s.label,
       freqLabel: s.freqLabel || null,
       tomadas: t,
-      mlMin: +((refMin / s.mgPer5) * 5).toFixed(1),
-      mlMax: +((refMax / s.mgPer5) * 5).toFixed(1),
+      gotas: !!s.gotas,
+      mlMin, mlMax,
+      gtMin: s.gotas ? +(mlMin * 20).toFixed(1) : null,
+      gtMax: s.gotas ? +(mlMax * 20).toFixed(1) : null,
     };
   });
   return { modo: "dia", diaMin, diaMax, diaAlvo, porTomada, excedeuTeto, volumes };
@@ -320,12 +333,26 @@ function CalcDose({ calc, peso, cor }) {
               {r.volumes.map((v) => (
                 <div key={v.label} style={{ ...box, marginBottom: 4 }}>
                   <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Volume · {v.label}{v.freqLabel ? ` · ${v.freqLabel}` : ""}</p>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
-                    {r.diaAlvo != null ? `${v.mlMin} mL/tomada` : `${v.mlMin} – ${v.mlMax} mL/tomada`}
-                  </p>
+                  {v.gotas ? (
+                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
+                      {r.diaAlvo != null ? `${v.gtMin} gotas` : `${v.gtMin} – ${v.gtMax} gotas`}
+                      <span style={{ fontSize: 11, fontWeight: 500, color: "#9CA3AF" }}>
+                        {" "}({r.diaAlvo != null ? `${v.mlMin} mL` : `${v.mlMin} – ${v.mlMax} mL`})
+                      </span>
+                    </p>
+                  ) : (
+                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
+                      {r.diaAlvo != null ? `${v.mlMin} mL/tomada` : `${v.mlMin} – ${v.mlMax} mL/tomada`}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
+          )}
+          {r.volumes.some((v) => v.gotas) && (
+            <p style={{ fontSize: 9, color: "#9CA3AF", margin: "0 0 6px", fontStyle: "italic" }}>
+              Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
+            </p>
           )}
         </>
       )}
@@ -348,6 +375,49 @@ function CalcDose({ calc, peso, cor }) {
           <AlertTriangle size={12} style={{ flexShrink: 0 }} /> Excede o máximo recomendado — revisar dose.
         </p>
       )}
+    </div>
+  );
+}
+
+// Seletor de gravidade → jatos (salbutamol spray). Fora do principal (regra 5).
+function JatosSelector({ jatos, cor }) {
+  const [sel, setSel] = useState(null);
+  const box = { background: "#fff", borderRadius: 8, padding: "8px 10px", border: "1px solid #E5E7EB" };
+  return (
+    <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 5 }}>
+        <Wind size={13} /> Jatos por gravidade da crise
+      </p>
+      <div style={{ display: "flex", gap: 6, marginBottom: sel ? 8 : 0 }}>
+        {jatos.map((j) => {
+          const ativo = sel === j.grav;
+          return (
+            <button
+              key={j.grav}
+              type="button"
+              onClick={() => setSel(ativo ? null : j.grav)}
+              style={{
+                flex: 1, padding: "8px 6px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
+                border: "1px solid " + (ativo ? cor : "#D1D5DB"),
+                background: ativo ? cor : "#fff",
+                color: ativo ? "#fff" : "#6B7280",
+              }}
+            >
+              {j.grav}
+            </button>
+          );
+        })}
+      </div>
+      {sel && (() => {
+        const j = jatos.find((x) => x.grav === sel);
+        return (
+          <div style={box}>
+            <p style={{ fontSize: 10, color: "#9CA3AF", margin: 0 }}>Crise {sel.toLowerCase()}</p>
+            <p style={{ fontSize: 15, fontWeight: 800, color: cor, margin: "2px 0 0" }}>{j.jatos} jatos</p>
+            <p style={{ fontSize: 11, color: "#374151", margin: "2px 0 0" }}>{j.freq} · espaçador · 100 mcg/jato</p>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -376,6 +446,7 @@ function DrugCard({ drug, peso }) {
         ))}
       </div>
       {peso && drug.calc && <CalcDose calc={drug.calc} peso={peso} cor={cor} />}
+      {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "#6B7280", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid #F3F4F6", paddingTop: 6 }}>{drug.obs}</p>
       )}
@@ -469,7 +540,7 @@ export default function Pedfarma() {
         <div style={{ display: "flex", gap: 8 }}>
           <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Doses baseadas em Harriet Lane Handbook (22ª ed.) e NeoFax 2023. Confirmar com peso atual, função renal/hepática e protocolo institucional. Não substitui julgamento clínico.
+            <strong>Apoio à decisão clínica.</strong> Doses baseadas em Harriet Lane Handbook (22ª ed.) e NeoFax 2023; posologia inalatória do salbutamol (jatos por gravidade da crise) conforme GINA e SBP. Confirmar com peso atual, função renal/hepática e protocolo institucional. Não substitui julgamento clínico.
           </p>
         </div>
       </div>
