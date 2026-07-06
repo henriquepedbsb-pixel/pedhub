@@ -3,7 +3,7 @@
 // Convenções PedHub: inline styles, C object, maxWidth 480, Lucide icons, sem CSS vars
 
 import { useState } from "react";
-import { Activity, RotateCcw } from "lucide-react";
+import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -309,11 +309,13 @@ export default function DorNeonatal() {
             Pontos de corte: &lt;6 sem dor · 6–11 moderada · ≥12 intensa
           </div>
           <div style={{
+            display:"flex", alignItems:"flex-start", gap:6,
             background:"#FEF3C7", border:"1px solid #F59E0B",
             borderRadius:10, padding:"8px 12px", marginBottom:10,
             fontSize:11, color:"#92400E",
           }}>
-            ⚠️ Itens <b>contextuais</b>: observar os 15 s <b>anteriores</b> ao procedimento.
+            <AlertTriangle size={13} style={{flexShrink:0, marginTop:1}}/>
+            <span>Itens <b>contextuais</b>: observar os 15 s <b>anteriores</b> ao procedimento.</span>
           </div>
           <ItemSelector items={PIPPR} scores={ps} setScores={setPs} ac={C.pipp} acBg={C.pippBg}/>
           <ResetBtn onReset={() => setPs({})}/>
@@ -354,6 +356,7 @@ export default function DorNeonatal() {
                   ? <div style={{fontSize:10,fontWeight:700,color:painInt.c,marginTop:3}}>{painInt.l}</div>
                   : <div style={{fontSize:10,color:C.muted,marginTop:2}}>{painFilled}/5 itens + IG</div>}
               </div>
+
               {/* Sedação */}
               <div style={{
                 background:   sedDone ? sedInt.bg : "#F1F5F9",
@@ -379,17 +382,21 @@ export default function DorNeonatal() {
               background:C.card, padding:5,
               borderRadius:12, border:`1px solid ${C.border}`, marginBottom:12,
             }}>
-              {[{k:"pain",emoji:"🔴",label:"Dor / Agitação",ac:C.bad},
-                {k:"sed", emoji:"💜",label:"Sedação",       ac:C.pipp}].map(m => (
-                <button key={m.k} onClick={() => setNm(m.k)} style={{
-                  padding:"8px", borderRadius:8, border:"none", cursor:"pointer",
-                  fontSize:12, fontWeight:600,
-                  background: nm===m.k ? m.ac : "transparent",
-                  color:      nm===m.k ? "#fff" : C.sub,
-                }}>
-                  {m.emoji} {m.label}
-                </button>
-              ))}
+              {[{k:"pain",Icon:Flame,label:"Dor / Agitação",ac:C.bad},
+                {k:"sed", Icon:Moon, label:"Sedação",       ac:C.pipp}].map(m => {
+                const MIcon = m.Icon;
+                return (
+                  <button key={m.k} onClick={() => setNm(m.k)} style={{
+                    display:"flex", alignItems:"center", justifyContent:"center", gap:6,
+                    padding:"8px", borderRadius:8, border:"none", cursor:"pointer",
+                    fontSize:12, fontWeight:600,
+                    background: nm===m.k ? m.ac : "transparent",
+                    color:      nm===m.k ? "#fff" : C.sub,
+                  }}>
+                    <MIcon size={14}/> {m.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Ajuste de prematuridade — só na aba Dor */}
@@ -489,23 +496,25 @@ export default function DorNeonatal() {
             Pontos de corte: &lt;3 sem dor · 3–4 leve/mod · ≥5 intervir
           </div>
           <div style={{
+            display:"flex", alignItems:"flex-start", gap:6,
             background:"#EFF6FF", border:"1px solid #BFDBFE",
             borderRadius:10, padding:"8px 12px", marginBottom:10,
             fontSize:11, color:"#1E40AF",
           }}>
-            ℹ️ Indicada em RN pós-operatório ≥ 32 semanas (CRIES = mnemônico dos domínios).
+            <Info size={13} style={{flexShrink:0, marginTop:1}}/>
+            <span>Indicada em RN pós-operatório ≥ 32 semanas (CRIES = mnemônico dos domínios).</span>
           </div>
           <ItemSelector items={CRIES} scores={cs} setScores={setCs} ac={C.cries} acBg={C.criesBg}/>
           <ResetBtn onReset={() => setCs({})}/>
         </>}
 
-        {/* ── Rodapé ───────────────────────────────────────────────────── */}
+        {/* ── Disclaimer padrão ────────────────────────────────────────── */}
         <div style={{
           marginTop:20, padding:"10px 14px",
           background:C.card, borderRadius:10, border:`1px solid ${C.border}`,
-          fontSize:10, color:C.muted, textAlign:"center",
+          fontSize:11, color:C.muted, textAlign:"center", lineHeight:1.5,
         }}>
-          PedHub · Avaliação de Dor Neonatal · Uso exclusivo profissional
+          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </div>
 
       </div>
