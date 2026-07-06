@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -39,7 +39,7 @@ const CONTEXTOS = [
 ];
 
 // ─── DoseCard — componente de exibição de dose ───────────────────────────────
-function DoseCard({ label, dose, unit, vol, ampola, cor, obs }) {
+function DoseCard({ label, dose, unit, vol, ampola, cor, obs, admin }) {
   return (
     <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', border: '1px solid #E5E7EB' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
@@ -50,6 +50,11 @@ function DoseCard({ label, dose, unit, vol, ampola, cor, obs }) {
         </div>
       </div>
       <p style={{ margin: 0, fontSize: '10px', color: '#9CA3AF' }}>{ampola}</p>
+      {admin && (
+        <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#374151' }}>
+          <strong>Administração:</strong> {admin}
+        </p>
+      )}
       {obs && <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#B45309', fontWeight: '600' }}>{obs}</p>}
     </div>
   );
@@ -131,11 +136,14 @@ export default function ISR() {
     const tubo   = id > 0 ? calcTubo(id) : null;
     const lamina = id > 0 ? calcLamina(id) : null;
 
+    // Flush de arraste (SF 0,9%) pós-cada droga em bólus — por porte
+    const flush = p < 10 ? 3 : p < 30 ? 5 : 10;
+
     return {
       ctx, atropDose, atropVol, fenMcg, fenVol, lidoDose, lidoVol,
       indDose, indVol, indAmpola,
       bnmDoseKg, bnmDose, bnmVol, bnmNome, bnmAmpola,
-      sugDose, sugVol, tubo, lamina,
+      sugDose, sugVol, tubo, lamina, flush,
     };
   }, [p, id, contexto, usarRocur]);
 
@@ -195,7 +203,7 @@ export default function ISR() {
 
           {/* Indicações */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>⚡ Indicações de ISR</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Zap size={15} style={{ marginRight: 6 }} />Indicações de ISR</p>
             {[
               'Insuficiência respiratória grave (FR ↑↑, uso de musculatura acessória, exaustão)',
               'SpO₂ < 90% refratária a O₂ de alto fluxo',
@@ -214,7 +222,7 @@ export default function ISR() {
 
           {/* Pré-oxigenação */}
           <div style={{ backgroundColor: '#ECFDF5', borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#065F46' }}>💨 Pré-oxigenação — Obrigatória</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#065F46', display: 'flex', alignItems: 'center' }}><Wind size={15} style={{ marginRight: 6 }} />Pré-oxigenação — Obrigatória</p>
             {[
               'Alvo: SpO₂ ≥ 95% antes da indução (dessaturação é rápida em crianças: apneia segura = 1-3 min)',
               'Máscara não-reinalante 15 L/min por 3-5 minutos',
@@ -232,7 +240,7 @@ export default function ISR() {
 
           {/* Contraindicações drogas */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🚫 Contraindicações às Drogas</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Ban size={15} style={{ marginRight: 6 }} />Contraindicações às Drogas</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
                 <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>Succinilcolina — CONTRAINDICADA se:</p>
@@ -244,7 +252,7 @@ export default function ISR() {
                   'História pessoal ou familiar de hipertermia maligna',
                 ].map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '3px', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#DC2626', flexShrink: 0 }}>✗</span>{c}
+                    <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
                 <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Se contraindicada → usar rocurônio 1.2 mg/kg (aba Calcular)</p>
@@ -256,7 +264,7 @@ export default function ISR() {
                   'Hipertrigliceridemia grave ou alergia confirmada a ovo/soja (relativo)',
                 ].map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '3px', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#D97706', flexShrink: 0 }}>⚠</span>{c}
+                    <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
                 <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Se PA borderline → cetamina 1.5 mg/kg é mais segura</p>
@@ -267,7 +275,7 @@ export default function ISR() {
           {/* Checklist equipamento */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('equip')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🧰 Checklist SOTANE</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Briefcase size={15} style={{ marginRight: 6 }} />Checklist SOTANE</p>
               {aberto === 'equip' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
             </button>
             {aberto === 'equip' && (
@@ -295,7 +303,7 @@ export default function ISR() {
 
           {/* Inputs */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Dados do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6 }} />Dados do Paciente</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
@@ -330,7 +338,7 @@ export default function ISR() {
             {usarRocur && (
               <div style={{ marginTop: '8px', backgroundColor: '#F5F3FF', borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #7C3AED' }}>
                 <p style={{ margin: 0, fontSize: '11px', color: '#7C3AED', fontWeight: '600' }}>
-                  ⚠ Ter Sugammadex 16 mg/kg disponível antes de iniciar o procedimento
+                  Ter Sugammadex 16 mg/kg disponível antes de iniciar o procedimento
                 </p>
               </div>
             )}
@@ -348,6 +356,7 @@ export default function ISR() {
                   dose={drugs.atropDose} unit="mg"
                   vol={drugs.atropVol}
                   ampola="Atropina 0,25 mg/mL (1 mL/ampola)"
+                  admin={`IV em bólus rápido, sem diluição · flush ${drugs.flush} mL SF 0,9%`}
                   obs={id < 1 ? 'Obrigatória < 1 ano. Dar 3-5 min antes ou imediatamente antes da laringoscopia.' : 'Obrigatória com succinilcolina < 10 anos. Previne bradicardia reflexa.'}
                   cor="#065F46"
                 />
@@ -359,6 +368,7 @@ export default function ISR() {
                       dose={drugs.fenMcg} unit="mcg"
                       vol={drugs.fenVol}
                       ampola="Fentanil 50 mcg/mL (10 mL = 500 mcg)"
+                      admin={`IV lento em 30–60 s (evita rigidez torácica) · pode diluir 1:1 em SF · flush ${drugs.flush} mL`}
                       obs={contexto === 'hic' ? 'Dar 3 min antes da laringoscopia. Atenua elevação de PIC e PA.' : 'Opcional. Omitir em instabilidade hemodinâmica.'}
                       cor="#7C3AED"
                     />
@@ -372,6 +382,7 @@ export default function ISR() {
                       dose={drugs.lidoDose} unit="mg"
                       vol={drugs.lidoVol}
                       ampola="Lidocaína 2% (20 mg/mL)"
+                      admin={`IV em bólus, sem diluição · flush ${drugs.flush} mL SF`}
                       obs="Evidência debatida. Dar 3 min antes se PA adequada. Omitir se hipotensão."
                       cor="#6B7280"
                     />
@@ -387,6 +398,7 @@ export default function ISR() {
                   dose={drugs.indDose} unit="mg"
                   vol={drugs.indVol}
                   ampola={drugs.indAmpola}
+                  admin={`IV em bólus (${drugs.ctx.inducaoId === 'cetamina' ? 'cetamina pura 50 mg/mL' : 'propofol puro 10 mg/mL'}) · flush ${drugs.flush} mL SF`}
                   obs={
                     drugs.ctx.inducaoId === 'cetamina'
                       ? (contexto === 'choque'
@@ -406,6 +418,7 @@ export default function ISR() {
                   dose={drugs.bnmDose} unit="mg"
                   vol={drugs.bnmVol}
                   ampola={drugs.bnmAmpola}
+                  admin={`IV em bólus rápido · empurrar com flush ${drugs.flush} mL SF (garante chegada ao sítio)`}
                   obs={
                     !usarRocur
                       ? `Início: 30-60s · Duração: 8-10 min · ${id <= 0.5 ? 'Lactente ≤6 meses: dose 2 mg/kg · ' : ''}Atropina obrigatória antes`
@@ -420,6 +433,7 @@ export default function ISR() {
                       dose={drugs.sugDose} unit="mg"
                       vol={drugs.sugVol}
                       ampola="Bridion 200 mg/2 mL (100 mg/mL)"
+                      admin={`IV em bólus rápido (≤ 10 s) · flush ${drugs.flush} mL SF`}
                       obs="Manter preparado ANTES de iniciar. Reverter se impossível intubar e impossível oxigenar (CICO)."
                       cor="#7C3AED"
                     />
@@ -460,6 +474,38 @@ export default function ISR() {
                   <p style={{ margin: 0, fontSize: '12px', color: '#1D4ED8' }}>Insira a idade para calcular tamanho do tubo e lâmina</p>
                 </div>
               )}
+
+              {/* Prescrição pronta — receita ordenada, transcrevível */}
+              <div style={card({ border: `2px solid ${C}` })}>
+                <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}>
+                  <ListChecks size={15} style={{ marginRight: 6 }} />Prescrição pronta — ordem de administração
+                </p>
+                <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: '#9CA3AF' }}>
+                  Peso {p} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {drugs.flush} mL de SF 0,9% após cada uma.
+                </p>
+                {(() => {
+                  const linhas = [];
+                  linhas.push({ t: '1. Pré-medicação (T − 3 min)', d: `Atropina — ${drugs.atropDose} mg (${drugs.atropVol} mL) IV${id < 1 || !usarRocur ? ' — obrigatória' : ' (se bradicardia prevista)'}` });
+                  if (drugs.fenMcg > 0) linhas.push({ t: '', d: `Fentanil — ${drugs.fenMcg} mcg (${drugs.fenVol} mL) IV lento 30–60 s` });
+                  if (contexto === 'hic') linhas.push({ t: '', d: `Lidocaína — ${drugs.lidoDose} mg (${drugs.lidoVol} mL) IV` });
+                  linhas.push({ t: '2. Indução (T − 0)', d: `${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} — ${drugs.indDose} mg (${drugs.indVol} mL) IV em bólus` });
+                  linhas.push({ t: '3. Bloqueio neuromuscular (logo após)', d: `${drugs.bnmNome} — ${drugs.bnmDose} mg (${drugs.bnmVol} mL) IV em bólus rápido` });
+                  if (usarRocur) linhas.push({ t: '4. Resgate (se CICO)', d: `Sugammadex — ${drugs.sugDose} mg (${drugs.sugVol} mL) IV rápido — preparado ANTES` });
+                  if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${drugs.tubo.tamanho} mm (com cuff) · fixar em ${drugs.tubo.profCole} cm · ${drugs.lamina.tipo}` });
+                  return linhas.map((l, i) => (
+                    <div key={i} style={{ marginBottom: '6px' }}>
+                      {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '10px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.03em' }}>{l.t}</p>}
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
+                        <span style={{ color: C, fontWeight: '700', flexShrink: 0 }}>›</span>
+                        <span style={{ fontSize: '12px', color: '#1F2937', lineHeight: 1.4 }}>{l.d}</span>
+                      </div>
+                    </div>
+                  ));
+                })()}
+                <p style={{ margin: '8px 0 0 0', fontSize: '10px', color: '#B45309', fontWeight: '600' }}>
+                  Confirmar posição do tubo por capnografia + ausculta + RX. Doses e diluições conforme Harriet Lane 22ª ed.
+                </p>
+              </div>
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '20px', fontSize: '13px', color: '#9CA3AF', backgroundColor: '#FFF', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
@@ -562,13 +608,13 @@ export default function ISR() {
 
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
-              ⚠ Em criança, dessaturação é rápida. Definir plano A/B/C/D ANTES de induzir. Nunca mais de 2 tentativas sem reavaliação.
+              Em criança, dessaturação é rápida. Definir plano A/B/C/D ANTES de induzir. Nunca mais de 2 tentativas sem reavaliação.
             </p>
           </div>
 
           {/* LEMON */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📋 LEMON — Predição de Dificuldade</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6 }} />LEMON — Predição de Dificuldade</p>
             {[
               { l: 'L', nome: 'Look externally', desc: 'Trauma facial, macroglossia, micrognatia, pescoço curto, síndromes craniofaciais (Pierre Robin, Treacher Collins, Goldenhar, Down)' },
               { l: 'E', nome: 'Evaluate 3-3-2', desc: 'Abertura de boca < 3 dedos · Distância mento-hioide < 3 dedos · Distância hioide-tireoide < 2 dedos' },
@@ -588,7 +634,7 @@ export default function ISR() {
 
           {/* Planos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🗂 Planos A / B / C / D</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><FolderOpen size={15} style={{ marginRight: 6 }} />Planos A / B / C / D</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
                 { plano: 'A', titulo: 'ISR padrão + otimização', cor: '#10B981', desc: 'Laringoscopia direta ou videolaringoscopia · Otimizar posição, lâmina, BURP · Máx. 2 tentativas antes de mudar de plano' },
@@ -609,7 +655,7 @@ export default function ISR() {
 
           {/* CICO */}
           <div style={{ backgroundColor: '#FEF2F2', borderRadius: '12px', padding: '14px', border: `1px solid ${CBR}` }}>
-            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: C }}>🚨 CICO — Não consigo intubar, não consigo oxigenar</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6 }} />CICO — Não consigo intubar, não consigo oxigenar</p>
             {[
               'Chamar ajuda imediatamente — cirurgião, ORL',
               'Criança > 12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6.0 sem cuff)',
