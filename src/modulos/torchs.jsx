@@ -277,6 +277,10 @@ function DiferencialAchados({ onSelecionar }) {
               neuroimagem e o contexto materno.
             </AlertaBox>
           )}
+          <p className="text-[10px] text-gray-400 mt-3 px-1 leading-relaxed">
+            Achados discriminantes conforme SBP e AAP Red Book. Ferramenta de
+            apoio ao raciocínio — a confirmação é sempre clínica e laboratorial.
+          </p>
         </div>
       )}
     </div>
@@ -295,6 +299,7 @@ const OUTROS_AGENTES = [
     diagnostico: "PCR materno/fetal · USG (hidropsia, ascite) · Doppler da ACM (pico de velocidade sistólica estima anemia fetal).",
     conduta: "Transfusão intrauterina se anemia fetal grave; manejo de suporte. Não é teratógeno clássico — a maioria dos sobreviventes evolui sem sequela.",
     atencao: "O risco principal é hematológico (anemia/hidropsia), não malformação estrutural.",
+    fonte: ["AAP Red Book", "SBP"],
   },
   {
     id: "varicela",
@@ -303,6 +308,7 @@ const OUTROS_AGENTES = [
     diagnostico: "Clínico + história materna; PCR de lesões quando presentes.",
     conduta: "RN exposto periparto: imunoglobulina antivaricela-zóster (VZIG). Doença neonatal: aciclovir IV (dose no PedFarma). Síndrome congênita: suporte multidisciplinar.",
     atencao: "Distinguir síndrome congênita (embriopatia < 20 sem) de varicela neonatal (transmissão periparto, risco de doença disseminada grave).",
+    fonte: ["AAP Red Book", "SBP"],
   },
   {
     id: "hiv",
@@ -311,6 +317,7 @@ const OUTROS_AGENTES = [
     diagnostico: "Carga viral (RNA/DNA por PCR) em momentos definidos — sorologia NÃO serve no RN (anticorpos maternos atravessam a placenta).",
     conduta: "Profilaxia antirretroviral no RN iniciada precocemente (esquema conforme risco); TARV materna e carga viral indetectável reduzem a transmissão. No Brasil, NÃO amamentar.",
     atencao: "Início precoce da profilaxia é tempo-dependente — ver protocolo/PCDT vigente.",
+    fonte: ["MS — PCDT HIV", "SBP"],
   },
   {
     id: "hepb",
@@ -319,6 +326,7 @@ const OUTROS_AGENTES = [
     diagnostico: "HBsAg materno no pré-natal define a conduta no RN.",
     conduta: "RN de mãe HBsAg+: vacina para hepatite B + imunoglobulina (HBIG) nas primeiras 12–24 h de vida (locais anatômicos diferentes). Amamentação permitida após a imunoprofilaxia.",
     atencao: "A imunoprofilaxia precoce é altamente eficaz — janela das primeiras horas de vida.",
+    fonte: ["MS/PNI", "AAP Red Book"],
   },
   {
     id: "chagas",
@@ -327,6 +335,7 @@ const OUTROS_AGENTES = [
     diagnostico: "Parasitológico direto (micro-hematócrito) nos primeiros meses · PCR. Sorologia só após 8–9 meses (antes reflete anticorpo materno).",
     conduta: "Benznidazol — alta taxa de cura quando o Chagas congênito é tratado precocemente (ver protocolo/PedFarma para dose).",
     atencao: "Tratamento precoce = alta chance de cura; não aguardar a sorologia dos 9 meses se o parasitológico for positivo.",
+    fonte: ["MS — PCDT Chagas", "SBP"],
   },
   {
     id: "chik",
@@ -335,6 +344,7 @@ const OUTROS_AGENTES = [
     diagnostico: "RT-PCR no RN sintomático.",
     conduta: "Suporte. Vigilância neurológica — o acometimento de SNC neonatal pode deixar sequela.",
     atencao: "Não é teratógeno clássico; o risco é a doença neonatal por transmissão intraparto.",
+    fonte: ["MS — Arboviroses", "SBP"],
   },
 ];
 
@@ -377,6 +387,11 @@ function OutrosAgentes() {
                   <p><span className="font-semibold text-gray-800">Diagnóstico: </span>{a.diagnostico}</p>
                   <p><span className="font-semibold text-gray-800">Conduta: </span>{a.conduta}</p>
                   <AlertaBox tone="amber">{a.atencao}</AlertaBox>
+                  <div className="pt-0.5">
+                    {a.fonte.map((f) => (
+                      <FonteTag key={f}>{f}</FonteTag>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
