@@ -40,7 +40,6 @@ const R = '12px', RS = '8px';
 const LM_100 = { kcal: 67, prot: 1.2, p: 14,  zn: 0.15, vitD: 2  };
 const FM85   = { kcal: 4.3,prot: 0.36,p: 11,  zn: 0.24, vitD: 35 };
 const FOS_P_ML   = 25;
-const POLIVIT_VD = 400;
 
 const FORMULAS = {
   aptamil:     { nome: 'Aptamil Premium 1', kcal: 67, prot: 1.2, p: 38, zn: 0.59, vitD: 44 },
@@ -78,6 +77,24 @@ const ZINCO_PRODUTOS = {
               sal: 'sulfato de zinco 4 mg/mL',   mgMl: 4 },
 };
 
+/* ── Apresentações de Polivitamínico (vitamínico puro, sem minerais) ──
+   Regime prescrito padrão: 6 gotas VO 12/12h (12 gotas/dia) para ambas as marcas —
+   só a concentração de vitamina D por gota muda o aporte final.
+   Growvit BB (Cifarma): 5 mcg colecalciferol / 6 gotas (0,25 mL) = 200 UI/6 gotas (bula do fabricante)
+   Nutrinfan Gotas (Exeltis, frasco 20 mL conta-gotas — não confundir com Nutrinfan
+   Infantil 120 mL dosado em mL/colher, mesma fórmula porém apresentação diferente):
+   5 mcg colecalciferol / 6 gotas (0,25 mL) = 200 UI/6 gotas (bula do fabricante)
+   Ambas vitamínico puro — sem ferro, cálcio ou zinco na fórmula, não sobrepõe às
+   linhas de Ferro/Fosfato/Zinco prescritas separadamente. Protovit Plus (Bayer) foi
+   descontinuado definitivamente pelo fabricante e não é mais oferecido como opção. */
+const POLIVIT_PRODUTOS = {
+  growvit:   { key: 'growvit',   btn: 'Growvit BB',     nome: 'Growvit BB',
+               sal: 'polivitamínico sem minerais', uiGota: 200 / 6 },
+  nutrinfan: { key: 'nutrinfan', btn: 'Nutrinfan Gotas', nome: 'Nutrinfan Gotas',
+               sal: 'polivitamínico sem minerais', uiGota: 200 / 6 },
+};
+const POLIVIT_GOTAS_DIA = 12; // 6 gotas 12/12h — regime padrão prescrito
+
 const parseFld = v => parseFloat(String(v).replace(',', '.'));
 
 /* Resolve a dose final exibida: usa o valor editado manualmente se for válido,
@@ -105,7 +122,7 @@ const HOJE_ISO = new Date().toISOString().split('T')[0];
 ════════════════════════════════════════════ */
 function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
                     tipoDieta, volKgStr, tomadasStr, sachetStr, formula,
-                    ferroMarca = 'sulfato', znMarca = 'padrao' }) {
+                    ferroMarca = 'sulfato', znMarca = 'padrao', polivitMarca = 'growvit' }) {
   const peso   = parseFld(pesoG);
   const pesorn = parseFld(pesornG);
   const ig     = parseInt(igSemStr,   10) || 0;
@@ -122,8 +139,9 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const menor32 = ig < 32;
   const preT    = ig < 37;
 
-  const ferroProd = FERRO_PRODUTOS[ferroMarca] || FERRO_PRODUTOS.sulfato;
-  const znProd    = ZINCO_PRODUTOS[znMarca]    || ZINCO_PRODUTOS.padrao;
+  const ferroProd   = FERRO_PRODUTOS[ferroMarca]     || FERRO_PRODUTOS.sulfato;
+  const znProd      = ZINCO_PRODUTOS[znMarca]        || ZINCO_PRODUTOS.padrao;
+  const polivitProd = POLIVIT_PRODUTOS[polivitMarca] || POLIVIT_PRODUTOS.growvit;
 
   let dKcal = 0, dProt = 0, dP = 0, dZn = 0, dVitD = 0;
   const volTotal = vol * pk;
@@ -185,13 +203,16 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const znVol      = znNec / znProd.mgMl;
   const znSemRest  = (znIndicado && !znSuspenso && !znAtivo) ? 36 - igCorrSem : 0;
 
-  // Vitamina D (colecalciferol) — apresentação única de 200 UI/gota,
-  // sempre como complemento ao que já é recebido via dieta + polivitamínico.
-  const vitDAlvo  = ig < 32 ? 800 : ig < 37 ? 600 : 400;
-  const vitDDieta = dVitD;
-  const vitDTotal = vitDDieta + POLIVIT_VD;
-  const vitDNec   = Math.max(0, vitDAlvo - vitDTotal);
-  const vitDG200  = Math.ceil(vitDNec / 200);
+  // Vitamina D (colecalciferol) — alvo escalonado por IG ao nascimento (mesmo
+  // esquema usado no módulo Seguimento do Prematuro de Risco), sempre como
+  // complemento ao que já é recebido via dieta + polivitamínico (regime padrão
+  // 6 gotas 12/12h = 12 gotas/dia, concentração conforme a marca selecionada).
+  const vitDAlvo   = ig < 32 ? 800 : ig < 37 ? 600 : 400;
+  const vitDDieta  = dVitD;
+  const polivitVD  = polivitProd.uiGota * POLIVIT_GOTAS_DIA;
+  const vitDTotal  = vitDDieta + polivitVD;
+  const vitDNec    = Math.max(0, vitDAlvo - vitDTotal);
+  const vitDG200   = Math.ceil(vitDNec / 200);
 
   const alertUSG = dias >= 0 && dias <= 7;
   const alertEco = ig < 34;
@@ -207,11 +228,11 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   return {
     pk, pnk, ig, igd, menor32, preT,
     volTotal, volTom, kcalKg, protKg, dP, dZn, dVitD,
-    ferroProd, znProd,
+    ferroProd, znProd, polivitProd,
     ferroAtivo, ferroRate, ferroDose, ferroGotas, ferroDiasRest,
     fosIndicado, fosSuspenso, fosAtivo, pVol, pTom, pSuficDieta, pDoseMgKg,
     znIndicado, znSuspenso, znAtivo, znHighCrit, znMidCrit, znRate, znNec, znVol, znSemRest,
-    vitDAlvo, vitDDieta, vitDTotal, vitDNec, vitDG200,
+    vitDAlvo, vitDDieta, polivitVD, vitDTotal, vitDNec, vitDG200,
     igCorrSem, igCorrResto,
     alertUSG, alertEco, labHoje, proxLab, alert44,
     alerta28apx, alerta28ating,
@@ -332,6 +353,7 @@ function TabPrescricao() {
   const [formula,   setFormula]   = useState('aptamil');
   const [ferroMarca, setFerroMarca] = useState('sulfato');
   const [znMarca,    setZnMarca]    = useState('padrao');
+  const [polivitMarca, setPolivitMarca] = useState('growvit');
   const [ferroManual, setFerroManual] = useState('');
   const [znManual,    setZnManual]    = useState('');
   const [resultado, setResultado] = useState(null);
@@ -357,7 +379,7 @@ function TabPrescricao() {
       diasVidaStr: String(diasCalc),
       tipoDieta, volKgStr: volKg, tomadasStr: tomadas,
       sachetStr: sachets, formula,
-      ferroMarca, znMarca,
+      ferroMarca, znMarca, polivitMarca,
     });
     if (!r) { setErro('Dados inválidos. Verifique os campos.'); return; }
     setFerroManual('');
@@ -370,7 +392,7 @@ function TabPrescricao() {
     setIgSem(''); setIgDias(''); setDataNasc('');
     setTipoDieta(''); setVolKg(''); setTomadas('');
     setSachets('6'); setFormula('aptamil');
-    setFerroMarca('sulfato'); setZnMarca('padrao');
+    setFerroMarca('sulfato'); setZnMarca('padrao'); setPolivitMarca('growvit');
     setFerroManual(''); setZnManual('');
     setResultado(null); setErro('');
   }
@@ -466,6 +488,20 @@ function TabPrescricao() {
             {ZINCO_PRODUTOS[znMarca].sal}
           </div>
         </Fld>
+        <Fld label="Polivitamínico">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(POLIVIT_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={polivitMarca === p.key}
+                onClick={() => setPolivitMarca(p.key)}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {POLIVIT_PRODUTOS[polivitMarca].sal} — {POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1)} UI Vit.D/gota
+            (regime padrão 6 gotas 12/12h)
+          </div>
+        </Fld>
       </Card>
 
       {erro && <ErrBox msg={erro} />}
@@ -498,6 +534,7 @@ function TabReceituario() {
   const [formula,   setFormula]   = useState('aptamil');
   const [ferroMarca, setFerroMarca] = useState('sulfato');
   const [znMarca,    setZnMarca]    = useState('padrao');
+  const [polivitMarca, setPolivitMarca] = useState('growvit');
   const [ferroManual, setFerroManual] = useState('');
   const [znManual,    setZnManual]    = useState('');
   const [resultado, setResultado] = useState(null);
@@ -523,7 +560,7 @@ function TabReceituario() {
       diasVidaStr: String(diasCalc),
       tipoDieta, volKgStr: volKg, tomadasStr: '8',
       sachetStr: sachets, formula,
-      ferroMarca, znMarca,
+      ferroMarca, znMarca, polivitMarca,
     });
     if (!r) { setErro('Dados inválidos. Verifique os campos.'); return; }
     setFerroManual('');
@@ -535,7 +572,7 @@ function TabReceituario() {
     setNomePac(''); setNrSES(''); setPesoG(''); setPesornG('');
     setIgSem(''); setIgDias(''); setDataNasc('');
     setTipoDieta(''); setVolKg(''); setSachets('6'); setFormula('aptamil');
-    setFerroMarca('sulfato'); setZnMarca('padrao');
+    setFerroMarca('sulfato'); setZnMarca('padrao'); setPolivitMarca('growvit');
     setFerroManual(''); setZnManual('');
     setResultado(null); setErro('');
   }
@@ -631,6 +668,20 @@ function TabReceituario() {
           </div>
           <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
             {ZINCO_PRODUTOS[znMarca].sal}
+          </div>
+        </Fld>
+        <Fld label="Polivitamínico">
+          <div style={{ display: 'flex', gap: 6 }}>
+            {Object.values(POLIVIT_PRODUTOS).map(p => (
+              <BtnSel key={p.key} active={polivitMarca === p.key}
+                onClick={() => setPolivitMarca(p.key)}>
+                {p.btn}
+              </BtnSel>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
+            {POLIVIT_PRODUTOS[polivitMarca].sal} — {POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1)} UI Vit.D/gota
+            (regime padrão 6 gotas 12/12h)
           </div>
         </Fld>
       </Card>
@@ -787,9 +838,11 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
             </RxItem>
           </div>
 
-          <RxItem n="4" label="Polivitamínico (Growvit BB / Pedianutri ou equiv.)" status="ativo">
+          <RxItem n="4" label={`Polivitamínico — ${res.polivitProd.nome}`} status="ativo">
             <strong>6 gotas</strong> VO 12/12h
-            <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}> (400 UI VitD/dia)</span>
+            <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
+              {' '}({res.polivitVD.toFixed(0)} UI Vit.D/dia · {res.polivitProd.sal})
+            </span>
           </RxItem>
 
           <RxItem n="5" label="Vitamina D (colecalciferol)" status={res.vitDNec > 0 ? 'ativo' : 'dieta-ok'}>
@@ -797,7 +850,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               <OkBadge>
                 Não necessário
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}— dieta ({res.vitDDieta.toFixed(0)} UI) + polivit (400 UI) = alvo {res.vitDAlvo} UI
+                  {' '}— dieta ({res.vitDDieta.toFixed(0)} UI) + polivit ({res.polivitVD.toFixed(0)} UI) = alvo {res.vitDAlvo} UI
                 </span>
               </OkBadge>
             ) : (
@@ -807,11 +860,19 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
                   <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI ({res.ig < 32 ? '<32s' : res.ig < 37 ? '32–36s' : '≥37s'}) − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: {res.polivitVD.toFixed(0)} UI
                   {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
               </>
             )}
+          </RxItem>
+
+          <RxItem n="6" label="Vitamina A" status="nao-indicado">
+            <NaoIndicadoBadge>
+              Sem indicação de suplementação de rotina em RNPT — evidência insuficiente para benefício clínico
+              consistente (ESPGHAN/SBP). Considerar apenas em contexto de protocolo de pesquisa ou deficiência
+              documentada, a critério médico.
+            </NaoIndicadoBadge>
           </RxItem>
 
           <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 10, marginTop: 10 }}>
@@ -1015,7 +1076,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
             </RxDocItem>
           </div>
 
-          <RxDocItem n="4" titulo="Polivitamínico (Growvit BB / Pedianutri ou equiv.)">
+          <RxDocItem n="4" titulo={`Polivitamínico — ${res.polivitProd.nome}`}>
             <strong>6 gotas</strong> VO 12/12h
           </RxDocItem>
 
@@ -1024,7 +1085,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
               <span style={{ color: COR.ok }}>
                 Não necessário — alvo {res.vitDAlvo} UI coberto
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}(dieta {res.vitDDieta.toFixed(0)} UI + polivit 400 UI)
+                  {' '}(dieta {res.vitDDieta.toFixed(0)} UI + polivit {res.polivitVD.toFixed(0)} UI)
                 </span>
               </span>
             ) : (
@@ -1034,7 +1095,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
                   <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
-                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: 400 UI
+                  Complemento à dieta + polivitamínico · Alvo: {res.vitDAlvo} UI − dieta: {res.vitDDieta.toFixed(0)} UI − polivit: {res.polivitVD.toFixed(0)} UI
                   {' '}= {res.vitDNec.toFixed(0)} UI adicionais
                 </div>
               </>
