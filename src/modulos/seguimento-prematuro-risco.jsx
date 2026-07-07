@@ -229,7 +229,9 @@ export default function SeguimentoPrematuroRisco() {
             <InfoRow label="Cálcio (total, dieta inclusa)" valor="120–150 mg/kg/dia" />
             <InfoRow label="Fósforo (total, dieta inclusa)" valor="60–90 mg/kg/dia" />
             <InfoRow label="Relação Ca:P (massa)" valor="≈ 1,7:1" />
-            <InfoRow label="Vitamina D" valor="400–1000 UI/dia" />
+            <InfoRow label="Vitamina D — IG < 32 semanas" valor="800 UI/dia" />
+            <InfoRow label="Vitamina D — IG 32–36⁶/⁷ semanas" valor="600 UI/dia" />
+            <InfoRow label="Vitamina D — IG ≥ 37 semanas" valor="400 UI/dia" />
           </div>
           <p className="font-semibold text-gray-800 pt-1">Composição de referência aproximada (varia por marca/fortificante — conferir sempre o rótulo):</p>
           <div className="space-y-1.5">
@@ -243,8 +245,9 @@ export default function SeguimentoPrematuroRisco() {
             de oferta inadequada.
           </AlertaBox>
           <AlertaBox tone="blue">
-            Há divergência entre sociedades quanto à vitamina D: AAP recomenda 200–400 UI/dia, ESPGHAN recomenda
-            800–1000 UI/dia. Na prática brasileira, iniciar com 400 UI/dia é razoável na maioria dos casos.
+            Esquema de vitamina D escalonado por idade gestacional ao nascer — mesmo critério usado no cálculo
+            individual (complemento à dieta + polivitamínico) do módulo <strong>Canguru</strong>. Substitui a faixa
+            única de 400–1000 UI/dia usada anteriormente neste módulo.
           </AlertaBox>
           <FonteTag>ESPGHAN</FonteTag><FonteTag>AAP</FonteTag><FonteTag>SBP 2024</FonteTag>
         </Section>
@@ -291,14 +294,15 @@ export default function SeguimentoPrematuroRisco() {
           <p className="font-semibold text-gray-800 pt-1">Tratamento — Fosfato tricálcico 12,9% (manipulado):</p>
           <div className="space-y-1.5">
             <InfoRow label="Composição de referência" valor="1 mL = 50 mg Ca + 25 mg P" />
-            <InfoRow label="Dose de tratamento" valor="50–100 mg Ca/kg/dia" />
-            <InfoRow label="Equivalente em volume" valor="1–2 mL/kg/dia, 4x/dia" />
+            <InfoRow label="Aporte total — fósforo" valor="110–125 mg/kg/dia" />
+            <InfoRow label="Aporte total — cálcio" valor="200–250 mg/kg/dia" />
           </div>
           <AlertaBox tone="red">
-            A dose de reposição deve ser calculada pelo <strong>déficit de fósforo</strong> (alvo 60–90 mg/kg/dia menos
-            o que a dieta atual já fornece), e não pelo alvo de cálcio isolado — como o fosfato tricálcico entrega
-            cálcio e fósforo juntos, repor o déficit de fósforo até o topo da faixa pode elevar o cálcio total acima
-            do seguro.
+            Aporte <strong>total</strong> (dieta + solução) quando a triagem de DMO está alterada — mais alto que o
+            alvo basal de prevenção (ver seção de Alvos nutricionais acima). A dose de reposição deve ser calculada
+            pelo <strong>déficit de fósforo</strong> em relação a esse aporte total (descontando o que a dieta atual
+            já fornece), e não pelo alvo de cálcio isolado — como o fosfato tricálcico entrega cálcio e fósforo
+            juntos, repor o déficit de fósforo até o topo da faixa pode elevar o cálcio total acima do seguro.
           </AlertaBox>
           <AlertaBox tone="blue">
             Para fins de cálculo, vá para o módulo <strong>Canguru</strong>.
@@ -313,7 +317,7 @@ export default function SeguimentoPrematuroRisco() {
             <strong>Prevenção</strong> é a melhor estratégia: iniciar a fortificação precocemente e atingir a
             necessidade basal do prematuro reduz a incidência de DMO — ver seção de alvos nutricionais acima.
           </AlertaBox>
-          <FonteTag>Protocolo institucional de nutrição neonatal</FonteTag><FonteTag>SBP</FonteTag>
+          <FonteTag>SBP — Seguimento Ambulatorial do Prematuro de Risco</FonteTag><FonteTag>SBP 2024</FonteTag>
         </Section>
 
         <Section title="Sinais de alarme pós-alta" icon={AlertTriangle} open={abertas.alarme} onToggle={() => toggle("alarme")}>
@@ -358,6 +362,10 @@ export default function SeguimentoPrematuroRisco() {
         <p className="text-[11px] text-gray-400 text-center leading-relaxed">
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
           institucional.
+        </p>
+        <p className="text-[10px] text-gray-400 text-center leading-relaxed mt-2">
+          Referência: Sociedade Brasileira de Pediatria. Departamento Científico de Neonatologia. Manual de
+          seguimento do recém-nascido de alto risco. 2. ed. São Paulo: SBP, 2024.
         </p>
       </div>
     </div>
