@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield } from 'lucide-react';
 
 const parseNum = (val) => {

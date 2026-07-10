@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
   Activity, Heart, MessageCircle, Star, Move,
-  AlertTriangle, CheckCircle, Calendar, Info, RotateCcw,
+  AlertTriangle, Calendar, Info, RotateCcw,
 } from "lucide-react";
 
 /* ── Tokens de cor ── */
@@ -192,7 +192,14 @@ export default function Dnpm() {
   const currIdx      = useMemo(() => idade ? getFaixaIdx(idade.totalMeses) : -1, [idade]);
   const currFaixaId  = currIdx >= 0 ? FAIXAS[currIdx].id : null;
 
-  useEffect(() => { setSelFaixaId(null); setChecked({}); }, [dataNasc]);
+  // Ao trocar a data de nascimento, limpa a seleção manual e os marcos marcados.
+  // Ajuste no render (padrão React) em vez de setState dentro de useEffect.
+  const [prevDataNasc, setPrevDataNasc] = useState(dataNasc);
+  if (dataNasc !== prevDataNasc) {
+    setPrevDataNasc(dataNasc);
+    setSelFaixaId(null);
+    setChecked({});
+  }
 
   const activeFaixaId = selFaixaId || currFaixaId;
   const activeFaixa   = FAIXAS.find(f => f.id === activeFaixaId) || null;

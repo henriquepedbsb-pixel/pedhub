@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Thermometer, Info, AlertTriangle, ChevronRight, CheckCircle } from "lucide-react";
+import { Info, AlertTriangle, ChevronRight, CheckCircle } from "lucide-react";
 
 const PRIMARY = "#EF4444";
 

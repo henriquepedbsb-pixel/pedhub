@@ -1,6 +1,6 @@
 // src/modulos/pedfarma.jsx
 import { useState } from "react";
-import { Pill, Search, Info, ChevronRight, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
+import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 
 const PRIMARY = "#8B5CF6";
 
@@ -75,7 +75,6 @@ function parseDose(s) {
   return !isNaN(v) && v > 0 ? v : null;
 }
 
-const CATS = ["Todos", "Antibiótico", "Analgésico", "Corticoide", "Respiratório", "Antihistamínico", "Gastrointestinal", "Neurológico", "Antifúngico", "Antiviral", "Suplemento", "Antídoto"];
 const CAT_CORES = { "Antibiótico":"#10B981","Analgésico":"#EF4444","Corticoide":"#F97316","Respiratório":"#2563EB","Antihistamínico":"#F59E0B","Gastrointestinal":"#D97706","Neurológico":"#7C3AED","Antifúngico":"#059669","Antiviral":"#0891B2","Suplemento":"#10B981","Antídoto":"#DC2626" };
 
 // ─── Conversor de equivalência de corticosteroides sistêmicos ─────────────────

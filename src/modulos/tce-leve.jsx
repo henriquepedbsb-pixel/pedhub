@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Brain, Info, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react";
+import { Info, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#7C3AED";
 
@@ -43,12 +43,11 @@ const PECARN_OVER2 = [
   { label: "Cefaleia intensa / progressiva", moderado: true },
 ];
 
-function PecarnCard({ items, grupo, color }) {
+function PecarnCard({ items }) {
   const [selecionados, setSelecionados] = useState({});
   const toggle = (i) => setSelecionados(prev => ({ ...prev, [i]: !prev[i] }));
   const altoRisco = items.some((item, i) => item.alto_risco && selecionados[i]);
   const moderado  = items.some((item, i) => item.moderado  && selecionados[i]) && !altoRisco;
-  const baixo     = !altoRisco && !moderado;
 
   let resultado, conduta, corRes;
   if (altoRisco) {

@@ -4,7 +4,7 @@
  * Ref: ESPGHAN/ESPEN 2018 · BRASPEN 2022 · NeoFax 2023
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Info, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
 
 const PRIMARY = "#0D9488";
@@ -317,15 +317,20 @@ function TabNPT() {
   const diasCalc = calcDias(dataNasc);
 
   /* Sugerir eletrólitos quando dia de vida muda */
-  useEffect(() => {
+  // Sugere eletrólitos quando o dia de vida muda. Ajuste no render (padrão React)
+  // em vez de setState dentro de useEffect — comportamento idêntico.
+  const [prevDias, setPrevDias] = useState(diasCalc);
+  if (diasCalc !== prevDias) {
+    setPrevDias(diasCalc);
     const s = sugerirEletro(diasCalc);
-    if (!s) return;
-    setDoseNa(s.na);
-    setDoseK(s.k);
-    setDoseCa(s.ca);
-    setDoseP(s.p);
-    setDoseMg(s.mg);
-  }, [diasCalc]);
+    if (s) {
+      setDoseNa(s.na);
+      setDoseK(s.k);
+      setDoseCa(s.ca);
+      setDoseP(s.p);
+      setDoseMg(s.mg);
+    }
+  }
 
   /* Perfis rápidos */
   const PERFIS = [

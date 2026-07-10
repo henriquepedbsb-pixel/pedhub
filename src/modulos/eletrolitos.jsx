@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -23,7 +23,6 @@ const CBR = '#DDD6FE';
 // NaCl 3% = 0.5133 mEq/mL | KCl 10% = 1.341 mEq/mL | Ca Gluc 10% = 0.465 mEq/mL
 const NACL3_CONC  = 0.5133; // mEq/mL
 const KCL10_CONC  = 1.341;  // mEq/mL (verificado: 1000mg/74.55g·mol = 13.41 mEq/10mL)
-const CAGLUC_CONC = 100;    // mg/mL (gluconato Ca 10%): 1 mL/kg = 100 mg/kg
 const MGSO4_CONC  = 500;    // mg/mL (MgSO4 50%)
 
 const TABS = [

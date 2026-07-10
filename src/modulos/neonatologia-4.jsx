@@ -29,64 +29,65 @@ const APGAR_PARAMS = [
 
 const COR_APGAR = "#5B21B6";
 
+function calcTotal(v) { return v.every(x => x !== null) ? v.reduce((a, b) => a + b, 0) : null; }
+function apgarClass(t) {
+  if (t === null) return null;
+  if (t <= 3) return { cor: "#DC2626", grau: "Depressão neonatal grave", conduta: "Reanimação imediata — NRP 2020" };
+  if (t <= 6) return { cor: "#F97316", grau: "Depressão leve a moderada", conduta: "Estimulação e O₂; monitorar; repetir em 5 min se < 7" };
+  return { cor: "#10B981", grau: "Boa vitalidade", conduta: "Monitorização de rotina" };
+}
+
+function BtnSet({ vals, setVals, i, opt }) {
+  const active = vals[i] === opt.v;
+  return (
+    <button onClick={() => setVals(x => x.map((v2, j) => j === i ? opt.v : v2))}
+      style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? COR_APGAR : "#F9FAFB", color: active ? "#fff" : "#374151", lineHeight: 1.3 }}>
+      {opt.l}<br />({opt.v})
+    </button>
+  );
+}
+
+function ScoreCard({ label, vals, setVals }) {
+  const total = calcTotal(vals);
+  const cls   = apgarClass(total);
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ fontWeight: 700, fontSize: 13, color: COR_APGAR, marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ background: COR_APGAR + "18", borderRadius: 6, padding: "2px 8px", fontSize: 11 }}>{label}</span>
+      </div>
+      {APGAR_PARAMS.map((p, i) => (
+        <div key={i} style={{ marginBottom: 8 }}>
+          <p style={{ fontWeight: 600, fontSize: 12.5, color: "#374151", margin: "0 0 5px" }}>{p.nome}</p>
+          <div style={{ display: "flex", gap: 5 }}>
+            {p.opts.map(opt => (
+              <BtnSet key={opt.v} vals={vals} setVals={setVals} i={i} opt={opt} />
+            ))}
+          </div>
+        </div>
+      ))}
+      {cls && (
+        <div style={{ borderRadius: 10, border: "2px solid " + cls.cor, overflow: "hidden", marginTop: 6 }}>
+          <div style={{ background: cls.cor, padding: "10px 14px" }}>
+            <p style={{ fontWeight: 700, color: "#fff", fontSize: 15, margin: 0 }}>{cls.grau} — Score: {total}/10</p>
+          </div>
+          <div style={{ padding: "8px 14px", background: cls.cor + "15" }}>
+            <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>{cls.conduta}</p>
+          </div>
+        </div>
+      )}
+      {!cls && (
+        <div style={{ borderRadius: 10, border: "1.5px dashed #E5E7EB", padding: "10px 14px", marginTop: 6, textAlign: "center" }}>
+          <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Selecione todos os critérios para ver a classificação</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 function TabApgar() {
   const [vals1, setVals1] = useState([null, null, null, null, null]);
   const [vals5, setVals5] = useState([null, null, null, null, null]);
-
-  function calcTotal(v) { return v.every(x => x !== null) ? v.reduce((a, b) => a + b, 0) : null; }
-  function apgarClass(t) {
-    if (t === null) return null;
-    if (t <= 3) return { cor: "#DC2626", grau: "Depressão neonatal grave", conduta: "Reanimação imediata — NRP 2020" };
-    if (t <= 6) return { cor: "#F97316", grau: "Depressão leve a moderada", conduta: "Estimulação e O₂; monitorar; repetir em 5 min se < 7" };
-    return { cor: "#10B981", grau: "Boa vitalidade", conduta: "Monitorização de rotina" };
-  }
-
-  function BtnSet({ vals, setVals, i, opt }) {
-    const active = vals[i] === opt.v;
-    return (
-      <button onClick={() => setVals(x => x.map((v2, j) => j === i ? opt.v : v2))}
-        style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? COR_APGAR : "#F9FAFB", color: active ? "#fff" : "#374151", lineHeight: 1.3 }}>
-        {opt.l}<br />({opt.v})
-      </button>
-    );
-  }
-
-  function ScoreCard({ label, vals, setVals }) {
-    const total = calcTotal(vals);
-    const cls   = apgarClass(total);
-    return (
-      <div style={{ marginBottom: 18 }}>
-        <div style={{ fontWeight: 700, fontSize: 13, color: COR_APGAR, marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ background: COR_APGAR + "18", borderRadius: 6, padding: "2px 8px", fontSize: 11 }}>{label}</span>
-        </div>
-        {APGAR_PARAMS.map((p, i) => (
-          <div key={i} style={{ marginBottom: 8 }}>
-            <p style={{ fontWeight: 600, fontSize: 12.5, color: "#374151", margin: "0 0 5px" }}>{p.nome}</p>
-            <div style={{ display: "flex", gap: 5 }}>
-              {p.opts.map(opt => (
-                <BtnSet key={opt.v} vals={vals} setVals={setVals} i={i} opt={opt} />
-              ))}
-            </div>
-          </div>
-        ))}
-        {cls && (
-          <div style={{ borderRadius: 10, border: "2px solid " + cls.cor, overflow: "hidden", marginTop: 6 }}>
-            <div style={{ background: cls.cor, padding: "10px 14px" }}>
-              <p style={{ fontWeight: 700, color: "#fff", fontSize: 15, margin: 0 }}>{cls.grau} — Score: {total}/10</p>
-            </div>
-            <div style={{ padding: "8px 14px", background: cls.cor + "15" }}>
-              <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>{cls.conduta}</p>
-            </div>
-          </div>
-        )}
-        {!cls && (
-          <div style={{ borderRadius: 10, border: "1.5px dashed #E5E7EB", padding: "10px 14px", marginTop: 6, textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Selecione todos os critérios para ver a classificação</p>
-          </div>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div>

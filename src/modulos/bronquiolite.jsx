@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Stethoscope, Pill, Wind, Home, ChevronDown, ChevronUp, ClipboardList, Scale, Ban, Hospital, Shield, Activity, AlertTriangle, CheckCircle2, X, Check } from 'lucide-react';
 
 const parseNum = (val) => {
@@ -16,6 +16,14 @@ const TABS = [
   { id: 'oaf',     label: 'OAF',      icon: Wind },
   { id: 'alta',    label: 'Alta',     icon: Home },
 ];
+
+// Componente de chip de opção — declarado no nível do módulo para não ser
+// recriado a cada render (evita reset de estado; regra react-hooks/static-components).
+const OptionChip = ({ label, ativo, onClick, cor = C }) => (
+  <button onClick={onClick} style={{ flex: 1, padding: '7px 4px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: ativo ? '700' : '500', backgroundColor: ativo ? cor : '#F3F4F6', color: ativo ? '#FFF' : '#374151', textAlign: 'center' }}>
+    {label}
+  </button>
+);
 
 export default function Bronquiolite() {
   const [tab,     setTab]     = useState('avaliar');
@@ -69,12 +77,6 @@ export default function Bronquiolite() {
     width: '100%', display: 'flex', justifyContent: 'space-between',
     alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
   });
-
-  const OptionChip = ({ label, ativo, onClick, cor = C }) => (
-    <button onClick={onClick} style={{ flex: 1, padding: '7px 4px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: ativo ? '700' : '500', backgroundColor: ativo ? cor : '#F3F4F6', color: ativo ? '#FFF' : '#374151', textAlign: 'center' }}>
-      {label}
-    </button>
-  );
 
   const gravConfig = {
     leve:     { cor: '#10B981', bg: '#ECFDF5', borda: '#6EE7B7', label: 'LEVE' },

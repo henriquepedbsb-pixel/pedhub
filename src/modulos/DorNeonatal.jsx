@@ -127,6 +127,101 @@ const countIn = (items, o) => items.filter(i => i.id in o).length;
 /* ══════════════════════════════════════════════════════════════════════════
    Componente principal
 ══════════════════════════════════════════════════════════════════════════ */
+/* ── ScoreBadge ─────────────────────────────────────────────────────── */
+const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
+  const filled = countIn(items, scores);
+  const done   = filled === items.length;
+  const int    = done ? interp(score) : null;
+  return (
+    <div style={{
+      background:   done ? int.bg  : "#F1F5F9",
+      border:       `2px solid ${done ? int.c : C.border}`,
+      borderRadius: 16,
+      padding:      "16px",
+      marginBottom: 12,
+      textAlign:    "center",
+    }}>
+      <div style={{fontSize:11,fontWeight:600,color:done?int.c:C.muted,
+        textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>
+        {label} &nbsp;
+        <span style={{fontWeight:400,fontSize:10}}>({filled}/{items.length} itens)</span>
+      </div>
+
+      <div style={{fontSize:48,fontWeight:900,lineHeight:1,color:done?int.c:C.muted}}>
+        {score}
+        <span style={{fontSize:20,fontWeight:400}}>/{maxLabel}</span>
+      </div>
+
+      {done
+        ? <div style={{fontSize:13,fontWeight:700,color:int.c,marginTop:6}}>{int.l}</div>
+        : <div style={{fontSize:11,color:C.muted,marginTop:4}}>Preencha todos os itens para interpretação</div>}
+    </div>
+  );
+};
+
+/* ── ItemSelector (NIPS / PIPP-R / CRIES) ──────────────────────────── */
+const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
+  <div style={{display:"flex",flexDirection:"column",gap:10}}>
+    {items.map(item => (
+      <div key={item.id} style={{
+        background: C.card, borderRadius:12,
+        padding: "12px 14px", border:`1px solid ${C.border}`,
+      }}>
+        <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:8,
+          display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+          {item.label}
+          {item.ctx && (
+            <span style={{fontSize:10,background:"#FEF3C7",color:"#92400E",
+              borderRadius:4,padding:"1px 6px",fontWeight:500}}>
+              CONTEXTUAL
+            </span>
+          )}
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:5}}>
+          {item.opts.map(opt => {
+            const sel = scores[item.id] === opt.v;
+            return (
+              <button key={opt.v}
+                onClick={() => setScores(p => ({...p, [item.id]: opt.v}))}
+                style={{
+                  display:"flex", alignItems:"center", gap:8,
+                  background: sel ? acBg    : "#F8FAFC",
+                  border:     `1.5px solid ${sel ? ac : C.border}`,
+                  borderRadius:8, padding:"8px 10px",
+                  cursor:"pointer", textAlign:"left",
+                }}>
+                <span style={{
+                  width:22, height:22, borderRadius:"50%", flexShrink:0,
+                  background: sel ? ac : "#CBD5E1",
+                  color:"#fff", fontSize:11, fontWeight:700,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                }}>{opt.v}</span>
+                <span style={{fontSize:13, fontWeight:sel?600:400, color:C.text}}>
+                  {opt.l}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+/* ── ResetBtn ────────────────────────────────────────────────────────── */
+const ResetBtn = ({ onReset }) => (
+  <button onClick={onReset} style={{
+    width:"100%", marginTop:14, padding:"10px",
+    background:"#F1F5F9", border:`1px solid ${C.border}`,
+    borderRadius:10, color:C.muted, fontSize:13,
+    cursor:"pointer", display:"flex", alignItems:"center",
+    justifyContent:"center", gap:6,
+  }}>
+    <RotateCcw size={14}/> Limpar avaliação
+  </button>
+);
+
 export default function DorNeonatal() {
   const [tab, setTab]     = useState("NIPS");
 
@@ -138,101 +233,6 @@ export default function DorNeonatal() {
   const [nga, setNga] = useState(null);        // N-PASS ajuste IG
   const [nm,  setNm]  = useState("pain");      // N-PASS modo ativo
   const [cs,  setCs]  = useState({});          // CRIES
-
-  /* ── ScoreBadge ─────────────────────────────────────────────────────── */
-  const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
-    const filled = countIn(items, scores);
-    const done   = filled === items.length;
-    const int    = done ? interp(score) : null;
-    return (
-      <div style={{
-        background:   done ? int.bg  : "#F1F5F9",
-        border:       `2px solid ${done ? int.c : C.border}`,
-        borderRadius: 16,
-        padding:      "16px",
-        marginBottom: 12,
-        textAlign:    "center",
-      }}>
-        <div style={{fontSize:11,fontWeight:600,color:done?int.c:C.muted,
-          textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>
-          {label} &nbsp;
-          <span style={{fontWeight:400,fontSize:10}}>({filled}/{items.length} itens)</span>
-        </div>
-
-        <div style={{fontSize:48,fontWeight:900,lineHeight:1,color:done?int.c:C.muted}}>
-          {score}
-          <span style={{fontSize:20,fontWeight:400}}>/{maxLabel}</span>
-        </div>
-
-        {done
-          ? <div style={{fontSize:13,fontWeight:700,color:int.c,marginTop:6}}>{int.l}</div>
-          : <div style={{fontSize:11,color:C.muted,marginTop:4}}>Preencha todos os itens para interpretação</div>}
-      </div>
-    );
-  };
-
-  /* ── ItemSelector (NIPS / PIPP-R / CRIES) ──────────────────────────── */
-  const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
-    <div style={{display:"flex",flexDirection:"column",gap:10}}>
-      {items.map(item => (
-        <div key={item.id} style={{
-          background: C.card, borderRadius:12,
-          padding: "12px 14px", border:`1px solid ${C.border}`,
-        }}>
-          <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:8,
-            display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-            {item.label}
-            {item.ctx && (
-              <span style={{fontSize:10,background:"#FEF3C7",color:"#92400E",
-                borderRadius:4,padding:"1px 6px",fontWeight:500}}>
-                CONTEXTUAL
-              </span>
-            )}
-          </div>
-
-          <div style={{display:"flex",flexDirection:"column",gap:5}}>
-            {item.opts.map(opt => {
-              const sel = scores[item.id] === opt.v;
-              return (
-                <button key={opt.v}
-                  onClick={() => setScores(p => ({...p, [item.id]: opt.v}))}
-                  style={{
-                    display:"flex", alignItems:"center", gap:8,
-                    background: sel ? acBg    : "#F8FAFC",
-                    border:     `1.5px solid ${sel ? ac : C.border}`,
-                    borderRadius:8, padding:"8px 10px",
-                    cursor:"pointer", textAlign:"left",
-                  }}>
-                  <span style={{
-                    width:22, height:22, borderRadius:"50%", flexShrink:0,
-                    background: sel ? ac : "#CBD5E1",
-                    color:"#fff", fontSize:11, fontWeight:700,
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                  }}>{opt.v}</span>
-                  <span style={{fontSize:13, fontWeight:sel?600:400, color:C.text}}>
-                    {opt.l}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  /* ── ResetBtn ────────────────────────────────────────────────────────── */
-  const ResetBtn = ({ onReset }) => (
-    <button onClick={onReset} style={{
-      width:"100%", marginTop:14, padding:"10px",
-      background:"#F1F5F9", border:`1px solid ${C.border}`,
-      borderRadius:10, color:C.muted, fontSize:13,
-      cursor:"pointer", display:"flex", alignItems:"center",
-      justifyContent:"center", gap:6,
-    }}>
-      <RotateCcw size={14}/> Limpar avaliação
-    </button>
-  );
 
   /* ── Tabs ─────────────────────────────────────────────────────────────── */
   const TABS = [

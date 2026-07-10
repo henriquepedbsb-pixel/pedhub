@@ -1,6 +1,6 @@
 // src/modulos/sedacao.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Syringe, AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
 
 const CI = '#6366F1';

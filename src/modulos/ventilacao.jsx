@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -66,6 +66,15 @@ const TABS = [
 ];
 
 // ─── Componente ──────────────────────────────────────────────────────────────
+// Linha rótulo→valor — no nível do módulo para não ser recriada a cada render
+// (regra react-hooks/static-components).
+const MetaRow = ({ label, valor, cor = '#1F2937', bg = '#F9FAFB' }) => (
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', backgroundColor: bg, borderRadius: '8px', marginBottom: '5px' }}>
+    <span style={{ fontSize: '12px', color: '#374151', fontWeight: '600' }}>{label}</span>
+    <span style={{ fontSize: '12px', color: cor, fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{valor}</span>
+  </div>
+);
+
 export default function Ventilacao() {
   const [tab,      setTab]     = useState('iniciar');
   const [peso,     setPeso]    = useState('');
@@ -136,13 +145,6 @@ export default function Ventilacao() {
     border: '1px solid #E5E7EB', ...extra,
   });
 
-  const chip = (ativo, cor = C) => ({
-    flex: 1, padding: '8px 4px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-    backgroundColor: ativo ? cor : '#F3F4F6',
-    color: ativo ? '#FFF' : '#374151',
-    fontSize: '11px', fontWeight: '600', textAlign: 'center',
-  });
-
   const accordBtn = () => ({
     width: '100%', display: 'flex', justifyContent: 'space-between',
     alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
@@ -153,13 +155,6 @@ export default function Ventilacao() {
       <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
       <input type="number" inputMode="decimal" value={val} onChange={e => set(e.target.value)} placeholder={ph}
         style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${parseNum(val) > 0 ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: parseNum(val) > 0 ? '700' : '400', color: parseNum(val) > 0 ? C : '#374151', boxSizing: 'border-box', outline: 'none' }} />
-    </div>
-  );
-
-  const MetaRow = ({ label, valor, cor = '#1F2937', bg = '#F9FAFB' }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', backgroundColor: bg, borderRadius: '8px', marginBottom: '5px' }}>
-      <span style={{ fontSize: '12px', color: '#374151', fontWeight: '600' }}>{label}</span>
-      <span style={{ fontSize: '12px', color: cor, fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{valor}</span>
     </div>
   );
 

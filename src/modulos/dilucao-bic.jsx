@@ -14,7 +14,6 @@ const C = "#DC2626";
 const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !isNaN(v)&&v>0&&v<=10000?v:null; };
 const pN     = s => { const v = parseFloat(String(s).replace(",",".")); return isNaN(v)||v<0?0:v; };
 const f2     = n => (Math.round(n*100)/100).toFixed(2);
-const f1     = n => (Math.round(n*10)/10).toFixed(1);
 
 /* ── Drogas ──────────────────────────────────────────────────────────────
    mA_K_n   : drug/kg in normalised units  (mcg for mcg-drugs, same for mg×1000)
@@ -215,7 +214,7 @@ function TabBIC() {
       await navigator.clipboard.writeText(gerarTxt());
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch (_) { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+    } catch { setCopied(true); setTimeout(() => setCopied(false), 2500); }
   }
 
   const GRUPOS = ["Vasoativa", "Sedoanalgesia", "Metabólico"];

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Baby, Calendar, Clock, CalendarClock, Info, ChevronRight } from "lucide-react";
+import { CalendarClock, Info, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#2563EB";
 const TERMO_DIAS = 280; // 40 semanas
@@ -113,7 +113,6 @@ export default function IdadeGestacional() {
   const igDiaValido = !isNaN(igDia) && igDia >= 0 && igDia <= 6;
 
   // Validações
-  const refFutura   = nasc && ref && diffDias(ref, new Date(new Date().setHours(0,0,0,0))) < -1 && false; // ref pode ser hoje
   const refAntesNasc = nasc && ref && diffDias(nasc, ref) < 0;
 
   const tudoValido = nasc && ref && igSemValido && igDiaValido && !refAntesNasc;

@@ -1,12 +1,7 @@
 import { useState } from "react";
-import { ClipboardList, Info, AlertTriangle, CheckCircle } from "lucide-react";
+import { Info, CheckCircle } from "lucide-react";
 
 const PRIMARY = "#F97316";
-
-function parsePeso(s) {
-  const v = parseFloat(String(s).replace(",", "."));
-  return !isNaN(v) && v > 0 && v <= 150 ? v : null;
-}
 
 function InfoBox({ color, children }) {
   return (

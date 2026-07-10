@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Activity, Pill, Moon, TrendingDown, ChevronDown, ChevronUp, RotateCcw, ClipboardList, Check, Search, Brain, AlertTriangle } from 'lucide-react';
 // FLACC — fonte única: itens e cortes vêm do módulo Dor (dono do domínio
 // "escalas de dor"). Este módulo consome, não redefine. (ver regra de
@@ -93,7 +93,6 @@ const DROGAS = {
   ],
 };
 
-
 const calcDil = (droga, p) => {
   if (!droga.mgKgDil || p <= 0) return null;
   const qtd     = droga.mgKgDil * p;
@@ -118,6 +117,109 @@ const TABS = [
 ];
 
 // ─── Componente ───────────────────────────────────────────────────────────────
+// Drug panel reutilizável
+const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
+  const dil = calcDil(droga, p);
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
+      {/* Indicação */}
+      <div style={{ backgroundColor:droga.corBg, borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
+        <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:droga.cor }}>{droga.nome} · {droga.tipo}</p>
+        <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:'#374151' }}>{droga.indicacao}</p>
+        <p style={{ margin:'3px 0 0 0', fontSize:'10px', color:'#6B7280' }}>{droga.apresentacao}</p>
+      </div>
+
+      {/* Bolus */}
+      <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
+        <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>BOLUS / DOSE ISOLADA</p>
+        <p style={{ margin:0, fontSize:'12px', color:'#1F2937', fontWeight:'600' }}>{droga.bolus}</p>
+        {p > 0 && droga.unidade !== 'mcg/kg/dose' && droga.unidade !== 'mg/kg/dose' && (
+          <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
+            Para {p} kg: <strong>{parseFloat((0.075 * p).toFixed(2))}–{parseFloat((0.1 * p).toFixed(2))} {droga.id==='fentanil'?'mcg':'mg'}</strong>
+          </p>
+        )}
+        {p > 0 && droga.id === 'dipirona' && (
+          <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
+            Para {p} kg: <strong>{Math.round(15*p)}–{Math.round(Math.min(25*p,1000))} mg</strong> → {parseFloat((Math.min(25*p,1000)/500).toFixed(2))} mL da amp
+          </p>
+        )}
+        {p > 0 && droga.id === 'tramadol' && (
+          <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
+            Para {p} kg: <strong>{Math.round(Math.min(p,100))}–{Math.round(Math.min(2*p,100))} mg</strong> IV em 15-20 min
+          </p>
+        )}
+        {p > 0 && droga.id === 'clonidina' && (
+          <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
+            Para {p} kg: <strong>{Math.round(2*p)}–{Math.round(5*p)} mcg</strong> VO q6-12h
+          </p>
+        )}
+        {p > 0 && droga.id === 'propofol' && (
+          <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
+            Para {p} kg: <strong>{parseFloat((1*p).toFixed(1))}–{parseFloat((2*p).toFixed(1))} mg</strong> = {parseFloat((p*1/10).toFixed(2))}–{parseFloat((p*2/10).toFixed(2))} mL (10 mg/mL)
+          </p>
+        )}
+      </div>
+
+      {/* BIC */}
+      {droga.bic && drogaA?.id === droga.id || droga.bic && drogaS?.id === droga.id ? (
+        <div>
+          <p style={{ margin:'0 0 6px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>INFUSÃO CONTÍNUA (BIC)</p>
+
+          {/* Diluição */}
+          <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
+            <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280' }}>DILUIÇÃO · {droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL SF</p>
+            {dil && p > 0 ? (
+              <>
+                <p style={{ margin:0, fontSize:'13px', fontWeight:'800', color:droga.cor }}>
+                  {dil.qtd} {droga.unidade.includes('mcg')?'mcg':'mg'} de {droga.nome}
+                </p>
+                <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:'#374151' }}>
+                  Retirar <strong>{dil.volDroga} mL</strong> + <strong>{dil.volSF} mL</strong> SF → {droga.volDil} mL total
+                </p>
+                <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
+                  Conc final: {dil.conc} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
+                </p>
+              </>
+            ) : (
+              <p style={{ margin:0, fontSize:'11px', color:'#9CA3AF' }}>Insira o peso acima para calcular</p>
+            )}
+          </div>
+
+          {/* Tabela velocidades */}
+          <div style={{ border:'1px solid #E5E7EB', borderRadius:'8px', overflow:'hidden' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor:droga.corBg, padding:'6px 12px' }}>
+              <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>DOSE ({droga.unidade})</span>
+              <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>mL/h</span>
+            </div>
+            {droga.bic.map((dose, i) => {
+              const vel = calcVel(droga, dose);
+              const isStart = dose === droga.start;
+              return (
+                <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?'#F9FAFB':'#FFF'), borderTop:'1px solid #E5E7EB', padding:'7px 12px' }}>
+                  <span style={{ fontSize:'12px', color:'#374151', fontWeight:isStart?'700':'400' }}>
+                    {dose}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
+                  </span>
+                  <span style={{ fontSize:'13px', color:isStart?droga.cor:'#1F2937', fontWeight:'800' }}>{vel}</span>
+                </div>
+              );
+            })}
+          </div>
+          <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
+            Velocidade independente do peso com esta diluição ({droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL)
+          </p>
+        </div>
+      ) : null}
+
+      {/* Alerta */}
+      {droga.alerta && (
+        <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'8px 10px', borderLeft:'3px solid #F97316' }}>
+          <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'600' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />{droga.alerta}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function AnalgesiaSedacao() {
   const [tab,      setTab]     = useState('avaliar');
   const [peso,     setPeso]    = useState('');
@@ -167,108 +269,7 @@ export default function AnalgesiaSedacao() {
     alignItems:'center', background:'none', border:'none', cursor:'pointer', padding:0,
   });
 
-  // Drug panel reutilizável
-  const DrugPanel = ({ droga }) => {
-    const dil = calcDil(droga, p);
-    return (
-      <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
-        {/* Indicação */}
-        <div style={{ backgroundColor:droga.corBg, borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
-          <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:droga.cor }}>{droga.nome} · {droga.tipo}</p>
-          <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:'#374151' }}>{droga.indicacao}</p>
-          <p style={{ margin:'3px 0 0 0', fontSize:'10px', color:'#6B7280' }}>{droga.apresentacao}</p>
-        </div>
 
-        {/* Bolus */}
-        <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
-          <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>BOLUS / DOSE ISOLADA</p>
-          <p style={{ margin:0, fontSize:'12px', color:'#1F2937', fontWeight:'600' }}>{droga.bolus}</p>
-          {p > 0 && droga.unidade !== 'mcg/kg/dose' && droga.unidade !== 'mg/kg/dose' && (
-            <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-              Para {p} kg: <strong>{parseFloat((0.075 * p).toFixed(2))}–{parseFloat((0.1 * p).toFixed(2))} {droga.id==='fentanil'?'mcg':'mg'}</strong>
-            </p>
-          )}
-          {p > 0 && droga.id === 'dipirona' && (
-            <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-              Para {p} kg: <strong>{Math.round(15*p)}–{Math.round(Math.min(25*p,1000))} mg</strong> → {parseFloat((Math.min(25*p,1000)/500).toFixed(2))} mL da amp
-            </p>
-          )}
-          {p > 0 && droga.id === 'tramadol' && (
-            <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-              Para {p} kg: <strong>{Math.round(Math.min(p,100))}–{Math.round(Math.min(2*p,100))} mg</strong> IV em 15-20 min
-            </p>
-          )}
-          {p > 0 && droga.id === 'clonidina' && (
-            <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-              Para {p} kg: <strong>{Math.round(2*p)}–{Math.round(5*p)} mcg</strong> VO q6-12h
-            </p>
-          )}
-          {p > 0 && droga.id === 'propofol' && (
-            <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-              Para {p} kg: <strong>{parseFloat((1*p).toFixed(1))}–{parseFloat((2*p).toFixed(1))} mg</strong> = {parseFloat((p*1/10).toFixed(2))}–{parseFloat((p*2/10).toFixed(2))} mL (10 mg/mL)
-            </p>
-          )}
-        </div>
-
-        {/* BIC */}
-        {droga.bic && drogaA?.id === droga.id || droga.bic && drogaS?.id === droga.id ? (
-          <div>
-            <p style={{ margin:'0 0 6px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>INFUSÃO CONTÍNUA (BIC)</p>
-
-            {/* Diluição */}
-            <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
-              <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280' }}>DILUIÇÃO · {droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL SF</p>
-              {dil && p > 0 ? (
-                <>
-                  <p style={{ margin:0, fontSize:'13px', fontWeight:'800', color:droga.cor }}>
-                    {dil.qtd} {droga.unidade.includes('mcg')?'mcg':'mg'} de {droga.nome}
-                  </p>
-                  <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:'#374151' }}>
-                    Retirar <strong>{dil.volDroga} mL</strong> + <strong>{dil.volSF} mL</strong> SF → {droga.volDil} mL total
-                  </p>
-                  <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
-                    Conc final: {dil.conc} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
-                  </p>
-                </>
-              ) : (
-                <p style={{ margin:0, fontSize:'11px', color:'#9CA3AF' }}>Insira o peso acima para calcular</p>
-              )}
-            </div>
-
-            {/* Tabela velocidades */}
-            <div style={{ border:'1px solid #E5E7EB', borderRadius:'8px', overflow:'hidden' }}>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor:droga.corBg, padding:'6px 12px' }}>
-                <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>DOSE ({droga.unidade})</span>
-                <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>mL/h</span>
-              </div>
-              {droga.bic.map((dose, i) => {
-                const vel = calcVel(droga, dose);
-                const isStart = dose === droga.start;
-                return (
-                  <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?'#F9FAFB':'#FFF'), borderTop:'1px solid #E5E7EB', padding:'7px 12px' }}>
-                    <span style={{ fontSize:'12px', color:'#374151', fontWeight:isStart?'700':'400' }}>
-                      {dose}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
-                    </span>
-                    <span style={{ fontSize:'13px', color:isStart?droga.cor:'#1F2937', fontWeight:'800' }}>{vel}</span>
-                  </div>
-                );
-              })}
-            </div>
-            <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
-              Velocidade independente do peso com esta diluição ({droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL)
-            </p>
-          </div>
-        ) : null}
-
-        {/* Alerta */}
-        {droga.alerta && (
-          <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'8px 10px', borderLeft:'3px solid #F97316' }}>
-            <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'600' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />{droga.alerta}</p>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -400,7 +401,7 @@ export default function AnalgesiaSedacao() {
                 </button>
               ))}
             </div>
-            <DrugPanel droga={drogaA} />
+            <DrugPanel droga={drogaA} p={p} drogaA={drogaA} drogaS={drogaS} />
           </div>
         </div>
       )}
@@ -426,7 +427,7 @@ export default function AnalgesiaSedacao() {
                 </button>
               ))}
             </div>
-            <DrugPanel droga={drogaS} />
+            <DrugPanel droga={drogaS} p={p} drogaA={drogaA} drogaS={drogaS} />
           </div>
         </div>
       )}

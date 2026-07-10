@@ -9,7 +9,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Calculator, ClipboardList, BookOpen, Activity,
   AlertTriangle, Info, TrendingUp, Printer,
-  RefreshCw, ChevronDown, ChevronUp, CheckCircle,
+  RefreshCw, ChevronDown, ChevronUp,
 } from 'lucide-react';
 
 /* ── Paleta ── */
@@ -667,7 +667,7 @@ export default function IctericiaNeonatal() {
   /* ── Resultado AAP ── */
   function renderAAP(r) {
     const {ig,hours,biliN,biliType,hasNeuro,photoThresh,exsangThresh,escalThresh,
-           diff,zone,baRatio,baAlarm,baLimit,riseRate,bdN,albN} = r;
+           diff,zone,baRatio,baAlarm,baLimit,riseRate,bdN} = r;
     return (
       <>
         {/* Banner protocolo */}
@@ -1014,12 +1014,6 @@ export default function IctericiaNeonatal() {
               </thead>
               <tbody>
                 {tableData.E.map((row,ri) => {
-                  const fields = [
-                    {field:'photoL',other:'photoH'},
-                    {field:'photoH',other:'photoL'},
-                    {field:'estL',other:'estH'},
-                    {field:'estH',other:'estL'},
-                  ];
                   function eCell(field) {
                     const isEdit = editCell && editCell.key==='E' && editCell.ri===ri && editCell.field===field;
                     if (isEdit) return (

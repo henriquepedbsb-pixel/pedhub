@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw } from 'lucide-react';
 
 const parseNum = (val) => {

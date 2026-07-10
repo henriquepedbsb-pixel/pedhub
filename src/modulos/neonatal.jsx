@@ -1,7 +1,6 @@
 // src/modulos/neonatal.jsx
 // Hub Neonatal — tela de entrada para os módulos de Neonatologia
 
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Baby,

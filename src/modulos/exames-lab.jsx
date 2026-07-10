@@ -1,6 +1,6 @@
 // src/modulos/exames-lab.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Microscope, Info, AlertTriangle, AlertCircle } from "lucide-react";
 
 const CS = '#0EA5E9';

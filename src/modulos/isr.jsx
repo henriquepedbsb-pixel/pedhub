@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

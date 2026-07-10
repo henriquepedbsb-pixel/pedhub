@@ -120,7 +120,7 @@ function PesoInput({ value, set, cor }) {
 }
 
 async function copiarTxt(txt, setCopied) {
-  try { await navigator.clipboard.writeText(txt); } catch (_) {}
+  try { await navigator.clipboard.writeText(txt); } catch { /* clipboard indisponível — ignora */ }
   setCopied(true);
   setTimeout(() => setCopied(false), 2500);
 }

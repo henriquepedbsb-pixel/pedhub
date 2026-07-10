@@ -1,7 +1,6 @@
 // src/modulos/pediatria-geral.jsx
 // Hub Pediatria Geral — tela de entrada para os módulos de Pediatria Geral
 
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Stethoscope,

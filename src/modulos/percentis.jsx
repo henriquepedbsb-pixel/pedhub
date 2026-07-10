@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta helpers/dados compartilhados com outros módulos; Fast Refresh não se aplica a este módulo de rota lazy. */
 // src/modulos/percentis.jsx — PedHub v1.3
 // Curvas: OMS 0–60m | Intergrowth-21st (nasc.) 24–42s | Intergrowth Postnatal 27–64s | Fenton 2013 24–40s
 //
