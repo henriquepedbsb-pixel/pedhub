@@ -103,16 +103,45 @@ const MODULOS = [
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
 const EM_BREVE = [];
 
+/* ─── Estilos de interação (hover/toque/entrada) — injetados uma vez ───────── */
+/* Usa custom properties (--sh / --sh-hover) para que o :hover do CSS possa    */
+/* animar a sombra sem conflitar com os estilos inline de cada elemento.       */
+function HubStyles() {
+  return (
+    <style>{`
+      @keyframes ph-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      @keyframes ph-toast { from { opacity: 0; transform: translate(-50%, 14px); } to { opacity: 1; transform: translate(-50%, 0); } }
+      .ph-press { transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .24s ease, border-color .2s ease; box-shadow: var(--sh, 0 1px 3px rgba(16,24,40,.06)); -webkit-tap-highlight-color: transparent; }
+      .ph-press:hover { transform: translateY(-3px); box-shadow: var(--sh-hover, 0 12px 26px rgba(16,24,40,.12)); }
+      .ph-press:active { transform: translateY(-1px) scale(.985); transition-duration: .1s; }
+      .ph-chev { transition: transform .2s ease; }
+      .ph-press:hover .ph-chev { transform: translateX(4px); }
+      .ph-rise { animation: ph-rise .5s cubic-bezier(.2,.7,.3,1) both; }
+      .ph-search { transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+      .ph-search:focus-within { background: rgba(255,255,255,.24); border-color: rgba(255,255,255,.55); box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+      .ph-input::placeholder { color: rgba(255,255,255,.65); }
+      @media (prefers-reduced-motion: reduce) {
+        .ph-press, .ph-press:hover, .ph-press:active, .ph-rise, .ph-chev, .ph-press:hover .ph-chev {
+          transition: none !important; animation: none !important; transform: none !important;
+        }
+      }
+    `}</style>
+  );
+}
+
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
   const { label, desc, Icon, cor } = modulo;
   return (
     <button
       onClick={onClick}
+      className="ph-press"
       style={{
+        "--sh": "0 1px 3px rgba(16,24,40,0.06)",
+        "--sh-hover": `0 14px 30px ${cor}26, 0 4px 10px rgba(16,24,40,0.08)`,
         background: "#fff",
-        border: "1.5px solid #F3F4F6",
-        borderRadius: 14,
+        border: "1px solid #EEF0F4",
+        borderRadius: 16,
         padding: "15px 13px",
         cursor: "pointer",
         textAlign: "left",
@@ -120,12 +149,12 @@ function ModuloCard({ modulo, onClick }) {
         flexDirection: "column",
         gap: 8,
         width: "100%",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       }}
     >
       <div style={{
-        width: 40, height: 40, borderRadius: 12,
-        background: cor + "18",
+        width: 42, height: 42, borderRadius: 13,
+        background: `linear-gradient(135deg, ${cor}24, ${cor}12)`,
+        border: `1px solid ${cor}22`,
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0,
       }}>
@@ -133,18 +162,18 @@ function ModuloCard({ modulo, onClick }) {
       </div>
       <div>
         <p style={{
-          fontWeight: 700, fontSize: 16,
-          color: "#111827", margin: "0 0 3px",
+          fontWeight: 700, fontSize: 15.5,
+          color: "#0F172A", margin: "0 0 3px",
           lineHeight: 1.3,
           wordBreak: "break-word", hyphens: "auto",
         }}>{label}</p>
         <p style={{
-          fontSize: 13, color: "#9CA3AF",
+          fontSize: 12.5, color: "#94A3B8",
           margin: 0, lineHeight: 1.45,
           wordBreak: "break-word",
         }}>{desc}</p>
       </div>
-      <div style={{ height: 3, borderRadius: 2, background: cor + "40", marginTop: "auto" }} />
+      <div style={{ height: 3, borderRadius: 2, background: `linear-gradient(90deg, ${cor}, ${cor}44)`, marginTop: "auto" }} />
     </button>
   );
 }
@@ -198,11 +227,15 @@ function PediatriaGateway({ count, onClick }) {
   return (
     <button
       onClick={onClick}
+      className="ph-press ph-rise"
       style={{
+        "--sh": "0 4px 16px rgba(30,64,175,0.28)",
+        "--sh-hover": "0 18px 38px rgba(30,64,175,0.40)",
+        position: "relative", overflow: "hidden",
         gridColumn: "1 / -1",
         background: "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)",
         border: "none",
-        borderRadius: 16,
+        borderRadius: 18,
         padding: "18px 18px",
         cursor: "pointer",
         textAlign: "left",
@@ -210,18 +243,22 @@ function PediatriaGateway({ count, onClick }) {
         alignItems: "center",
         gap: 14,
         width: "100%",
-        boxShadow: "0 2px 10px rgba(30,64,175,0.25)",
       }}
     >
       <div style={{
+        position: "absolute", top: -46, right: -30, width: 150, height: 150, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,255,255,0.28), transparent 70%)", pointerEvents: "none",
+      }} />
+      <div style={{
         width: 48, height: 48, borderRadius: 14,
         background: "rgba(255,255,255,0.18)",
+        border: "1px solid rgba(255,255,255,0.28)",
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0,
       }}>
         <Stethoscope size={26} color="#fff" />
       </div>
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, position: "relative" }}>
         <p style={{ fontWeight: 700, fontSize: 17, color: "#fff", margin: "0 0 3px", lineHeight: 1.2 }}>
           Pediatria Geral
         </p>
@@ -229,7 +266,7 @@ function PediatriaGateway({ count, onClick }) {
           {count} ferramentas · ambulatório à emergência pediátrica
         </p>
       </div>
-      <ChevronRight size={22} color="#fff" style={{ flexShrink: 0 }} />
+      <ChevronRight size={22} color="#fff" className="ph-chev" style={{ flexShrink: 0, position: "relative" }} />
     </button>
   );
 }
@@ -239,11 +276,15 @@ function NeonatalGateway({ count, onClick }) {
   return (
     <button
       onClick={onClick}
+      className="ph-press ph-rise"
       style={{
+        "--sh": "0 4px 16px rgba(14,116,144,0.28)",
+        "--sh-hover": "0 18px 38px rgba(14,116,144,0.40)",
+        position: "relative", overflow: "hidden",
         gridColumn: "1 / -1",
         background: "linear-gradient(135deg, #0E7490 0%, #155E75 100%)",
         border: "none",
-        borderRadius: 16,
+        borderRadius: 18,
         padding: "18px 18px",
         cursor: "pointer",
         textAlign: "left",
@@ -251,18 +292,22 @@ function NeonatalGateway({ count, onClick }) {
         alignItems: "center",
         gap: 14,
         width: "100%",
-        boxShadow: "0 2px 10px rgba(14,116,144,0.25)",
       }}
     >
       <div style={{
+        position: "absolute", top: -46, right: -30, width: 150, height: 150, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,255,255,0.24), transparent 70%)", pointerEvents: "none",
+      }} />
+      <div style={{
         width: 48, height: 48, borderRadius: 14,
         background: "rgba(255,255,255,0.18)",
+        border: "1px solid rgba(255,255,255,0.28)",
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0,
       }}>
         <Baby size={26} color="#fff" />
       </div>
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, position: "relative" }}>
         <p style={{ fontWeight: 700, fontSize: 17, color: "#fff", margin: "0 0 3px", lineHeight: 1.2 }}>
           Neonatologia
         </p>
@@ -270,7 +315,7 @@ function NeonatalGateway({ count, onClick }) {
           {count} ferramentas · do parto à alta da UCIN
         </p>
       </div>
-      <ChevronRight size={22} color="#fff" style={{ flexShrink: 0 }} />
+      <ChevronRight size={22} color="#fff" className="ph-chev" style={{ flexShrink: 0, position: "relative" }} />
     </button>
   );
 }
@@ -309,15 +354,22 @@ export default function PedHub() {
       fontFamily: "'DM Sans', sans-serif",
       maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
-      background: "#F9FAFB",
+      background: "#F6F8FB",
     }}>
+      <HubStyles />
       {/* Hero */}
       <div style={{
-        background: "linear-gradient(135deg, #1E40AF 0%, #0E7490 100%)",
-        padding: "28px 20px 24px",
+        position: "relative", overflow: "hidden",
+        background: "linear-gradient(135deg, #1E3A8A 0%, #1E40AF 42%, #0E7490 100%)",
+        padding: "30px 20px 26px",
         color: "#fff",
+        borderBottomLeftRadius: 26, borderBottomRightRadius: 26,
+        boxShadow: "0 10px 30px rgba(14,116,144,0.20)",
       }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+        {/* brilhos radiais */}
+        <div style={{ position: "absolute", top: -70, right: -40, width: 210, height: 210, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -80, left: -50, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.32), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, letterSpacing: "0.1em", margin: "0 0 4px" }}>
               PEDSUITE
@@ -333,32 +385,36 @@ export default function PedHub() {
             </p>
           </div>
           <div style={{
-            background: "rgba(255,255,255,0.15)",
-            borderRadius: 12, padding: "6px 10px",
-            fontSize: 11, fontWeight: 700, color: "#fff",
+            background: "rgba(255,255,255,0.16)",
+            border: "1px solid rgba(255,255,255,0.28)",
+            backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+            borderRadius: 999, padding: "6px 12px",
+            fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
           }}>
             {MODULOS.length} módulos
           </div>
         </div>
 
         {/* Busca */}
-        <div style={{
+        <div className="ph-search" style={{
+          position: "relative", zIndex: 1,
           marginTop: 18,
           background: "rgba(255,255,255,0.15)",
-          borderRadius: 10,
+          borderRadius: 12,
           display: "flex", alignItems: "center", gap: 10,
-          padding: "10px 14px",
-          border: "1px solid rgba(255,255,255,0.25)",
+          padding: "11px 14px",
+          border: "1px solid rgba(255,255,255,0.28)",
         }}>
-          <Search size={16} color="rgba(255,255,255,0.7)" />
+          <Search size={16} color="rgba(255,255,255,0.75)" />
           <input
             type="text"
+            className="ph-input"
             placeholder="Buscar módulo…"
             value={busca}
             onChange={e => setBusca(e.target.value)}
             style={{
               background: "none", border: "none", outline: "none",
-              color: "#fff", fontSize: 14, flex: 1,
+              color: "#fff", fontSize: 14, flex: 1, minWidth: 0,
               fontFamily: "'DM Sans', sans-serif",
             }}
           />
@@ -462,9 +518,11 @@ export default function PedHub() {
       {toastN > 0 && (
         <div style={{
           position: "fixed", left: "50%", bottom: 24, transform: "translateX(-50%)",
-          background: "#111827", color: "#fff", fontSize: 13, fontWeight: 600,
-          padding: "10px 18px", borderRadius: 24, boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+          background: "rgba(17,24,39,0.96)", color: "#fff", fontSize: 13, fontWeight: 600,
+          padding: "11px 20px", borderRadius: 999, boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
           zIndex: 200, maxWidth: "90%", textAlign: "center",
+          animation: "ph-toast .3s cubic-bezier(.2,.7,.3,1) both",
         }}>
           Em desenvolvimento — em breve no PedHub
         </div>

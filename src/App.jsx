@@ -144,7 +144,10 @@ function Header() {
   return (
     <div style={{
       position: "sticky", top: 0, zIndex: 100,
-      background: "#ffffff", borderBottom: "2px solid #F3F4F6",
+      background: "rgba(255,255,255,0.82)",
+      backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+      borderBottom: "1px solid #EEF0F4",
+      boxShadow: "0 4px 16px rgba(16,24,40,0.04)",
       width: "100%",
     }}>
       <div style={{
@@ -156,12 +159,19 @@ function Header() {
           onClick={() => navigate(destinoVoltar)}
           aria-label="Voltar"
           style={{
-            background: "none", border: "none", cursor: "pointer",
-            padding: 4, display: "flex", alignItems: "center",
-            borderRadius: 8,
+            background: modulo.cor + "12", border: "none", cursor: "pointer",
+            padding: 7, display: "flex", alignItems: "center",
+            borderRadius: 10,
+            transition: "background 0.18s ease, transform 0.12s ease",
+            WebkitTapHighlightColor: "transparent",
           }}
+          onMouseEnter={e => { e.currentTarget.style.background = modulo.cor + "22"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = modulo.cor + "12"; }}
+          onPointerDown={e => { e.currentTarget.style.transform = "scale(0.92)"; }}
+          onPointerUp={e => { e.currentTarget.style.transform = "scale(1)"; }}
+          onPointerLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
         >
-          <ArrowLeft size={22} color={modulo.cor} />
+          <ArrowLeft size={20} color={modulo.cor} />
         </button>
         <span style={{
           fontFamily: "'DM Sans', sans-serif",
