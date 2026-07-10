@@ -115,14 +115,14 @@ export default function TceLeve() {
           <div>
             <InfoBox color={PRIMARY}><strong>PECARN (Kuppermann 2009) · Lactentes &lt; 2 anos.</strong> GCS 14–15, sem perda de consciência prolongada. Identifica crianças de muito baixo risco de lesão intracraniana clinicamente importante (LIICI).</InfoBox>
             <AlertBox text="*Mecanismos de ALTO RISCO: colisão de veículo a motor com ejeção, morte de outro ocupante ou capotamento; queda > 0,9 m (lactente) / > 1,5 m (criança maior); pedestre/ciclista sem capacete atropelado; golpe por objeto de alto impacto." color="#D97706" />
-            <PecarnCard items={PECARN_UNDER2} grupo="< 2 anos" color={PRIMARY} />
+            <PecarnCard items={PECARN_UNDER2} />
           </div>
         )}
         {tab === 1 && (
           <div>
             <InfoBox color="#5B21B6"><strong>PECARN (Kuppermann 2009) · Crianças ≥ 2 anos.</strong> GCS 14–15. Risco de LIICI em baixo risco: &lt; 0,05%.</InfoBox>
             <AlertBox text="*Mecanismos de ALTO RISCO: os mesmos descritos na aba < 2 anos. Queda > 1,5 m nessa faixa." color="#D97706" />
-            <PecarnCard items={PECARN_OVER2} grupo=">= 2 anos" color="#5B21B6" />
+            <PecarnCard items={PECARN_OVER2} />
           </div>
         )}
         {tab === 2 && (

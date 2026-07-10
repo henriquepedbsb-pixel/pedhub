@@ -77,6 +77,10 @@ function parseDose(s) {
 
 const CAT_CORES = { "Antibiótico":"#10B981","Analgésico":"#EF4444","Corticoide":"#F97316","Respiratório":"#2563EB","Antihistamínico":"#F59E0B","Gastrointestinal":"#D97706","Neurológico":"#7C3AED","Antifúngico":"#059669","Antiviral":"#0891B2","Suplemento":"#10B981","Antídoto":"#DC2626" };
 
+// Categorias do filtro derivadas dos próprios dados — garante que toda categoria
+// com medicamentos tenha um chip (nenhuma droga fica inacessível pelo filtro).
+const CATEGORIAS = ["Todos", ...new Set(DRUGS.map(d => d.cat))];
+
 // ─── Conversor de equivalência de corticosteroides sistêmicos ─────────────────
 // Doses equivalentes (potência anti-inflamatória/glicocorticoide), referência
 // clássica amplamente citada (Harriet Lane, UpToDate): 20mg hidrocortisona ≈
@@ -512,11 +516,10 @@ export default function Pedfarma() {
             style={{ width: "100%", paddingLeft: 36, padding: "9px 12px 9px 36px", borderRadius: 8, fontSize: 14, border: "1.5px solid #E5E7EB", outline: "none", background: "#F9FAFB", boxSizing: "border-box" }} />
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", marginTop: 10, paddingBottom: 4 }}>
-          {["Todos","Antibiótico","Analgésico","Corticoide","Respiratório","GI","Neurológico"].map(c => {
-            const label = c === "GI" ? "Gastrointestinal" : c;
-            const active = cat === label || (c === "GI" && cat === "Gastrointestinal");
+          {CATEGORIAS.map(c => {
+            const active = cat === c;
             return (
-              <button key={c} onClick={() => setCat(label === "Todos" ? "Todos" : label)}
+              <button key={c} onClick={() => setCat(c)}
                 style={{ flexShrink: 0, padding: "5px 12px", borderRadius: 20, fontSize: 11, fontWeight: active ? 700 : 500, cursor: "pointer", border: "none", background: active ? PRIMARY : "#F3F4F6", color: active ? "#fff" : "#6B7280" }}>
                 {c}
               </button>
