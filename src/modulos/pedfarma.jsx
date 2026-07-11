@@ -1,10 +1,11 @@
 // src/modulos/pedfarma.jsx
+/* eslint-disable react-refresh/only-export-components -- exporta calcularDose/DRUGS (funções/dados puros) para testes unitários */
 import { useState } from "react";
 import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 
 const PRIMARY = "#8B5CF6";
 
-const DRUGS = [
+export const DRUGS = [
   // ─── Antibióticos ───────────────────────────────────────────────────────────
   { id:"amoxicilina",     cat:"Antibiótico", nome:"Amoxicilina",                 via:"VO",    dose:"40–90 mg/kg/dia",   freq:"8/8h ou 12/12h",  max:"3 g/dia",   obs:"90 mg/kg/dia para pneumonia/otite de alto risco · Suspensão 250mg/5mL ou 400mg/5mL", calc:{min:40,max:90,unidade:"dia",tomadas:[2,3],tetoMg:3000,tetoTipo:"dia",susp:[{label:"250 mg/5 mL",mgPer5:250,tomadas:3,freqLabel:"8/8h"},{label:"400 mg/5 mL",mgPer5:400,tomadas:2,freqLabel:"12/12h"}]} },
   { id:"amoxiclav",       cat:"Antibiótico", nome:"Amoxicilina+Clavulanato",     via:"VO",    dose:"40–90 mg/kg/dia (fração amox)", freq:"8/8h ou 12/12h",   max:"3 g/dia",   obs:"Dose pela fração amoxicilina (igual à amoxicilina). 250 mg/5 mL: 8/8h · 400 mg/5 mL: 12/12h · Alta dose (90 mg/kg/dia) preferir formulação 400 (ES) pela menor carga de clavulanato", calc:{min:40,max:90,unidade:"dia",tomadas:[2,3],tetoMg:3000,tetoTipo:"dia",susp:[{label:"250/62,5 por 5 mL (amox 250)",mgPer5:250,tomadas:3,freqLabel:"8/8h"},{label:"400/57 por 5 mL (amox 400)",mgPer5:400,tomadas:2,freqLabel:"12/12h"}]} },
@@ -181,7 +182,7 @@ const parseFld = (v) => {
   return isNaN(n) ? null : n;
 };
 
-function calcularDose(c, peso, alvo) {
+export function calcularDose(c, peso, alvo) {
   if (!c || !peso || peso <= 0) return null;
 
   // ── Fármacos dosados por DOSE (mg/kg/dose): analgésicos, alguns outros ──

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta holliday/parsePeso (funções puras) para testes unitários */
 import { useState } from "react";
 import { Droplets, Info, AlertTriangle, CheckCircle } from "lucide-react";
 
@@ -7,12 +8,12 @@ const PRIMARY = "#3B82F6";
 const NACL20_MEQ_ML = 3.423;  // NaCl 20%: 200 g/L ÷ 58,44 g/mol
 const KCL10_MEQ_ML  = 1.341;  // KCl 10%:  100 g/L ÷ 74,55 g/mol
 
-function parsePeso(s) {
+export function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 150 ? v : null;
 }
 
-function holliday(w) {
+export function holliday(w) {
   let vol;
   if (w <= 10)      vol = w * 100;
   else if (w <= 20) vol = 1000 + (w - 10) * 50;

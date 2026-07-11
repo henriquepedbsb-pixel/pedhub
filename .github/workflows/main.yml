@@ -27,6 +27,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm test          # cálculos verificados — falha bloqueia o deploy
+
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
