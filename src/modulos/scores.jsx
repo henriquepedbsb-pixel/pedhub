@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta as funções de interpretação de score para testes unitários */
 import { useState } from "react";
 import { Info, CheckCircle } from "lucide-react";
 
@@ -45,7 +46,7 @@ const GORELICK_ITEMS = [
   "Extremidades frias / marmoreadas",
 ];
 
-function gorelickResult(score) {
+export function gorelickResult(score) {
   if (score <= 2) return { grau: "Sem desidratação ou leve (< 5%)", color: "#10B981", condutas: ["Plano A — SRO domiciliar", "50–100 mL SRO por evacuação diarreica", "Manter aleitamento", "Retornar se piora"] };
   if (score <= 5) return { grau: "Desidratação moderada (5–9%)", color: "#F59E0B", condutas: ["Plano B — reidratação oral na UBS/UPA", "75 mL/kg de SRO em 4 horas", "Reavaliar a cada hora", "Se falha → Plano C"] };
   return { grau: "Desidratação grave (≥ 10%) / Choque", color: "#EF4444", condutas: ["Plano C — SF 0,9% 20 mL/kg IV em 20–30 min", "Repetir bolus até estabilização (máx 60 mL/kg/h)", "Acesso intraósseo se AVP impossível em 5 min", "UTI pediátrica"] };
@@ -87,7 +88,7 @@ const WESTLEY_PARAMS = [
   { label: "Nível de consciência",     opts: [{ label: "Normal", v: 0 }, { label: "Alterado", v: 5 }] },
 ];
 
-function westleyResult(score) {
+export function westleyResult(score) {
   if (score <= 2)  return { grau: "Crupe leve",      color: "#10B981", condutas: ["Dexametasona 0,15–0,3 mg/kg VO dose única (máx 10 mg)", "Alta com orientações · Retorno se piora"] };
   if (score <= 5)  return { grau: "Crupe moderado",  color: "#D97706", condutas: ["Dexametasona 0,3–0,6 mg/kg VO/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada 0,5 mL/kg sol. 1:1.000 (máx 5 mL) + 3 mL SF", "Observar ≥ 3–4 h após epinefrina · alta ou internação conforme resposta"] };
   if (score <= 11) return { grau: "Crupe grave",     color: "#EF4444", condutas: ["Dexametasona 0,6 mg/kg IV/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada imediata: 0,5 mL/kg sol. 1:1.000 (máx 5 mL)", "O₂ suplementar · monitorização contínua · internação"] };
@@ -131,7 +132,7 @@ const PEWS_PARAMS = [
   { label: "Respiratório",     opts: [{ label: "Normal para idade", v: 0 }, { label: "FR > 10 acima normal · O₂ ≤ 30%", v: 1 }, { label: "FR > 20 acima normal · O₂ > 30%", v: 2 }, { label: "FR < 5 ou > 5 acima + retração + gemência", v: 3 }] },
 ];
 
-function pewsResult(score) {
+export function pewsResult(score) {
   if (score <= 1)  return { grau: "Baixo risco", color: "#10B981", condutas: ["Monitorização de rotina", "Reavaliação horária"] };
   if (score <= 3)  return { grau: "Risco moderado", color: "#F59E0B", condutas: ["Aumentar frequência de avaliações (30 min)", "Notificar médico responsável", "Considerar transferência para área de maior vigilância"] };
   if (score <= 6)  return { grau: "Risco alto", color: "#EF4444", condutas: ["Avaliação médica imediata", "Considerar transferência para UTI", "Monitorização contínua", "Preparar protocolo de resposta rápida"] };
@@ -224,7 +225,7 @@ const FINNEGAN_MAX_SCORE = FINNEGAN_SECOES.reduce(
   0
 );
 
-function finneganResult(score) {
+export function finneganResult(score) {
   if (score < 8) {
     return {
       grau: "Abaixo do limiar farmacológico",

@@ -1,8 +1,21 @@
+/* eslint-disable react-refresh/only-export-components -- exporta helpers de data e calcularIdadesPMA para testes unitários */
 import { useState } from "react";
 import { CalendarClock, Info, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#2563EB";
 const TERMO_DIAS = 280; // 40 semanas
+
+// Idades a partir do dia de vida (cronoDias) e IG ao nascer (igSem/igDia).
+// pmaDias = idade pós-menstrual (IGPM). corrigidaDias = dias além do termo (40 sem).
+export function calcularIdadesPMA(cronoDias, igSem, igDia) {
+  const gaNascDias    = igSem * 7 + igDia;
+  const pmaDias       = gaNascDias + cronoDias;
+  const aTermo        = igSem >= 37;
+  const fase          = pmaDias < TERMO_DIAS ? "igpm" : "corrigida";
+  const corrigidaDias = pmaDias - TERMO_DIAS;   // negativo enquanto < 40 sem
+  const faltaPara40   = TERMO_DIAS - pmaDias;
+  return { gaNascDias, pmaDias, aTermo, fase, corrigidaDias, faltaPara40 };
+}
 
 /* ─── Utilitários de data ─────────────────────────────────────────────────── */
 function maskDate(v) {
@@ -12,7 +25,7 @@ function maskDate(v) {
   return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
 }
 
-function parseDateBR(dataBR) {
+export function parseDateBR(dataBR) {
   if (!dataBR || dataBR.length < 10) return null;
   const parts = dataBR.split("/");
   if (parts.length !== 3) return null;
@@ -30,11 +43,11 @@ function parseDateBR(dataBR) {
   return dt;
 }
 
-function diffDias(d1, d2) {
+export function diffDias(d1, d2) {
   return Math.floor((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-function addDias(date, n) {
+export function addDias(date, n) {
   const d = new Date(date.getTime());
   d.setDate(d.getDate() + n);
   return d;
@@ -51,7 +64,7 @@ function hojeBR() {
 }
 
 /* ─── Formatação de idade ─────────────────────────────────────────────────── */
-function fmtSemDias(totalDias) {
+export function fmtSemDias(totalDias) {
   if (totalDias < 0) totalDias = 0;
   const s = Math.floor(totalDias / 7);
   const dd = totalDias % 7;
@@ -119,19 +132,11 @@ export default function IdadeGestacional() {
 
   let resultado = null;
   if (tudoValido) {
-    const cronoDias    = diffDias(nasc, ref);
-    const gaNascDias   = igSem * 7 + igDia;
-    const pmaDias      = gaNascDias + cronoDias;
-    const aTermo       = igSem >= 37; // correção só se aplica a prematuros (< 37 sem)
-    const dataTermo    = addDias(nasc, TERMO_DIAS - gaNascDias); // data em que IGPM = 40 sem
-    const fase         = pmaDias < TERMO_DIAS ? "igpm" : "corrigida";
-    const corrigidaDias = pmaDias - TERMO_DIAS; // pode ser negativo na fase igpm
-    const faltaPara40   = TERMO_DIAS - pmaDias;
+    const cronoDias = diffDias(nasc, ref);
+    const idades    = calcularIdadesPMA(cronoDias, igSem, igDia); // pura (testada)
+    const dataTermo = addDias(nasc, TERMO_DIAS - idades.gaNascDias); // data em que IGPM = 40 sem
 
-    resultado = {
-      cronoDias, gaNascDias, pmaDias, aTermo, dataTermo, fase,
-      corrigidaDias, faltaPara40,
-    };
+    resultado = { cronoDias, ...idades, dataTermo };
   }
 
   const limparDisabled = !dataNasc && !igSemRaw && !igDiaRaw;
