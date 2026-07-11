@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta correções puras (K/Ca/Mg) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
 
@@ -24,6 +25,44 @@ const CBR = '#DDD6FE';
 const NACL3_CONC  = 0.5133; // mEq/mL
 const KCL10_CONC  = 1.341;  // mEq/mL (verificado: 1000mg/74.55g·mol = 13.41 mEq/10mL)
 const MGSO4_CONC  = 500;    // mg/mL (MgSO4 50%)
+
+// ─── Correções puras (testadas) — dose/volume por peso e valor sérico ───────
+export function corrigirPotassio(p, k) {
+  if (!(p > 0 && k > 0)) return null;
+  if (k < 3.5) {
+    const dose03 = parseFloat((0.3 * p).toFixed(1));
+    const vol03  = parseFloat((dose03 / KCL10_CONC).toFixed(2));
+    const dose05 = parseFloat((0.5 * p).toFixed(1));
+    const vol05  = parseFloat((dose05 / KCL10_CONC).toFixed(2));
+    const sfPerif   = Math.ceil((dose05 / 0.04) / 10) * 10;
+    const sfCentral = Math.ceil((dose05 / 0.08) / 10) * 10;
+    return { tipo: 'hipo', k, dose03, vol03, dose05, vol05, sfPerif, sfCentral };
+  }
+  if (k >= 5.5) {
+    const volCa    = parseFloat(Math.min(p * 1.0, 20).toFixed(1));
+    const mgCa     = Math.round(Math.min(p * 100, 2000));
+    const glicose  = parseFloat((0.5 * p).toFixed(1));
+    const insulina = parseFloat((0.1 * p).toFixed(2));
+    return { tipo: 'hiper', k, volCa, mgCa, glicose, insulina };
+  }
+  return null;
+}
+export function corrigirCalcio(p, ca) {
+  if (!(p > 0 && ca > 0 && ca < 8.5)) return null;
+  const vol1 = parseFloat(Math.min(p * 1.0, 20).toFixed(1));
+  const vol2 = parseFloat(Math.min(p * 2.0, 20).toFixed(1));
+  const mg1  = Math.round(Math.min(p * 100, 2000));
+  const mg2  = Math.round(Math.min(p * 200, 2000));
+  return { ca, vol1, vol2, mg1, mg2 };
+}
+export function corrigirMagnesio(p, mg) {
+  if (!(p > 0 && mg > 0 && mg < 1.5)) return null;
+  const dose25 = Math.round(Math.min(25 * p, 2000));
+  const dose50 = Math.round(Math.min(50 * p, 2000));
+  const vol25  = parseFloat((dose25 / MGSO4_CONC).toFixed(2));
+  const vol50  = parseFloat((dose50 / MGSO4_CONC).toFixed(2));
+  return { mg, dose25, dose50, vol25, vol50 };
+}
 
 const TABS = [
   { id: 'na', label: 'Sódio',     icon: Droplets },
@@ -120,52 +159,10 @@ export default function Eletrolitos() {
       }
     }
 
-    // ── Potássio ─────────────────────────────────────────────────────────────
-    let kC = null;
-    if (p > 0 && k > 0) {
-      if (k < 3.5) {
-        // Hipocalemia: KCl 10% IV
-        const dose03   = parseFloat((0.3 * p).toFixed(1));
-        const vol03    = parseFloat((dose03 / KCL10_CONC).toFixed(2));
-        const dose05   = parseFloat((0.5 * p).toFixed(1));
-        const vol05    = parseFloat((dose05 / KCL10_CONC).toFixed(2));
-        // Volume mínimo de SF 0,9% para diluir a dose de 0,5 mEq/kg dentro do
-        // limite de concentração: ≤ 40 mEq/L periférico · ≤ 80 mEq/L central
-        const sfPerif   = Math.ceil((dose05 / 0.04) / 10) * 10;
-        const sfCentral = Math.ceil((dose05 / 0.08) / 10) * 10;
-        kC = { tipo:'hipo', k, dose03, vol03, dose05, vol05, sfPerif, sfCentral };
-      } else if (k >= 5.5) {
-        // Hipercalemia: gluconato Ca 10% para estabilização de membrana
-        const volCa  = parseFloat(Math.min(p * 1.0, 20).toFixed(1)); // 1 mL/kg, máx 20 mL
-        const mgCa   = Math.round(Math.min(p * 100, 2000));
-        // Glicose + Insulina (shift intracelular)
-        const glicose = parseFloat((0.5 * p).toFixed(1)); // 0.5 g/kg
-        const insulina = parseFloat((0.1 * p).toFixed(2)); // 0.1 U/kg regular
-        kC = { tipo:'hiper', k, volCa, mgCa, glicose, insulina };
-      }
-    }
-
-    // ── Cálcio ───────────────────────────────────────────────────────────────
-    let caC = null;
-    if (p > 0 && ca > 0 && ca < 8.5) {
-      // Hipocalcemia: gluconato Ca 10% — 100-200 mg/kg total
-      const vol1 = parseFloat(Math.min(p * 1.0, 20).toFixed(1)); // 1 mL/kg (100 mg/kg)
-      const vol2 = parseFloat(Math.min(p * 2.0, 20).toFixed(1)); // 2 mL/kg (200 mg/kg)
-      const mg1  = Math.round(Math.min(p * 100, 2000));
-      const mg2  = Math.round(Math.min(p * 200, 2000));
-      caC = { ca, vol1, vol2, mg1, mg2 };
-    }
-
-    // ── Magnésio ─────────────────────────────────────────────────────────────
-    let mgC = null;
-    if (p > 0 && mg > 0 && mg < 1.5) {
-      // Hipomagnesemia: MgSO4 50% — 25-50 mg/kg IV
-      const dose25 = Math.round(Math.min(25 * p, 2000));
-      const dose50 = Math.round(Math.min(50 * p, 2000));
-      const vol25  = parseFloat((dose25 / MGSO4_CONC).toFixed(2)); // 50% = 500 mg/mL
-      const vol50  = parseFloat((dose50 / MGSO4_CONC).toFixed(2));
-      mgC = { mg, dose25, dose50, vol25, vol50 };
-    }
+    // ── Potássio · Cálcio · Magnésio (fórmulas puras extraídas) ──────────────
+    const kC  = corrigirPotassio(p, k);
+    const caC = corrigirCalcio(p, ca);
+    const mgC = corrigirMagnesio(p, mg);
 
     // ── Sódio corrigido (hiperglicemia) + Osmolaridade sérica ─────────────────
     // Katz 1973: Na + 1.6 × [(glicose-100)/100] · Hillier 1999 (revisado,
