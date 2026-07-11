@@ -14,7 +14,7 @@ function InfoBox({ color, children }) {
   return (
     <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -23,7 +23,7 @@ function AlertBox({ text, color }) {
   return (
     <div style={{ display: "flex", gap: 8, background: color + "10", border: "1px solid " + color + "40", borderRadius: 8, padding: "8px 12px", marginBottom: 8 }}>
       <AlertTriangle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{text}</span>
+      <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{text}</span>
     </div>
   );
 }
@@ -40,7 +40,7 @@ function ItemList({ items, color }) {
       {items.map((item, i) => (
         <div key={i} style={{ display: "flex", gap: 8, marginBottom: 5 }}>
           <CheckCircle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-          <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{item}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{item}</span>
         </div>
       ))}
     </div>
@@ -50,12 +50,12 @@ function ItemList({ items, color }) {
 function Accordion({ title, color, children }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderRadius: 10, border: "1px solid #E5E7EB", marginBottom: 10, overflow: "hidden" }}>
-      <button onClick={() => setOpen(!open)} style={{ width: "100%", background: open ? color + "15" : "#F9FAFB", border: "none", cursor: "pointer", padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontWeight: 700, color: open ? color : "#111827", fontSize: 13, textAlign: "left" }}>{title}</span>
-        {open ? <ChevronUp size={17} color={color} /> : <ChevronDown size={17} color="#9CA3AF" />}
+    <div style={{ borderRadius: 10, border: "1px solid var(--border)", marginBottom: 10, overflow: "hidden" }}>
+      <button onClick={() => setOpen(!open)} style={{ width: "100%", background: open ? color + "15" : "var(--surface-2)", border: "none", cursor: "pointer", padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontWeight: 700, color: open ? color : "var(--text)", fontSize: 13, textAlign: "left" }}>{title}</span>
+        {open ? <ChevronUp size={17} color={color} /> : <ChevronDown size={17} color="var(--muted)" />}
       </button>
-      {open && <div style={{ padding: "12px 14px", borderTop: "1px solid #F3F4F6" }}>{children}</div>}
+      {open && <div style={{ padding: "12px 14px", borderTop: "1px solid var(--border)" }}>{children}</div>}
     </div>
   );
 }
@@ -75,9 +75,9 @@ function TabDRGE() {
           { label: "GER fisiológico", cor: "#10B981", desc: "Regurgitação sem complicações. Pico aos 4 meses, resolve em 12–14 meses. Lactente com bom crescimento e sem sintomas." },
           { label: "DRGE", cor: "#EF4444", desc: "Regurgitação + complicações: esofagite, má nutrição, apneia/ALTE, irritabilidade, ruminação." },
         ].map(({ label, cor, desc }) => (
-          <div key={label} style={{ display: "flex", gap: 12, padding: "10px 14px", borderBottom: "1px solid #F3F4F6" }}>
+          <div key={label} style={{ display: "flex", gap: 12, padding: "10px 14px", borderBottom: "1px solid var(--border)" }}>
             <span style={{ fontWeight: 700, color: cor, fontSize: 12, minWidth: 90, flexShrink: 0 }}>{label}</span>
-            <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.5 }}>{desc}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{desc}</span>
           </div>
         ))}
       </div>
@@ -180,7 +180,7 @@ function TabAPLV() {
       ]} />
 
       <SectionTitle text="Fórmulas para APLV — resumo" color={C} />
-      <div style={{ background: "#FEF2F2", borderRadius: 10, padding: "12px 14px", border: "1px solid #FECACA" }}>
+      <div style={{ background: "var(--tint-red)", borderRadius: 10, padding: "12px 14px", border: "1px solid #FECACA" }}>
         {[
           { linha: "1ª linha — EH",  formula: "Alfaré (Nestlé) · Aptamil Pepti 1 (Danone)", cor: "#EF4444" },
           { linha: "2ª linha — AAF", formula: "Alfamino (Nestlé) · Neocate LCP (Danone)",   cor: "#DC2626" },
@@ -188,7 +188,7 @@ function TabAPLV() {
         ].map(({ linha, formula, cor }) => (
           <div key={linha} style={{ display: "flex", gap: 8, marginBottom: 6 }}>
             <span style={{ fontWeight: 700, color: cor, fontSize: 11, minWidth: 80, flexShrink: 0 }}>{linha}</span>
-            <span style={{ fontSize: 12, color: "#374151" }}>{formula}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)" }}>{formula}</span>
           </div>
         ))}
       </div>
@@ -207,7 +207,7 @@ function TabConstipacao() {
 
       <SectionTitle text="Critérios Roma IV" color={C} />
       <Accordion title="Lactentes e Toddlers (< 4 anos)" color={C}>
-        <p style={{ fontSize: 12, color: "#6B7280", margin: "0 0 8px" }}>≥ 2 critérios por ≥ 1 mês:</p>
+        <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 8px" }}>≥ 2 critérios por ≥ 1 mês:</p>
         <ItemList color={C} items={[
           "≤ 2 evacuações por semana",
           "Retenção fecal excessiva",
@@ -218,7 +218,7 @@ function TabConstipacao() {
         ]} />
       </Accordion>
       <Accordion title="Crianças ≥ 4 anos / Adolescentes" color={C}>
-        <p style={{ fontSize: 12, color: "#6B7280", margin: "0 0 8px" }}>≥ 2 dos seguintes, ≥ 1×/semana por ≥ 1 mês, com critérios insuficientes para SII:</p>
+        <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 8px" }}>≥ 2 dos seguintes, ≥ 1×/semana por ≥ 1 mês, com critérios insuficientes para SII:</p>
         <ItemList color={C} items={[
           "≤ 2 evacuações por semana",
           "≥ 1 episódio de incontinência fecal por semana",
@@ -282,17 +282,17 @@ export default function Gastropediatria() {
   const colors = ["#3B82F6", "#EF4444", "#10B981"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Gastropediatria</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>DRGE · APLV · Constipação Funcional</p>
       </div>
 
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
           return (
-            <button key={i} onClick={() => setTab(i)} style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? colors[i] : "#6B7280", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? colors[i] : "transparent"), cursor: "pointer" }}>
+            <button key={i} onClick={() => setTab(i)} style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? colors[i] : "var(--muted)", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? colors[i] : "transparent"), cursor: "pointer" }}>
               {t}
             </button>
           );
@@ -305,10 +305,10 @@ export default function Gastropediatria() {
         {tab === 2 && <TabConstipacao />}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Baseado em ESPGHAN/NASPGHAN 2018, Roma IV 2016, ESPGHAN 2014 e SBAI/SBP 2022. Não substitui julgamento clínico nem protocolo institucional.
           </p>
         </div>

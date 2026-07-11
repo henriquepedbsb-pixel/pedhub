@@ -342,8 +342,8 @@ function getStatus(item, idadeDias) {
 const STATUS_STYLES = {
   due:      { bg: "#ECFDF5", border: "#6EE7B7", dot: "#10B981" },
   upcoming: { bg: "#EFF6FF", border: "#BFDBFE", dot: "#3B82F6" },
-  done:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#9CA3AF" },
-  none:     { bg: "#F9FAFB", border: "#E5E7EB", dot: "#D1D5DB" },
+  done:     { bg: "var(--surface-2)", border: "var(--border)", dot: "var(--muted)" },
+  none:     { bg: "var(--surface-2)", border: "var(--border)", dot: "#D1D5DB" },
 };
 
 // Seleciona a regra de catch-up aplicável à idade atual (em meses)
@@ -372,7 +372,7 @@ export default function Vacinal() {
       }).slice(0, 8);
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
 
       {/* Header */}
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
@@ -383,7 +383,7 @@ export default function Vacinal() {
       </div>
 
       {/* Abas */}
-      <div style={{ display: "flex", background: "#fff", borderBottom: "1px solid #E5E7EB" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
         {[
           { id: "calendario", label: "Calendário", Icon: Calendar },
           { id: "atraso",     label: "Atraso vacinal", Icon: Clock },
@@ -395,10 +395,10 @@ export default function Vacinal() {
                 flex: 1, padding: "12px 8px", background: "none", border: "none",
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
                 borderBottom: ativo ? "2.5px solid " + PRIMARY : "2.5px solid transparent",
-                color: ativo ? PRIMARY : "#6B7280", fontWeight: ativo ? 700 : 500, fontSize: 14,
+                color: ativo ? PRIMARY : "var(--muted)", fontWeight: ativo ? 700 : 500, fontSize: 14,
                 fontFamily: "'DM Sans', sans-serif",
               }}>
-              <t.Icon size={16} color={ativo ? PRIMARY : "#9CA3AF"} />
+              <t.Icon size={16} color={ativo ? PRIMARY : "var(--muted)"} />
               {t.label}
             </button>
           );
@@ -406,7 +406,7 @@ export default function Vacinal() {
       </div>
 
       {/* Controles de data (compartilhados) */}
-      <div style={{ padding: "12px 16px", background: "#ECFEFF", borderBottom: "1px solid #A5F3FC" }}>
+      <div style={{ padding: "12px 16px", background: "var(--tint-teal)", borderBottom: "1px solid #A5F3FC" }}>
         <label style={{ fontSize: 11, fontWeight: 700, color: "#0E7490", display: "block", marginBottom: 4 }}>
           DATA DE NASCIMENTO
         </label>
@@ -420,7 +420,7 @@ export default function Vacinal() {
           autoComplete="off"
           style={{
             width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15,
-            border: "1.5px solid #67E8F9", outline: "none", background: "#fff",
+            border: "1.5px solid #67E8F9", outline: "none", background: "var(--surface)",
             boxSizing: "border-box", letterSpacing: "0.05em",
           }}
         />
@@ -442,8 +442,8 @@ export default function Vacinal() {
                 style={{
                   flex: 1, padding: "8px", borderRadius: 8, fontSize: 12,
                   fontWeight: modo === m ? 700 : 500, cursor: "pointer", border: "none",
-                  background: modo === m ? PRIMARY : "#F3F4F6",
-                  color: modo === m ? "#fff" : "#6B7280",
+                  background: modo === m ? PRIMARY : "var(--surface-2)",
+                  color: modo === m ? "#fff" : "var(--muted)",
                 }}>
                 {m === "sus" ? "SUS" : "Privado (SBIm)"}
               </button>
@@ -456,9 +456,9 @@ export default function Vacinal() {
       {aba === "calendario" && (
         <div style={{ padding: 16 }}>
           {idadeDias !== null && (
-            <div style={{ background: "#FFF7ED", borderRadius: 10, padding: "10px 14px", marginBottom: 16, border: "1px solid #FED7AA", display: "flex", gap: 8 }}>
+            <div style={{ background: "var(--tint-amber)", borderRadius: 10, padding: "10px 14px", marginBottom: 16, border: "1px solid #FED7AA", display: "flex", gap: 8 }}>
               <AlertTriangle size={15} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />
-              <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
+              <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>
                 Exibindo vacinas <strong>previstas agora</strong> e <strong>próximas</strong> para a idade calculada.
               </p>
             </div>
@@ -475,16 +475,16 @@ export default function Vacinal() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 10, height: 10, borderRadius: "50%", background: st.dot, flexShrink: 0 }} />
-                    <span style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>{item.faixa}</span>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{item.faixa}</span>
                   </div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {isMenoOnly && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#7C3AED", background: "#EDE9FE", padding: "2px 7px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#7C3AED", background: "var(--tint-purple)", padding: "2px 7px", borderRadius: 20 }}>
                         VISITA EXCLUSIVA
                       </span>
                     )}
                     {status === "due" && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "#DCFCE7", padding: "2px 8px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "var(--tint-green)", padding: "2px 8px", borderRadius: 20 }}>
                         PREVISTO AGORA
                       </span>
                     )}
@@ -493,7 +493,7 @@ export default function Vacinal() {
                 {vacinas.map((v, j) => (
                   <div key={j} style={{ display: "flex", gap: 7, marginBottom: 4 }}>
                     <CheckCircle size={13} color={st.dot} style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.45 }}>{v}</span>
+                    <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{v}</span>
                   </div>
                 ))}
               </div>
@@ -501,15 +501,15 @@ export default function Vacinal() {
           })}
 
           {idadeDias === null && (
-            <div style={{ textAlign: "center", padding: "32px 16px", color: "#9CA3AF" }}>
-              <Calendar size={40} color="#E5E7EB" style={{ display: "block", margin: "0 auto 12px" }} />
+            <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--muted)" }}>
+              <Calendar size={40} color="var(--border)" style={{ display: "block", margin: "0 auto 12px" }} />
               <p style={{ fontSize: 13 }}>Digite a data de nascimento para filtrar as vacinas pela idade.</p>
             </div>
           )}
 
           {/* Notas */}
-          <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid #E5E7EB" }}>
-            <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: "0 0 8px" }}>
+          <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid var(--border)" }}>
+            <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: "0 0 8px" }}>
               Notas SBIm 2025/2026 · PNI
             </p>
             {[
@@ -524,7 +524,7 @@ export default function Vacinal() {
             ].map((nota, i) => (
               <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
                 <Info size={12} color="#06B6D4" style={{ flexShrink: 0, marginTop: 2 }} />
-                <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{nota}</span>
+                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{nota}</span>
               </div>
             ))}
           </div>
@@ -535,17 +535,17 @@ export default function Vacinal() {
       {aba === "atraso" && (
         <div style={{ padding: 16 }}>
           {idadeDias === null ? (
-            <div style={{ textAlign: "center", padding: "32px 16px", color: "#9CA3AF" }}>
-              <Clock size={40} color="#E5E7EB" style={{ display: "block", margin: "0 auto 12px" }} />
+            <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--muted)" }}>
+              <Clock size={40} color="var(--border)" style={{ display: "block", margin: "0 auto 12px" }} />
               <p style={{ fontSize: 13 }}>
                 Digite a data de nascimento acima para ver a conduta de atualização (catch-up) por vacina conforme a idade atual.
               </p>
             </div>
           ) : (
             <>
-              <div style={{ background: "#EFF6FF", borderRadius: 10, padding: "10px 14px", marginBottom: 16, border: "1px solid #BFDBFE", display: "flex", gap: 8 }}>
+              <div style={{ background: "var(--tint-blue)", borderRadius: 10, padding: "10px 14px", marginBottom: 16, border: "1px solid #BFDBFE", display: "flex", gap: 8 }}>
                 <Info size={15} color="#3B82F6" style={{ flexShrink: 0, marginTop: 2 }} />
-                <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
+                <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>
                   Conduta de <strong>atualização vacinal</strong> para a idade de <strong>{idadeStr}</strong>.
                   Doses específicas e técnica de aplicação: ver aba <strong>Calendário</strong>. Confirmar elegibilidade SUS x privado.
                 </p>
@@ -559,39 +559,39 @@ export default function Vacinal() {
                 return (
                   <div key={i} style={{
                     borderRadius: 10,
-                    border: "1.5px solid " + (perdida ? "#FECACA" : aplicavel ? "#A5F3FC" : "#E5E7EB"),
-                    background: perdida ? "#FEF2F2" : aplicavel ? "#F0FDFF" : "#F9FAFB",
+                    border: "1.5px solid " + (perdida ? "#FECACA" : aplicavel ? "#A5F3FC" : "var(--border)"),
+                    background: perdida ? "#FEF2F2" : aplicavel ? "#F0FDFF" : "var(--surface-2)",
                     marginBottom: 10, padding: "11px 14px",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, gap: 8 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <Syringe size={15} color={perdida ? "#EF4444" : PRIMARY} style={{ flexShrink: 0 }} />
-                        <span style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>{vac.vacina}</span>
+                        <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{vac.vacina}</span>
                       </div>
                       {vac.limiteRigido && (
-                        <span style={{ fontSize: 9, fontWeight: 700, color: "#B91C1C", background: "#FEE2E2", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: "#B91C1C", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
                           JANELA RÍGIDA
                         </span>
                       )}
                     </div>
 
-                    <div style={{ fontSize: 11, color: "#6B7280", marginBottom: 6 }}>
+                    <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6 }}>
                       <strong>Janela:</strong> {vac.janelaLimite}
                     </div>
 
                     {aplicavel ? (
                       <div style={{ display: "flex", gap: 7 }}>
                         <CheckCircle size={13} color={perdida ? "#EF4444" : "#0891B2"} style={{ flexShrink: 0, marginTop: 2 }} />
-                        <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{regra.texto}</span>
+                        <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{regra.texto}</span>
                       </div>
                     ) : (
-                      <div style={{ fontSize: 12, color: "#9CA3AF", fontStyle: "italic" }}>
+                      <div style={{ fontSize: 12, color: "var(--muted)", fontStyle: "italic" }}>
                         Sem conduta específica de catch-up para esta idade — ver Calendário ou avaliar individualmente.
                       </div>
                     )}
 
                     {vac.alerta && (
-                      <div style={{ display: "flex", gap: 6, marginTop: 8, background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 10px" }}>
+                      <div style={{ display: "flex", gap: 6, marginTop: 8, background: "var(--tint-amber)", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 10px" }}>
                         <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
                         <span style={{ fontSize: 11, color: "#92400E", lineHeight: 1.45 }}>{vac.alerta}</span>
                       </div>
@@ -601,8 +601,8 @@ export default function Vacinal() {
               })}
 
               {/* Princípios gerais de catch-up */}
-              <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid #E5E7EB" }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: "0 0 8px" }}>
+              <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid var(--border)" }}>
+                <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: "0 0 8px" }}>
                   Princípios gerais de atualização (catch-up)
                 </p>
                 {[
@@ -614,7 +614,7 @@ export default function Vacinal() {
                 ].map((nota, i) => (
                   <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
                     <Info size={12} color="#06B6D4" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{nota}</span>
+                    <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{nota}</span>
                   </div>
                 ))}
               </div>
@@ -624,10 +624,10 @@ export default function Vacinal() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Calendário e regras de atraso baseados em SBIm 2025/2026, NT 77/2025 DPNI e Guia Técnico PNI jun/2026. Esquemas de catch-up devem ser confirmados no Manual de Normas e Procedimentos para Vacinação (MS) e adequados ao CRIE em imunodeprimidos. Não substitui avaliação clínica individual.
           </p>
         </div>

@@ -9,17 +9,17 @@ const VD_E  = "#065f46";
 const VD_M  = "#059669";
 const VD_C  = "#10B981";
 const VD_L  = "#d1fae5";
-const FUNDO = "#F9FAFB";
-const BORDA = "#E5E7EB";
-const TEXTO = "#1F2937";
-const MUTED = "#9CA3AF";
+const FUNDO = "var(--surface-2)";
+const BORDA = "var(--border)";
+const TEXTO = "var(--text)";
+const MUTED = "var(--muted)";
 
 /* ── Domínios: cores, ícones, labels ── */
 const DOM = {
-  social:    { bg: "#FDF2F8", bd: "#F9A8D4", cor: "#EC4899", Icon: Heart,          label: "Social / Emocional" },
-  linguagem: { bg: "#EFF6FF", bd: "#BFDBFE", cor: "#3B82F6", Icon: MessageCircle,  label: "Linguagem / Comunicação" },
-  cognitivo: { bg: "#F5F3FF", bd: "#DDD6FE", cor: "#8B5CF6", Icon: Star,           label: "Cognitivo" },
-  motor:     { bg: "#FFFBEB", bd: "#FDE68A", cor: "#F59E0B", Icon: Move,           label: "Motor / Físico" },
+  social:    { bg: "var(--tint-red)", bd: "#F9A8D4", cor: "#EC4899", Icon: Heart,          label: "Social / Emocional" },
+  linguagem: { bg: "var(--tint-blue)", bd: "#BFDBFE", cor: "#3B82F6", Icon: MessageCircle,  label: "Linguagem / Comunicação" },
+  cognitivo: { bg: "var(--tint-purple)", bd: "#DDD6FE", cor: "#8B5CF6", Icon: Star,           label: "Cognitivo" },
+  motor:     { bg: "var(--tint-amber)", bd: "#FDE68A", cor: "#F59E0B", Icon: Move,           label: "Motor / Físico" },
 };
 
 /* ── Faixas etárias ── */
@@ -179,7 +179,7 @@ function idadeLabel({ anos, meses, dias }) {
   return `${dias} dias de vida`;
 }
 
-const CARD = { background: "#ffffff", border: "1px solid " + BORDA, borderRadius: 13, padding: 18, marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" };
+const CARD = { background: "var(--surface)", border: "1px solid " + BORDA, borderRadius: 13, padding: 18, marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" };
 
 /* ── Componente principal ── */
 export default function Dnpm() {
@@ -246,7 +246,7 @@ export default function Dnpm() {
             </div>
             Data de nascimento
           </div>
-          <div style={{ display: "flex", border: "1.5px solid " + BORDA, borderRadius: 9, overflow: "hidden", background: "#f8fbfd" }}>
+          <div style={{ display: "flex", border: "1.5px solid " + BORDA, borderRadius: 9, overflow: "hidden", background: "var(--tint-slate)" }}>
             <input
               type="text" inputMode="numeric" placeholder="dd/mm/aaaa"
               value={dataNasc} onChange={e => setDataNasc(maskDate(e.target.value))} maxLength={10}
@@ -283,10 +283,10 @@ export default function Dnpm() {
                 const isActive = f.id === activeFaixaId;
                 const isCurr   = f.id === currFaixaId;
                 const isPast   = i < currIdx;
-                let bg = "#ffffff", col = "#9CA3AF", bord = "1.5px solid #E5E7EB";
+                let bg = "var(--surface-2)", col = "var(--muted)", bord = "1.5px solid var(--border)";
                 if (isActive)      { bg = VD_E; col = "#fff"; bord = "1.5px solid " + VD_E; }
                 else if (isCurr)   { bg = VD_L; col = VD_E;   bord = "1.5px solid " + VD_C; }
-                else if (isPast)   { bg = "#F3F4F6"; col = "#6B7280"; bord = "1.5px solid #E5E7EB"; }
+                else if (isPast)   { bg = "var(--surface-2)"; col = "var(--muted)"; bord = "1.5px solid var(--border)"; }
                 return (
                   <button key={f.id} onClick={() => setSelFaixaId(f.id)}
                     style={{ flexShrink: 0, padding: "6px 12px", borderRadius: 999, border: bord, background: bg, fontSize: 12, fontWeight: isActive ? 700 : 600, color: col, cursor: "pointer", position: "relative" }}>
@@ -308,21 +308,21 @@ export default function Dnpm() {
         {activeFaixa && marcos ? (
           <>
             {/* Cabeçalho da faixa */}
-            <div style={{ background: "#ffffff", border: "1px solid " + BORDA, borderLeft: "4px solid " + (faixaStatus === "current" ? VD_C : faixaStatus === "past" ? "#9CA3AF" : "#93C5FD"), borderRadius: 13, padding: "12px 16px", marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ background: "var(--surface)", border: "1px solid " + BORDA, borderLeft: "4px solid " + (faixaStatus === "current" ? VD_C : faixaStatus === "past" ? "var(--muted)" : "#93C5FD"), borderRadius: 13, padding: "12px 16px", marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: TEXTO }}>Marcos dos {activeFaixa.title}</div>
                 <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>CDC Act Early · SBP 2024 — ≥ 75% das crianças</div>
               </div>
               <div style={{ flexShrink: 0, marginLeft: 10 }}>
                 {faixaStatus === "current" && <span style={{ fontSize: 11, fontWeight: 700, background: VD_L, color: VD_E, padding: "4px 10px", borderRadius: 999 }}>Faixa atual</span>}
-                {faixaStatus === "past"    && <span style={{ fontSize: 11, fontWeight: 700, background: "#F3F4F6", color: "#6B7280", padding: "4px 10px", borderRadius: 999 }}>Ultrapassada</span>}
-                {faixaStatus === "future"  && <span style={{ fontSize: 11, fontWeight: 700, background: "#EFF6FF", color: "#3B82F6", padding: "4px 10px", borderRadius: 999 }}>Próxima</span>}
+                {faixaStatus === "past"    && <span style={{ fontSize: 11, fontWeight: 700, background: "var(--surface-2)", color: "var(--muted)", padding: "4px 10px", borderRadius: 999 }}>Ultrapassada</span>}
+                {faixaStatus === "future"  && <span style={{ fontSize: 11, fontWeight: 700, background: "var(--tint-blue)", color: "#3B82F6", padding: "4px 10px", borderRadius: 999 }}>Próxima</span>}
               </div>
             </div>
 
             {/* Banner de triagem */}
             {activeFaixa.triagem && (
-              <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderLeft: "4px solid #F59E0B", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <div style={{ background: "var(--tint-amber)", border: "1px solid #FDE68A", borderLeft: "4px solid #F59E0B", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <AlertTriangle size={15} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#78350F" }}>Triagem recomendada nesta consulta</div>
@@ -332,7 +332,7 @@ export default function Dnpm() {
             )}
 
             {/* Barra de progresso do checklist */}
-            <div style={{ background: "#ffffff", border: "1px solid " + BORDA, borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
+            <div style={{ background: "var(--surface)", border: "1px solid " + BORDA, borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 600, color: totalChecked === totalMarcos && totalChecked > 0 ? VD_E : TEXTO }}>
                   {totalChecked === 0 ? "Verificar marcos desta faixa" : totalChecked === totalMarcos ? "Todos os marcos verificados" : `${totalChecked} de ${totalMarcos} marcos verificados`}
@@ -349,7 +349,7 @@ export default function Dnpm() {
                   </button>
                 )}
               </div>
-              <div style={{ height: 6, background: "#E5E7EB", borderRadius: 3, overflow: "hidden" }}>
+              <div style={{ height: 6, background: "var(--surface-2)", borderRadius: 3, overflow: "hidden" }}>
                 <div style={{ height: "100%", width: totalMarcos > 0 ? `${(totalChecked / totalMarcos) * 100}%` : "0%", background: totalChecked === totalMarcos && totalChecked > 0 ? VD_C : "#6EE7B7", borderRadius: 3, transition: "width 0.3s" }} />
               </div>
             </div>
@@ -362,7 +362,7 @@ export default function Dnpm() {
                 <div key={dom} style={{ background: bg, border: `1px solid ${bd}`, borderRadius: 13, padding: "12px 14px", marginBottom: 10 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <div style={{ width: 26, height: 26, background: "#fff", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${bd}` }}>
+                      <div style={{ width: 26, height: 26, background: "var(--surface)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${bd}` }}>
                         <Icon size={14} color={cor} />
                       </div>
                       <span style={{ fontSize: 12.5, fontWeight: 700, color: cor }}>{label}</span>
@@ -374,10 +374,10 @@ export default function Dnpm() {
                     return (
                       <button key={i} onClick={() => toggleCheck(activeFaixaId, dom, i)}
                         style={{ display: "flex", alignItems: "flex-start", gap: 10, width: "100%", background: "transparent", border: "none", padding: "7px 0", cursor: "pointer", textAlign: "left", borderBottom: i < items.length - 1 ? `1px solid ${bd}` : "none" }}>
-                        <div style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", border: `2px solid ${isChk ? cor : bd}`, background: isChk ? cor : "#fff", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2 }}>
+                        <div style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", border: `2px solid ${isChk ? cor : bd}`, background: isChk ? cor : "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2 }}>
                           {isChk && <span style={{ fontSize: 11, color: "#fff", fontWeight: 800, lineHeight: 1 }}>✓</span>}
                         </div>
-                        <span style={{ fontSize: 13, lineHeight: 1.55, color: isChk ? "#9CA3AF" : TEXTO, textDecoration: isChk ? "line-through" : "none" }}>
+                        <span style={{ fontSize: 13, lineHeight: 1.55, color: isChk ? "var(--muted)" : TEXTO, textDecoration: isChk ? "line-through" : "none" }}>
                           {item}
                         </span>
                       </button>
@@ -389,7 +389,7 @@ export default function Dnpm() {
 
             {/* Sinais de alarme */}
             {alarmes && (
-              <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderLeft: "4px solid #EF4444", borderRadius: 13, padding: "12px 14px", marginBottom: 12 }}>
+              <div style={{ background: "var(--tint-red)", border: "1px solid #FECACA", borderLeft: "4px solid #EF4444", borderRadius: 13, padding: "12px 14px", marginBottom: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
                   <AlertTriangle size={15} color="#EF4444" />
                   <span style={{ fontSize: 12.5, fontWeight: 700, color: "#B91C1C" }}>Sinais de alarme — encaminhar se presentes</span>
@@ -413,7 +413,7 @@ export default function Dnpm() {
             <div style={{ width: 56, height: 56, borderRadius: "50%", background: VD_L, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
               <Calendar size={26} color={VD_M} />
             </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: "#6B7280", margin: "0 0 6px" }}>Informe a data de nascimento</p>
+            <p style={{ fontSize: 14, fontWeight: 600, color: "var(--muted)", margin: "0 0 6px" }}>Informe a data de nascimento</p>
             <p style={{ fontSize: 12.5, color: MUTED, margin: 0 }}>Os marcos da consulta serão exibidos automaticamente com base na idade calculada</p>
           </div>
         ) : null}
@@ -431,10 +431,10 @@ export default function Dnpm() {
       </div>
 
       {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> CDC Act Early · SBP 2024 · AAP 2022. Não substitui avaliação neurológica nem ferramenta de triagem validada. Regressão de habilidades = encaminhar imediatamente. Não substitui julgamento clínico.
           </p>
         </div>

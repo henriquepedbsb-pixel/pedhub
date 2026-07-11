@@ -27,12 +27,12 @@ function parsePeso(s) {
    Estimativa para emergência quando o peso real não pode ser obtido —
    peso real medido sempre tem prioridade sobre esta estimativa.          */
 const BROSELOW = [
-  { nome: "Cinza",   hex: "#6B7280", compMin: 46,  compMax: 52.4, pesoMin: 3,  pesoMax: 5,  pesoEstimado: 4,    tot: "3,5" },
+  { nome: "Cinza",   hex: "var(--muted)", compMin: 46,  compMax: 52.4, pesoMin: 3,  pesoMax: 5,  pesoEstimado: 4,    tot: "3,5" },
   { nome: "Rosa",    hex: "#EC4899", compMin: 52.5, compMax: 66.7, pesoMin: 6,  pesoMax: 7,  pesoEstimado: 6.5,  tot: "3,5–4,0" },
   { nome: "Vermelho",hex: "#EF4444", compMin: 66.8, compMax: 74.5, pesoMin: 8,  pesoMax: 9,  pesoEstimado: 8.5,  tot: "4,0" },
   { nome: "Roxo",    hex: "#8B5CF6", compMin: 74.6, compMax: 84.6, pesoMin: 10, pesoMax: 11, pesoEstimado: 10.5, tot: "4,5" },
   { nome: "Amarelo", hex: "#D97706", compMin: 84.7, compMax: 97.7, pesoMin: 12, pesoMax: 14, pesoEstimado: 13,   tot: "5,0" },
-  { nome: "Branco",  hex: "#9CA3AF", compMin: 97.8, compMax: 108.6, pesoMin: 15, pesoMax: 18, pesoEstimado: 16.5, tot: "5,5" },
+  { nome: "Branco",  hex: "var(--muted)", compMin: 97.8, compMax: 108.6, pesoMin: 15, pesoMax: 18, pesoEstimado: 16.5, tot: "5,5" },
   { nome: "Azul",    hex: "#2563EB", compMin: 108.7, compMax: 121.7, pesoMin: 19, pesoMax: 23, pesoEstimado: 21,   tot: "6,0" },
   { nome: "Laranja", hex: "#EA580C", compMin: 121.8, compMax: 137.7, pesoMin: 24, pesoMax: 29, pesoEstimado: 26.5, tot: "6,5" },
   { nome: "Verde",   hex: "#059669", compMin: 137.8, compMax: 150,  pesoMin: 30, pesoMax: 36, pesoEstimado: 33,   tot: "7,0" },
@@ -111,10 +111,10 @@ function SectionTitle({ icon: Icon, color, text }) {
 
 function DoseCard({ label, formula, doses, note, color }) {
   return (
-    <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "10px 14px", marginBottom: 8, borderLeft: "3px solid " + color }}>
+    <div style={{ background: "var(--bg)", borderRadius: 10, padding: "10px 14px", marginBottom: 8, borderLeft: "3px solid " + color }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-        <span style={{ fontWeight: 600, fontSize: 13, color: "#111827", flex: 1 }}>{label}</span>
-        <span style={{ fontSize: 11, color: "#9CA3AF", textAlign: "right", flexShrink: 0 }}>{formula}</span>
+        <span style={{ fontWeight: 600, fontSize: 13, color: "var(--text)", flex: 1 }}>{label}</span>
+        <span style={{ fontSize: 11, color: "var(--muted)", textAlign: "right", flexShrink: 0 }}>{formula}</span>
       </div>
       {doses && doses.length > 0 && (
         <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
@@ -125,7 +125,7 @@ function DoseCard({ label, formula, doses, note, color }) {
           ))}
         </div>
       )}
-      {note && <p style={{ fontSize: 11, color: "#6B7280", margin: "6px 0 0", lineHeight: 1.45 }}>{note}</p>}
+      {note && <p style={{ fontSize: 11, color: "var(--muted)", margin: "6px 0 0", lineHeight: 1.45 }}>{note}</p>}
     </div>
   );
 }
@@ -135,8 +135,8 @@ function StepCard({ step, title, content, color, highlight }) {
     <div style={{
       display: "flex", gap: 12, marginBottom: 10,
       padding: "10px 14px", borderRadius: 10,
-      background: highlight ? color + "12" : "#F9FAFB",
-      border: "1px solid " + (highlight ? color + "40" : "#F3F4F6"),
+      background: highlight ? color + "12" : "var(--surface-2)",
+      border: "1px solid " + (highlight ? color + "40" : "var(--surface-2)"),
     }}>
       <div style={{
         width: 28, height: 28, borderRadius: "50%",
@@ -147,8 +147,8 @@ function StepCard({ step, title, content, color, highlight }) {
         {step}
       </div>
       <div style={{ flex: 1 }}>
-        <p style={{ fontWeight: 600, fontSize: 13, color: highlight ? color : "#111827", margin: "0 0 3px" }}>{title}</p>
-        <p style={{ fontSize: 12, color: "#374151", lineHeight: 1.55, margin: 0 }}>{content}</p>
+        <p style={{ fontWeight: 600, fontSize: 13, color: highlight ? color : "var(--text)", margin: "0 0 3px" }}>{title}</p>
+        <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55, margin: 0 }}>{content}</p>
       </div>
     </div>
   );
@@ -167,7 +167,7 @@ function TimelineStep({ time, color, title, actions, isLast }) {
           {time}
         </div>
         {!isLast && (
-          <div style={{ width: 2, background: "#E5E7EB", flex: 1, marginTop: 4, minHeight: 20 }} />
+          <div style={{ width: 2, background: "var(--surface-2)", flex: 1, marginTop: 4, minHeight: 20 }} />
         )}
       </div>
       <div style={{ flex: 1, paddingBottom: isLast ? 0 : 18 }}>
@@ -175,7 +175,7 @@ function TimelineStep({ time, color, title, actions, isLast }) {
         {actions.map((a, i) => (
           <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
             <ChevronRight size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{a}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{a}</span>
           </div>
         ))}
       </div>
@@ -191,7 +191,7 @@ function InfoBox({ color, children }) {
       display: "flex", gap: 10,
     }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -205,22 +205,22 @@ function SeverityCard({ level, color, criteria, condutas }) {
       </div>
       {criteria && (
         <div style={{ padding: "8px 14px 4px" }}>
-          <p style={{ fontSize: 11, color: "#6B7280", fontWeight: 600, margin: "0 0 4px", letterSpacing: "0.04em" }}>CRITÉRIOS</p>
+          <p style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, margin: "0 0 4px", letterSpacing: "0.04em" }}>CRITÉRIOS</p>
           {criteria.map((c, i) => (
             <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
               <span style={{ color, fontWeight: 700, fontSize: 11, flexShrink: 0 }}>·</span>
-              <span style={{ fontSize: 12, color: "#374151" }}>{c}</span>
+              <span style={{ fontSize: 12, color: "var(--text-2)" }}>{c}</span>
             </div>
           ))}
         </div>
       )}
       {condutas && (
-        <div style={{ padding: "8px 14px 12px", borderTop: "1px solid #F3F4F6" }}>
-          <p style={{ fontSize: 11, color: "#6B7280", fontWeight: 600, margin: "0 0 6px", letterSpacing: "0.04em" }}>CONDUTA</p>
+        <div style={{ padding: "8px 14px 12px", borderTop: "1px solid var(--border)" }}>
+          <p style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, margin: "0 0 6px", letterSpacing: "0.04em" }}>CONDUTA</p>
           {condutas.map((c, i) => (
             <div key={i} style={{ display: "flex", gap: 8, marginBottom: 5 }}>
               <span style={{ color, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{i + 1}.</span>
-              <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{c}</span>
+              <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{c}</span>
             </div>
           ))}
         </div>
@@ -233,8 +233,8 @@ function SeverityCard({ level, color, criteria, condutas }) {
 function TabCalculadora({ d }) {
   if (!d) {
     return (
-      <div style={{ textAlign: "center", padding: "48px 16px", color: "#9CA3AF" }}>
-        <Calculator size={48} color="#E5E7EB" style={{ margin: "0 auto 12px", display: "block" }} />
+      <div style={{ textAlign: "center", padding: "48px 16px", color: "var(--muted)" }}>
+        <Calculator size={48} color="var(--border)" style={{ margin: "0 auto 12px", display: "block" }} />
         <p style={{ fontSize: 14 }}>Digite o peso acima para calcular as doses.</p>
       </div>
     );
@@ -358,11 +358,11 @@ function TabAnafilaxia({ d }) {
         ].map(({ grau, cor, desc }) => (
           <div key={grau} style={{ display: "flex", gap: 12, padding: "9px 14px", borderBottom: "1px solid #FEF3C7" }}>
             <span style={{ fontWeight: 700, color: cor, fontSize: 12, minWidth: 52, flexShrink: 0 }}>{grau}</span>
-            <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.5 }}>{desc}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{desc}</span>
           </div>
         ))}
       </div>
-      <p style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 16, marginTop: -8 }}>Adrenalina IM obrigatória a partir do Grau 2</p>
+      <p style={{ fontSize: 11, color: "var(--muted)", marginBottom: 16, marginTop: -8 }}>Adrenalina IM obrigatória a partir do Grau 2</p>
 
       <SectionTitle icon={ChevronRight} color={C} text="Protocolo de Tratamento" />
       {[
@@ -536,7 +536,7 @@ function TabChoque({ d }) {
       </InfoBox>
 
       <SectionTitle icon={AlertTriangle} color={C} text="Sinais de Alerta" />
-      <div style={{ background: "#F0FDFA", borderRadius: 10, padding: "12px 14px", marginBottom: 16, border: "1px solid #99F6E4" }}>
+      <div style={{ background: "var(--tint-teal)", borderRadius: 10, padding: "12px 14px", marginBottom: 16, border: "1px solid #99F6E4" }}>
         {[
           "Taquicardia inexplicável · FC acima do esperado para febre",
           "Tempo de enchimento capilar > 2 s (periférico) ou < 1 s (flash — choque quente)",
@@ -547,7 +547,7 @@ function TabChoque({ d }) {
         ].map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ color: C, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>·</span>
-            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{item}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{item}</span>
           </div>
         ))}
       </div>
@@ -615,7 +615,7 @@ function TabCAD({ d }) {
       </InfoBox>
 
       <SectionTitle icon={AlertTriangle} color={C} text="Classificação da Gravidade" />
-      <div style={{ borderRadius: 10, border: "1px solid #E5E7EB", marginBottom: 16, overflow: "hidden" }}>
+      <div style={{ borderRadius: 10, border: "1px solid var(--border)", marginBottom: 16, overflow: "hidden" }}>
         {[
           { nivel: "Leve",     cor: "#10B981", pH: "7,25–7,30", hco: "15–18", desc: "Consciente, hidratado" },
           { nivel: "Moderada", cor: "#D97706", pH: "7,10–7,24", hco: "5–14",  desc: "Vômito, dor abdominal" },
@@ -623,7 +623,7 @@ function TabCAD({ d }) {
         ].map((item) => (
           <div key={item.nivel} style={{ display: "flex", padding: "10px 14px", borderBottom: "1px solid #F9FAFB", gap: 8 }}>
             <span style={{ fontWeight: 700, color: item.cor, minWidth: 64, fontSize: 12, flexShrink: 0 }}>{item.nivel}</span>
-            <span style={{ fontSize: 12, color: "#374151" }}>pH {item.pH} · HCO₃ {item.hco} mEq/L · {item.desc}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)" }}>pH {item.pH} · HCO₃ {item.hco} mEq/L · {item.desc}</span>
           </div>
         ))}
       </div>
@@ -695,7 +695,7 @@ function TabPCR({ d }) {
       </InfoBox>
 
       <SectionTitle icon={Heart} color={C} text="RCP de Alta Qualidade" />
-      <div style={{ background: "#FEF2F2", borderRadius: 10, padding: "12px 14px", marginBottom: 8, border: "1px solid #FECACA" }}>
+      <div style={{ background: "var(--tint-red)", borderRadius: 10, padding: "12px 14px", marginBottom: 8, border: "1px solid #FECACA" }}>
         {[
           "Frequência: 100–120 compressões/min",
           "Profundidade: pelo menos 1/3 do diâmetro AP do tórax (cerca de 4 cm no lactente, 5 cm na criança)",
@@ -706,7 +706,7 @@ function TabPCR({ d }) {
         ].map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ color: C, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>·</span>
-            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{item}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{item}</span>
           </div>
         ))}
       </div>
@@ -775,16 +775,16 @@ function TabPCR({ d }) {
 
       <SectionTitle icon={AlertTriangle} color="#92400E" text="Causas Reversíveis (5H e 5T)" />
       <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
-        <div style={{ flex: 1, background: "#FFFBEB", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
+        <div style={{ flex: 1, background: "var(--tint-amber)", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
           <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 H</p>
           {["Hipóxia", "Hipovolemia", "Hidrogênio (acidose)", "Hipo/Hipercalemia", "Hipotermia"].map((h, i) => (
-            <p key={i} style={{ fontSize: 11, color: "#374151", margin: "0 0 3px" }}>· {h}</p>
+            <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px" }}>· {h}</p>
           ))}
         </div>
-        <div style={{ flex: 1, background: "#FFFBEB", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
+        <div style={{ flex: 1, background: "var(--tint-amber)", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
           <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 T</p>
           {["Tóxicos", "Tamponamento cardíaco", "Pneumotórax hipertensivo", "Trombose (coronária/pulmonar)", "Trauma"].map((t, i) => (
-            <p key={i} style={{ fontSize: 11, color: "#374151", margin: "0 0 3px" }}>· {t}</p>
+            <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px" }}>· {t}</p>
           ))}
         </div>
       </div>
@@ -921,7 +921,7 @@ const CRISES = [
 function CrisisGrid({ onPick }) {
   return (
     <div>
-      <p style={{ fontSize: 12, color: "#6B7280", margin: "4px 0 12px", lineHeight: 1.5 }}>
+      <p style={{ fontSize: 12, color: "var(--muted)", margin: "4px 0 12px", lineHeight: 1.5 }}>
         Toque na emergência para ver a <strong>ação imediata</strong> e a sequência condensada. Informe o peso acima para doses calculadas.
       </p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -958,12 +958,12 @@ function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
         onClick={onVoltar}
         style={{
           display: "flex", alignItems: "center", gap: 6, background: "none",
-          border: "none", cursor: "pointer", color: "#6B7280", fontSize: 13,
+          border: "none", cursor: "pointer", color: "var(--muted)", fontSize: 13,
           fontWeight: 600, padding: "2px 0", marginBottom: 12,
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        <ArrowLeft size={16} color="#6B7280" /> Emergências
+        <ArrowLeft size={16} color="var(--muted)" /> Emergências
       </button>
 
       {/* Cabeçalho da crise */}
@@ -983,7 +983,7 @@ function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
         <p style={{ fontSize: 11, fontWeight: 700, color: crise.cor, letterSpacing: "0.08em", margin: "0 0 6px" }}>
           AÇÃO IMEDIATA
         </p>
-        <p style={{ fontWeight: 700, fontSize: 14, color: "#111827", margin: "0 0 8px", lineHeight: 1.3 }}>
+        <p style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", margin: "0 0 8px", lineHeight: 1.3 }}>
           {acao.titulo}
         </p>
         <div style={{
@@ -992,17 +992,17 @@ function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
         }}>
           {acao.dose}
         </div>
-        <p style={{ fontSize: 12, color: "#6B7280", margin: "8px 0 0", lineHeight: 1.45 }}>{acao.detalhe}</p>
+        <p style={{ fontSize: 12, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.45 }}>{acao.detalhe}</p>
       </div>
 
       {/* Sequência */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", letterSpacing: "0.06em", margin: "0 0 8px" }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 8px" }}>
         SEQUÊNCIA
       </p>
       {passos.map((p, i) => (
         <div key={i} style={{
           display: "flex", gap: 12, marginBottom: 8, padding: "10px 14px",
-          borderRadius: 10, background: "#F9FAFB", border: "1px solid #F3F4F6",
+          borderRadius: 10, background: "var(--bg)", border: "1px solid var(--border)",
         }}>
           <div style={{
             width: 26, height: 26, borderRadius: "50%", background: crise.cor, color: "#fff",
@@ -1011,7 +1011,7 @@ function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
           }}>
             {i + 1}
           </div>
-          <span style={{ fontSize: 13, color: "#1F2937", lineHeight: 1.5, alignSelf: "center" }}>{p}</span>
+          <span style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5, alignSelf: "center" }}>{p}</span>
         </div>
       ))}
 
@@ -1020,7 +1020,7 @@ function CrisisCard({ crise, d, onVoltar, onProtocolo }) {
         onClick={() => onProtocolo(crise.tab)}
         style={{
           width: "100%", marginTop: 8, padding: "13px", borderRadius: 12,
-          background: "#fff", border: "1.5px solid " + crise.cor, cursor: "pointer",
+          background: "var(--surface)", border: "1.5px solid " + crise.cor, cursor: "pointer",
           color: crise.cor, fontWeight: 700, fontSize: 14,
           display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
           fontFamily: "'DM Sans', sans-serif",
@@ -1068,7 +1068,7 @@ export default function Urgencias() {
   }
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       {/* ── Header ── */}
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
@@ -1078,7 +1078,7 @@ export default function Urgencias() {
       </div>
 
       {/* ── Toggle de modo ── */}
-      <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", background: "#fff" }}>
+      <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", background: "var(--surface)" }}>
         {[
           { id: "crise", label: "Modo Crise" },
           { id: "detalhado", label: "Detalhado" },
@@ -1091,9 +1091,9 @@ export default function Urgencias() {
               style={{
                 flex: 1, padding: "10px", borderRadius: 10, fontSize: 13,
                 fontWeight: ativo ? 700 : 500, cursor: "pointer",
-                border: "1.5px solid " + (ativo ? PRIMARY : "#E5E7EB"),
-                background: ativo ? PRIMARY : "#fff",
-                color: ativo ? "#fff" : "#6B7280",
+                border: "1.5px solid " + (ativo ? PRIMARY : "var(--border)"),
+                background: ativo ? PRIMARY : "var(--surface)",
+                color: ativo ? "#fff" : "var(--muted)",
                 fontFamily: "'DM Sans', sans-serif",
               }}
             >
@@ -1104,7 +1104,7 @@ export default function Urgencias() {
       </div>
 
       {/* ── Peso (compartilhado) ── */}
-      <div style={{ background: "#FEF2F2", borderBottom: "1px solid #FECACA", padding: "12px 16px", margin: "12px 0 0" }}>
+      <div style={{ background: "var(--tint-red)", borderBottom: "1px solid #FECACA", padding: "12px 16px", margin: "12px 0 0" }}>
         <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
           PESO DO PACIENTE (kg) — doses calculadas automaticamente
         </label>
@@ -1118,7 +1118,7 @@ export default function Urgencias() {
             style={{
               flex: 1, padding: "10px 14px", borderRadius: 8, fontSize: 16,
               border: "1.5px solid #FCA5A5", outline: "none",
-              background: "#fff", color: "#111827",
+              background: "var(--surface)", color: "var(--text)",
             }}
           />
           {peso && (
@@ -1150,7 +1150,7 @@ export default function Urgencias() {
         </button>
 
         {mostrarBroselow && (
-          <div style={{ marginTop: 10, background: "#fff", border: "1px solid #FECACA", borderRadius: 10, padding: "12px 14px" }}>
+          <div style={{ marginTop: 10, background: "var(--surface)", border: "1px solid #FECACA", borderRadius: 10, padding: "12px 14px" }}>
             <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
               ALTURA / COMPRIMENTO (cm)
             </label>
@@ -1162,7 +1162,7 @@ export default function Urgencias() {
               onChange={(e) => setAlturaRaw(e.target.value)}
               style={{
                 width: "100%", padding: "10px 14px", borderRadius: 8, fontSize: 16,
-                border: "1.5px solid #FCA5A5", outline: "none", background: "#fff", color: "#111827",
+                border: "1.5px solid #FCA5A5", outline: "none", background: "var(--surface)", color: "var(--text)",
                 boxSizing: "border-box",
               }}
             />
@@ -1179,13 +1179,13 @@ export default function Urgencias() {
                 }}>
                   <div style={{ width: 22, height: 22, borderRadius: 6, background: zonaBroselow.hex, flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: 0 }}>Faixa {zonaBroselow.nome}</p>
-                    <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>
+                    <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: 0 }}>Faixa {zonaBroselow.nome}</p>
+                    <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>
                       {zonaBroselow.pesoMin}–{zonaBroselow.pesoMax} kg · peso estimado {zonaBroselow.pesoEstimado} kg
                     </p>
                   </div>
                 </div>
-                <p style={{ fontSize: 11, color: "#6B7280", margin: "8px 0 8px" }}>
+                <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 8px" }}>
                   TOT sugerido: {zonaBroselow.tot} mm (sem balonete, referência) · Desfibrilação: {Math.round(zonaBroselow.pesoEstimado * 2)} J (1º choque) · {Math.round(zonaBroselow.pesoEstimado * 4)} J (2º choque) — sempre ter 1 tamanho de tubo acima/abaixo disponível.
                 </p>
                 <button
@@ -1200,7 +1200,7 @@ export default function Urgencias() {
                 </button>
               </div>
             )}
-            <p style={{ fontSize: 10, color: "#9CA3AF", margin: "8px 0 0", lineHeight: 1.4 }}>
+            <p style={{ fontSize: 10, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4 }}>
               Estimativa para uso emergencial quando o peso real não pode ser obtido de imediato (ex.: paciente inconsciente, sem acompanhante). Pesar a criança assim que possível — o peso real medido sempre tem prioridade sobre esta estimativa.
             </p>
           </div>
@@ -1226,7 +1226,7 @@ export default function Urgencias() {
       {/* ── MODO DETALHADO ── */}
       {modo === "detalhado" && (
         <>
-          <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+          <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
             {TABS.map(({ label, icon: Icon }, i) => {
               const active = tab === i;
               return (
@@ -1236,7 +1236,7 @@ export default function Urgencias() {
                   style={{
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
                     padding: "10px 12px", fontSize: 10, fontWeight: active ? 700 : 500,
-                    color: active ? PRIMARY : "#6B7280",
+                    color: active ? PRIMARY : "var(--muted)",
                     background: "transparent", border: "none",
                     borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),
                     cursor: "pointer", whiteSpace: "nowrap",
@@ -1263,10 +1263,10 @@ export default function Urgencias() {
       )}
 
       {/* ── Disclaimer ── */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Doses baseadas em WAO 2020, GINA 2024,
             ILAE 2015, SBP, AHA PALS 2020, Surviving Sepsis Campaign 2020 e ISPAD 2022.
             Confirme com peso atual, função renal e protocolo institucional.

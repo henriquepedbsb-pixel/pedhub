@@ -214,7 +214,7 @@ function BlocoTratamento({ d, grupo, onGrupo }) {
         {d.tratamento.map((c, i) => (
           <div key={i} style={{ display: "flex", gap: 6, marginBottom: 4 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: d.cor, flexShrink: 0, marginTop: 5 }} />
-            <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{c}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{c}</span>
           </div>
         ))}
       </>
@@ -228,7 +228,7 @@ function BlocoTratamento({ d, grupo, onGrupo }) {
       {d.tratamentoSel.comum.map((c, i) => (
         <div key={`c${i}`} style={{ display: "flex", gap: 6, marginBottom: 4 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: d.cor, flexShrink: 0, marginTop: 5 }} />
-          <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{c}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{c}</span>
         </div>
       ))}
 
@@ -243,8 +243,8 @@ function BlocoTratamento({ d, grupo, onGrupo }) {
               style={{
                 border: "none", cursor: "pointer", borderRadius: 8, padding: "6px 12px",
                 fontSize: 12, fontWeight: 700,
-                background: on ? d.cor : "#F3F4F6",
-                color: on ? "#fff" : "#6B7280",
+                background: on ? d.cor : "var(--surface-2)",
+                color: on ? "#fff" : "var(--muted)",
               }}
             >
               {g.label}
@@ -258,7 +258,7 @@ function BlocoTratamento({ d, grupo, onGrupo }) {
         {d.tratamentoSel.porGrupo[sel].map((c, i) => (
           <div key={`g${i}`} style={{ display: "flex", gap: 6, marginBottom: i === d.tratamentoSel.porGrupo[sel].length - 1 ? 0 : 4 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: d.cor, flexShrink: 0, marginTop: 5 }} />
-            <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{c}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{c}</span>
           </div>
         ))}
       </div>
@@ -276,7 +276,7 @@ function DiferencialAchados({ onSelecionar }) {
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: "10px 12px", marginBottom: 12 }}>
+      <div style={{ display: "flex", gap: 8, background: "var(--tint-blue)", border: "1px solid #BFDBFE", borderRadius: 10, padding: "10px 12px", marginBottom: 12 }}>
         <Info size={15} color="#1D4ED8" style={{ flexShrink: 0, marginTop: 1 }} />
         <p style={{ fontSize: 11, color: "#1E40AF", lineHeight: 1.5, margin: 0 }}>
           Marque os achados observados. A ferramenta ordena as hipóteses por
@@ -285,14 +285,14 @@ function DiferencialAchados({ onSelecionar }) {
         </p>
       </div>
 
-      <div style={{ borderRadius: 12, border: "1px solid #E5E7EB", padding: 14, marginBottom: 12 }}>
+      <div style={{ borderRadius: 12, border: "1px solid var(--border)", padding: 14, marginBottom: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-          <span style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 700, color: "#111827", fontSize: 14 }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 700, color: "var(--text)", fontSize: 14 }}>
             <ListChecks size={17} color={PRIMARY} />
             Achados presentes
           </span>
           {algum && (
-            <button onClick={limpar} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "#9CA3AF" }}>
+            <button onClick={limpar} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--muted)" }}>
               <RotateCcw size={12} /> Limpar
             </button>
           )}
@@ -307,18 +307,18 @@ function DiferencialAchados({ onSelecionar }) {
                 onClick={() => toggle(a.id)}
                 style={{
                   display: "flex", alignItems: "center", gap: 8, textAlign: "left",
-                  border: `1px solid ${on ? PRIMARY : "#E5E7EB"}`,
-                  background: on ? PRIMARY + "12" : "#F9FAFB",
+                  border: `1px solid ${on ? PRIMARY : "var(--border)"}`,
+                  background: on ? PRIMARY + "12" : "var(--surface-2)",
                   borderRadius: 10, padding: "8px 10px", cursor: "pointer",
                   fontSize: 12, fontWeight: on ? 600 : 400,
-                  color: on ? "#831843" : "#374151",
+                  color: on ? "#831843" : "var(--text-2)",
                 }}
               >
                 <span style={{
                   width: 16, height: 16, borderRadius: 5, flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: on ? PRIMARY : "#fff",
-                  border: on ? "none" : "1px solid #D1D5DB",
+                  background: on ? PRIMARY : "var(--surface)",
+                  border: on ? "none" : "1px solid var(--border)",
                 }}>
                   {on && <Check size={11} color="#fff" />}
                 </span>
@@ -331,7 +331,7 @@ function DiferencialAchados({ onSelecionar }) {
 
       {algum && (
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px 4px" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px 4px" }}>
             Hipóteses a considerar
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -342,13 +342,13 @@ function DiferencialAchados({ onSelecionar }) {
                 style={{
                   width: "100%", textAlign: "left", cursor: "pointer",
                   borderRadius: 12, border: `1px solid ${r.dermatose.cor}55`,
-                  background: "#fff", padding: 12,
+                  background: "var(--surface)", padding: 12,
                   display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
                 }}
               >
                 <span style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                   <span style={{ width: 10, height: 10, borderRadius: "50%", background: r.dermatose.cor, flexShrink: 0 }} />
-                  <span style={{ fontWeight: 700, fontSize: 14, color: "#111827" }}>{r.dermatose.nome}</span>
+                  <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{r.dermatose.nome}</span>
                   <span style={{ fontSize: 11, fontWeight: 700, color: r.dermatose.cor, background: r.dermatose.cor + "18", borderRadius: 20, padding: "1px 8px", flexShrink: 0 }}>
                     {r.n} {r.n === 1 ? "achado" : "achados"}
                   </span>
@@ -387,8 +387,8 @@ export default function Dermato() {
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
           border: "none", cursor: "pointer", borderRadius: 10, padding: "9px 8px",
           fontSize: 13, fontWeight: 700,
-          background: on ? PRIMARY : "#F3F4F6",
-          color: on ? "#fff" : "#6B7280",
+          background: on ? PRIMARY : "var(--surface-2)",
+          color: on ? "#fff" : "var(--muted)",
         }}
       >
         <Icon size={15} />
@@ -398,7 +398,7 @@ export default function Dermato() {
   };
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Dermatologia Pediátrica</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Dermatoses comuns da infância</p>
@@ -414,34 +414,34 @@ export default function Dermato() {
         {modo === "diferencial" && <DiferencialAchados onSelecionar={irParaDermatose} />}
 
         {modo === "lista" && DERMATOSES.map((d) => (
-          <div key={d.id} style={{ borderRadius: 12, border: "1px solid #E5E7EB", marginBottom: 10, overflow: "hidden" }}>
-            <button onClick={() => toggle(d.id)} style={{ width: "100%", background: expanded === d.id ? d.cor + "15" : "#F9FAFB", border: "none", cursor: "pointer", padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div key={d.id} style={{ borderRadius: 12, border: "1px solid var(--border)", marginBottom: 10, overflow: "hidden" }}>
+            <button onClick={() => toggle(d.id)} style={{ width: "100%", background: expanded === d.id ? d.cor + "15" : "var(--surface-2)", border: "none", cursor: "pointer", padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 12, height: 12, borderRadius: "50%", background: d.cor }} />
                 <span style={{ fontWeight: 700, color: expanded === d.id ? d.cor : "#111827", fontSize: 14 }}>{d.nome}</span>
               </div>
-              {expanded === d.id ? <ChevronUp size={17} color={d.cor} /> : <ChevronDown size={17} color="#9CA3AF" />}
+              {expanded === d.id ? <ChevronUp size={17} color={d.cor} /> : <ChevronDown size={17} color="var(--muted)" />}
             </button>
             {expanded === d.id && (
-              <div style={{ padding: "10px 14px 14px", borderTop: "1px solid #F3F4F6" }}>
-                <p style={{ fontSize: 12, color: "#374151", margin: "0 0 10px", lineHeight: 1.5 }}>{d.definicao}</p>
-                <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", margin: "0 0 5px" }}>DIAGNÓSTICO</p>
+              <div style={{ padding: "10px 14px 14px", borderTop: "1px solid var(--border)" }}>
+                <p style={{ fontSize: 12, color: "var(--text-2)", margin: "0 0 10px", lineHeight: 1.5 }}>{d.definicao}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", margin: "0 0 5px" }}>DIAGNÓSTICO</p>
                 {d.criterios.map((c, i) => (
                   <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
                     <CheckCircle size={12} color={d.cor} style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 12, color: "#374151" }}>{c}</span>
+                    <span style={{ fontSize: 12, color: "var(--text-2)" }}>{c}</span>
                   </div>
                 ))}
-                {d.classificacao && <p style={{ fontSize: 11, color: "#6B7280", margin: "8px 0", background: "#F9FAFB", padding: "6px 10px", borderRadius: 6 }}>{d.classificacao}</p>}
-                <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", margin: "10px 0 5px" }}>TRATAMENTO</p>
+                {d.classificacao && <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0", background: "var(--bg)", padding: "6px 10px", borderRadius: 6 }}>{d.classificacao}</p>}
+                <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", margin: "10px 0 5px" }}>TRATAMENTO</p>
                 <BlocoTratamento d={d} grupo={grupoSel[d.id]} onGrupo={onGrupo} />
                 {d.alarme && d.alarme.length > 0 && (
-                  <div style={{ background: "#FEF2F2", borderRadius: 8, padding: "8px 12px", marginTop: 10, border: "1px solid #FECACA" }}>
+                  <div style={{ background: "var(--tint-red)", borderRadius: 8, padding: "8px 12px", marginTop: 10, border: "1px solid #FECACA" }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: "#991B1B", margin: "0 0 5px" }}>SINAIS DE ALARME</p>
                     {d.alarme.map((c, i) => (
                       <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
                         <AlertTriangle size={12} color="#EF4444" style={{ flexShrink: 0, marginTop: 2 }} />
-                        <span style={{ fontSize: 12, color: "#374151" }}>{c}</span>
+                        <span style={{ fontSize: 12, color: "var(--text-2)" }}>{c}</span>
                       </div>
                     ))}
                   </div>
@@ -452,10 +452,10 @@ export default function Dermato() {
         ))}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Baseado em SBD (Sociedade Brasileira de Dermatologia), AAD 2023 e SBP. Não substitui avaliação dermatológica especializada.
           </p>
         </div>
