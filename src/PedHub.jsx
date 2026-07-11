@@ -28,6 +28,7 @@ import {
   Search,
   Shield,
   Stethoscope,
+  Sun,
   Syringe,
   Thermometer,
   Zap,
@@ -129,6 +130,24 @@ function HubStyles() {
   );
 }
 
+/* ─── Tema claro/escuro ──────────────────────────────────────────────────── */
+/* O tema salvo já é aplicado no <head> (index.html) antes da 1ª pintura.     */
+function useTheme() {
+  const [theme, setTheme] = useState(() => {
+    const attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark" || attr === "light") return attr;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  const toggle = () =>
+    setTheme(prev => {
+      const next = prev === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("pedhub-theme", next); } catch { /* ignora */ }
+      return next;
+    });
+  return [theme, toggle];
+}
+
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
   const { label, desc, Icon, cor } = modulo;
@@ -139,8 +158,8 @@ function ModuloCard({ modulo, onClick }) {
       style={{
         "--sh": "0 1px 3px rgba(16,24,40,0.06)",
         "--sh-hover": `0 14px 30px ${cor}26, 0 4px 10px rgba(16,24,40,0.08)`,
-        background: "#fff",
-        border: "1px solid #EEF0F4",
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
         borderRadius: 16,
         padding: "15px 13px",
         cursor: "pointer",
@@ -163,12 +182,12 @@ function ModuloCard({ modulo, onClick }) {
       <div>
         <p style={{
           fontWeight: 700, fontSize: 15.5,
-          color: "#0F172A", margin: "0 0 3px",
+          color: "var(--text)", margin: "0 0 3px",
           lineHeight: 1.3,
           wordBreak: "break-word", hyphens: "auto",
         }}>{label}</p>
         <p style={{
-          fontSize: 12.5, color: "#94A3B8",
+          fontSize: 12.5, color: "var(--muted)",
           margin: 0, lineHeight: 1.45,
           wordBreak: "break-word",
         }}>{desc}</p>
@@ -323,6 +342,7 @@ function NeonatalGateway({ count, onClick }) {
 /* ─── Componente principal ───────────────────────────────────────────────── */
 export default function PedHub() {
   const navigate = useNavigate();
+  const [tema, toggleTema] = useTheme();
   const [busca, setBusca] = useState("");
   const [toastN, setToastN] = useState(0);
 
@@ -354,7 +374,7 @@ export default function PedHub() {
       fontFamily: "'DM Sans', sans-serif",
       maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
-      background: "#F6F8FB",
+      background: "var(--bg)",
     }}>
       <HubStyles />
       {/* Hero */}
@@ -384,14 +404,35 @@ export default function PedHub() {
               Decisão clínica pediátrica · beira do leito
             </p>
           </div>
-          <div style={{
-            background: "rgba(255,255,255,0.16)",
-            border: "1px solid rgba(255,255,255,0.28)",
-            backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-            borderRadius: 999, padding: "6px 12px",
-            fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
-          }}>
-            {MODULOS.length} módulos
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 10 }}>
+            <button
+              onClick={toggleTema}
+              aria-label={tema === "dark" ? "Mudar para tema claro" : "Mudar para tema escuro"}
+              style={{
+                width: 38, height: 38, borderRadius: 999,
+                background: "rgba(255,255,255,0.16)",
+                border: "1px solid rgba(255,255,255,0.28)",
+                backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer", color: "#fff", flexShrink: 0,
+                transition: "background 0.18s ease, transform 0.12s ease",
+                WebkitTapHighlightColor: "transparent",
+              }}
+              onPointerDown={e => { e.currentTarget.style.transform = "scale(0.9)"; }}
+              onPointerUp={e => { e.currentTarget.style.transform = "scale(1)"; }}
+              onPointerLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+            >
+              {tema === "dark" ? <Sun size={18} color="#fff" /> : <Moon size={18} color="#fff" />}
+            </button>
+            <div style={{
+              background: "rgba(255,255,255,0.16)",
+              border: "1px solid rgba(255,255,255,0.28)",
+              backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+              borderRadius: 999, padding: "6px 12px",
+              fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
+            }}>
+              {MODULOS.length} módulos
+            </div>
           </div>
         </div>
 
@@ -434,13 +475,13 @@ export default function PedHub() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <p style={{
-                fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                 letterSpacing: "0.07em", textTransform: "uppercase",
               }}>
                 Resultado da busca
               </p>
-              <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{resultadosBusca.length + resultadosBreve.length}</span>
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+              <span style={{ fontSize: 11, color: "var(--muted)" }}>{resultadosBusca.length + resultadosBreve.length}</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {resultadosBusca.map(m => (
@@ -451,7 +492,7 @@ export default function PedHub() {
               ))}
             </div>
             {resultadosBusca.length === 0 && resultadosBreve.length === 0 && (
-              <p style={{ fontSize: 13, color: "#9CA3AF", textAlign: "center", padding: "20px 0" }}>
+              <p style={{ fontSize: 13, color: "var(--muted)", textAlign: "center", padding: "20px 0" }}>
                 Nenhum módulo encontrado para "{busca}"
               </p>
             )}
@@ -462,13 +503,13 @@ export default function PedHub() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <p style={{
-                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                  fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                   letterSpacing: "0.07em", textTransform: "uppercase",
                 }}>
                   Pediatria Geral
                 </p>
-                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{totalPediatria}</span>
+                <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+                <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalPediatria}</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 <PediatriaGateway count={totalPediatria} onClick={() => navigate("/pediatria-geral")} />
@@ -478,13 +519,13 @@ export default function PedHub() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <p style={{
-                  fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                  fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                   letterSpacing: "0.07em", textTransform: "uppercase",
                 }}>
                   Neonatologia
                 </p>
-                <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{totalNeonatal}</span>
+                <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+                <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalNeonatal}</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
@@ -495,13 +536,13 @@ export default function PedHub() {
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                   <p style={{
-                    fontWeight: 700, fontSize: 12, color: "#6B7280", margin: 0,
+                    fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                     letterSpacing: "0.07em", textTransform: "uppercase",
                   }}>
                     Em breve
                   </p>
-                  <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-                  <span style={{ fontSize: 11, color: "#9CA3AF" }}>{EM_BREVE.length}</span>
+                  <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+                  <span style={{ fontSize: 11, color: "var(--muted)" }}>{EM_BREVE.length}</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {EM_BREVE.map(m => (
@@ -532,10 +573,10 @@ export default function PedHub() {
       <div style={{
         textAlign: "center",
         padding: "16px 20px 32px",
-        borderTop: "1px solid #E5E7EB",
+        borderTop: "1px solid var(--border)",
       }}>
-        <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0, lineHeight: 1.6 }}>
-          <strong style={{ color: "#6B7280" }}>PedHub · PedSuite</strong><br />
+        <p style={{ fontSize: 11, color: "var(--muted)", margin: 0, lineHeight: 1.6 }}>
+          <strong style={{ color: "var(--text-2)" }}>PedHub · PedSuite</strong><br />
           Apoio à decisão clínica — não substitui julgamento médico<br />
           Dr. Henrique Flávio G. Gomes · CRM-DF 14.611
         </p>

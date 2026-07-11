@@ -2,4 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-body { font-family: 'DM Sans', sans-serif; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
+
+/* ─── Tokens de tema (cores de "moldura") ──────────────────────────────────
+   Cores semânticas/clínicas (vermelho, âmbar, verde…) NÃO usam tokens —
+   permanecem fixas para preservar o significado clínico. Estes tokens cobrem
+   apenas fundos, superfícies, textos e bordas neutros. */
+:root {
+  color-scheme: light;
+  --bg:        #F6F8FB;  /* fundo da página */
+  --surface:   #FFFFFF;  /* cards / superfícies */
+  --surface-2: #F3F4F6;  /* superfície sutil */
+  --border:    #EEF0F4;  /* bordas / divisores */
+  --text:      #0F172A;  /* texto primário */
+  --text-2:    #374151;  /* texto secundário */
+  --muted:     #94A3B8;  /* texto auxiliar */
+}
+
+/* Escuro por preferência do sistema — a menos que o usuário force "light" */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:        #0B1220;
+    --surface:   #151D2B;
+    --surface-2: #1E293B;
+    --border:    #263248;
+    --text:      #E6EDF6;
+    --text-2:    #B4C0D3;
+    --muted:     #8798B0;
+  }
+}
+
+/* Escuro forçado pelo toggle (vence a preferência do sistema) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:        #0B1220;
+  --surface:   #151D2B;
+  --surface-2: #1E293B;
+  --border:    #263248;
+  --text:      #E6EDF6;
+  --text-2:    #B4C0D3;
+  --muted:     #8798B0;
+}
+
+/* Claro forçado pelo toggle (vence a preferência do sistema) */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:        #F6F8FB;
+  --surface:   #FFFFFF;
+  --surface-2: #F3F4F6;
+  --border:    #EEF0F4;
+  --text:      #0F172A;
+  --text-2:    #374151;
+  --muted:     #94A3B8;
+}

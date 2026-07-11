@@ -12,6 +12,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="PedHub" />
 
+    <!-- Aplica o tema salvo antes da 1ª pintura (evita flash claro/escuro) -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('pedhub-theme');
+          if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
       data-cf-beacon='{"token": "a4afe38cb869485e8b53f6ef7496deba", "spa": true}'></script>
