@@ -4,6 +4,7 @@
  * Ref: NeoFax 2023 · Harriet Lane · SBP
  */
 
+/* eslint-disable react-refresh/only-export-components -- exporta rateA/rateB/DROGAS para testes unitários */
 import { useState } from "react";
 import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
 
@@ -25,7 +26,7 @@ const f2     = n => (Math.round(n*100)/100).toFixed(2);
    Rate B   : dose × dF × tC × pk  / mB_c_n            (weight dependent)
    Amp draw : mA_K_n × pk / ampC_n  mL                  (volume from ampoule)
 ──────────────────────────────────────────────────────────────────────── */
-const DROGAS = [
+export const DROGAS = [
   { id:"dopamina",      nome:"Dopamina",         grupo:"Vasoativa",    cor:"#DC2626",
     amp:"200 mg/5 mL (40 mg/mL)", diluente:"SF 0,9%",
     unidade:"mcg/kg/min", doseMin:2,    doseMax:20,  doseInicio:5,
@@ -120,10 +121,10 @@ const DROGAS = [
 
 /* ── Fórmulas ───────────────────────────────────────────────────────────── */
 // Rate A (mL/h) — independente do peso
-const rateA = (d, dose) => (dose * d.dF * d.tC * d.vol) / d.mA_K_n;
+export const rateA = (d, dose) => (dose * d.dF * d.tC * d.vol) / d.mA_K_n;
 
 // Rate B (mL/h) — depende do peso
-const rateB = (d, pk, dose) => (dose * d.dF * d.tC * pk) / d.mB_c_n;
+export const rateB = (d, pk, dose) => (dose * d.dF * d.tC * pk) / d.mB_c_n;
 
 // Quantidade de droga para Modo A (exibição)
 function amountA(d, pk) {

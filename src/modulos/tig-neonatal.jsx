@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras de TIG para testes unitários */
 import { useState, useMemo } from "react";
 import {
   Scale, Calculator, ClipboardList, BarChart2,
@@ -42,11 +43,15 @@ function pOverride(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v >= 0 ? v : null;
 }
-function getNa(dia) { return [1, 2, 3][Math.min(dia - 1, 2)]; }
-function getK(dia, diurese) {
+export function getNa(dia) { return [1, 2, 3][Math.min(dia - 1, 2)]; }
+export function getK(dia, diurese) {
   if (dia === 1) return diurese ? 0.5 : 0;
   return [0.5, 1, 2][Math.min(dia - 2, 2)];
 }
+
+// Fórmulas puras de TIG (testadas). tig em mg/kg/min, vol em mL/kg/dia, peso em kg.
+export function tigGlicoseGramasDia(tig, peso) { return tig * peso * 1.44; }  // g de glicose/dia
+export function tigConcentracao(tig, vol) { return (tig * 144) / vol; }        // % de glicose (independe do peso)
 
 /* ── Estilo base card ── */
 const CARD = {
@@ -199,8 +204,8 @@ export default function TigNeonatal() {
   const calc = useMemo(() => {
     if (!peso || !tig || !vol || dia < 1) return null;
 
-    const conc      = (tig * 144) / vol;       // % concentração (independente do peso)
-    const gg        = tig * peso * 1.44;       // g de glicose / dia
+    const conc      = tigConcentracao(tig, vol);      // % concentração (independente do peso)
+    const gg        = tigGlicoseGramasDia(tig, peso); // g de glicose / dia
     const vol_total = vol * peso;              // mL / dia
     const mlh       = vol_total / 24;          // mL / h
 
