@@ -1,5 +1,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras de TIG para testes unitários */
 import { useState, useMemo } from "react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 import {
   Scale, Calculator, ClipboardList, BarChart2,
   AlertTriangle, CheckCircle, Info, Activity, ArrowRight,
@@ -315,6 +317,7 @@ export default function TigNeonatal() {
               />
               <UT text="kg" />
             </IW>
+            <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
           </div>
 
           {/* Dias de vida — stepper */}

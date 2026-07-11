@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta função pura de cálculo para testes */
 /**
  * dexametasona-dbp.jsx — PedHub
  * Dexametasona · RNPT com DBP — DART e Protocolo HMIB
@@ -39,7 +40,7 @@ const ACUM_HMIB = 1.80;  // mg/kg
    vol1  = doseDose / 1    mL de Dexa 1 mg/mL
    vol01 = doseDose / 0.1  mL de Dexa 0,1 mg/mL
 ──────────────────────────────────────────────────────────────────────── */
-function calcFases(fases, pk) {
+export function calcFases(fases, pk) {
   return fases.map(f => {
     const doseDose = (f.doseKgDia * pk) / 2;
     return { ...f, doseDose, vol4: doseDose/4, vol1: doseDose/1, vol01: doseDose/0.1 };
