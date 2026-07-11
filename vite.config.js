@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',      // atualiza sozinho quando uma nova versão é publicada
+      registerType: 'prompt',          // avisa o usuário ("nova versão") em vez de atualizar em silêncio
       injectRegister: 'auto',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {

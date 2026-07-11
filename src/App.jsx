@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PedHub from "./PedHub"; // importação direta — não lazy
+import ReloadPrompt from "./ReloadPrompt";
 
 /* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
@@ -310,6 +311,7 @@ export default function App() {
         </Routes>
       </Suspense>
       <RodapeGlobal />
+      <ReloadPrompt />
     </>
   );
 }
