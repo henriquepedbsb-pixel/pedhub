@@ -7,7 +7,7 @@ function InfoBox({ color, children }) {
   return (
     <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -23,7 +23,7 @@ function ResultBox({ label, value, color, condutas }) {
         {condutas && condutas.map((c, i) => (
           <div key={i} style={{ display: "flex", gap: 7, marginBottom: 5 }}>
             <CheckCircle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.45 }}>{c}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{c}</span>
           </div>
         ))}
       </div>
@@ -60,18 +60,18 @@ function TabGorelick() {
   return (
     <div>
       <InfoBox color="#3B82F6"><strong>Score de Gorelick (1997) + SBP 2022.</strong> 10 sinais clínicos para avaliar grau de desidratação em crianças com gastroenterite aguda.</InfoBox>
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 10px" }}>Marque os sinais presentes:</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 10px" }}>Marque os sinais presentes:</p>
       {GORELICK_ITEMS.map((item, i) => (
-        <button key={i} onClick={() => toggle(i)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, marginBottom: 6, background: scores[i] ? "#3B82F610" : "#F9FAFB", border: "1.5px solid " + (scores[i] ? "#3B82F6" : "#E5E7EB"), cursor: "pointer" }}>
-          <div style={{ width: 22, height: 22, borderRadius: 6, background: scores[i] ? "#3B82F6" : "#E5E7EB", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <button key={i} onClick={() => toggle(i)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, marginBottom: 6, background: scores[i] ? "#3B82F610" : "var(--surface-2)", border: "1.5px solid " + (scores[i] ? "#3B82F6" : "var(--border)"), cursor: "pointer" }}>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: scores[i] ? "#3B82F6" : "var(--border)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             {scores[i] && <CheckCircle size={14} color="#fff" />}
           </div>
-          <span style={{ fontSize: 12, color: "#374151", textAlign: "left", lineHeight: 1.4 }}>{item}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", textAlign: "left", lineHeight: 1.4 }}>{item}</span>
         </button>
       ))}
-      <div style={{ background: "#F3F4F6", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>Pontuação total</span>
-        <span style={{ fontWeight: 800, fontSize: 18, color: "#111827" }}>{total} / 10</span>
+      <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-2)" }}>Pontuação total</span>
+        <span style={{ fontWeight: 800, fontSize: 18, color: "var(--text)" }}>{total} / 10</span>
       </div>
       <ResultBox label={res.grau} value={"Score: " + total} color={res.color} condutas={res.condutas} />
     </div>
@@ -105,19 +105,19 @@ function TabWestley() {
       <InfoBox color="#F59E0B"><strong>Score de Westley (1978) + SBP Dep. Emergências nº 1 (2017).</strong> Avaliação da gravidade do crupe (laringotraqueobronquite viral).</InfoBox>
       {WESTLEY_PARAMS.map((p, i) => (
         <div key={i} style={{ marginBottom: 12 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 6px" }}>{p.label}</p>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 6px" }}>{p.label}</p>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             {p.opts.map(opt => (
-              <button key={opt.v} onClick={() => set(i, opt.v)} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 500, cursor: "pointer", border: "none", background: vals[i] === opt.v ? PRIMARY : "#F3F4F6", color: vals[i] === opt.v ? "#fff" : "#374151" }}>
+              <button key={opt.v} onClick={() => set(i, opt.v)} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 500, cursor: "pointer", border: "none", background: vals[i] === opt.v ? PRIMARY : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)" }}>
                 {opt.label} ({opt.v})
               </button>
             ))}
           </div>
         </div>
       ))}
-      <div style={{ background: "#F3F4F6", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>Pontuação total</span>
-        <span style={{ fontWeight: 800, fontSize: 18, color: "#111827" }}>{total} / 17</span>
+      <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-2)" }}>Pontuação total</span>
+        <span style={{ fontWeight: 800, fontSize: 18, color: "var(--text)" }}>{total} / 17</span>
       </div>
       <ResultBox label={res.grau} value={"Westley: " + total} color={res.color} condutas={res.condutas} />
     </div>
@@ -149,19 +149,19 @@ function TabPEWS() {
       <InfoBox color="#EF4444"><strong>PEWS — Pediatric Early Warning Score (Monaghan 2005).</strong> Identificar deterioração clínica precoce em crianças hospitalizadas.</InfoBox>
       {PEWS_PARAMS.map((p, i) => (
         <div key={i} style={{ marginBottom: 12 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 6px" }}>{p.label}</p>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 6px" }}>{p.label}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {p.opts.map(opt => (
-              <button key={opt.v} onClick={() => set(i, opt.v)} style={{ padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 500, cursor: "pointer", border: "none", background: vals[i] === opt.v ? "#EF4444" : "#F9FAFB", color: vals[i] === opt.v ? "#fff" : "#374151", textAlign: "left", borderLeft: vals[i] === opt.v ? "3px solid #DC2626" : "3px solid transparent" }}>
+              <button key={opt.v} onClick={() => set(i, opt.v)} style={{ padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 500, cursor: "pointer", border: "none", background: vals[i] === opt.v ? "#EF4444" : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)", textAlign: "left", borderLeft: vals[i] === opt.v ? "3px solid #DC2626" : "3px solid transparent" }}>
                 {opt.label} <span style={{ opacity: 0.7 }}>({opt.v} pt)</span>
               </button>
             ))}
           </div>
         </div>
       ))}
-      <div style={{ background: "#F3F4F6", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>PEWS total</span>
-        <span style={{ fontWeight: 800, fontSize: 18, color: "#111827" }}>{total} / 9</span>
+      <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-2)" }}>PEWS total</span>
+        <span style={{ fontWeight: 800, fontSize: 18, color: "var(--text)" }}>{total} / 9</span>
       </div>
       <ResultBox label={res.grau} value={"PEWS: " + total} color={res.color} condutas={res.condutas} />
     </div>
@@ -272,12 +272,12 @@ function TabFinnegan() {
 
       {FINNEGAN_SECOES.map((secao, si) => (
         <div key={si} style={{ marginBottom: 16 }}>
-          <p style={{ fontWeight: 700, fontSize: 12, color: "#6B7280", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
             {secao.titulo}
           </p>
           {secao.itens.map((item) => (
             <div key={item.idx} style={{ marginBottom: 12 }}>
-              <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 6px" }}>{item.label}</p>
+              <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 6px" }}>{item.label}</p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {item.opts.map((opt) => (
                   <button
@@ -286,8 +286,8 @@ function TabFinnegan() {
                     style={{
                       padding: "6px 12px", borderRadius: 8, fontSize: 12,
                       fontWeight: vals[item.idx] === opt.v ? 700 : 500, cursor: "pointer", border: "none",
-                      background: vals[item.idx] === opt.v ? "#7C3AED" : "#F3F4F6",
-                      color: vals[item.idx] === opt.v ? "#fff" : "#374151",
+                      background: vals[item.idx] === opt.v ? "#7C3AED" : "var(--surface-2)",
+                      color: vals[item.idx] === opt.v ? "#fff" : "var(--text-2)",
                     }}
                   >
                     {opt.label} ({opt.v})
@@ -299,9 +299,9 @@ function TabFinnegan() {
         </div>
       ))}
 
-      <div style={{ background: "#F3F4F6", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>Pontuação total</span>
-        <span style={{ fontWeight: 800, fontSize: 18, color: "#111827" }}>{total} / {FINNEGAN_MAX_SCORE}</span>
+      <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-2)" }}>Pontuação total</span>
+        <span style={{ fontWeight: 800, fontSize: 18, color: "var(--text)" }}>{total} / {FINNEGAN_MAX_SCORE}</span>
       </div>
       <ResultBox label={res.grau} value={"Finnegan: " + total} color={res.color} condutas={res.condutas} />
 
@@ -318,15 +318,15 @@ export default function Scores() {
   const cores = ["#3B82F6", "#F59E0B", "#EF4444", "#7C3AED"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Scores Pediátricos</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Desidratação · Crupe · PEWS · Finnegan</p>
       </div>
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
-          return <button key={i} onClick={() => setTab(i)} style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? cores[i] : "#6B7280", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer" }}>{t}</button>;
+          return <button key={i} onClick={() => setTab(i)} style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? cores[i] : "var(--muted)", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer" }}>{t}</button>;
         })}
       </div>
       <div style={{ padding: 16 }}>
@@ -335,10 +335,10 @@ export default function Scores() {
         {tab === 2 && <TabPEWS />}
         {tab === 3 && <TabFinnegan />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Gorelick 1997/SBP 2022 · Westley 1978/SBP 2017 · PEWS Monaghan 2005 · Finnegan modificada/AAP 2020. Não substitui julgamento clínico.
           </p>
         </div>
