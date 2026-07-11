@@ -12,7 +12,7 @@ function InfoBox({ color, children }) {
   return (
     <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -21,7 +21,7 @@ function AlertBox({ text, color }) {
   return (
     <div style={{ display: "flex", gap: 8, background: color + "10", border: "1px solid " + color + "40", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
       <AlertTriangle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{text}</span>
+      <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{text}</span>
     </div>
   );
 }
@@ -32,7 +32,7 @@ function ItemList({ items, color }) {
       {items.map((item, i) => (
         <div key={i} style={{ display: "flex", gap: 7, marginBottom: 4 }}>
           <CheckCircle size={12} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-          <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{item}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{item}</span>
         </div>
       ))}
     </div>
@@ -58,7 +58,7 @@ function TabHipoglicemia() {
         Alvo: ≥ 45 mg/dL (1ª 24h) e ≥ 50 mg/dL após 24h.
       </InfoBox>
 
-      <div style={{ background: "#FFFBEB", borderRadius: 8, padding: "10px 14px", marginBottom: 14, border: "1px solid #FDE68A" }}>
+      <div style={{ background: "var(--tint-amber)", borderRadius: 8, padding: "10px 14px", marginBottom: 14, border: "1px solid #FDE68A" }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: C, margin: "0 0 4px" }}>PESO (kg) — doses EV</p>
         <input
           type="text"
@@ -66,7 +66,7 @@ function TabHipoglicemia() {
           placeholder="Ex: 1,650"
           value={pesoRaw}
           onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #FDE68A", outline: "none", background: "#fff", boxSizing: "border-box" }}
+          style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #FDE68A", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
@@ -75,7 +75,7 @@ function TabHipoglicemia() {
         )}
       </div>
 
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 8px" }}>Grupos de risco</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 8px" }}>Grupos de risco</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 14 }}>
         {[
           "GIG ou PIG (> P90 ou < P10)", "IDM (Filho de mãe diabética)",
@@ -83,13 +83,13 @@ function TabHipoglicemia() {
           "Hipotermia / Sepse",          "Eritroblastose / Doença hemolítica",
           "Policitemia",                 "Hiperinsulinismo congênito",
         ].map((r, i) => (
-          <div key={i} style={{ background: "#FFFBEB", borderRadius: 7, padding: "6px 10px", border: "1px solid #FDE68A", fontSize: 11, color: "#374151" }}>
+          <div key={i} style={{ background: "var(--tint-amber)", borderRadius: 7, padding: "6px 10px", border: "1px solid #FDE68A", fontSize: 11, color: "var(--text-2)" }}>
             {r}
           </div>
         ))}
       </div>
 
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 8px" }}>Fluxo de conduta</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 8px" }}>Fluxo de conduta</p>
       {[
         {
           faixa: "Glicemia < 25 mg/dL (qualquer sintoma)",
@@ -169,7 +169,7 @@ function TabGelDextrose() {
       </InfoBox>
 
       {/* Calculadora */}
-      <div style={{ background: "#ECFEFF", borderRadius: 8, padding: "10px 14px", marginBottom: 14, border: "1px solid #A5F3FC" }}>
+      <div style={{ background: "var(--tint-teal)", borderRadius: 8, padding: "10px 14px", marginBottom: 14, border: "1px solid #A5F3FC" }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: C, margin: "0 0 4px" }}>PESO (kg) — dose do gel</p>
         <input
           type="text"
@@ -177,7 +177,7 @@ function TabGelDextrose() {
           placeholder="Ex: 2,800"
           value={pesoRaw}
           onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #A5F3FC", outline: "none", background: "#fff", boxSizing: "border-box" }}
+          style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #A5F3FC", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
@@ -187,7 +187,7 @@ function TabGelDextrose() {
       </div>
 
       {/* Indicações */}
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 8px" }}>Indicações</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 8px" }}>Indicações</p>
       <div style={{ borderRadius: 10, border: "1.5px solid " + C, overflow: "hidden", marginBottom: 12 }}>
         <div style={{ background: C + "20", padding: "7px 14px" }}>
           <span style={{ fontWeight: 700, color: C, fontSize: 12 }}>Glicemia 25–47 mg/dL, ASSINTOMÁTICO, grupo de risco</span>
@@ -202,7 +202,7 @@ function TabGelDextrose() {
       </div>
 
       {/* Dose e técnica */}
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 8px" }}>Dose e técnica de administração</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 8px" }}>Dose e técnica de administração</p>
       {[
         { n: "1", texto: "Dose: 200 mg/kg = 0,5 mL/kg do gel 40% (seringa de 3 mL unitarizada)", cor: C },
         { n: "2", texto: "Massagear na mucosa oral (bochechas) por 2 minutos", cor: C },
@@ -214,18 +214,18 @@ function TabGelDextrose() {
           <div style={{ width: 22, height: 22, borderRadius: "50%", background: cor, color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             {n}
           </div>
-          <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.5, paddingTop: 2 }}>{texto}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5, paddingTop: 2 }}>{texto}</span>
         </div>
       ))}
 
       {/* Protocolo de unitarização */}
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "14px 0 8px" }}>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "14px 0 8px" }}>
         Protocolo de unitarização (Farmácia)
       </p>
-      <div style={{ background: "#F0FDFA", borderRadius: 10, border: "1px solid #99F6E4", padding: "10px 14px", marginBottom: 14 }}>
+      <div style={{ background: "var(--tint-teal)", borderRadius: 10, border: "1px solid #99F6E4", padding: "10px 14px", marginBottom: 14 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
           <Droplets size={13} color="#0F766E" />
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#0F766E", textTransform: "uppercase", letterSpacing: ".06em" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-teal)", textTransform: "uppercase", letterSpacing: ".06em" }}>
             Gel de Glicose 40% · Seringa 3 mL unitarizada
           </span>
         </div>
@@ -242,22 +242,22 @@ function TabGelDextrose() {
             <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#0D9488", color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
               {i + 1}
             </div>
-            <span style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.5 }}>{step}</span>
+            <span style={{ fontSize: 11.5, color: "var(--text-2)", lineHeight: 1.5 }}>{step}</span>
           </div>
         ))}
       </div>
 
       {/* Contraindicações */}
-      <p style={{ fontWeight: 700, color: "#111827", fontSize: 14, margin: "0 0 8px" }}>Contraindicações</p>
+      <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 14, margin: "0 0 8px" }}>Contraindicações</p>
       <AlertBox
         color="#DC2626"
         text="NÃO USAR: glicemia < 25 mg/dL; hipoglicemia SINTOMÁTICA; RN sem sucção ou com risco de broncoaspiração. Nesses casos: acesso venoso + bolus D10% imediato."
       />
 
       {/* Evidência */}
-      <div style={{ background: "#F8FAFC", borderRadius: 8, padding: "10px 14px", border: "1px solid #E2E8F0", marginTop: 4 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#475569", margin: "0 0 4px" }}>Evidência clínica</p>
-        <p style={{ fontSize: 11, color: "#64748B", lineHeight: 1.5, margin: 0 }}>
+      <div style={{ background: "var(--tint-slate)", borderRadius: 8, padding: "10px 14px", border: "1px solid var(--border)", marginTop: 4 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: "var(--text-2)", margin: "0 0 4px" }}>Evidência clínica</p>
+        <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
           <strong>Sugar Babies RCT</strong> (Harris et al., Lancet 2013): gel dextrose 40% vs. placebo em 514 RN —
           reduziu falha de tratamento (14% vs. 24%, NNT 10) e admissão em UCIN (14% vs. 25%, NNT 4).
           Confirmado por meta-análise Cochrane 2021 (Weston et al.) e incorporado ao guideline AAP/PAS 2011.
@@ -274,13 +274,13 @@ export default function Neonatologia2() {
   const cores = ["#D97706", "#0891B2"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia II</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Hipoglicemia Neonatal</p>
       </div>
 
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
           return (
@@ -290,7 +290,7 @@ export default function Neonatologia2() {
               style={{
                 flex: 1, padding: "12px 6px", fontSize: 12,
                 fontWeight: active ? 700 : 500,
-                color: active ? cores[i] : "#6B7280",
+                color: active ? cores[i] : "var(--muted)",
                 background: "transparent", border: "none",
                 borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"),
                 cursor: "pointer",
@@ -307,10 +307,10 @@ export default function Neonatologia2() {
         {tab === 1 && <TabGelDextrose />}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Hipoglicemia: AAP/PAS 2011 e SBP.
             Gel de dextrose: Harris et al. Lancet 2013 · Weston et al. Cochrane 2021.
             Não substitui prescrição médica individualizada.

@@ -65,11 +65,11 @@ function FaixaCard({ titulo, cor, idade, criterios_baixo_risco, exames, conduta_
         )}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 12 }}>
           <div style={{ background: "var(--tint-green)", borderRadius: 8, padding: "10px 10px", border: "1px solid #6EE7B7" }}>
-            <p style={{ fontWeight: 700, color: "#065F46", fontSize: 11, margin: "0 0 6px" }}>BAIXO RISCO</p>
+            <p style={{ fontWeight: 700, color: "var(--tx-green)", fontSize: 11, margin: "0 0 6px" }}>BAIXO RISCO</p>
             {conduta_baixo.map((c, i) => <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px", lineHeight: 1.4 }}>{c}</p>)}
           </div>
           <div style={{ background: "var(--tint-red)", borderRadius: 8, padding: "10px 10px", border: "1px solid #FECACA" }}>
-            <p style={{ fontWeight: 700, color: "#991B1B", fontSize: 11, margin: "0 0 6px" }}>ALTO RISCO</p>
+            <p style={{ fontWeight: 700, color: "var(--tx-red)", fontSize: 11, margin: "0 0 6px" }}>ALTO RISCO</p>
             {conduta_alto.map((c, i) => <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px", lineHeight: 1.4 }}>{c}</p>)}
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function FebreSemFoco() {
               </div>
             ))}
             <div style={{ background: "var(--tint-purple)", borderRadius: 10, padding: "12px 14px", marginTop: 14, border: "1px solid #DDD6FE" }}>
-              <p style={{ fontWeight: 700, color: "#5B21B6", fontSize: 13, margin: "0 0 8px" }}>Se TODOS os critérios PECARN presentes (baixo risco):</p>
+              <p style={{ fontWeight: 700, color: "var(--tx-purple)", fontSize: 13, margin: "0 0 8px" }}>Se TODOS os critérios PECARN presentes (baixo risco):</p>
               {["Sensibilidade 97,7% para IBG séria", "Não requer punção lombar de rotina", "Alta ambulatorial com retorno em 24h é segura", "Hemograma + PCT + EQU ainda necessários"].map((c, i) => (
                 <div key={i} style={{ display: "flex", gap: 6, marginBottom: 4 }}>
                   <ChevronRight size={13} color="#7C3AED" style={{ flexShrink: 0, marginTop: 2 }} />

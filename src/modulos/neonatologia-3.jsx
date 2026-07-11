@@ -19,12 +19,12 @@ const C = {
   sbp:  '#0d6e6e', sbpL: '#e0f2f1',
   prim: '#D97706',
   fundo:'#eef2f7', card: '#ffffff', borda:'#d0dae8',
-  texto:'#1a1a2e', det: '#4a5568', muted:'#718096',
+  texto:'#1a1a2e', det: "var(--text-2)", muted:'#718096',
   // Zone colors — clinical, preserve originals
-  z1bg:'#d4edda', z1br:'#28a745', z1tx:'#155724',
-  z2bg:'#fff3cd', z2br:'#ffc107', z2tx:'#856404',
-  z3bg:'#ffe0b2', z3br:'#ff9800', z3tx:'#e65100',
-  z4bg:'#f8d7da', z4br:'#dc3545', z4tx:'#721c24',
+  z1bg:"var(--tint-green)", z1br:'#28a745', z1tx:'#155724',
+  z2bg:"var(--tint-amber)", z2br:'#ffc107', z2tx:'#856404',
+  z3bg:"var(--tint-amber)", z3br:'#ff9800', z3tx:'#e65100',
+  z4bg:"var(--tint-red)", z4br:'#dc3545', z4tx:'#721c24',
   z5bg:'#b71c1c', z5br:'#7f0000', z5tx:'#ffffff',
 };
 const R = '10px', RS = '7px';
@@ -464,7 +464,7 @@ export default function IctericiaNeonatal() {
       </header>
 
       {/* ── Tab bar ── */}
-      <div style={{display:'flex',background:'#fff',borderBottom:`2px solid ${C.borda}`,position:'sticky',top:0,zIndex:99,overflow:'auto'}}>
+      <div style={{display:'flex',background:"var(--surface)",borderBottom:`2px solid ${C.borda}`,position:'sticky',top:0,zIndex:99,overflow:'auto'}}>
         {[
           {id:'calc',   Icon:Calculator,   label:'Calculadora'},
           {id:'tables', Icon:ClipboardList, label:'Tabelas'},
@@ -491,7 +491,7 @@ export default function IctericiaNeonatal() {
 
       <div style={{
         textAlign:'center', fontSize:11, color:C.muted,
-        padding:'14px 16px', background:'#f0f4f8', lineHeight:1.7,
+        padding:'14px 16px', background:"var(--tint-slate)", lineHeight:1.7,
       }}>
         <p style={{margin:0}}>AAP 2022: Kemper AR et al. <em>Pediatrics</em> 2022;150(3):e2022058859</p>
         <p style={{margin:0}}>SBP 2021: Depto. Científico de Neonatologia. Manual de Orientação nº 10, set/2021</p>
@@ -655,7 +655,7 @@ export default function IctericiaNeonatal() {
           display:'flex', alignItems:'center', justifyContent:'center', gap:7,
           width:'100%', padding:'11px 0', marginBottom:14,
           border:`1.5px solid ${C.borda}`, borderRadius:R,
-          background:'#fff', color:C.head2,
+          background:"var(--surface)", color:C.head2,
           fontSize:14, fontWeight:600, cursor:'pointer',
         }}>
           <Printer size={15}/> Imprimir / PDF
@@ -929,7 +929,7 @@ export default function IctericiaNeonatal() {
                 <span style={{fontWeight:700,fontSize:13}}>{label}</span>
               </div>
               <button onClick={()=>restoreTable(key)} style={{
-                padding:'4px 11px',fontSize:12,background:'#e2e8f0',border:'none',
+                padding:'4px 11px',fontSize:12,background:"var(--tint-slate)",border:'none',
                 borderRadius:5,cursor:'pointer',fontWeight:600,color:C.det,
                 display:'flex',alignItems:'center',gap:5,
               }}>
@@ -961,7 +961,7 @@ export default function IctericiaNeonatal() {
                                 onBlur={e=>commitEdit(key,ri,ci,e.target.value)}
                                 onKeyDown={e=>e.key==='Enter'&&e.target.blur()}
                                 style={{width:'100%',border:'none',outline:`2px solid ${C.aap}`,
-                                  padding:'5px 4px',fontSize:13,textAlign:'center',background:'#e8f0fe'}}
+                                  padding:'5px 4px',fontSize:13,textAlign:'center',background:"var(--tint-blue)"}}
                               />
                             </td>
                           );
@@ -969,7 +969,7 @@ export default function IctericiaNeonatal() {
                         return (
                           <td key={ci} onClick={()=>setEditCell({key,ri,ci})}
                             style={{...tdStyle,cursor:'pointer',
-                              background: isHl ? '#fff3cd' : ri%2?'#f5f8fc':'',
+                              background: isHl ? "var(--tint-amber)" : ri%2?'#f5f8fc':'',
                               fontWeight: isHl ? 700 : 400,
                               outline: isHl ? `2px solid #ffc107` : 'none',
                             }}>
@@ -996,7 +996,7 @@ export default function IctericiaNeonatal() {
               <span style={{fontWeight:700,fontSize:13}}>Tabela E — Fototerapia e Exsanguinotransfusão (&lt; 35 sem)</span>
             </div>
             <button onClick={()=>restoreTable('E')} style={{
-              padding:'4px 11px',fontSize:12,background:'#e2e8f0',border:'none',
+              padding:'4px 11px',fontSize:12,background:"var(--tint-slate)",border:'none',
               borderRadius:5,cursor:'pointer',fontWeight:600,color:C.det,
               display:'flex',alignItems:'center',gap:5,
             }}>
@@ -1059,7 +1059,7 @@ function GuiaTab() {
       {GUIDE.map((item,i) => (
         <div key={i} style={{border:`1px solid #d0dae8`,borderRadius:'8px',marginBottom:8,overflow:'hidden'}}>
           <button onClick={()=>setOpen(p=>({...p,[i]:!p[i]}))}
-            style={{width:'100%',padding:'10px 14px',background:'#f0f4f8',border:'none',
+            style={{width:'100%',padding:'10px 14px',background:"var(--tint-slate)",border:'none',
               cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',
               fontWeight:700,fontSize:13,textAlign:'left'}}>
             <span>{item.title}</span>
@@ -1091,7 +1091,7 @@ function Card({children}) {
 function CardTitle({children}) {
   return (
     <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.5px',
-      color:'#4a5568',marginBottom:10,borderBottom:`1px solid #e2e8f0`,paddingBottom:6}}>
+      color:"var(--text-2)",marginBottom:10,borderBottom:`1px solid var(--border)`,paddingBottom:6}}>
       {children}
     </div>
   );
@@ -1100,7 +1100,7 @@ function CardTitle({children}) {
 function Fld({label,children}) {
   return (
     <div>
-      <label style={{display:'block',fontSize:12,fontWeight:600,color:'#4a5568',marginBottom:4}}>
+      <label style={{display:'block',fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:4}}>
         {label}
       </label>
       {children}
@@ -1129,9 +1129,9 @@ function Pill({color,children}) {
 
 function ABox({type,children}) {
   const styles = {
-    warn:   {bg:'#fff3cd',tx:'#856404',br:'#ffc107'},
-    danger: {bg:'#f8d7da',tx:'#721c24',br:'#dc3545'},
-    info:   {bg:'#d1ecf1',tx:'#0c5460',br:'#bee5eb'},
+    warn:   {bg:"var(--tint-amber)",tx:'#856404',br:'#ffc107'},
+    danger: {bg:"var(--tint-red)",tx:'#721c24',br:'#dc3545'},
+    info:   {bg:"var(--tint-teal)",tx:'#0c5460',br:'#bee5eb'},
   };
   const s = styles[type] || styles.info;
   return (
@@ -1203,7 +1203,7 @@ function ZoneBox({z,title,subtitle,items}) {
 
 const inpStyle = {
   width:'100%', padding:'8px 10px', border:`1.5px solid ${C.borda}`,
-  borderRadius:RS, fontSize:14, background:'#f8fafc',
+  borderRadius:RS, fontSize:14, background:"var(--tint-slate)",
   boxSizing:'border-box', outline:'none', color:C.texto,
 };
 const selStyle = {

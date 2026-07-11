@@ -17,22 +17,22 @@ const COR = {
   dark:  '#065F46',
   mid:   '#047857',
   lite:  '#D1FAE5',
-  fundo: '#F0FDF4',
+  fundo: "var(--tint-green)",
   card:  '#ffffff',
   borda: '#A7F3D0',
   texto: '#1A2332',
-  det:   '#374151',
-  muted: '#6B7280',
+  det:   "var(--text-2)",
+  muted: "var(--muted)",
   warn:  '#D97706',
-  warnL: '#FEF3C7',
+  warnL: "var(--tint-amber)",
   ok:    '#16A34A',
-  okL:   '#DCFCE7',
+  okL:   "var(--tint-green)",
   err:   '#DC2626',
-  errL:  '#FEE2E2',
+  errL:  "var(--tint-red)",
   roxo:  '#7C3AED',
-  roxoL: '#EDE9FE',
-  slate: '#64748B',
-  slateL:'#F1F5F9',
+  roxoL: "var(--tint-purple)",
+  slate: "var(--muted)",
+  slateL:"var(--tint-slate)",
 };
 const R = '12px', RS = '8px';
 
@@ -305,7 +305,7 @@ export default function Canguru() {
         </p>
       </header>
 
-      <div style={{ display: 'flex', background: '#fff', borderBottom: `2px solid ${COR.lite}` }}>
+      <div style={{ display: 'flex', background: "var(--surface)", borderBottom: `2px solid ${COR.lite}` }}>
         {['Prescrição', 'Receituário'].map((t, i) => (
           <button key={i} onClick={() => setTab(i)} style={{
             flex: 1, padding: '12px 8px', fontSize: 13,
@@ -966,7 +966,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
     <>
       {/* ── área imprimível (sem o botão) ── */}
       <div id="ph-print-receit" style={{
-        background: '#FFFEF8',
+        background: "var(--tint-amber)",
         border: `1px solid ${COR.borda}`,
         borderTop: `3px solid ${COR.dark}`,
         borderRadius: R, overflow: 'hidden', marginBottom: 12,
@@ -1160,7 +1160,7 @@ function Inp({ value, onChange, placeholder, mode }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: '#fff', color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
     />
   );
 }
@@ -1172,7 +1172,7 @@ function DateInp({ value, onChange }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       max={HOJE_ISO}
-      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: '#fff', color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
     />
   );
 }
@@ -1195,7 +1195,7 @@ function Grid2({ children }) {
 
 function BtnSel({ active, onClick, children }) {
   return (
-    <button onClick={onClick} style={{ flex: 1, padding: '9px 4px', fontSize: 12, fontWeight: active ? 700 : 500, borderRadius: RS, border: 'none', cursor: 'pointer', background: active ? COR.prim : '#F3F4F6', color: active ? '#fff' : COR.det, transition: 'all .14s' }}>
+    <button onClick={onClick} style={{ flex: 1, padding: '9px 4px', fontSize: 12, fontWeight: active ? 700 : 500, borderRadius: RS, border: 'none', cursor: 'pointer', background: active ? COR.prim : "var(--surface-2)", color: active ? '#fff' : COR.det, transition: 'all .14s' }}>
       {children}
     </button>
   );
@@ -1203,7 +1203,7 @@ function BtnSel({ active, onClick, children }) {
 
 function SelectFm({ value, onChange }) {
   return (
-    <select value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: '#fff', color: COR.texto, outline: 'none' }}>
+    <select value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none' }}>
       {Object.entries(FORMULAS).map(([k, f]) => (
         <option key={k} value={k}>{f.nome}</option>
       ))}
@@ -1213,7 +1213,7 @@ function SelectFm({ value, onChange }) {
 
 function ErrBox({ msg }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: COR.errL, border: `1px solid ${COR.err}`, borderRadius: RS, padding: '10px 14px', marginBottom: 12, fontSize: 13, color: '#7F1D1D' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: COR.errL, border: `1px solid ${COR.err}`, borderRadius: RS, padding: '10px 14px', marginBottom: 12, fontSize: 13, color: "var(--tx-red)" }}>
       <AlertTriangle size={15} style={{ flexShrink: 0 }} />
       {msg}
     </div>
@@ -1226,7 +1226,7 @@ function BtnRow({ onGerar, onLimpar, labelGerar }) {
       <button onClick={onGerar} style={{ flex: 2, padding: '14px 0', border: 'none', borderRadius: R, background: COR.prim, color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
         {labelGerar}
       </button>
-      <button onClick={onLimpar} style={{ flex: 1, padding: '14px 0', border: `1.5px solid ${COR.borda}`, borderRadius: R, background: '#fff', color: COR.muted, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+      <button onClick={onLimpar} style={{ flex: 1, padding: '14px 0', border: `1.5px solid ${COR.borda}`, borderRadius: R, background: "var(--surface)", color: COR.muted, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
         <RefreshCw size={14} /> Limpar
       </button>
     </div>
@@ -1284,7 +1284,7 @@ function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 })
           style={{
             width: 74, padding: '7px 9px', borderRadius: RS,
             border: `1.5px solid ${edited ? COR.warn : COR.borda}`,
-            fontSize: 13, fontWeight: 700, color: COR.texto, background: '#fff',
+            fontSize: 13, fontWeight: 700, color: COR.texto, background: "var(--surface)",
             outline: 'none', boxSizing: 'border-box',
           }}
         />
@@ -1385,7 +1385,7 @@ function PrintBtn({ targetId }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         width: '100%', padding: '12px 0',
         border: `1.5px solid ${COR.borda}`, borderRadius: R,
-        background: '#fff', color: COR.mid,
+        background: "var(--surface)", color: COR.mid,
         fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 4,
       }}
     >

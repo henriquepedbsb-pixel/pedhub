@@ -86,12 +86,12 @@ function fmtCronologica(totalDias) {
 /* ─── Micro-componentes ───────────────────────────────────────────────────── */
 function MetricRow({ rotulo, valor, sub }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "11px 14px", borderBottom: "1px solid #F3F4F6", gap: 12 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "11px 14px", borderBottom: "1px solid var(--border)", gap: 12 }}>
       <div style={{ flex: 1 }}>
-        <p style={{ fontSize: 13, color: "#374151", fontWeight: 600, margin: 0 }}>{rotulo}</p>
-        {sub && <p style={{ fontSize: 11, color: "#9CA3AF", margin: "2px 0 0", lineHeight: 1.4 }}>{sub}</p>}
+        <p style={{ fontSize: 13, color: "var(--text-2)", fontWeight: 600, margin: 0 }}>{rotulo}</p>
+        {sub && <p style={{ fontSize: 11, color: "var(--muted)", margin: "2px 0 0", lineHeight: 1.4 }}>{sub}</p>}
       </div>
-      <span style={{ fontSize: 14, fontWeight: 700, color: "#111827", textAlign: "right", flexShrink: 0 }}>{valor}</span>
+      <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", textAlign: "right", flexShrink: 0 }}>{valor}</span>
     </div>
   );
 }
@@ -137,7 +137,7 @@ export default function IdadeGestacional() {
   const limparDisabled = !dataNasc && !igSemRaw && !igDiaRaw;
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
 
       {/* Header */}
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
@@ -148,18 +148,18 @@ export default function IdadeGestacional() {
       </div>
 
       {/* Entradas */}
-      <div style={{ padding: "12px 16px", background: "#EFF6FF", borderBottom: "1px solid #BFDBFE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#1D4ED8", display: "block", marginBottom: 4 }}>
+      <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", marginBottom: 4 }}>
           DATA DE NASCIMENTO
         </label>
         <input
           type="text" inputMode="numeric" value={dataNasc}
           onChange={e => setDataNasc(maskDate(e.target.value))}
           placeholder="dd/mm/aaaa" maxLength={10} autoComplete="off"
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "#fff", boxSizing: "border-box", letterSpacing: "0.05em" }}
+          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box", letterSpacing: "0.05em" }}
         />
 
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#1D4ED8", display: "block", margin: "10px 0 4px" }}>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", margin: "10px 0 4px" }}>
           IDADE GESTACIONAL AO NASCER
         </label>
         <div style={{ display: "flex", gap: 8 }}>
@@ -168,42 +168,42 @@ export default function IdadeGestacional() {
               type="text" inputMode="numeric" value={igSemRaw}
               onChange={e => setIgSemRaw(e.target.value.replace(/\D/g, "").slice(0, 2))}
               placeholder="semanas" maxLength={2} autoComplete="off"
-              style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "#fff", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "#6B7280", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
+            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
           </div>
           <div style={{ flex: 1 }}>
             <input
               type="text" inputMode="numeric" value={igDiaRaw}
               onChange={e => setIgDiaRaw(e.target.value.replace(/\D/g, "").slice(0, 1))}
               placeholder="dias" maxLength={1} autoComplete="off"
-              style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "#fff", boxSizing: "border-box" }}
+              style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "#6B7280", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
+            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
           </div>
         </div>
 
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#1D4ED8", display: "block", margin: "10px 0 4px" }}>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", margin: "10px 0 4px" }}>
           DATA DE AVALIAÇÃO
         </label>
         <input
           type="text" inputMode="numeric" value={dataRef}
           onChange={e => setDataRef(maskDate(e.target.value))}
           placeholder="dd/mm/aaaa" maxLength={10} autoComplete="off"
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "#fff", boxSizing: "border-box", letterSpacing: "0.05em" }}
+          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box", letterSpacing: "0.05em" }}
         />
 
         <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
           <button
             onClick={() => setDataRef(hojeBR())}
-            style={{ flex: 1, padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "1.5px solid #93C5FD", background: "#fff", color: "#1D4ED8" }}
+            style={{ flex: 1, padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "1.5px solid #93C5FD", background: "var(--surface)", color: "var(--tx-blue)" }}
           >
             Usar hoje
           </button>
           <button
             onClick={() => { setDataNasc(""); setIgSemRaw(""); setIgDiaRaw(""); setDataRef(hojeBR()); }}
             disabled={limparDisabled}
-            style={{ flex: 1, padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: limparDisabled ? "default" : "pointer", border: "1.5px solid #E5E7EB", background: "#fff", color: limparDisabled ? "#D1D5DB" : "#6B7280" }}
+            style={{ flex: 1, padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: limparDisabled ? "default" : "pointer", border: "1.5px solid var(--border)", background: "var(--surface)", color: limparDisabled ? "#D1D5DB" : "var(--muted)" }}
           >
             Limpar
           </button>
@@ -227,8 +227,8 @@ export default function IdadeGestacional() {
       {/* Resultado */}
       <div style={{ padding: 16 }}>
         {!resultado ? (
-          <div style={{ textAlign: "center", padding: "32px 16px", color: "#9CA3AF" }}>
-            <CalendarClock size={40} color="#E5E7EB" style={{ display: "block", margin: "0 auto 12px" }} />
+          <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--muted)" }}>
+            <CalendarClock size={40} color="var(--border)" style={{ display: "block", margin: "0 auto 12px" }} />
             <p style={{ fontSize: 13 }}>
               Informe a data de nascimento e a idade gestacional ao nascer para calcular IGPM, idade corrigida e idade cronológica.
             </p>
@@ -241,16 +241,16 @@ export default function IdadeGestacional() {
                 <p style={{ fontSize: 11, fontWeight: 700, color: PRIMARY, letterSpacing: "0.08em", margin: "0 0 6px" }}>
                   IDADE GESTACIONAL PÓS-MENSTRUAL (IGPM)
                 </p>
-                <p style={{ fontWeight: 700, fontSize: 28, color: "#111827", margin: "0 0 6px", lineHeight: 1.1 }}>
+                <p style={{ fontWeight: 700, fontSize: 28, color: "var(--text)", margin: "0 0 6px", lineHeight: 1.1 }}>
                   {fmtSemDias(resultado.pmaDias)}
                 </p>
-                <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
                   {resultado.faltaPara40 > 0
                     ? "Faltam " + fmtSemDias(resultado.faltaPara40) + " para atingir 40 semanas (termo). A idade corrigida passa a ser usada a partir daí."
                     : "Atingindo 40 semanas — transição para idade corrigida."}
                 </p>
-                <p style={{ fontSize: 11, color: "#9CA3AF", margin: "8px 0 0" }}>
-                  Atinge 40 semanas em: <strong style={{ color: "#374151" }}>{fmtDateBR(resultado.dataTermo)}</strong>
+                <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0" }}>
+                  Atinge 40 semanas em: <strong style={{ color: "var(--text-2)" }}>{fmtDateBR(resultado.dataTermo)}</strong>
                 </p>
               </div>
             )}
@@ -260,14 +260,14 @@ export default function IdadeGestacional() {
                 <p style={{ fontSize: 11, fontWeight: 700, color: PRIMARY, letterSpacing: "0.08em", margin: "0 0 6px" }}>
                   IDADE CORRIGIDA
                 </p>
-                <p style={{ fontWeight: 700, fontSize: 28, color: "#111827", margin: "0 0 6px", lineHeight: 1.1 }}>
+                <p style={{ fontWeight: 700, fontSize: 28, color: "var(--text)", margin: "0 0 6px", lineHeight: 1.1 }}>
                   {resultado.corrigidaDias === 0 ? "Termo (40 semanas)" : fmtMesesDias(resultado.corrigidaDias)}
                 </p>
-                <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
                   Contada a partir de 40 semanas de IGPM (atingidas em {fmtDateBR(resultado.dataTermo)}). Use a idade corrigida para curvas de crescimento e marcos do DNPM.
                 </p>
                 {resultado.corrigidaDias > 730 && (
-                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: "8px 0 0" }}>
+                  <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0" }}>
                     Acima de 2 anos a correção geralmente já não é necessária.
                   </p>
                 )}
@@ -275,21 +275,21 @@ export default function IdadeGestacional() {
             )}
 
             {resultado.aTermo && (
-              <div style={{ background: "#ECFDF5", border: "2px solid #10B981", borderRadius: 14, padding: "16px", marginBottom: 14 }}>
+              <div style={{ background: "var(--tint-green)", border: "2px solid #10B981", borderRadius: 14, padding: "16px", marginBottom: 14 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: "#059669", letterSpacing: "0.08em", margin: "0 0 6px" }}>
                   RECÉM-NASCIDO A TERMO
                 </p>
-                <p style={{ fontWeight: 700, fontSize: 24, color: "#111827", margin: "0 0 6px", lineHeight: 1.15 }}>
+                <p style={{ fontWeight: 700, fontSize: 24, color: "var(--text)", margin: "0 0 6px", lineHeight: 1.15 }}>
                   {fmtCronologica(resultado.cronoDias)}
                 </p>
-                <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
                   Nascido a termo (37 semanas ou mais) — não se aplica correção de idade. Use a idade cronológica.
                 </p>
               </div>
             )}
 
             {/* Métricas sempre exibidas */}
-            <div style={{ borderRadius: 12, border: "1px solid #E5E7EB", overflow: "hidden", marginBottom: 14 }}>
+            <div style={{ borderRadius: 12, border: "1px solid var(--border)", overflow: "hidden", marginBottom: 14 }}>
               <MetricRow
                 rotulo="Idade cronológica"
                 valor={fmtCronologica(resultado.cronoDias)}
@@ -318,9 +318,9 @@ export default function IdadeGestacional() {
 
             {/* Cross-reference (apenas prematuros) */}
             {!resultado.aTermo && (
-              <div style={{ background: "#EFF6FF", borderRadius: 10, padding: "10px 14px", marginBottom: 8, border: "1px solid #BFDBFE", display: "flex", gap: 8 }}>
+              <div style={{ background: "var(--tint-blue)", borderRadius: 10, padding: "10px 14px", marginBottom: 8, border: "1px solid #BFDBFE", display: "flex", gap: 8 }}>
                 <ChevronRight size={15} color={PRIMARY} style={{ flexShrink: 0, marginTop: 2 }} />
-                <p style={{ fontSize: 12, color: "#374151", margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0, lineHeight: 1.5 }}>
                   Aplique a idade corrigida nos módulos <strong>Percentis</strong> (curvas de crescimento) e <strong>DNPM</strong> (marcos do desenvolvimento) para prematuros.
                 </p>
               </div>
@@ -329,8 +329,8 @@ export default function IdadeGestacional() {
         )}
 
         {/* Notas */}
-        <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid #E5E7EB" }}>
-          <p style={{ fontWeight: 700, fontSize: 13, color: "#111827", margin: "0 0 8px" }}>Como interpretar</p>
+        <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid var(--border)" }}>
+          <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: "0 0 8px" }}>Como interpretar</p>
           {[
             "Idade cronológica: tempo decorrido desde o nascimento, independente da idade gestacional.",
             "IGPM (idade gestacional pós-menstrual): IG ao nascer somada à idade cronológica. Usada principalmente no período neonatal, até 40 semanas.",
@@ -340,17 +340,17 @@ export default function IdadeGestacional() {
           ].map((nota, i) => (
             <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
               <Info size={12} color={PRIMARY} style={{ flexShrink: 0, marginTop: 2 }} />
-              <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{nota}</span>
+              <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{nota}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Cálculo baseado na definição de idade gestacional pós-menstrual e idade corrigida (SBP / AAP — Engle WA, Pediatrics 2004; reafirmado 2024). Confira a idade gestacional ao nascer com o método de datação mais confiável disponível. Não substitui julgamento clínico.
           </p>
         </div>

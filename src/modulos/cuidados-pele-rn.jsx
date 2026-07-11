@@ -7,7 +7,7 @@ function InfoBox({ color, children }) {
   return (
     <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -16,7 +16,7 @@ function AlertBox({ text, color }) {
   return (
     <div style={{ display: "flex", gap: 8, background: color + "10", border: "1px solid " + color + "40", borderRadius: 8, padding: "8px 12px", marginBottom: 8 }}>
       <AlertTriangle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{text}</span>
+      <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{text}</span>
     </div>
   );
 }
@@ -24,16 +24,16 @@ function AlertBox({ text, color }) {
 function Accordion({ title, cor, badge, children }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderRadius: 10, border: "1px solid #E5E7EB", marginBottom: 8, overflow: "hidden" }}>
-      <button onClick={() => setOpen(!open)} style={{ width: "100%", background: open ? cor + "15" : "#F9FAFB", border: "none", cursor: "pointer", padding: "11px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div style={{ borderRadius: 10, border: "1px solid var(--border)", marginBottom: 8, overflow: "hidden" }}>
+      <button onClick={() => setOpen(!open)} style={{ width: "100%", background: open ? cor + "15" : "var(--surface-2)", border: "none", cursor: "pointer", padding: "11px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ fontWeight: 700, color: open ? cor : "#111827", fontSize: 13, textAlign: "left" }}>{title}</span>
           {badge && <span style={{ fontSize: 10, fontWeight: 700, color: cor, background: cor + "20", padding: "2px 7px", borderRadius: 10 }}>{badge}</span>}
         </div>
-        {open ? <ChevronUp size={16} color={cor} /> : <ChevronDown size={16} color="#9CA3AF" />}
+        {open ? <ChevronUp size={16} color={cor} /> : <ChevronDown size={16} color="var(--muted)" />}
       </button>
       {open && (
-        <div style={{ padding: "10px 14px 12px", borderTop: "1px solid #F3F4F6" }}>
+        <div style={{ padding: "10px 14px 12px", borderTop: "1px solid var(--border)" }}>
           {children}
         </div>
       )}
@@ -47,7 +47,7 @@ function ItemList({ items, color }) {
       {items.map((item, i) => (
         <div key={i} style={{ display: "flex", gap: 7, marginBottom: 4 }}>
           <CheckCircle size={12} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-          <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{item}</span>
+          <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{item}</span>
         </div>
       ))}
     </div>
@@ -269,15 +269,15 @@ export default function CuidadosPeleRn() {
   const cores = [PRIMARY, "#0EA5E9", "#0369A1", "#7C3AED"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Cuidados com a Pele do RN</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBP GPA nº 140 · março/2024</p>
       </div>
-      <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
-          return <button key={i} onClick={() => setTab(i)} style={{ flexShrink: 0, padding: "11px 12px", fontSize: 11, fontWeight: active ? 700 : 500, color: active ? cores[i] : "#6B7280", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer", whiteSpace: "nowrap" }}>{t}</button>;
+          return <button key={i} onClick={() => setTab(i)} style={{ flexShrink: 0, padding: "11px 12px", fontSize: 11, fontWeight: active ? 700 : 500, color: active ? cores[i] : "var(--muted)", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer", whiteSpace: "nowrap" }}>{t}</button>;
         })}
       </div>
       <div style={{ padding: 16 }}>
@@ -286,10 +286,10 @@ export default function CuidadosPeleRn() {
         {tab === 2 && <TabEspecificos />}
         {tab === 3 && <TabPrematuro />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> SBP GPA nº 140 (março/2024) · AWHONN 2018 · Chalmers et al. (BEEP, Lancet 2020) · Skjerven et al. (PreventADALL, Lancet 2020) · Lowe et al. (STOP-AD, J Allergy Clin Immunol 2022). Não substitui julgamento clínico.
           </p>
         </div>

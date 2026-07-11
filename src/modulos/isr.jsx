@@ -41,28 +41,28 @@ const CONTEXTOS = [
 // ─── DoseCard — componente de exibição de dose ───────────────────────────────
 function DoseCard({ label, dose, unit, vol, ampola, cor, obs, admin }) {
   return (
-    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', border: '1px solid #E5E7EB' }}>
+    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', border: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
-        <span style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', flex: 1, marginRight: '8px' }}>{label}</span>
+        <span style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", flex: 1, marginRight: '8px' }}>{label}</span>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
           <p style={{ margin: 0, fontSize: '20px', fontWeight: '800', color: cor || '#1F2937', lineHeight: 1 }}>{dose} {unit}</p>
-          <p style={{ margin: '1px 0 0 0', fontSize: '12px', color: '#374151', fontWeight: '600' }}>{vol} mL</p>
+          <p style={{ margin: '1px 0 0 0', fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{vol} mL</p>
         </div>
       </div>
-      <p style={{ margin: 0, fontSize: '10px', color: '#9CA3AF' }}>{ampola}</p>
+      <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)" }}>{ampola}</p>
       {admin && (
-        <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#374151' }}>
+        <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--text-2)" }}>
           <strong>Administração:</strong> {admin}
         </p>
       )}
-      {obs && <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#B45309', fontWeight: '600' }}>{obs}</p>}
+      {obs && <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>{obs}</p>}
     </div>
   );
 }
 
 // ─── Constantes visuais ───────────────────────────────────────────────────────
 const C   = '#C2410C';
-const CLT = '#FFF7ED';
+const CLT = "var(--tint-amber)";
 const CBR = '#FED7AA';
 
 const TABS = [
@@ -153,20 +153,20 @@ export default function ISR() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFFFFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFFFFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const chip = (ativo, cor = C) => ({
     flex: 1, padding: '8px 4px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-    backgroundColor: ativo ? cor : '#F3F4F6',
-    color: ativo ? '#FFF' : '#374151',
+    backgroundColor: ativo ? cor : "var(--surface-2)",
+    color: ativo ? '#FFF' : "var(--text-2)",
     fontSize: '11px', fontWeight: '600', textAlign: 'center',
   });
 
@@ -177,7 +177,7 @@ export default function ISR() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #9A3412 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -214,15 +214,15 @@ export default function ISR() {
               'Angioedema ou obstrução de via aérea iminente',
               'Procedimento urgente com proteção inadequada de via aérea',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                 <span style={{ color: C, flexShrink: 0, marginTop: '1px' }}>•</span>{item}
               </div>
             ))}
           </div>
 
           {/* Pré-oxigenação */}
-          <div style={{ backgroundColor: '#ECFDF5', borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#065F46', display: 'flex', alignItems: 'center' }}><Wind size={15} style={{ marginRight: 6 }} />Pré-oxigenação — Obrigatória</p>
+          <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)", display: 'flex', alignItems: 'center' }}><Wind size={15} style={{ marginRight: 6 }} />Pré-oxigenação — Obrigatória</p>
             {[
               'Alvo: SpO₂ ≥ 95% antes da indução (dessaturação é rápida em crianças: apneia segura = 1-3 min)',
               'Máscara não-reinalante 15 L/min por 3-5 minutos',
@@ -231,7 +231,7 @@ export default function ISR() {
               'Posição sniffing: extensão leve do pescoço + flexão de C7',
               'Rampa (lactente): elevar ombros até ouvido alinhar com esterno',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: '#065F46' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: "var(--tx-green)" }}>
                 <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
@@ -240,9 +240,9 @@ export default function ISR() {
 
           {/* Contraindicações drogas */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Ban size={15} style={{ marginRight: 6 }} />Contraindicações às Drogas</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Ban size={15} style={{ marginRight: 6 }} />Contraindicações às Drogas</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
+              <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
                 <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>Succinilcolina — CONTRAINDICADA se:</p>
                 {['Hipercalemia conhecida ou suspeita (rabdomiólise, lesão renal aguda, crush)',
                   'Distrofia muscular, miopatia, doença neuromuscular',
@@ -251,23 +251,23 @@ export default function ISR() {
                   'Lesão medular crônica (fase não-aguda)',
                   'História pessoal ou familiar de hipertermia maligna',
                 ].map((c, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '3px', alignItems: 'flex-start' }}>
                     <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Se contraindicada → usar rocurônio 1.2 mg/kg (aba Calcular)</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se contraindicada → usar rocurônio 1.2 mg/kg (aba Calcular)</p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
                 <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#D97706' }}>Propofol — usar com cautela se:</p>
                 {['Choque / hipovolemia significativa (hipotensão)',
                   'Lactentes < 3 meses (risco de síndrome de infusão do propofol)',
                   'Hipertrigliceridemia grave ou alergia confirmada a ovo/soja (relativo)',
                 ].map((c, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '3px', alignItems: 'flex-start' }}>
                     <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Se PA borderline → cetamina 1.5 mg/kg é mais segura</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se PA borderline → cetamina 1.5 mg/kg é mais segura</p>
               </div>
             </div>
           </div>
@@ -275,18 +275,18 @@ export default function ISR() {
           {/* Checklist equipamento */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('equip')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Briefcase size={15} style={{ marginRight: 6 }} />Checklist SOTANE</p>
-              {aberto === 'equip' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Briefcase size={15} style={{ marginRight: 6 }} />Checklist SOTANE</p>
+              {aberto === 'equip' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'equip' && (
               <div style={{ marginTop: '10px' }}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#6B7280' }}>
+                <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: "var(--muted)" }}>
                   <strong>S</strong>uctioning · <strong>O</strong>xygen · <strong>T</strong>ubo · <strong>A</strong>irway device · <strong>N</strong>urse/equipe · <strong>E</strong>quipment
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
                   {['Tubo IOT (tamanho ±0.5)', 'Condutor/estilete', 'Laringoscópio + lâmina', 'Aspirador funcionando', 'BVM + O₂ 15 L/min', 'Monitor: ECG, SpO₂, PA', 'Acesso venoso pérvio', 'Fita/fixador para tubo', 'CO₂ colorimétrico', 'Seringa 5 mL p/ cuff', 'Drogas preparadas e id.', 'Capnografia se disponível'].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', alignItems: 'center', padding: '4px 0' }}>
-                      <span style={{ width: '14px', height: '14px', borderRadius: '3px', border: '1.5px solid #D1D5DB', flexShrink: 0 }} />
+                    <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", alignItems: 'center', padding: '4px 0' }}>
+                      <span style={{ width: '14px', height: '14px', borderRadius: '3px', border: '1.5px solid var(--border)', flexShrink: 0 }} />
                       {item}
                     </div>
                   ))}
@@ -303,40 +303,40 @@ export default function ISR() {
 
           {/* Inputs */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6 }} />Dados do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6 }} />Dados do Paciente</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
+                <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
               </div>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
+                <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
                 <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 2,5"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>0,5 = 6 meses · 0,08 ≈ 1 mês</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>0,5 = 6 meses · 0,08 ≈ 1 mês</p>
               </div>
             </div>
 
             {/* Contexto */}
-            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>CONTEXTO CLÍNICO</p>
+            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>CONTEXTO CLÍNICO</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
               {CONTEXTOS.map(ctx => (
                 <button key={ctx.id} onClick={() => setContexto(ctx.id)}
-                  style={{ padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: contexto === ctx.id ? ctx.cor : '#F3F4F6', color: contexto === ctx.id ? '#FFF' : '#374151' }}>
+                  style={{ padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: contexto === ctx.id ? ctx.cor : "var(--surface-2)", color: contexto === ctx.id ? '#FFF' : "var(--text-2)" }}>
                   {ctx.label}
                 </button>
               ))}
             </div>
 
             {/* BNM toggle */}
-            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>BLOQUEADOR NEUROMUSCULAR</p>
+            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>BLOQUEADOR NEUROMUSCULAR</p>
             <div style={{ display: 'flex', gap: '6px' }}>
               <button onClick={() => setUsarRocur(false)} style={chip(!usarRocur)}>Succinilcolina</button>
               <button onClick={() => setUsarRocur(true)}  style={chip(usarRocur, '#7C3AED')}>Rocurônio (sux CI)</button>
             </div>
             {usarRocur && (
-              <div style={{ marginTop: '8px', backgroundColor: '#F5F3FF', borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #7C3AED' }}>
+              <div style={{ marginTop: '8px', backgroundColor: "var(--tint-purple)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #7C3AED' }}>
                 <p style={{ margin: 0, fontSize: '11px', color: '#7C3AED', fontWeight: '600' }}>
                   Ter Sugammadex 16 mg/kg disponível antes de iniciar o procedimento
                 </p>
@@ -350,7 +350,7 @@ export default function ISR() {
 
               {/* Pré-medicação */}
               <div style={card()}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>PRÉ-MEDICAÇÃO</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>PRÉ-MEDICAÇÃO</p>
                 <DoseCard
                   label={`Atropina 0,02 mg/kg${id <= 1 || !usarRocur ? ' ← obrigatória' : ' (se bradicardia prevista)'}`}
                   dose={drugs.atropDose} unit="mg"
@@ -384,7 +384,7 @@ export default function ISR() {
                       ampola="Lidocaína 2% (20 mg/mL)"
                       admin={`IV em bólus, sem diluição · flush ${drugs.flush} mL SF`}
                       obs="Evidência debatida. Dar 3 min antes se PA adequada. Omitir se hipotensão."
-                      cor="#6B7280"
+                      cor="var(--muted)"
                     />
                   </div>
                 )}
@@ -392,7 +392,7 @@ export default function ISR() {
 
               {/* Indução */}
               <div style={card({ border: `1px solid ${CBR}` })}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>INDUÇÃO (T − 0)</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>INDUÇÃO (T − 0)</p>
                 <DoseCard
                   label={`${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} ${drugs.ctx.doseInd} mg/kg IV`}
                   dose={drugs.indDose} unit="mg"
@@ -412,7 +412,7 @@ export default function ISR() {
 
               {/* BNM */}
               <div style={card({ border: usarRocur ? '1px solid #DDD6FE' : `1px solid ${CBR}` })}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>BLOQUEIO NEUROMUSCULAR (logo após indução)</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>BLOQUEIO NEUROMUSCULAR (logo após indução)</p>
                 <DoseCard
                   label={`${drugs.bnmNome} ${drugs.bnmDoseKg} mg/kg IV`}
                   dose={drugs.bnmDose} unit="mg"
@@ -444,25 +444,25 @@ export default function ISR() {
               {/* Via aérea */}
               {id > 0 && drugs.tubo && drugs.lamina && (
                 <div style={card({ border: '1px solid #BFDBFE' })}>
-                  <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>VIA AÉREA</p>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VIA AÉREA</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>{drugs.tubo.tamanho}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>mm DI (com cuff)</p>
+                    <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{drugs.tubo.tamanho}</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mm DI (com cuff)</p>
                       <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>ter {drugs.tubo.tamanho - 0.5} e {drugs.tubo.tamanho + 0.5} disponíveis</p>
                     </div>
-                    <div style={{ backgroundColor: '#F0FDF4', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: '#065F46', lineHeight: 1 }}>{drugs.tubo.profCole}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>cm na comissura</p>
+                    <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{drugs.tubo.profCole}</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cm na comissura</p>
                       <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>fórmula DI × 3</p>
                     </div>
                   </div>
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                    <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
                       <strong>Lâmina:</strong> {drugs.lamina.tipo}
                     </p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{drugs.lamina.detalhe}</p>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{drugs.lamina.detalhe}</p>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
                       Pressão do cuff ≤ 25 cmH₂O · Confirmar com capnografia + ausculta + RX tórax
                     </p>
                   </div>
@@ -470,8 +470,8 @@ export default function ISR() {
               )}
 
               {id <= 0 && (
-                <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#1D4ED8' }}>Insira a idade para calcular tamanho do tubo e lâmina</p>
+                <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-blue)" }}>Insira a idade para calcular tamanho do tubo e lâmina</p>
                 </div>
               )}
 
@@ -480,7 +480,7 @@ export default function ISR() {
                 <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}>
                   <ListChecks size={15} style={{ marginRight: 6 }} />Prescrição pronta — ordem de administração
                 </p>
-                <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: '#9CA3AF' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: "var(--muted)" }}>
                   Peso {p} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {drugs.flush} mL de SF 0,9% após cada uma.
                 </p>
                 {(() => {
@@ -494,21 +494,21 @@ export default function ISR() {
                   if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${drugs.tubo.tamanho} mm (com cuff) · fixar em ${drugs.tubo.profCole} cm · ${drugs.lamina.tipo}` });
                   return linhas.map((l, i) => (
                     <div key={i} style={{ marginBottom: '6px' }}>
-                      {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '10px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.03em' }}>{l.t}</p>}
+                      {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.03em' }}>{l.t}</p>}
                       <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
                         <span style={{ color: C, fontWeight: '700', flexShrink: 0 }}>›</span>
-                        <span style={{ fontSize: '12px', color: '#1F2937', lineHeight: 1.4 }}>{l.d}</span>
+                        <span style={{ fontSize: '12px', color: "var(--text-2)", lineHeight: 1.4 }}>{l.d}</span>
                       </div>
                     </div>
                   ));
                 })()}
-                <p style={{ margin: '8px 0 0 0', fontSize: '10px', color: '#B45309', fontWeight: '600' }}>
+                <p style={{ margin: '8px 0 0 0', fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>
                   Confirmar posição do tubo por capnografia + ausculta + RX. Doses e diluições conforme Harriet Lane 22ª ed.
                 </p>
               </div>
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '20px', fontSize: '13px', color: '#9CA3AF', backgroundColor: '#FFF', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
+            <div style={{ textAlign: 'center', padding: '20px', fontSize: '13px', color: "var(--muted)", backgroundColor: "var(--surface)", borderRadius: '12px', border: '1px solid var(--border)' }}>
               Insira o peso para calcular as doses
             </div>
           )}
@@ -527,7 +527,7 @@ export default function ISR() {
 
           {[
             {
-              tempo: 'T − 10 min', titulo: 'Preparação', cor: '#6B7280',
+              tempo: 'T − 10 min', titulo: 'Preparação', cor: "var(--muted)",
               itens: [
                 'Confirmar indicação e revisar contraindicações às drogas',
                 'Verificar e preparar equipamento (SOTANE)',
@@ -589,10 +589,10 @@ export default function ISR() {
             <div key={i} style={card()}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '8px', padding: '4px 8px', fontSize: '10px', fontWeight: '800', flexShrink: 0 }}>{etapa.tempo}</span>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#1F2937' }}>{etapa.titulo}</p>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--text-2)" }}>{etapa.titulo}</p>
               </div>
               {etapa.itens.map((item, j) => (
-                <div key={j} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+                <div key={j} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                   <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0, marginTop: '1px' }}>{j + 1}</span>
                   {item}
                 </div>
@@ -614,7 +614,7 @@ export default function ISR() {
 
           {/* LEMON */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6 }} />LEMON — Predição de Dificuldade</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6 }} />LEMON — Predição de Dificuldade</p>
             {[
               { l: 'L', nome: 'Look externally', desc: 'Trauma facial, macroglossia, micrognatia, pescoço curto, síndromes craniofaciais (Pierre Robin, Treacher Collins, Goldenhar, Down)' },
               { l: 'E', nome: 'Evaluate 3-3-2', desc: 'Abertura de boca < 3 dedos · Distância mento-hioide < 3 dedos · Distância hioide-tireoide < 2 dedos' },
@@ -625,8 +625,8 @@ export default function ISR() {
               <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px' }}>
                 <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '6px', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '800', flexShrink: 0 }}>{item.l}</span>
                 <div>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>{item.nome}</p>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{item.desc}</p>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{item.nome}</p>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -634,7 +634,7 @@ export default function ISR() {
 
           {/* Planos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><FolderOpen size={15} style={{ marginRight: 6 }} />Planos A / B / C / D</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><FolderOpen size={15} style={{ marginRight: 6 }} />Planos A / B / C / D</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
                 { plano: 'A', titulo: 'ISR padrão + otimização', cor: '#10B981', desc: 'Laringoscopia direta ou videolaringoscopia · Otimizar posição, lâmina, BURP · Máx. 2 tentativas antes de mudar de plano' },
@@ -642,11 +642,11 @@ export default function ISR() {
                 { plano: 'C', titulo: 'Via aérea instrumental', cor: '#7C3AED', desc: 'Videolaringoscópio (GlideScope/C-MAC) · Fibroscopia flexível (se operador treinado) · Intubação nasal às cegas (≥ 8 anos, respiração espontânea)' },
                 { plano: 'D', titulo: 'Via aérea cirúrgica — CICO', cor: '#DC2626', desc: '>12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6.0) · <12 anos: punção cricotireoidea (cateter 14G) + jet ventilation · ÚLTIMO RECURSO — não pode intubar + não consegue oxigenar' },
               ].map((pl, i) => (
-                <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px', backgroundColor: '#F9FAFB', borderRadius: '8px', borderLeft: `3px solid ${pl.cor}` }}>
+                <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px', backgroundColor: "var(--bg)", borderRadius: '8px', borderLeft: `3px solid ${pl.cor}` }}>
                   <span style={{ backgroundColor: pl.cor, color: '#FFF', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '800', flexShrink: 0 }}>{pl.plano}</span>
                   <div>
-                    <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>{pl.titulo}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{pl.desc}</p>
+                    <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{pl.titulo}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{pl.desc}</p>
                   </div>
                 </div>
               ))}
@@ -654,7 +654,7 @@ export default function ISR() {
           </div>
 
           {/* CICO */}
-          <div style={{ backgroundColor: '#FEF2F2', borderRadius: '12px', padding: '14px', border: `1px solid ${CBR}` }}>
+          <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '12px', padding: '14px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6 }} />CICO — Não consigo intubar, não consigo oxigenar</p>
             {[
               'Chamar ajuda imediatamente — cirurgião, ORL',
@@ -664,7 +664,7 @@ export default function ISR() {
               'Enquanto aguarda: BVM alta pressão, LMA, todos os esforços para oxigenar',
               'Documentar tentativas, tempos e comunicação pós-evento (debriefing)',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                 <span style={{ color: C, fontWeight: '700', flexShrink: 0 }}>{i + 1}.</span>{item}
               </div>
             ))}
@@ -673,8 +673,8 @@ export default function ISR() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Doses: Harriet Lane Handbook 22ª ed. · UpToDate Pediatric RSI 2024 · APLS 2021 · SBP 2024.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

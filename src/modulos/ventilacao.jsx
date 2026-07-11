@@ -19,10 +19,10 @@ const getFR = (idadeAnos) => {
 
 // Classificação PARDS — PALICC 2015 (Índice de Oxigenação)
 const getIOClass = (io) => {
-  if (io < 4)  return { label: 'Sem PARDS', cor: '#10B981', bg: '#ECFDF5' };
-  if (io < 8)  return { label: 'PARDS Leve', cor: '#D97706', bg: '#FFF7ED' };
-  if (io < 16) return { label: 'PARDS Moderado', cor: '#F97316', bg: '#FFF7ED', extra: 'considerar iNO, prono, VAFO' };
-  return              { label: 'PARDS Grave', cor: '#DC2626', bg: '#FEF2F2', extra: 'avaliar VAFO / ECMO' };
+  if (io < 4)  return { label: 'Sem PARDS', cor: '#10B981', bg: "var(--tint-green)" };
+  if (io < 8)  return { label: 'PARDS Leve', cor: '#D97706', bg: "var(--tint-amber)" };
+  if (io < 16) return { label: 'PARDS Moderado', cor: '#F97316', bg: "var(--tint-amber)", extra: 'considerar iNO, prono, VAFO' };
+  return              { label: 'PARDS Grave', cor: '#DC2626', bg: "var(--tint-red)", extra: 'avaliar VAFO / ECMO' };
 };
 
 // ─── Contextos clínicos ───────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ const CONTEXTOS = [
 
 // ─── Constantes visuais ───────────────────────────────────────────────────────
 const C   = '#0891B2';
-const CLT = '#ECFEFF';
+const CLT = "var(--tint-teal)";
 const CBR = '#A5F3FC';
 
 const TABS = [
@@ -68,9 +68,9 @@ const TABS = [
 // ─── Componente ──────────────────────────────────────────────────────────────
 // Linha rótulo→valor — no nível do módulo para não ser recriada a cada render
 // (regra react-hooks/static-components).
-const MetaRow = ({ label, valor, cor = '#1F2937', bg = '#F9FAFB' }) => (
+const MetaRow = ({ label, valor, cor = "var(--text)", bg = "var(--surface-2)" }) => (
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', backgroundColor: bg, borderRadius: '8px', marginBottom: '5px' }}>
-    <span style={{ fontSize: '12px', color: '#374151', fontWeight: '600' }}>{label}</span>
+    <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{label}</span>
     <span style={{ fontSize: '12px', color: cor, fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{valor}</span>
   </div>
 );
@@ -135,14 +135,14 @@ export default function Ventilacao() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -152,15 +152,15 @@ export default function Ventilacao() {
 
   const inputField = (label, val, set, ph, unit = '') => (
     <div>
-      <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
+      <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
       <input type="number" inputMode="decimal" value={val} onChange={e => set(e.target.value)} placeholder={ph}
-        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${parseNum(val) > 0 ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: parseNum(val) > 0 ? '700' : '400', color: parseNum(val) > 0 ? C : '#374151', boxSizing: 'border-box', outline: 'none' }} />
+        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${parseNum(val) > 0 ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: parseNum(val) > 0 ? '700' : '400', color: parseNum(val) > 0 ? C : "var(--text-2)", boxSizing: 'border-box', outline: 'none' }} />
     </div>
   );
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #0E7490 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -195,13 +195,13 @@ export default function Ventilacao() {
             <MetaRow label="I:E padrão"            valor="1:2" />
             <MetaRow label="PaCO₂ alvo"            valor="35-45 mmHg (normocapnia)" />
             <MetaRow label="SpO₂ alvo (geral)"     valor="95-99%" />
-            <MetaRow label="SpO₂ alvo (ARDS/pós-ressuscitação)" valor="88-92% (conservador — SSC 2026)" cor="#D97706" bg="#FFF7ED" />
+            <MetaRow label="SpO₂ alvo (ARDS/pós-ressuscitação)" valor="88-92% (conservador — SSC 2026)" cor="#D97706" bg="var(--tint-amber)" />
           </div>
 
           {/* FR por faixa etária */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />FR de Referência por Faixa Etária</p>
-            <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />FR de Referência por Faixa Etária</p>
+            <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: CLT, padding: '7px 12px' }}>
                 <span style={{ fontSize: '10px', fontWeight: '700', color: C }}>FAIXA ETÁRIA</span>
                 <span style={{ fontSize: '10px', fontWeight: '700', color: C }}>FR (irpm)</span>
@@ -213,9 +213,9 @@ export default function Ventilacao() {
                 { label: 'Escolar (6-12a)',    fr: '18-24' },
                 { label: 'Adolescente (>12a)', fr: '12-20' },
               ].map((row, i) => (
-                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#FFF', borderTop: '1px solid #E5E7EB', padding: '7px 12px' }}>
-                  <span style={{ fontSize: '12px', color: '#374151' }}>{row.label}</span>
-                  <span style={{ fontSize: '13px', color: '#1F2937', fontWeight: '700' }}>{row.fr}</span>
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderTop: '1px solid var(--border)', padding: '7px 12px' }}>
+                  <span style={{ fontSize: '12px', color: "var(--text-2)" }}>{row.label}</span>
+                  <span style={{ fontSize: '13px', color: "var(--text-2)", fontWeight: '700' }}>{row.fr}</span>
                 </div>
               ))}
             </div>
@@ -224,8 +224,8 @@ export default function Ventilacao() {
           {/* Indicações */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('ind')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Indicações de VM</p>
-              {aberto === 'ind' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Indicações de VM</p>
+              {aberto === 'ind' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'ind' && (
               <div style={{ marginTop: '10px' }}>
@@ -239,7 +239,7 @@ export default function Ventilacao() {
                   'Pós-operatório de cirurgias cardíacas ou torácicas complexas',
                   'HIC com necessidade de controle rigoroso de PaCO₂',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+                  <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                     <span style={{ color: C, flexShrink: 0 }}>•</span>{item}
                   </div>
                 ))}
@@ -250,19 +250,19 @@ export default function Ventilacao() {
           {/* Ajustes por patologia */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('pat')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wrench size={15} style={{ flexShrink: 0 }} />Ajustes por Patologia</p>
-              {aberto === 'pat' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><Wrench size={15} style={{ flexShrink: 0 }} />Ajustes por Patologia</p>
+              {aberto === 'pat' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'pat' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {CONTEXTOS.map(ctx => (
-                  <div key={ctx.id} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${ctx.cor}` }}>
+                  <div key={ctx.id} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${ctx.cor}` }}>
                     <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: ctx.cor }}>{ctx.label}</p>
-                    <div style={{ fontSize: '11px', color: '#374151', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div style={{ fontSize: '11px', color: "var(--text-2)", display: 'flex', flexDirection: 'column', gap: '2px' }}>
                       <div>VC: <strong>{ctx.vc} mL/kg</strong> · PEEP: <strong>{ctx.peep}</strong> · I:E: <strong>{ctx.ie}</strong></div>
                       <div>Pplat: <strong>{ctx.pplat} cmH₂O</strong> · DP: <strong>{ctx.dp} cmH₂O</strong></div>
                     </div>
-                    <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{ctx.obs}</p>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{ctx.obs}</p>
                   </div>
                 ))}
               </div>
@@ -277,28 +277,28 @@ export default function Ventilacao() {
 
           {/* Inputs básicos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />Dados do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />Dados do Paciente</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
+                <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Usar peso ideal se obeso</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Usar peso ideal se obeso</p>
               </div>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
+                <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
                 <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 4"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Para FR por faixa etária</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Para FR por faixa etária</p>
               </div>
             </div>
 
             {/* Contexto */}
-            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>CONTEXTO CLÍNICO</p>
+            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>CONTEXTO CLÍNICO</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
               {CONTEXTOS.map(ctx => (
                 <button key={ctx.id} onClick={() => setContexto(ctx.id)}
-                  style={{ padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: contexto === ctx.id ? ctx.cor : '#F3F4F6', color: contexto === ctx.id ? '#FFF' : '#374151' }}>
+                  style={{ padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: contexto === ctx.id ? ctx.cor : "var(--surface-2)", color: contexto === ctx.id ? '#FFF' : "var(--text-2)" }}>
                   {ctx.label}
                 </button>
               ))}
@@ -308,35 +308,35 @@ export default function Ventilacao() {
           {/* Resultados VC + FR */}
           {p > 0 && (
             <div style={card({ border: `1px solid ${CBR}` })}>
-              <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>VOLUME CORRENTE E FREQUÊNCIA</p>
+              <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VOLUME CORRENTE E FREQUÊNCIA</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                 <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>VC MÍNIMO (6 mL/kg)</p>
+                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÍNIMO (6 mL/kg)</p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{calcs.vc6}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: C }}>mL</p>
                 </div>
-                <div style={{ backgroundColor: '#F0FDF4', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>VC MÁXIMO (8 mL/kg)</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: '#065F46', lineHeight: 1 }}>{calcs.vc8}</p>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÁXIMO (8 mL/kg)</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{calcs.vc8}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>mL</p>
                 </div>
               </div>
 
               {/* Contexto específico */}
-              <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${CONTEXTOS.find(c => c.id === contexto)?.cor}` }}>
-                <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+              <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${CONTEXTOS.find(c => c.id === contexto)?.cor}` }}>
+                <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                   <strong>{ctx?.label}:</strong> VC {ctx?.vc} mL/kg · PEEP {ctx?.peep} cmH₂O · I:E {ctx?.ie}
                 </p>
-                <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{ctx?.obs}</p>
+                <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{ctx?.obs}</p>
               </div>
 
               {id > 0 && calcs.fr && (
-                <div style={{ marginTop: '8px', backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#1D4ED8', fontWeight: '700' }}>
+                <div style={{ marginTop: '8px', backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-blue)", fontWeight: '700' }}>
                     FR alvo ({calcs.fr.label}): {calcs.fr.min}–{calcs.fr.max} irpm
                   </p>
                   {calcs.vmMin && (
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                       Volume minuto estimado: {calcs.vmMin}–{calcs.vmMax} mL/min
                     </p>
                   )}
@@ -347,8 +347,8 @@ export default function Ventilacao() {
 
           {/* Índice de Oxigenação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Índice de Oxigenação (IO)</p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#6B7280' }}>IO = (FiO₂ × P média × 100) / PaO₂ · Requer gasometria arterial</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Índice de Oxigenação (IO)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: "var(--muted)" }}>IO = (FiO₂ × P média × 100) / PaO₂ · Requer gasometria arterial</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
               {inputField('FiO₂ (0-1)', fio2, setFio2, '0,6')}
               {inputField('P Média', pmap, setPmap, '12', 'cmH₂O')}
@@ -360,24 +360,24 @@ export default function Ventilacao() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <p style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: calcs.ioClass.cor, lineHeight: 1 }}>{calcs.io}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6B7280' }}>Índice de Oxigenação</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Índice de Oxigenação</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: calcs.ioClass.cor }}>{calcs.ioClass.label}</p>
-                    {calcs.ioClass.extra && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{calcs.ioClass.extra}</p>}
+                    {calcs.ioClass.extra && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{calcs.ioClass.extra}</p>}
                   </div>
                 </div>
               </div>
             ) : (
-              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: '#9CA3AF' }}>
+              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: "var(--muted)" }}>
                 Preencha FiO₂, P Média e PaO₂ para calcular
               </div>
             )}
 
-            <div style={{ marginTop: '10px', backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '8px 10px' }}>
-              <p style={{ margin: 0, fontSize: '11px', color: '#374151', fontWeight: '700' }}>Classificação PARDS (PALICC 2015):</p>
+            <div style={{ marginTop: '10px', backgroundColor: "var(--bg)", borderRadius: '8px', padding: '8px 10px' }}>
+              <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", fontWeight: '700' }}>Classificação PARDS (PALICC 2015):</p>
               {[['< 4', 'Sem PARDS', '#10B981'],['4-8', 'Leve', '#D97706'],['8-16', 'Moderado', '#F97316'],['>16', 'Grave', '#DC2626']].map(([faixa, classe, cor], i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#374151', marginTop: '3px' }}>
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: "var(--text-2)", marginTop: '3px' }}>
                   <span>IO {faixa}</span><span style={{ color: cor, fontWeight: '700' }}>{classe}</span>
                 </div>
               ))}
@@ -386,7 +386,7 @@ export default function Ventilacao() {
 
           {/* Driving Pressure + Compliance */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Ruler size={15} style={{ flexShrink: 0 }} />Driving Pressure e Compliance</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><Ruler size={15} style={{ flexShrink: 0 }} />Driving Pressure e Compliance</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
               {inputField('Pplat', pplat, setPplat, '22', 'cmH₂O')}
               {inputField('PEEP', peepCm, setPeepCm, '8', 'cmH₂O')}
@@ -395,21 +395,21 @@ export default function Ventilacao() {
             {calcs.dp !== null ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <div style={{ backgroundColor: calcs.dpAlerta ? '#FEF2F2' : '#ECFDF5', borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
+                  <div style={{ backgroundColor: calcs.dpAlerta ? "var(--tint-red)" : "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : '#065F46', lineHeight: 1 }}>{calcs.dp}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>cmH₂O (DP)</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cmH₂O (DP)</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
                   </div>
                   {calcs.cst && (
-                    <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>{calcs.cst}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>mL/cmH₂O</p>
+                    <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calcs.cst}</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL/cmH₂O</p>
                       <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>Compliance estática</p>
                     </div>
                   )}
                 </div>
                 {calcs.dpAlerta && (
-                  <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #DC2626' }}>
+                  <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #DC2626' }}>
                     <p style={{ margin: 0, fontSize: '11px', color: '#DC2626', fontWeight: '600' }}>
                       DP acima de 15 cmH₂O — considerar reduzir VC ou reduzir PEEP para diminuir driving pressure (meta protetora)
                     </p>
@@ -417,7 +417,7 @@ export default function Ventilacao() {
                 )}
               </div>
             ) : (
-              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: '#9CA3AF' }}>
+              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: "var(--muted)" }}>
                 Preencha Pplat e PEEP para calcular
               </div>
             )}
@@ -470,26 +470,26 @@ export default function Ventilacao() {
               <button style={accordBtn()} onClick={() => toggle(modo.sigla)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ backgroundColor: modo.cor, color: '#FFF', borderRadius: '8px', padding: '4px 10px', fontSize: '12px', fontWeight: '800' }}>{modo.sigla}</span>
-                  <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#1F2937' }}>{modo.nome}</p>
+                  <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--text-2)" }}>{modo.nome}</p>
                 </div>
-                {aberto === modo.sigla ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+                {aberto === modo.sigla ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
               </button>
               {aberto === modo.sigla && (
                 <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280' }}>COMO FUNCIONA</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{modo.desc}</p>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>COMO FUNCIONA</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>{modo.desc}</p>
                   </div>
-                  <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px' }}>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#065F46' }}>QUANDO USAR</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{modo.quando}</p>
+                  <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>QUANDO USAR</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>{modo.quando}</p>
                   </div>
-                  <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px' }}>
+                  <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px' }}>
                     <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#D97706', display: 'flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={12} style={{ flexShrink: 0 }} />ATENÇÃO</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{modo.alerta}</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>{modo.alerta}</p>
                   </div>
-                  <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '8px 10px' }}>
-                    <p style={{ margin: 0, fontSize: '11px', color: '#1D4ED8' }}><strong>Parâmetros:</strong> {modo.params}</p>
+                  <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '8px 10px' }}>
+                    <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}><strong>Parâmetros:</strong> {modo.params}</p>
                   </div>
                 </div>
               )}
@@ -505,7 +505,7 @@ export default function Ventilacao() {
           {/* Critérios diários */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Avaliação Diária de Desmame</p>
-            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#6B7280' }}>Verificar diariamente. Todos os critérios devem estar presentes para SBT.</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: "var(--muted)" }}>Verificar diariamente. Todos os critérios devem estar presentes para SBT.</p>
             {[
               { ok: true,  txt: 'Causa da intubação resolvida ou em franca melhora' },
               { ok: true,  txt: 'FiO₂ ≤ 0,40 mantendo SpO₂ ≥ 95%' },
@@ -517,8 +517,8 @@ export default function Ventilacao() {
               { ok: true,  txt: 'Tosse presente e eficaz' },
               { ok: false, txt: 'Sedação interrompida ou em dose mínima' },
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
-                <span style={{ width: '16px', height: '16px', borderRadius: '3px', border: `2px solid ${item.ok ? '#10B981' : C}`, flexShrink: 0, marginTop: '1px', backgroundColor: item.ok ? '#ECFDF5' : CLT }} />
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
+                <span style={{ width: '16px', height: '16px', borderRadius: '3px', border: `2px solid ${item.ok ? '#10B981' : C}`, flexShrink: 0, marginTop: '1px', backgroundColor: item.ok ? "var(--tint-green)" : CLT }} />
                 {item.txt}
               </div>
             ))}
@@ -526,28 +526,28 @@ export default function Ventilacao() {
 
           {/* SBT */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>⏱ Teste de Respiração Espontânea (SBT)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⏱ Teste de Respiração Espontânea (SBT)</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1D4ED8' }}>Como realizar</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+              <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-blue)" }}>Como realizar</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                   CPAP 5 cmH₂O + PS 5-8 cmH₂O (ou T-piece) por <strong>30-120 minutos</strong>
                 </p>
               </div>
-              <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46', display: 'flex', alignItems: 'center', gap: 5 }}><CheckCircle size={13} style={{ flexShrink: 0 }} />SBT aprovado se (todos):</p>
+              <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)", display: 'flex', alignItems: 'center', gap: 5 }}><CheckCircle size={13} style={{ flexShrink: 0 }} />SBT aprovado se (todos):</p>
                 {['SpO₂ ≥ 95% com FiO₂ ≤ 0,40',
                   'FR dentro do normal para faixa etária (sem taquipneia)',
                   'Ausência de sinais de esforço respiratório aumentado',
                   'FC estável (sem taquicardia > 20% do basal)',
                   'Consciência e conforto adequados',
                 ].map((c, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                     <Check size={13} color="#10B981" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
               </div>
-              <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px' }}>
+              <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>❌ Interromper SBT se:</p>
                 {['SpO₂ < 92% ou PaO₂ < 60 mmHg',
                   'Taquipneia > 150% do normal para idade',
@@ -556,7 +556,7 @@ export default function Ventilacao() {
                   'PA ↓ > 20% ou hipertensão grave',
                   'Agitação ou rebaixamento de consciência',
                 ].map((c, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                     <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
@@ -567,18 +567,18 @@ export default function Ventilacao() {
           {/* Pós-extubação */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('posext')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Suporte Pós-extubação</p>
-              {aberto === 'posext' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><Wind size={15} style={{ flexShrink: 0 }} />Suporte Pós-extubação</p>
+              {aberto === 'posext' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'posext' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46' }}>O₂ de Alto Fluxo (OAF) — 1ª opção pós-extubação</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Reduz taxa de reintubação · Fluxo 1-2 L/kg/min (máx 60 L/min) · FiO₂ titulada</p>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)" }}>O₂ de Alto Fluxo (OAF) — 1ª opção pós-extubação</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Reduz taxa de reintubação · Fluxo 1-2 L/kg/min (máx 60 L/min) · FiO₂ titulada</p>
                 </div>
-                <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1D4ED8' }}>VNI/CPAP/BiPAP — alto risco de falha</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Uso precoce se: insuficiência cardíaca, ARDS, pré-existência de IOT difícil, extubação acidental</p>
+                <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-blue)" }}>VNI/CPAP/BiPAP — alto risco de falha</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Uso precoce se: insuficiência cardíaca, ARDS, pré-existência de IOT difícil, extubação acidental</p>
                 </div>
                 {[
                   'Decúbito semi-sentado (30-45°) se tolerado',
@@ -587,7 +587,7 @@ export default function Ventilacao() {
                   'Monitorar estridor — dexametasona 0,25-0,5 mg/kg IV se presente',
                   'Reavaliação a cada 1-2h nas primeiras 6h pós-extubação',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", alignItems: 'flex-start' }}>
                     <span style={{ color: C, flexShrink: 0 }}>•</span>{item}
                   </div>
                 ))}
@@ -598,8 +598,8 @@ export default function Ventilacao() {
           {/* Alarmes */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('alarmes')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center', gap: 6 }}><Bell size={15} style={{ flexShrink: 0 }} />Alarmes Frequentes e Condutas</p>
-              {aberto === 'alarmes' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><Bell size={15} style={{ flexShrink: 0 }} />Alarmes Frequentes e Condutas</p>
+              {aberto === 'alarmes' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'alarmes' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -609,10 +609,10 @@ export default function Ventilacao() {
                   { alarme: 'SpO₂ baixa persistente', causas: 'Piora da doença de base · Atelectasia · Pneumotórax · Posição do tubo · Auto-PEEP', conduta: 'Aspirar · aumentar FiO₂ transitório · PEEP · RX tórax · gasometria' },
                   { alarme: 'Auto-PEEP / hiperinsuflação dinâmica', causas: 'FR alta demais · obstrução de VA · broncoespasmo · tubo estreito', conduta: 'Reduzir FR · prolongar tempo expiratório · desconectar brevemente para esvaziar pulmão' },
                 ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
+                  <div key={i} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                     <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: C }}>{item.alarme}</p>
-                    <p style={{ margin: '0 0 3px 0', fontSize: '11px', color: '#6B7280' }}><strong>Causas:</strong> {item.causas}</p>
-                    <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}><strong>Conduta:</strong> {item.conduta}</p>
+                    <p style={{ margin: '0 0 3px 0', fontSize: '11px', color: "var(--muted)" }}><strong>Causas:</strong> {item.causas}</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}><strong>Conduta:</strong> {item.conduta}</p>
                   </div>
                 ))}
               </div>
@@ -622,8 +622,8 @@ export default function Ventilacao() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Referências: PALICC 2023 · Harriet Lane 22ª ed. · ARDSnet (adaptado pediátrico) · SSC 2026 · UpToDate Pediatric MV 2024.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

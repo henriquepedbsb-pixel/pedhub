@@ -118,22 +118,22 @@ function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
 /* ── Sub-componentes ────────────────────────────────────────────────────── */
 function Card({ children }) {
   return (
-    <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "14px 14px 6px", marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, padding: "14px 14px 6px", marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
       {children}
     </div>
   );
 }
 
 function CardHead({ label }) {
-  return <div style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 12 }}>{label}</div>;
+  return <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 12 }}>{label}</div>;
 }
 
 function Fld({ label, hint, children }) {
   return (
     <div style={{ marginBottom: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
-        <label style={{ fontSize: 11.5, fontWeight: 600, color: "#374151" }}>{label}</label>
-        {hint && <span style={{ fontSize: 10, color: "#9CA3AF" }}>{hint}</span>}
+        <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)" }}>{label}</label>
+        {hint && <span style={{ fontSize: 10, color: "var(--muted)" }}>{hint}</span>}
       </div>
       {children}
     </div>
@@ -144,7 +144,7 @@ function Inp({ value, set, placeholder, mode }) {
   return (
     <input type="text" inputMode={mode || "text"} value={value}
       onChange={e => set(e.target.value)} placeholder={placeholder}
-      style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 13, border: "1.5px solid #E5E7EB", outline: "none", background: "#fff", boxSizing: "border-box" }}
+      style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 13, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
     />
   );
 }
@@ -152,7 +152,7 @@ function Inp({ value, set, placeholder, mode }) {
 function DateInp({ value, onChange }) {
   return (
     <input type="date" value={value} onChange={e => onChange(e.target.value)} max={HOJE_ISO}
-      style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 13, border: "1.5px solid #E5E7EB", outline: "none", background: "#fff", color: "#374151", boxSizing: "border-box" }}
+      style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 13, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", color: "var(--text-2)", boxSizing: "border-box" }}
     />
   );
 }
@@ -162,7 +162,7 @@ function IdadeBadge({ dias }) {
     <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: PRIMARY }}>
       <CheckCircle size={13} />
       {dias} dias de vida
-      <span style={{ fontWeight: 400, color: "#9CA3AF", fontSize: 11 }}>
+      <span style={{ fontWeight: 400, color: "var(--muted)", fontSize: 11 }}>
         · eletrólitos sugeridos {dias <= 2 ? "(dia 1–2)" : "(dia 3+)"}
       </span>
     </div>
@@ -175,7 +175,7 @@ function Grid2({ children }) {
 
 function Chip({ active, onClick, children }) {
   return (
-    <button onClick={onClick} style={{ flex: 1, padding: "8px 4px", fontSize: 12, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? C : "#F3F4F6", color: active ? "#fff" : "#374151" }}>
+    <button onClick={onClick} style={{ flex: 1, padding: "8px 4px", fontSize: 12, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? C : "var(--surface-2)", color: active ? "#fff" : "var(--text-2)" }}>
       {children}
     </button>
   );
@@ -185,7 +185,7 @@ function InfoBox({ children }) {
   return (
     <div style={{ background: C + "12", border: "1px solid " + C + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={C} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -194,7 +194,7 @@ function Alerta({ color, text }) {
   return (
     <div style={{ display: "flex", gap: 8, background: color + "10", border: "1px solid " + color + "40", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
       <AlertTriangle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <span style={{ fontSize: 12, color: "#374151", lineHeight: 1.45 }}>{text}</span>
+      <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{text}</span>
     </div>
   );
 }
@@ -215,10 +215,10 @@ function ResultNPT({ r }) {
           ["TIG",          r.dTIG + " mg/kg/min",`${f1(r.gGlucose)} g glicose/dia`],
           ["Lipídeos",     r.dLip + " g/kg/d",  `${f1(r.kcalLip / r.pk)} kcal/kg`],
         ].map(([label, val, sub]) => (
-          <div key={label} style={{ background: "#F9FAFB", borderRadius: 8, padding: "10px 12px", border: "1px solid #E5E7EB" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>{label}</div>
+          <div key={label} style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)" }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>{label}</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: C }}>{val}</div>
-            <div style={{ fontSize: 10, color: "#9CA3AF", marginTop: 2 }}>{sub}</div>
+            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{sub}</div>
           </div>
         ))}
       </div>
@@ -240,11 +240,11 @@ function ResultNPT({ r }) {
             r.dMg > 0 && ["MgSO4 50%",       f2(r.volMg) + " mL"],
           ].filter(Boolean).map(([label, val]) => (
             <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 12 }}>
-              <span style={{ color: "#6B7280" }}>{label}</span>
-              <span style={{ fontWeight: 600, color: "#1F2937" }}>{val}</span>
+              <span style={{ color: "var(--muted)" }}>{label}</span>
+              <span style={{ fontWeight: 600, color: "var(--text-2)" }}>{val}</span>
             </div>
           ))}
-          <div style={{ marginTop: 8, padding: "7px 10px", background: "#ECFDF5", borderRadius: 7, fontSize: 11, color: "#065F46" }}>
+          <div style={{ marginTop: 8, padding: "7px 10px", background: "var(--tint-green)", borderRadius: 7, fontSize: 11, color: "var(--tx-green)" }}>
             <strong>Preparo glicose:</strong>{" "}
             {r.volAgua >= 0
               ? `${f2(r.vol50)} mL SG50% + ${f2(r.volAgua)} mL ABD`
@@ -255,25 +255,25 @@ function ResultNPT({ r }) {
 
       {/* Emulsão lipídica */}
       <div style={{ borderRadius: 10, border: "1.5px solid #F59E0B", overflow: "hidden", marginBottom: 12 }}>
-        <div style={{ background: "#FEF3C7", padding: "8px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ background: "var(--tint-amber)", padding: "8px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ fontWeight: 700, color: "#D97706", fontSize: 12 }}>EMULSÃO LIPÍDICA 20%</span>
           <span style={{ fontSize: 11, color: "#D97706", fontWeight: 700 }}>{f1(r.volLip)} mL · {f2(r.rateLip)} mL/h</span>
         </div>
-        <div style={{ padding: "8px 14px", fontSize: 12, color: "#374151" }}>
+        <div style={{ padding: "8px 14px", fontSize: 12, color: "var(--text-2)" }}>
           {r.dLip} g/kg/dia · {f1(r.kcalLip / r.pk)} kcal/kg/dia · correr em 24h via Y ou acesso separado
         </div>
       </div>
 
       {r.caPAlert && (
-        <div style={{ background: "#FEF3C7", border: "1px solid #FDE68A", borderRadius: 8, padding: "8px 12px", marginBottom: 12, display: "flex", gap: 7, fontSize: 11.5, color: "#92400E", alignItems: "flex-start" }}>
+        <div style={{ background: "var(--tint-amber)", border: "1px solid #FDE68A", borderRadius: 8, padding: "8px 12px", marginBottom: 12, display: "flex", gap: 7, fontSize: 11.5, color: "var(--tx-amber)", alignItems: "flex-start" }}>
           <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
           <span><strong>Ca + P na mesma bolsa:</strong> verificar compatibilidade com farmácia (risco de precipitação). Se necessário, infundir Gluconato Ca em linha separada.</span>
         </div>
       )}
 
       {/* Tabela de alvos */}
-      <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
+      <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
           Alvos ESPGHAN/ESPEN 2018 — RNPT
         </div>
         {[
@@ -288,8 +288,8 @@ function ResultNPT({ r }) {
           ["Calorias", "80–120 kcal/kg/d"],
         ].map(([n, v]) => (
           <div key={n} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 11, gap: 8 }}>
-            <span style={{ color: "#6B7280", fontWeight: 700, flexShrink: 0 }}>{n}</span>
-            <span style={{ color: "#374151", textAlign: "right" }}>{v}</span>
+            <span style={{ color: "var(--muted)", fontWeight: 700, flexShrink: 0 }}>{n}</span>
+            <span style={{ color: "var(--text-2)", textAlign: "right" }}>{v}</span>
           </div>
         ))}
       </div>
@@ -369,11 +369,11 @@ function TabNPT() {
 
       {/* Perfis rápidos */}
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 6 }}>Perfil rápido — macros</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 6 }}>Perfil rápido — macros</div>
         <div style={{ display: "flex", gap: 6 }}>
           {PERFIS.map(p => (
             <button key={p.label} onClick={() => aplicarPerfil(p)}
-              style={{ flex: 1, padding: "7px 2px", fontSize: 10.5, fontWeight: 600, borderRadius: 7, border: "1px solid #E5E7EB", cursor: "pointer", background: "#F9FAFB", color: "#374151" }}>
+              style={{ flex: 1, padding: "7px 2px", fontSize: 10.5, fontWeight: 600, borderRadius: 7, border: "1px solid var(--border)", cursor: "pointer", background: "var(--bg)", color: "var(--text-2)" }}>
               {p.label}
             </button>
           ))}
@@ -443,7 +443,7 @@ function TabNPT() {
       </Card>
 
       {erro && (
-        <div style={{ background: "#FEE2E2", border: "1px solid #FECACA", borderRadius: 8, padding: "10px 14px", marginBottom: 12, display: "flex", gap: 8, fontSize: 12, color: "#7F1D1D", alignItems: "flex-start" }}>
+        <div style={{ background: "var(--tint-red)", border: "1px solid #FECACA", borderRadius: 8, padding: "10px 14px", marginBottom: 12, display: "flex", gap: 8, fontSize: 12, color: "var(--tx-red)", alignItems: "flex-start" }}>
           <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
           {erro}
         </div>
@@ -455,7 +455,7 @@ function TabNPT() {
           Calcular NPT
         </button>
         <button onClick={limpar}
-          style={{ flex: 1, padding: "13px 0", border: "1.5px solid #E5E7EB", borderRadius: 10, background: "#fff", color: "#6B7280", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+          style={{ flex: 1, padding: "13px 0", border: "1.5px solid var(--border)", borderRadius: 10, background: "var(--surface)", color: "var(--muted)", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
           <RefreshCw size={14} /> Limpar
         </button>
       </div>
@@ -468,7 +468,7 @@ function TabNPT() {
 /* ── Componente principal ────────────────────────────────────────────────── */
 export default function Neonatologia5() {
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia V</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>NPT Neonatal</p>
@@ -476,10 +476,10 @@ export default function Neonatologia5() {
       <div style={{ padding: 16 }}>
         <TabNPT />
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023.
             Eletrólitos sugeridos automaticamente — ajustar conforme labs e condição clínica.
             Não substitui prescrição médica individualizada.

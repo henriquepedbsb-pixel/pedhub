@@ -17,7 +17,7 @@ const parseNum = (val) => {
 const DROGAS = {
   analgesia: [
     {
-      id:'morfina', nome:'Morfina', tipo:'Opioide', cor:'#DC2626', corBg:'#FEF2F2', corBd:'#FECACA',
+      id:'morfina', nome:'Morfina', tipo:'Opioide', cor:'#DC2626', corBg:"var(--tint-red)", corBd:'#FECACA',
       apresentacao:'Ampola 10 mg/mL',
       bolus:'0,05-0,1 mg/kg IV q2-4h (RN: 0,05 mg/kg)',
       mgKgDil:0.5, volDil:50, concAmpola:10, fator:100, unidade:'mg/kg/h',
@@ -26,7 +26,7 @@ const DROGAS = {
       alerta:'Reduzir dose em RN e hepatopatas · monitorar depressão respiratória',
     },
     {
-      id:'fentanil', nome:'Fentanil', tipo:'Opioide', cor:'#7C3AED', corBg:'#F5F3FF', corBd:'#DDD6FE',
+      id:'fentanil', nome:'Fentanil', tipo:'Opioide', cor:'#7C3AED', corBg:"var(--tint-purple)", corBd:'#DDD6FE',
       apresentacao:'Ampola 50 mcg/mL (0,05 mg/mL)',
       bolus:'1-2 mcg/kg IV (RN: 0,5-1 mcg/kg)',
       mgKgDil:25, volDil:50, concAmpola:50, fator:2, unidade:'mcg/kg/h',
@@ -35,7 +35,7 @@ const DROGAS = {
       alerta:'Rigidez torácica com infusão rápida · acúmulo em uso prolongado',
     },
     {
-      id:'tramadol', nome:'Tramadol', tipo:'Opioide fraco', cor:'#D97706', corBg:'#FFF7ED', corBd:'#FED7AA',
+      id:'tramadol', nome:'Tramadol', tipo:'Opioide fraco', cor:'#D97706', corBg:"var(--tint-amber)", corBd:'#FED7AA',
       apresentacao:'Ampola 50 mg/mL (100 mg/2 mL)',
       bolus:'1-2 mg/kg IV em 15-20 min q6h (máx 100 mg/dose)',
       mgKgDil:null, volDil:null, concAmpola:50, fator:null, unidade:'mg/kg/dose',
@@ -44,7 +44,7 @@ const DROGAS = {
       alerta:'Pode baixar limiar convulsivo · evitar < 1 ano e em hepatopatas',
     },
     {
-      id:'dipirona', nome:'Dipirona', tipo:'Não-opioide', cor:'#059669', corBg:'#ECFDF5', corBd:'#6EE7B7',
+      id:'dipirona', nome:'Dipirona', tipo:'Não-opioide', cor:'#059669', corBg:"var(--tint-green)", corBd:'#6EE7B7',
       apresentacao:'Ampola 500 mg/mL (1 g/2 mL)',
       bolus:'15-25 mg/kg IV q6-8h (máx 1.000 mg/dose)',
       mgKgDil:null, volDil:null, concAmpola:500, fator:null, unidade:'mg/kg/dose',
@@ -55,7 +55,7 @@ const DROGAS = {
   ],
   sedacao: [
     {
-      id:'midazolam', nome:'Midazolam', tipo:'Benzodiazepínico', cor:'#1D4ED8', corBg:'#EFF6FF', corBd:'#BFDBFE',
+      id:'midazolam', nome:'Midazolam', tipo:'Benzodiazepínico', cor:'#1D4ED8', corBg:"var(--tint-blue)", corBd:'#BFDBFE',
       apresentacao:'Ampola 5 mg/mL',
       bolus:'0,05-0,1 mg/kg IV (máx 6 mg/dose)',
       mgKgDil:0.5, volDil:50, concAmpola:5, fator:100, unidade:'mg/kg/h',
@@ -64,7 +64,7 @@ const DROGAS = {
       alerta:'Acúmulo após > 48h · síndrome de abstinência com uso prolongado · evitar em choque refratário',
     },
     {
-      id:'dexmede', nome:'Dexmedetomidina', tipo:'α₂-agonista', cor:'#0891B2', corBg:'#ECFEFF', corBd:'#A5F3FC',
+      id:'dexmede', nome:'Dexmedetomidina', tipo:'α₂-agonista', cor:'#0891B2', corBg:"var(--tint-teal)", corBd:'#A5F3FC',
       apresentacao:'Precedex 200 mcg/2 mL (100 mcg/mL)',
       bolus:'0,5-1 mcg/kg em 10-20 min IV (ataque — opcional)',
       mgKgDil:4, volDil:50, concAmpola:100, fator:12.5, unidade:'mcg/kg/h',
@@ -73,7 +73,7 @@ const DROGAS = {
       alerta:'Bradicardia e hipotensão · contraindicada em BAV ou bradicardia grave',
     },
     {
-      id:'propofol', nome:'Propofol', tipo:'Hipnótico', cor:'#6B7280', corBg:'#F9FAFB', corBd:'#E5E7EB',
+      id:'propofol', nome:'Propofol', tipo:'Hipnótico', cor:"var(--muted)", corBg:"var(--surface-2)", corBd:"var(--border)",
       apresentacao:'Ampola 10 mg/mL (200 mg/20 mL)',
       bolus:'1-2 mg/kg IV (procedimentos, > 3 anos)',
       mgKgDil:null, volDil:null, concAmpola:10, fator:null, unidade:'mg/kg/h',
@@ -82,7 +82,7 @@ const DROGAS = {
       alerta:'NÃO usar infusão prolongada (> 48h) em crianças — risco de síndrome de infusão do propofol (PRIS): acidose, rabdomiólise, óbito',
     },
     {
-      id:'clonidina', nome:'Clonidina', tipo:'α₂-agonista oral', cor:'#065F46', corBg:'#ECFDF5', corBd:'#6EE7B7',
+      id:'clonidina', nome:'Clonidina', tipo:'α₂-agonista oral', cor:'#065F46', corBg:"var(--tint-green)", corBd:'#6EE7B7',
       apresentacao:'Comprimido 100 mcg ou solução oral',
       bolus:'2-5 mcg/kg VO q6-12h',
       mgKgDil:null, volDil:null, concAmpola:null, fator:null, unidade:'mcg/kg/dose',
@@ -106,7 +106,7 @@ const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
 
 // ─── Constantes visuais ───────────────────────────────────────────────────────
 const C   = '#F59E0B';
-const CLT = '#FFFBEB';
+const CLT = "var(--tint-amber)";
 const CBR = '#FDE68A';
 
 const TABS = [
@@ -125,14 +125,14 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
       {/* Indicação */}
       <div style={{ backgroundColor:droga.corBg, borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
         <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:droga.cor }}>{droga.nome} · {droga.tipo}</p>
-        <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:'#374151' }}>{droga.indicacao}</p>
-        <p style={{ margin:'3px 0 0 0', fontSize:'10px', color:'#6B7280' }}>{droga.apresentacao}</p>
+        <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>{droga.indicacao}</p>
+        <p style={{ margin:'3px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>{droga.apresentacao}</p>
       </div>
 
       {/* Bolus */}
-      <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
-        <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>BOLUS / DOSE ISOLADA</p>
-        <p style={{ margin:0, fontSize:'12px', color:'#1F2937', fontWeight:'600' }}>{droga.bolus}</p>
+      <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
+        <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>BOLUS / DOSE ISOLADA</p>
+        <p style={{ margin:0, fontSize:'12px', color:"var(--text-2)", fontWeight:'600' }}>{droga.bolus}</p>
         {p > 0 && droga.unidade !== 'mcg/kg/dose' && droga.unidade !== 'mg/kg/dose' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
             Para {p} kg: <strong>{parseFloat((0.075 * p).toFixed(2))}–{parseFloat((0.1 * p).toFixed(2))} {droga.id==='fentanil'?'mcg':'mg'}</strong>
@@ -163,30 +163,30 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
       {/* BIC */}
       {droga.bic && drogaA?.id === droga.id || droga.bic && drogaS?.id === droga.id ? (
         <div>
-          <p style={{ margin:'0 0 6px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>INFUSÃO CONTÍNUA (BIC)</p>
+          <p style={{ margin:'0 0 6px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>INFUSÃO CONTÍNUA (BIC)</p>
 
           {/* Diluição */}
-          <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
-            <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280' }}>DILUIÇÃO · {droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL SF</p>
+          <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
+            <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)" }}>DILUIÇÃO · {droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL SF</p>
             {dil && p > 0 ? (
               <>
                 <p style={{ margin:0, fontSize:'13px', fontWeight:'800', color:droga.cor }}>
                   {dil.qtd} {droga.unidade.includes('mcg')?'mcg':'mg'} de {droga.nome}
                 </p>
-                <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:'#374151' }}>
+                <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:"var(--text-2)" }}>
                   Retirar <strong>{dil.volDroga} mL</strong> + <strong>{dil.volSF} mL</strong> SF → {droga.volDil} mL total
                 </p>
-                <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
+                <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
                   Conc final: {dil.conc} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
                 </p>
               </>
             ) : (
-              <p style={{ margin:0, fontSize:'11px', color:'#9CA3AF' }}>Insira o peso acima para calcular</p>
+              <p style={{ margin:0, fontSize:'11px', color:"var(--muted)" }}>Insira o peso acima para calcular</p>
             )}
           </div>
 
           {/* Tabela velocidades */}
-          <div style={{ border:'1px solid #E5E7EB', borderRadius:'8px', overflow:'hidden' }}>
+          <div style={{ border:'1px solid var(--border)', borderRadius:'8px', overflow:'hidden' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor:droga.corBg, padding:'6px 12px' }}>
               <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>DOSE ({droga.unidade})</span>
               <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>mL/h</span>
@@ -195,8 +195,8 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
               const vel = calcVel(droga, dose);
               const isStart = dose === droga.start;
               return (
-                <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?'#F9FAFB':'#FFF'), borderTop:'1px solid #E5E7EB', padding:'7px 12px' }}>
-                  <span style={{ fontSize:'12px', color:'#374151', fontWeight:isStart?'700':'400' }}>
+                <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?"var(--surface-2)":"var(--surface)"), borderTop:'1px solid var(--border)', padding:'7px 12px' }}>
+                  <span style={{ fontSize:'12px', color:"var(--text-2)", fontWeight:isStart?'700':'400' }}>
                     {dose}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
                   </span>
                   <span style={{ fontSize:'13px', color:isStart?droga.cor:'#1F2937', fontWeight:'800' }}>{vel}</span>
@@ -204,7 +204,7 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
               );
             })}
           </div>
-          <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
+          <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
             Velocidade independente do peso com esta diluição ({droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL)
           </p>
         </div>
@@ -212,8 +212,8 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
 
       {/* Alerta */}
       {droga.alerta && (
-        <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'8px 10px', borderLeft:'3px solid #F97316' }}>
-          <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'600' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />{droga.alerta}</p>
+        <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'8px 10px', borderLeft:'3px solid #F97316' }}>
+          <p style={{ margin:0, fontSize:'11px', color:"var(--tx-amber)", fontWeight:'600' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />{droga.alerta}</p>
         </div>
       )}
     </div>
@@ -239,10 +239,10 @@ export default function AnalgesiaSedacao() {
   // Cortes canônicos vêm de interpretarDor (dor.jsx); aqui só mapeamos o
   // degrau para as cores/rótulo próprios deste módulo (camada visual local).
   const FLACC_UI = [
-    { label:'Sem dor',      cor:'#10B981', bg:'#ECFDF5' }, // degrau 0
-    { label:'Dor Leve',     cor:'#10B981', bg:'#ECFDF5' }, // degrau 1
-    { label:'Dor Moderada', cor:'#D97706', bg:'#FFF7ED' }, // degrau 2
-    { label:'Dor Grave',    cor:'#DC2626', bg:'#FEF2F2' }, // degrau 3
+    { label:'Sem dor',      cor:'#10B981', bg:"var(--tint-green)" }, // degrau 0
+    { label:'Dor Leve',     cor:'#10B981', bg:"var(--tint-green)" }, // degrau 1
+    { label:'Dor Moderada', cor:'#D97706', bg:"var(--tint-amber)" }, // degrau 2
+    { label:'Dor Grave',    cor:'#DC2626', bg:"var(--tint-red)" }, // degrau 3
   ];
   const flaccClass = flaccTotal === null ? null : FLACC_UI[interpretarDor(flaccTotal).degrau];
 
@@ -254,14 +254,14 @@ export default function AnalgesiaSedacao() {
   const tabBtn = (id) => ({
     padding:'8px 2px', borderRadius:'8px', fontSize:'11px',
     fontWeight: tab===id?'700':'500', cursor:'pointer', border:'none',
-    backgroundColor: tab===id ? C : '#F3F4F6',
-    color: tab===id ? '#FFF' : '#374151',
+    backgroundColor: tab===id ? C : "var(--surface-2)",
+    color: tab===id ? '#FFF' : "var(--text-2)",
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', minWidth:0,
   });
 
   const card = (extra={}) => ({
-    backgroundColor:'#FFF', borderRadius:'12px', padding:'14px',
-    border:'1px solid #E5E7EB', ...extra,
+    backgroundColor:"var(--surface)", borderRadius:'12px', padding:'14px',
+    border:'1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -273,7 +273,7 @@ export default function AnalgesiaSedacao() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:'#F9FAFB', minHeight:'100vh' }}>
+    <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
 
       {/* Header */}
       <div style={{ background:`linear-gradient(135deg, ${C} 0%, #D97706 100%)`, borderRadius:'14px', padding:'16px', marginBottom:'16px', color:'#FFF' }}>
@@ -286,7 +286,7 @@ export default function AnalgesiaSedacao() {
 
       {/* Peso persistente */}
       <div style={{ ...card({ padding:'10px' }), marginBottom:'12px' }}>
-        <label style={{ fontSize:'10px', fontWeight:'700', color:'#6B7280', display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
+        <label style={{ fontSize:'10px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
         <input type="number" inputMode="decimal" value={peso} onChange={e=>setPeso(e.target.value)} placeholder="ex: 15"
           style={{ width:'100%', padding:'6px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
       </div>
@@ -305,7 +305,7 @@ export default function AnalgesiaSedacao() {
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
 
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
-            <p style={{ margin:0, fontSize:'12px', color:'#92400E', fontWeight:'700' }}>
+            <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'700' }}>
               Princípio: analgesia ANTES de sedação (analgo-sedação). Avaliar dor a cada 4-6h. Tratar a causa da dor.
             </p>
           </div>
@@ -313,7 +313,7 @@ export default function AnalgesiaSedacao() {
           {/* FLACC interativo */}
           <div style={card()}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'12px' }}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Activity size={15} /> FLACC — 2 meses a 7 anos / não-verbal</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Activity size={15} /> FLACC — 2 meses a 7 anos / não-verbal</p>
               {flaccTotal !== null && (
                 <span style={{ backgroundColor:flaccClass.cor, color:'#FFF', borderRadius:'16px', padding:'3px 10px', fontSize:'13px', fontWeight:'800' }}>{flaccTotal}/10</span>
               )}
@@ -322,7 +322,7 @@ export default function AnalgesiaSedacao() {
             {FLACC_CATS.map(item => (
               <div key={item.id} style={{ marginBottom:'10px' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'4px' }}>
-                  <span style={{ fontSize:'12px', fontWeight:'700', color:'#374151' }}>{item.nome}</span>
+                  <span style={{ fontSize:'12px', fontWeight:'700', color:"var(--text-2)" }}>{item.nome}</span>
                   {flacc[item.id] !== undefined && (
                     <span style={{ fontSize:'12px', fontWeight:'800', color: flacc[item.id]===0?'#10B981':flacc[item.id]===1?'#D97706':'#DC2626' }}>+{flacc[item.id]}</span>
                   )}
@@ -330,7 +330,7 @@ export default function AnalgesiaSedacao() {
                 <div style={{ display:'flex', flexDirection:'column', gap:'4px' }}>
                   {item.opcoes.map(op => (
                     <button key={op.v} onClick={()=>setFlacc(prev=>({...prev,[item.id]:op.v}))}
-                      style={{ width:'100%', padding:'8px 10px', borderRadius:'6px', border:'none', cursor:'pointer', fontSize:'11px', fontWeight: flacc[item.id]===op.v?'700':'400', backgroundColor: flacc[item.id]===op.v?(op.v===0?'#10B981':op.v===1?'#D97706':'#DC2626'):'#F3F4F6', color: flacc[item.id]===op.v?'#FFF':'#374151', textAlign:'left', lineHeight:1.35 }}>
+                      style={{ width:'100%', padding:'8px 10px', borderRadius:'6px', border:'none', cursor:'pointer', fontSize:'11px', fontWeight: flacc[item.id]===op.v?'700':'400', backgroundColor: flacc[item.id]===op.v?(op.v===0?'#10B981':op.v===1?'#D97706':'#DC2626'):"var(--surface-2)", color: flacc[item.id]===op.v?'#FFF':"var(--text-2)", textAlign:'left', lineHeight:1.35 }}>
                       <span style={{ fontWeight:'800', marginRight:'6px' }}>{op.v}</span>{op.texto}
                     </button>
                   ))}
@@ -341,7 +341,7 @@ export default function AnalgesiaSedacao() {
             {flaccTotal !== null && (
               <div style={{ backgroundColor:flaccClass.bg, borderRadius:'10px', padding:'12px', textAlign:'center', marginTop:'4px' }}>
                 <p style={{ margin:0, fontSize:'18px', fontWeight:'800', color:flaccClass.cor }}>{flaccTotal}/10 — {flaccClass.label}</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:'#374151' }}>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>
                   {flaccTotal <= 3 ? 'Analgesia leve · reavaliação em 4h'
                    : flaccTotal <= 6 ? 'Analgesia necessária · considerar opioide se refratário a não-opioide'
                    : 'Analgesia urgente · opioide indicado · reavaliação em 1h'}
@@ -349,7 +349,7 @@ export default function AnalgesiaSedacao() {
               </div>
             )}
 
-            <button onClick={()=>setFlacc({})} style={{ marginTop:'8px', width:'100%', padding:'7px', borderRadius:'8px', border:'1px solid #E5E7EB', backgroundColor:'#F9FAFB', cursor:'pointer', fontSize:'11px', color:'#6B7280', display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+            <button onClick={()=>setFlacc({})} style={{ marginTop:'8px', width:'100%', padding:'7px', borderRadius:'8px', border:'1px solid var(--border)', backgroundColor:"var(--bg)", cursor:'pointer', fontSize:'11px', color:"var(--muted)", display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
               <RotateCcw size={13} /> Limpar FLACC
             </button>
           </div>
@@ -357,8 +357,8 @@ export default function AnalgesiaSedacao() {
           {/* Outras escalas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('escalas')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><ClipboardList size={14} style={{verticalAlign:'-2px', marginRight:6}} />Outras Escalas de Referência</p>
-              {aberto==='escalas'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><ClipboardList size={14} style={{verticalAlign:'-2px', marginRight:6}} />Outras Escalas de Referência</p>
+              {aberto==='escalas'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='escalas' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'8px' }}>
@@ -368,10 +368,10 @@ export default function AnalgesiaSedacao() {
                   { nome:'COMFORT-B', faixa:'VM · não cooperativo', itens:'Alerta, agitação, resp, choro, movimento, tônus (6-30)', corte:'Alvo 11-17 · < 11 = supersedado · > 17 = insuficiente', cor:'#D97706' },
                   { nome:'RASS', faixa:'Adulto/adolescente', itens:'-5 (arresponsivo) a +4 (combativo)', corte:'Alvo -1 a 0 em VM · 0 = alerta e calmo', cor:'#059669' },
                 ].map((e, i) => (
-                  <div key={i} style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${e.cor}` }}>
+                  <div key={i} style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${e.cor}` }}>
                     <p style={{ margin:'0 0 2px 0', fontSize:'12px', fontWeight:'700', color:e.cor }}>{e.nome} · {e.faixa}</p>
-                    <p style={{ margin:'0 0 2px 0', fontSize:'11px', color:'#374151' }}>{e.itens}</p>
-                    <p style={{ margin:0, fontSize:'10px', color:'#6B7280', fontWeight:'600' }}>{e.corte}</p>
+                    <p style={{ margin:'0 0 2px 0', fontSize:'11px', color:"var(--text-2)" }}>{e.itens}</p>
+                    <p style={{ margin:0, fontSize:'10px', color:"var(--muted)", fontWeight:'600' }}>{e.corte}</p>
                   </div>
                 ))}
               </div>
@@ -385,17 +385,17 @@ export default function AnalgesiaSedacao() {
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
 
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
-            <p style={{ margin:0, fontSize:'12px', color:'#92400E', fontWeight:'600' }}>
+            <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'600' }}>
               Analgesia-first: tratar dor antes de sedar · use a menor dose eficaz · reavaliar por escala (FLACC) a cada 4h
             </p>
           </div>
 
           <div style={card()}>
-            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>DROGA</p>
+            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>DROGA</p>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px', marginBottom:'12px' }}>
               {DROGAS.analgesia.map(d=>(
                 <button key={d.id} onClick={()=>setDrugA(d.id)}
-                  style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugA===d.id?d.cor:'#E5E7EB'}`, backgroundColor: drugA===d.id?d.corBg:'#F9FAFB', cursor:'pointer', fontSize:'11px', fontWeight:drugA===d.id?'700':'500', color:drugA===d.id?d.cor:'#6B7280', textAlign:'center' }}>
+                  style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugA===d.id?d.cor:"var(--border)"}`, backgroundColor: drugA===d.id?d.corBg:"var(--surface-2)", cursor:'pointer', fontSize:'11px', fontWeight:drugA===d.id?'700':'500', color:drugA===d.id?d.cor:"var(--muted)", textAlign:'center' }}>
                   {d.nome}
                   <span style={{ display:'block', fontSize:'9px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
                 </button>
@@ -410,18 +410,18 @@ export default function AnalgesiaSedacao() {
       {tab==='sedacao' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
 
-          <div style={{ backgroundColor:'#EFF6FF', borderRadius:'10px', padding:'10px', border:'1px solid #BFDBFE' }}>
-            <p style={{ margin:0, fontSize:'12px', color:'#1D4ED8', fontWeight:'600' }}>
+          <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'10px', padding:'10px', border:'1px solid #BFDBFE' }}>
+            <p style={{ margin:0, fontSize:'12px', color:"var(--tx-blue)", fontWeight:'600' }}>
               Meta: menor nível de sedação que permita conforto e segurança · RAMSAY 2-3 ou COMFORT-B 11-17 · "wake-up" diário quando possível
             </p>
           </div>
 
           <div style={card()}>
-            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>DROGA</p>
+            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>DROGA</p>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px', marginBottom:'12px' }}>
               {DROGAS.sedacao.map(d=>(
                 <button key={d.id} onClick={()=>setDrugS(d.id)}
-                  style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugS===d.id?d.cor:'#E5E7EB'}`, backgroundColor: drugS===d.id?d.corBg:'#F9FAFB', cursor:'pointer', fontSize:'11px', fontWeight:drugS===d.id?'700':'500', color:drugS===d.id?d.cor:'#6B7280', textAlign:'center' }}>
+                  style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugS===d.id?d.cor:"var(--border)"}`, backgroundColor: drugS===d.id?d.corBg:"var(--surface-2)", cursor:'pointer', fontSize:'11px', fontWeight:drugS===d.id?'700':'500', color:drugS===d.id?d.cor:"var(--muted)", textAlign:'center' }}>
                   {d.nome}
                   <span style={{ display:'block', fontSize:'9px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
                 </button>
@@ -445,7 +445,7 @@ export default function AnalgesiaSedacao() {
               'Hemodinâmica estável',
               'Opioides/BZD por > 5-7 dias: risco de síndrome de abstinência',
             ].map((item, i) => (
-              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:'#374151', marginBottom:'5px', alignItems:'flex-start' }}>
+              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:"var(--text-2)", marginBottom:'5px', alignItems:'flex-start' }}>
                 <span style={{ color:C, flexShrink:0 }}><Check size={13} /></span>{item}
               </div>
             ))}
@@ -454,31 +454,31 @@ export default function AnalgesiaSedacao() {
           {/* WAT-1 */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('wat')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><Search size={14} style={{verticalAlign:'-2px', marginRight:6}} />WAT-1 — Síndrome de Abstinência</p>
-              {aberto==='wat'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><Search size={14} style={{verticalAlign:'-2px', marginRight:6}} />WAT-1 — Síndrome de Abstinência</p>
+              {aberto==='wat'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='wat' && (
               <div style={{ marginTop:'10px' }}>
-                <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'8px 10px', marginBottom:'8px' }}>
-                  <p style={{ margin:0, fontSize:'11px', color:'#C2410C', fontWeight:'700' }}>WAT-1 ≥ 3 = síndrome de abstinência · iniciar protocolo de desmame estruturado</p>
+                <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'8px 10px', marginBottom:'8px' }}>
+                  <p style={{ margin:0, fontSize:'11px', color:"var(--tx-amber)", fontWeight:'700' }}>WAT-1 ≥ 3 = síndrome de abstinência · iniciar protocolo de desmame estruturado</p>
                 </div>
-                <div style={{ border:'1px solid #E5E7EB', borderRadius:'8px', overflow:'hidden' }}>
+                <div style={{ border:'1px solid var(--border)', borderRadius:'8px', overflow:'hidden' }}>
                   {['Fezes amolecidas/aquosas','Vômito/regurgitação','Temperatura > 37,8°C','Estado irritável ao despertar','Tremor','Diaforese','Movimentos repetitivos/descoordenados','Bocejo/espirro frequente','Resposta de susto exagerada','Tônus muscular aumentado','Aferir: score de sedação > 4'].map((item, i) => (
-                    <div key={i} style={{ display:'flex', gap:'10px', alignItems:'center', padding:'6px 10px', backgroundColor:i%2===0?'#F9FAFB':'#FFF', borderTop:i>0?'1px solid #E5E7EB':'none' }}>
-                      <span style={{ fontSize:'11px', color:'#6B7280', fontWeight:'600', width:'12px', flexShrink:0 }}>{i+1}</span>
-                      <span style={{ fontSize:'11px', color:'#374151' }}>{item}</span>
-                      <span style={{ fontSize:'11px', fontWeight:'700', color:'#6B7280', marginLeft:'auto', flexShrink:0 }}>0-1</span>
+                    <div key={i} style={{ display:'flex', gap:'10px', alignItems:'center', padding:'6px 10px', backgroundColor:i%2===0?"var(--surface-2)":"var(--surface)", borderTop:i>0?'1px solid var(--border)':'none' }}>
+                      <span style={{ fontSize:'11px', color:"var(--muted)", fontWeight:'600', width:'12px', flexShrink:0 }}>{i+1}</span>
+                      <span style={{ fontSize:'11px', color:"var(--text-2)" }}>{item}</span>
+                      <span style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", marginLeft:'auto', flexShrink:0 }}>0-1</span>
                     </div>
                   ))}
                 </div>
-                <p style={{ margin:'6px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>Aplicar a cada 8-12h durante o desmame · pontuação máxima: 11</p>
+                <p style={{ margin:'6px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>Aplicar a cada 8-12h durante o desmame · pontuação máxima: 11</p>
               </div>
             )}
           </div>
 
           {/* Protocolo desmame */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><TrendingDown size={14} style={{verticalAlign:'-2px', marginRight:6}} />Protocolo de Desmame</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><TrendingDown size={14} style={{verticalAlign:'-2px', marginRight:6}} />Protocolo de Desmame</p>
             {[
               { titulo:'Calcular dose total diária', desc:'Soma de toda a infusão do dia anterior (mg ou mcg totais)' },
               { titulo:'Converter para oral/enteral', desc:'Morfina IV:VO = 1:3 · Midazolam IV → Diazepam VO (fator 1:1 mg a mg aproximado)' },
@@ -486,11 +486,11 @@ export default function AnalgesiaSedacao() {
               { titulo:'Adicionar adjuvante', desc:'Clonidina 2-5 mcg/kg VO q6-12h reduz sintomas de abstinência de opioides e BZD' },
               { titulo:'Meta de desmame', desc:'Desmame completo em 5-10 dias (uso > 1 semana) ou 1-2 dias (uso < 5 dias)' },
             ].map((step, i) => (
-              <div key={i} style={{ display:'flex', gap:'8px', alignItems:'flex-start', marginBottom:'8px', padding:'8px 10px', backgroundColor:'#F9FAFB', borderRadius:'8px' }}>
+              <div key={i} style={{ display:'flex', gap:'8px', alignItems:'flex-start', marginBottom:'8px', padding:'8px 10px', backgroundColor:"var(--bg)", borderRadius:'8px' }}>
                 <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'20px', height:'20px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'10px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
                 <div>
-                  <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:'#1F2937' }}>{step.titulo}</p>
-                  <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:'#6B7280' }}>{step.desc}</p>
+                  <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--text-2)" }}>{step.titulo}</p>
+                  <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -499,26 +499,26 @@ export default function AnalgesiaSedacao() {
           {/* Delírio pediátrico */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('delirio')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}><Brain size={14} style={{verticalAlign:'-2px', marginRight:6}} />Delírio em UTI Pediátrica (PICU-pCAM)</p>
-              {aberto==='delirio'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><Brain size={14} style={{verticalAlign:'-2px', marginRight:6}} />Delírio em UTI Pediátrica (PICU-pCAM)</p>
+              {aberto==='delirio'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='delirio' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'8px' }}>
-                <div style={{ backgroundColor:'#FEF2F2', borderRadius:'8px', padding:'10px' }}>
+                <div style={{ backgroundColor:"var(--tint-red)", borderRadius:'8px', padding:'10px' }}>
                   <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:'#DC2626' }}>Fatores de risco</p>
-                  <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>
+                  <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>
                     Benzodiazepínicos prolongados · sedação profunda · VM prolongada · privação de sono · imobilização · dor não tratada · sepse · corticoides
                   </p>
                 </div>
-                <div style={{ backgroundColor:'#ECFDF5', borderRadius:'8px', padding:'10px' }}>
-                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:'#065F46' }}>Manejo não-farmacológico (1ª linha)</p>
-                  <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>
+                <div style={{ backgroundColor:"var(--tint-green)", borderRadius:'8px', padding:'10px' }}>
+                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:"var(--tx-green)" }}>Manejo não-farmacológico (1ª linha)</p>
+                  <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>
                     Reorientação frequente · manter ciclo sono-vigília · mobilização precoce · reduzir benzodiazepínico · presença familiar · luz natural
                   </p>
                 </div>
-                <div style={{ backgroundColor:'#EFF6FF', borderRadius:'8px', padding:'10px' }}>
-                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:'#1D4ED8' }}>Farmacológico (se necessário)</p>
-                  <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>
+                <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'8px', padding:'10px' }}>
+                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:"var(--tx-blue)" }}>Farmacológico (se necessário)</p>
+                  <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>
                     Dexmedetomidina: preferida (evidência em UTI pediátrica) · Quetiapina VO (off-label) · Haloperidol (off-label, últimos anos crescente uso) · Melatonina 0,1-0,5 mg/kg VO à noite
                   </p>
                 </div>
@@ -529,8 +529,8 @@ export default function AnalgesiaSedacao() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop:'20px', backgroundColor:'#F3F4F6', borderRadius:'10px', padding:'12px' }}>
-        <p style={{ margin:0, fontSize:'10px', color:'#6B7280', textAlign:'center', lineHeight:'1.6' }}>
+      <div style={{ marginTop:'20px', backgroundColor:"var(--surface-2)", borderRadius:'10px', padding:'12px' }}>
+        <p style={{ margin:0, fontSize:'10px', color:"var(--muted)", textAlign:'center', lineHeight:'1.6' }}>
           Devlin JW et al. SCCM Clinical Practice Guidelines 2018 (adulto/referência) · Hartman ME et al. Pediatric Sedation 2022 · Harriet Lane 22ª ed. · NeoFax 2023.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

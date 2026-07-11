@@ -392,20 +392,20 @@ function getPretermPercs(table, gaW) {
 }
 function classify(perc) {
   if (perc === null) return null;
-  if (perc < 10) return { label:"PIG", color:"#EF4444", bg:"#FEF2F2", text:"Pequeno para IG" };
-  if (perc > 90) return { label:"GIG", color:"#F59E0B", bg:"#FFFBEB", text:"Grande para IG" };
-  return { label:"AIG", color:"#10B981", bg:"#ECFDF5", text:"Adequado para IG" };
+  if (perc < 10) return { label:"PIG", color:"#EF4444", bg:"var(--tint-red)", text:"Pequeno para IG" };
+  if (perc > 90) return { label:"GIG", color:"#F59E0B", bg:"var(--tint-amber)", text:"Grande para IG" };
+  return { label:"AIG", color:"#10B981", bg:"var(--tint-green)", text:"Adequado para IG" };
 }
 function classifyOMS(perc) {
   if (perc === null) return null;
-  if (perc < 3)  return { label:"< P3",  color:"#EF4444", bg:"#FEF2F2" };
-  if (perc < 10) return { label:"P3–10", color:"#F97316", bg:"#FFF7ED" };
-  if (perc < 25) return { label:"P10–25",color:"#10B981", bg:"#ECFDF5" };
-  if (perc < 50) return { label:"P25–50",color:"#10B981", bg:"#ECFDF5" };
-  if (perc < 75) return { label:"P50–75",color:"#10B981", bg:"#ECFDF5" };
-  if (perc < 90) return { label:"P75–90",color:"#10B981", bg:"#ECFDF5" };
-  if (perc < 97) return { label:"P90–97",color:"#F97316", bg:"#FFF7ED" };
-  return { label:"> P97", color:"#EF4444", bg:"#FEF2F2" };
+  if (perc < 3)  return { label:"< P3",  color:"#EF4444", bg:"var(--tint-red)" };
+  if (perc < 10) return { label:"P3–10", color:"#F97316", bg:"var(--tint-amber)" };
+  if (perc < 25) return { label:"P10–25",color:"#10B981", bg:"var(--tint-green)" };
+  if (perc < 50) return { label:"P25–50",color:"#10B981", bg:"var(--tint-green)" };
+  if (perc < 75) return { label:"P50–75",color:"#10B981", bg:"var(--tint-green)" };
+  if (perc < 90) return { label:"P75–90",color:"#10B981", bg:"var(--tint-green)" };
+  if (perc < 97) return { label:"P90–97",color:"#F97316", bg:"var(--tint-amber)" };
+  return { label:"> P97", color:"#EF4444", bg:"var(--tint-red)" };
 }
 function percFromBand3(val, band) {
   if (!band || val === null || val === "") return null;
@@ -465,7 +465,7 @@ function percToZ(p) {
 function PercBar({ perc, color }) {
   const p = Math.min(Math.max(perc || 50, 0), 100);
   return (
-    <div style={{ marginTop:"8px", position:"relative", height:"6px", borderRadius:"3px", background:"#E5E7EB" }}>
+    <div style={{ marginTop:"8px", position:"relative", height:"6px", borderRadius:"3px", background:"var(--surface-2)" }}>
       {[3,10,25,50,75,90,97].map(m => (
         <div key={m} style={{ position:"absolute", left:`${m}%`, top:"-2px", width:"2px", height:"10px", background:"#D1D5DB" }} />
       ))}
@@ -481,8 +481,8 @@ function SexoBtn({ val, cur, set }) {
     <button onClick={() => set(val)} style={{
       flex:1, padding:"8px", borderRadius:"8px", border:"none", cursor:"pointer",
       fontWeight: a ? "700" : "500",
-      backgroundColor: a ? (val === "M" ? "#3B82F6" : "#EC4899") : "#F3F4F6",
-      color: a ? "#FFFFFF" : "#374151",
+      backgroundColor: a ? (val === "M" ? "#3B82F6" : "#EC4899") : "var(--surface-2)",
+      color: a ? "#FFFFFF" : "var(--text-2)",
     }}>
       {val === "M" ? "Masculino" : "Feminino"}
     </button>
@@ -492,8 +492,8 @@ function SexoBtn({ val, cur, set }) {
 function Input({ label, val, set, ph, unit }) {
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
-      <label style={{ fontSize:"13px", fontWeight:"600", color:"#374151" }}>
-        {label}{unit && <span style={{ fontWeight:"400", color:"#9CA3AF" }}> ({unit})</span>}
+      <label style={{ fontSize:"13px", fontWeight:"600", color:"var(--text-2)" }}>
+        {label}{unit && <span style={{ fontWeight:"400", color:"var(--muted)" }}> ({unit})</span>}
       </label>
       <input
         type="text"
@@ -504,9 +504,9 @@ function Input({ label, val, set, ph, unit }) {
         placeholder={ph}
         style={{
           padding:"10px 12px", borderRadius:"8px",
-          border:"1.5px solid #E5E7EB", fontSize:"16px",
+          border:"1.5px solid var(--border)", fontSize:"16px",
           outline:"none", width:"100%", boxSizing:"border-box",
-          background:"#fff",
+          background:"var(--surface)",
         }}
       />
     </div>
@@ -519,20 +519,20 @@ function CardOMS({ label, data }) {
   return (
     <div style={{ borderRadius:"10px", border:`1.5px solid ${cl.color}`, background:cl.bg, padding:"12px", marginBottom:"8px" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <span style={{ fontWeight:"700", color:"#111827", fontSize:"15px" }}>{label}</span>
+        <span style={{ fontWeight:"700", color:"var(--text)", fontSize:"15px" }}>{label}</span>
         <span style={{ fontWeight:"800", color:cl.color, fontSize:"18px" }}>{cl.label}</span>
       </div>
       <div style={{ marginTop:"8px", display:"flex", gap:"16px", flexWrap:"wrap" }}>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:"#111827" }}>{val}</div>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{val}</div>
         </div>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color: parseFloat(z) < -2 || parseFloat(z) > 2 ? cl.color : "#111827" }}>{z}</div>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color: parseFloat(z) < -2 || parseFloat(z) > 2 ? cl.color : "var(--text)" }}>{z}</div>
         </div>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
           <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>P{perc?.toFixed(1)}</div>
         </div>
       </div>
@@ -552,7 +552,7 @@ function CardPT({ label, data }) {
   return (
     <div style={{ borderRadius:"10px", border:`1.5px solid ${cl.color}`, background:cl.bg, padding:"12px", marginBottom:"8px" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <span style={{ fontWeight:"700", color:"#111827", fontSize:"15px" }}>{label}</span>
+        <span style={{ fontWeight:"700", color:"var(--text)", fontSize:"15px" }}>{label}</span>
         <div style={{ textAlign:"right" }}>
           <span style={{ fontWeight:"800", color:cl.color, fontSize:"18px" }}>{cl.label}</span>
           <span style={{ fontSize:"11px", color:cl.color, display:"block" }}>{cl.text}</span>
@@ -560,21 +560,21 @@ function CardPT({ label, data }) {
       </div>
       <div style={{ marginTop:"8px", display:"flex", gap:"16px", flexWrap:"wrap" }}>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:"#111827" }}>{val}</div>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{val}</div>
         </div>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color: z && (parseFloat(z) < -1.28 || parseFloat(z) > 1.28) ? cl.color : "#111827" }}>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color: z && (parseFloat(z) < -1.28 || parseFloat(z) > 1.28) ? cl.color : "var(--text)" }}>
             {z ? `~${z}` : '—'}
           </div>
         </div>
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"11px", color:"#9CA3AF", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
+          <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
           <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>≈P{perc}</div>
         </div>
       </div>
-      <div style={{ marginTop:"4px", fontSize:"11px", color:"#9CA3AF" }}>{bandTxt}</div>
+      <div style={{ marginTop:"4px", fontSize:"11px", color:"var(--muted)" }}>{bandTxt}</div>
       <PercBar perc={perc} color={cl.color} />
     </div>
   );
@@ -694,7 +694,7 @@ export default function Percentis({ somenteOMS = false }) {
     padding:"8px 0", borderRadius:"8px", fontSize:"12px",
     fontWeight: tab === i ? "700" : "500",
     backgroundColor: tab === i ? "#3B82F6" : "transparent",
-    color: tab === i ? "#FFFFFF" : "#6B7280",
+    color: tab === i ? "#FFFFFF" : "var(--muted)",
     border:"none", cursor:"pointer", flex:1,
   });
 
@@ -702,17 +702,17 @@ export default function Percentis({ somenteOMS = false }) {
 
   return (
     <div style={{ fontFamily:"'DM Sans', sans-serif", maxWidth:"480px", margin:"0 auto",
-      padding:"16px", backgroundColor:"#F9FAFB", minHeight:"100vh" }}>
+      padding:"16px", backgroundColor:"var(--bg)", minHeight:"100vh" }}>
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
-        <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"#EFF6FF",
+        <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"var(--tint-blue)",
           display:"flex", alignItems:"center", justifyContent:"center" }}>
           <Scale size={24} color="#3B82F6" />
         </div>
         <div>
-          <h1 style={{ margin:0, fontSize:"20px", fontWeight:"800", color:"#111827" }}>Curvas de Crescimento</h1>
-          <p style={{ margin:0, fontSize:"12px", color:"#6B7280" }}>
+          <h1 style={{ margin:0, fontSize:"20px", fontWeight:"800", color:"var(--text)" }}>Curvas de Crescimento</h1>
+          <p style={{ margin:0, fontSize:"12px", color:"var(--muted)" }}>
             {somenteOMS ? "OMS — Organização Mundial da Saúde · 0–60 meses" : "OMS · Intergrowth-21st · Fenton 2013"}
           </p>
         </div>
@@ -720,7 +720,7 @@ export default function Percentis({ somenteOMS = false }) {
 
       {/* Tabs (ocultas no modo somente OMS) */}
       {!somenteOMS && (
-        <div style={{ display:"flex", gap:"4px", background:"#E5E7EB", borderRadius:"10px",
+        <div style={{ display:"flex", gap:"4px", background:"var(--surface-2)", borderRadius:"10px",
           padding:"4px", marginBottom:"20px" }}>
           {TABS.map((t, i) => (
             <button key={i} style={tabStyle(i)}
@@ -734,30 +734,30 @@ export default function Percentis({ somenteOMS = false }) {
       {/* ─── Tab OMS ─── */}
       {tab === 0 && (
         <div>
-          <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+          <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
             boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>Sexo</p>
+            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Sexo</p>
             <div style={{ display:"flex", gap:"8px" }}>
               <SexoBtn val="M" cur={oSexo} set={s => { setOSexo(s); setORes(null); }} />
               <SexoBtn val="F" cur={oSexo} set={s => { setOSexo(s); setORes(null); }} />
             </div>
           </div>
 
-          <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+          <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
             boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>Idade</p>
+            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Idade</p>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
               <Input label="Anos"  val={oAnos}  set={setOAnos}  ph="0–5"  unit="" />
               <Input label="Meses" val={oMeses} set={setOMeses} ph="0–11" unit="" />
             </div>
-            <p style={{ margin:"8px 0 0", fontSize:"12px", color:"#9CA3AF" }}>
+            <p style={{ margin:"8px 0 0", fontSize:"12px", color:"var(--muted)" }}>
               Total: {idadeM} meses
             </p>
           </div>
 
-          <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+          <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
             boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>
+            <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>
               Medidas (pelo menos uma)
             </p>
             <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
@@ -779,16 +779,16 @@ export default function Percentis({ somenteOMS = false }) {
 
           {oRes && (
             <div style={{ marginTop:"20px" }}>
-              <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"#374151" }}>
+              <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"var(--text-2)" }}>
                 Resultado — {oRes.idade}m · {oSexo === "M" ? "Menino" : "Menina"}
               </h3>
               <CardOMS label="Peso" data={oRes.peso} />
               <CardOMS label={idadeM < 24 ? "Comprimento" : "Estatura"} data={oRes.altura} />
               <CardOMS label="Perímetro Cefálico" data={oRes.pc} />
-              <div style={{ background:"#EFF6FF", borderRadius:"10px", padding:"10px", marginTop:"8px",
+              <div style={{ background:"var(--tint-blue)", borderRadius:"10px", padding:"10px", marginTop:"8px",
                 display:"flex", gap:"8px", alignItems:"flex-start" }}>
                 <Info size={14} color="#3B82F6" style={{ marginTop:"1px", flexShrink:0 }} />
-                <p style={{ margin:0, fontSize:"12px", color:"#1D4ED8" }}>
+                <p style={{ margin:0, fontSize:"12px", color:"var(--tx-blue)" }}>
                   OMS: Z &lt; −2 = risco nutricional (abaixo P3). Z &gt; +2 = sobrepeso (acima P97). Avaliar tendência longitudinal.
                 </p>
               </div>
@@ -843,9 +843,9 @@ export default function Percentis({ somenteOMS = false }) {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop:"24px", padding:"12px", background:"#F3F4F6", borderRadius:"10px",
+      <div style={{ marginTop:"24px", padding:"12px", background:"var(--surface-2)", borderRadius:"10px",
         borderLeft:"3px solid #9CA3AF" }}>
-        <p style={{ margin:0, fontSize:"11px", color:"#6B7280", lineHeight:"1.5" }}>
+        <p style={{ margin:0, fontSize:"11px", color:"var(--muted)", lineHeight:"1.5" }}>
           <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
           Valores derivados das publicações originais (OMS 2006, Intergrowth-21st 2014,
           Intergrowth-21st Postnatal 2015, Fenton 2013). Z-scores em tabelas pré-termo são
@@ -863,22 +863,22 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
                       calc, res, igRange, titulo, subtitulo }) {
   return (
     <div>
-      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
-          <p style={{ margin:0, fontWeight:"700", color:"#374151", fontSize:"14px" }}>{titulo}</p>
-          <span style={{ fontSize:"11px", color:"#9CA3AF" }}>{subtitulo}</span>
+          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>{titulo}</p>
+          <span style={{ fontSize:"11px", color:"var(--muted)" }}>{subtitulo}</span>
         </div>
-        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>Sexo</p>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Sexo</p>
         <div style={{ display:"flex", gap:"8px" }}>
           <SexoBtn val="M" cur={sexo} set={setSexo} />
           <SexoBtn val="F" cur={sexo} set={setSexo} />
         </div>
       </div>
 
-      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>
           Dados ao nascimento
         </p>
         <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
@@ -898,13 +898,13 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
 
       {res && (
         <div style={{ marginTop:"20px" }}>
-          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"#374151" }}>
+          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"var(--text-2)" }}>
             Resultado — {res.ig} semanas · {sexo === "M" ? "Menino" : "Menina"}
           </h3>
           <CardPT label="Peso"               data={res.peso} />
           <CardPT label="Comprimento"        data={res.comp} />
           <CardPT label="Perímetro Cefálico" data={res.pc}   />
-          <div style={{ background:"#F5F3FF", borderRadius:"10px", padding:"10px", marginTop:"8px",
+          <div style={{ background:"var(--tint-purple)", borderRadius:"10px", padding:"10px", marginTop:"8px",
             display:"flex", gap:"8px", alignItems:"flex-start" }}>
             <Info size={14} color="#8B5CF6" style={{ marginTop:"1px", flexShrink:0 }} />
             <p style={{ margin:0, fontSize:"12px", color:"#6D28D9" }}>
@@ -925,22 +925,22 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
 function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, setAltura, pc, setPc, calc, res }) {
   return (
     <div>
-      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
-          <p style={{ margin:0, fontWeight:"700", color:"#374151", fontSize:"14px" }}>Intergrowth Postnatal</p>
-          <span style={{ fontSize:"11px", color:"#9CA3AF" }}>Villar J et al. Lancet Glob Health 2015</span>
+          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Intergrowth Postnatal</p>
+          <span style={{ fontSize:"11px", color:"var(--muted)" }}>Villar J et al. Lancet Glob Health 2015</span>
         </div>
-        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>Sexo</p>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Sexo</p>
         <div style={{ display:"flex", gap:"8px" }}>
           <SexoBtn val="M" cur={sexo} set={setSexo} />
           <SexoBtn val="F" cur={sexo} set={setSexo} />
         </div>
       </div>
 
-      <div style={{ background:"#fff", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"#374151", fontSize:"14px" }}>
+        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>
           Medidas atuais
         </p>
         <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
@@ -960,16 +960,16 @@ function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, set
 
       {res && (
         <div style={{ marginTop:"20px" }}>
-          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"#374151" }}>
+          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"var(--text-2)" }}>
             Resultado — IGPM {res.igpm} semanas · {sexo === "M" ? "Menino" : "Menina"}
           </h3>
           <CardPT label="Peso"               data={res.peso}   />
           <CardPT label="Estatura"           data={res.altura} />
           <CardPT label="Perímetro Cefálico" data={res.pc}     />
-          <div style={{ background:"#ECFDF5", borderRadius:"10px", padding:"10px", marginTop:"8px",
+          <div style={{ background:"var(--tint-green)", borderRadius:"10px", padding:"10px", marginTop:"8px",
             display:"flex", gap:"8px", alignItems:"flex-start" }}>
             <Info size={14} color="#059669" style={{ marginTop:"1px", flexShrink:0 }} />
-            <p style={{ margin:0, fontSize:"12px", color:"#047857" }}>
+            <p style={{ margin:0, fontSize:"12px", color:"var(--tx-green)" }}>
               Válido para acompanhamento pós-natal de prematuros (nascidos 27–36+6 semanas) até
               64 semanas de IGPM, quando as curvas se fundem com os padrões OMS sem ajuste.
               Diferente da aba "Interg. Nasc." — aqui a referência é o crescimento longitudinal,

@@ -7,21 +7,21 @@ import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-re
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
 const C = {
-  bg:       "#F0F4F8",
+  bg:       "var(--tint-slate)",
   card:     "#FFFFFF",
-  text:     "#1E293B",
-  sub:      "#475569",
-  muted:    "#94A3B8",
-  border:   "#E2E8F0",
+  text:     "var(--text-2)",
+  sub:      "var(--text-2)",
+  muted:    "var(--muted)",
+  border:   "var(--tint-slate)",
 
   ok:       "#059669",  okBg:    "#D1FAE5",
-  warn:     "#B45309",  warnBg:  "#FEF3C7",
-  bad:      "#DC2626",  badBg:   "#FEE2E2",
+  warn:     "#B45309",  warnBg:  "var(--tint-amber)",
+  bad:      "#DC2626",  badBg:   "var(--tint-red)",
 
   nips:     "#0EA5E9",  nipsBg:  "#E0F2FE",
-  pipp:     "#7C3AED",  pippBg:  "#EDE9FE",
-  npass:    "#10B981",  npassBg: "#ECFDF5",
-  cries:    "#EF4444",  criesBg: "#FEF2F2",
+  pipp:     "#7C3AED",  pippBg:  "var(--tint-purple)",
+  npass:    "#10B981",  npassBg: "var(--tint-green)",
+  cries:    "#EF4444",  criesBg: "var(--tint-red)",
 };
 
 /* ─── NIPS (0–7) ─────────────────────────────────────────────────────────── */
@@ -134,7 +134,7 @@ const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
   const int    = done ? interp(score) : null;
   return (
     <div style={{
-      background:   done ? int.bg  : "#F1F5F9",
+      background:   done ? int.bg  : "var(--tint-slate)",
       border:       `2px solid ${done ? int.c : C.border}`,
       borderRadius: 16,
       padding:      "16px",
@@ -171,7 +171,7 @@ const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
           display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
           {item.label}
           {item.ctx && (
-            <span style={{fontSize:10,background:"#FEF3C7",color:"#92400E",
+            <span style={{fontSize:10,background:"var(--tint-amber)",color:"var(--tx-amber)",
               borderRadius:4,padding:"1px 6px",fontWeight:500}}>
               CONTEXTUAL
             </span>
@@ -186,7 +186,7 @@ const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
                 onClick={() => setScores(p => ({...p, [item.id]: opt.v}))}
                 style={{
                   display:"flex", alignItems:"center", gap:8,
-                  background: sel ? acBg    : "#F8FAFC",
+                  background: sel ? acBg    : "var(--tint-slate)",
                   border:     `1.5px solid ${sel ? ac : C.border}`,
                   borderRadius:8, padding:"8px 10px",
                   cursor:"pointer", textAlign:"left",
@@ -213,7 +213,7 @@ const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
 const ResetBtn = ({ onReset }) => (
   <button onClick={onReset} style={{
     width:"100%", marginTop:14, padding:"10px",
-    background:"#F1F5F9", border:`1px solid ${C.border}`,
+    background:"var(--tint-slate)", border:`1px solid ${C.border}`,
     borderRadius:10, color:C.muted, fontSize:13,
     cursor:"pointer", display:"flex", alignItems:"center",
     justifyContent:"center", gap:6,
@@ -258,10 +258,10 @@ export default function DorNeonatal() {
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <Activity size={22} color="#60A5FA"/>
             <div>
-              <div style={{fontSize:17,fontWeight:800,color:"#F8FAFC"}}>
+              <div style={{fontSize:17,fontWeight:800,color:"var(--tint-slate)"}}>
                 Dor Neonatal
               </div>
-              <div style={{fontSize:11,color:"#94A3B8",marginTop:1}}>
+              <div style={{fontSize:11,color:"var(--muted)",marginTop:1}}>
                 NIPS · PIPP-R · N-PASS · CRIES
               </div>
             </div>
@@ -310,9 +310,9 @@ export default function DorNeonatal() {
           </div>
           <div style={{
             display:"flex", alignItems:"flex-start", gap:6,
-            background:"#FEF3C7", border:"1px solid #F59E0B",
+            background:"var(--tint-amber)", border:"1px solid #F59E0B",
             borderRadius:10, padding:"8px 12px", marginBottom:10,
-            fontSize:11, color:"#92400E",
+            fontSize:11, color:"var(--tx-amber)",
           }}>
             <AlertTriangle size={13} style={{flexShrink:0, marginTop:1}}/>
             <span>Itens <b>contextuais</b>: observar os 15 s <b>anteriores</b> ao procedimento.</span>
@@ -338,7 +338,7 @@ export default function DorNeonatal() {
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
               {/* Dor */}
               <div style={{
-                background:   painDone ? painInt.bg : "#F1F5F9",
+                background:   painDone ? painInt.bg : "var(--tint-slate)",
                 border:       `2px solid ${painDone ? painInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
@@ -359,7 +359,7 @@ export default function DorNeonatal() {
 
               {/* Sedação */}
               <div style={{
-                background:   sedDone ? sedInt.bg : "#F1F5F9",
+                background:   sedDone ? sedInt.bg : "var(--tint-slate)",
                 border:       `2px solid ${sedDone ? sedInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
@@ -406,7 +406,7 @@ export default function DorNeonatal() {
                 <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:8,
                   display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                   Ajuste de Prematuridade
-                  <span style={{fontSize:10,background:C.npassBg,color:"#065F46",
+                  <span style={{fontSize:10,background:C.npassBg,color:"var(--tx-green)",
                     borderRadius:4,padding:"1px 6px",fontWeight:500}}>
                     + PONTOS AO ESCORE
                   </span>
@@ -415,7 +415,7 @@ export default function DorNeonatal() {
                   {NPASS_GA.map(g => (
                     <button key={g.add} onClick={() => setNga(g.add)} style={{
                       display:"flex", alignItems:"center", gap:8,
-                      background: nga===g.add ? C.npassBg : "#F8FAFC",
+                      background: nga===g.add ? C.npassBg : "var(--tint-slate)",
                       border:     `1.5px solid ${nga===g.add ? C.npass : C.border}`,
                       borderRadius:8, padding:"8px 10px",
                       cursor:"pointer", textAlign:"left",
@@ -457,7 +457,7 @@ export default function DorNeonatal() {
                             onClick={() => setScr(p => ({...p,[item.id]:opt.v}))}
                             style={{
                               display:"flex", alignItems:"center", gap:8,
-                              background: sel ? acBg   : "#F8FAFC",
+                              background: sel ? acBg   : "var(--tint-slate)",
                               border:     `1.5px solid ${sel ? ac : C.border}`,
                               borderRadius:8, padding:"8px 10px",
                               cursor:"pointer", textAlign:"left",
@@ -497,9 +497,9 @@ export default function DorNeonatal() {
           </div>
           <div style={{
             display:"flex", alignItems:"flex-start", gap:6,
-            background:"#EFF6FF", border:"1px solid #BFDBFE",
+            background:"var(--tint-blue)", border:"1px solid #BFDBFE",
             borderRadius:10, padding:"8px 12px", marginBottom:10,
-            fontSize:11, color:"#1E40AF",
+            fontSize:11, color:"var(--tx-blue)",
           }}>
             <Info size={13} style={{flexShrink:0, marginTop:1}}/>
             <span>Indicada em RN pós-operatório ≥ 32 semanas (CRIES = mnemônico dos domínios).</span>

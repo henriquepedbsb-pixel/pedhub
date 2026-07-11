@@ -340,8 +340,8 @@ function getStatus(item, idadeDias) {
 }
 
 const STATUS_STYLES = {
-  due:      { bg: "#ECFDF5", border: "#6EE7B7", dot: "#10B981" },
-  upcoming: { bg: "#EFF6FF", border: "#BFDBFE", dot: "#3B82F6" },
+  due:      { bg: "var(--tint-green)", border: "#6EE7B7", dot: "#10B981" },
+  upcoming: { bg: "var(--tint-blue)", border: "#BFDBFE", dot: "#3B82F6" },
   done:     { bg: "var(--surface-2)", border: "var(--border)", dot: "var(--muted)" },
   none:     { bg: "var(--surface-2)", border: "var(--border)", dot: "#D1D5DB" },
 };
@@ -407,7 +407,7 @@ export default function Vacinal() {
 
       {/* Controles de data (compartilhados) */}
       <div style={{ padding: "12px 16px", background: "var(--tint-teal)", borderBottom: "1px solid #A5F3FC" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#0E7490", display: "block", marginBottom: 4 }}>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-teal)", display: "block", marginBottom: 4 }}>
           DATA DE NASCIMENTO
         </label>
         <input
@@ -560,7 +560,7 @@ export default function Vacinal() {
                   <div key={i} style={{
                     borderRadius: 10,
                     border: "1.5px solid " + (perdida ? "#FECACA" : aplicavel ? "#A5F3FC" : "var(--border)"),
-                    background: perdida ? "#FEF2F2" : aplicavel ? "#F0FDFF" : "var(--surface-2)",
+                    background: perdida ? "var(--tint-red)" : aplicavel ? "#F0FDFF" : "var(--surface-2)",
                     marginBottom: 10, padding: "11px 14px",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, gap: 8 }}>
@@ -569,7 +569,7 @@ export default function Vacinal() {
                         <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{vac.vacina}</span>
                       </div>
                       {vac.limiteRigido && (
-                        <span style={{ fontSize: 9, fontWeight: 700, color: "#B91C1C", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: "var(--tx-red)", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
                           JANELA RÍGIDA
                         </span>
                       )}
@@ -593,7 +593,7 @@ export default function Vacinal() {
                     {vac.alerta && (
                       <div style={{ display: "flex", gap: 6, marginTop: 8, background: "var(--tint-amber)", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 10px" }}>
                         <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
-                        <span style={{ fontSize: 11, color: "#92400E", lineHeight: 1.45 }}>{vac.alerta}</span>
+                        <span style={{ fontSize: 11, color: "var(--tx-amber)", lineHeight: 1.45 }}>{vac.alerta}</span>
                       </div>
                     )}
                   </div>

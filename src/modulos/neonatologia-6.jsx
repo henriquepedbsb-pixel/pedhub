@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info } from "lucide-react";
 
 const BG  = "#0284C7";
-const BGL = "#F0F9FF";
+const BGL = "var(--tint-blue)";
 const TXT = "#0369A1";
 const BRD = "#BAE6FD";
 
@@ -79,14 +79,14 @@ function TabAvaliacao({ vitaboa, setVitaboa, meconio, setMeconio }) {
             className="flex-1 py-3 rounded-2xl text-sm font-bold border-2 transition-all"
             style={vitaboa === true
               ? { background: "#10B981", borderColor: "#10B981", color: "#fff" }
-              : { background: "#f9fafb", borderColor: "#e5e7eb", color: "#4b5563" }}
+              : { background: "var(--bg)", borderColor: "var(--border)", color: "var(--text-2)" }}
           ><span className="inline-flex items-center justify-center gap-1"><CheckCircle size={15} /> Sim — Boa vitalidade</span></button>
           <button
             onClick={() => setVitaboa(false)}
             className="flex-1 py-3 rounded-2xl text-sm font-bold border-2 transition-all"
             style={vitaboa === false
               ? { background: "#EF4444", borderColor: "#EF4444", color: "#fff" }
-              : { background: "#f9fafb", borderColor: "#e5e7eb", color: "#4b5563" }}
+              : { background: "var(--bg)", borderColor: "var(--border)", color: "var(--text-2)" }}
           ><span className="inline-flex items-center justify-center gap-1"><XCircle size={15} /> Não — Sem vitalidade</span></button>
         </div>
         <div className="border-t border-gray-100 pt-3">
@@ -96,8 +96,8 @@ function TabAvaliacao({ vitaboa, setVitaboa, meconio, setMeconio }) {
               <button key={String(v)} onClick={() => setMeconio(v)}
                 className="px-4 py-2 rounded-full text-xs font-bold border transition-all"
                 style={meconio === v
-                  ? { background: v ? "#F59E0B" : "#9CA3AF", borderColor: v ? "#F59E0B" : "#9CA3AF", color: "#fff" }
-                  : { background: "#fff", borderColor: "#d1d5db", color: "#6b7280" }}
+                  ? { background: v ? "#F59E0B" : "var(--muted)", borderColor: v ? "#F59E0B" : "var(--muted)", color: "#fff" }
+                  : { background: "var(--surface)", borderColor: "var(--border)", color: "var(--muted)" }}
               >{v ? "Sim" : "Não"}</button>
             ))}
           </div>
@@ -187,7 +187,7 @@ function TabAvaliacao({ vitaboa, setVitaboa, meconio, setMeconio }) {
             </thead>
             <tbody>
               {SPO2.map((r, i) => (
-                <tr key={r.min} style={{ background: i % 2 === 0 ? "#fff" : BGL }}>
+                <tr key={r.min} style={{ background: i % 2 === 0 ? "var(--surface)" : BGL }}>
                   <td className="py-2 px-3 text-gray-700">{r.min} min</td>
                   <td className="py-2 px-3 text-right font-bold" style={{ color: TXT }}>{r.alvo}</td>
                 </tr>
@@ -385,7 +385,7 @@ function TabAvancado({ tube, prof, igN }) {
             </thead>
             <tbody>
               {CANULAS.map((r, i) => (
-                <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : BGL }}>
+                <tr key={i} style={{ background: i % 2 === 0 ? "var(--surface)" : BGL }}>
                   <td className="py-2 px-2 text-gray-700">{r.ig}</td>
                   <td className="py-2 px-2 text-gray-700">{r.peso}</td>
                   <td className="py-2 px-2 font-bold text-gray-800">{r.mm} mm</td>
@@ -403,7 +403,7 @@ function TabAvancado({ tube, prof, igN }) {
             </thead>
             <tbody>
               {PROFUNDIDADE.map((r, i) => (
-                <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#f9fafb" }}>
+                <tr key={i} style={{ background: i % 2 === 0 ? "var(--surface)" : "var(--surface-2)" }}>
                   <td className="py-2 px-2 text-gray-700">{r.ig}</td>
                   <td className="py-2 px-2 text-gray-700">{r.peso}</td>
                   <td className="py-2 px-2 font-bold text-gray-800">{r.cm} cm</td>
@@ -605,7 +605,7 @@ export default function App() {
             className="flex-shrink-0 px-4 py-3 text-sm border-b-2 transition-colors whitespace-nowrap"
             style={aba === i
               ? { color: BG, borderColor: BG, fontWeight: 700 }
-              : { color: "#6b7280", borderColor: "transparent" }}
+              : { color: "var(--muted)", borderColor: "transparent" }}
           >{t}</button>
         ))}
       </div>

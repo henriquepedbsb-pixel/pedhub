@@ -91,7 +91,7 @@ function westleyResult(score) {
   if (score <= 2)  return { grau: "Crupe leve",      color: "#10B981", condutas: ["Dexametasona 0,15–0,3 mg/kg VO dose única (máx 10 mg)", "Alta com orientações · Retorno se piora"] };
   if (score <= 5)  return { grau: "Crupe moderado",  color: "#D97706", condutas: ["Dexametasona 0,3–0,6 mg/kg VO/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada 0,5 mL/kg sol. 1:1.000 (máx 5 mL) + 3 mL SF", "Observar ≥ 3–4 h após epinefrina · alta ou internação conforme resposta"] };
   if (score <= 11) return { grau: "Crupe grave",     color: "#EF4444", condutas: ["Dexametasona 0,6 mg/kg IV/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada imediata: 0,5 mL/kg sol. 1:1.000 (máx 5 mL)", "O₂ suplementar · monitorização contínua · internação"] };
-  return { grau: "Falência respiratória iminente", color: "#7F1D1D", condutas: ["UTI / sala de reanimação — IMEDIATO", "Preparar via aérea avançada (intubação)", "Adrenalina IV + Dexametasona IV + O₂ 100%"] };
+  return { grau: "Falência respiratória iminente", color: "var(--tx-red)", condutas: ["UTI / sala de reanimação — IMEDIATO", "Preparar via aérea avançada (intubação)", "Adrenalina IV + Dexametasona IV + O₂ 100%"] };
 }
 
 function TabWestley() {
@@ -135,7 +135,7 @@ function pewsResult(score) {
   if (score <= 1)  return { grau: "Baixo risco", color: "#10B981", condutas: ["Monitorização de rotina", "Reavaliação horária"] };
   if (score <= 3)  return { grau: "Risco moderado", color: "#F59E0B", condutas: ["Aumentar frequência de avaliações (30 min)", "Notificar médico responsável", "Considerar transferência para área de maior vigilância"] };
   if (score <= 6)  return { grau: "Risco alto", color: "#EF4444", condutas: ["Avaliação médica imediata", "Considerar transferência para UTI", "Monitorização contínua", "Preparar protocolo de resposta rápida"] };
-  return { grau: "Risco muito alto / Iminência de parada", color: "#7F1D1D", condutas: ["Acionar equipe de resposta rápida / RCP", "Transferência imediata para UTI", "Preparar para reanimação"] };
+  return { grau: "Risco muito alto / Iminência de parada", color: "var(--tx-red)", condutas: ["Acionar equipe de resposta rápida / RCP", "Transferência imediata para UTI", "Preparar para reanimação"] };
 }
 
 function TabPEWS() {

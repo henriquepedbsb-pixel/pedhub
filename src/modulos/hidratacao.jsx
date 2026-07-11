@@ -192,7 +192,7 @@ function TabHolliday({ peso }) {
 
       {/* Regra Holliday-Segar */}
       <div style={{ background: "var(--tint-blue)", borderRadius: 10, padding: "12px 14px", border: "1px solid #BFDBFE" }}>
-        <p style={{ fontWeight: 600, fontSize: 13, color: "#1E40AF", margin: "0 0 6px" }}>Regra Holliday-Segar</p>
+        <p style={{ fontWeight: 600, fontSize: 13, color: "var(--tx-blue)", margin: "0 0 6px" }}>Regra Holliday-Segar</p>
         <ItemList color={PRIMARY} items={[
           "≤ 10 kg: 100 mL/kg/dia",
           "11–20 kg: 1.000 mL + 50 mL/kg acima de 10 kg",
@@ -209,7 +209,7 @@ function TabPlanoA({ peso }) {
     <div>
       <InfoBox color="#10B981"><strong>OMS 2005 / SBP 2022 · Plano A — Sem Desidratação.</strong> Prevenir desidratação e tratar em casa. Aumentar oferta de líquidos.</InfoBox>
       <div style={{ background: "var(--tint-green)", borderRadius: 10, padding: "12px 14px", border: "1px solid #6EE7B7", marginBottom: 14 }}>
-        <p style={{ fontWeight: 700, color: "#065F46", fontSize: 13, margin: "0 0 8px" }}>Regra do Plano A</p>
+        <p style={{ fontWeight: 700, color: "var(--tx-green)", fontSize: 13, margin: "0 0 8px" }}>Regra do Plano A</p>
         <ItemList color="#10B981" items={[
           "Continuar aleitamento materno",
           "Oferecer líquidos extras após cada evacuação diarreica:",
@@ -240,7 +240,7 @@ function TabPlanoB({ peso }) {
       <InfoBox color="#F59E0B"><strong>OMS 2005 / SBP 2022 · Plano B — Desidratação Leve a Moderada.</strong> Reidratação oral na unidade de saúde com SRO (75 mEq/L).</InfoBox>
       <AlertBox text="Contraindicações para Plano B: nível de consciência alterado, íleo paralítico, vômito incontrolável, perda > 10% ou choque → ir para Plano C." color="#D97706" />
       <div style={{ background: "var(--tint-amber)", borderRadius: 10, padding: "12px 14px", border: "1px solid #FDE68A", marginBottom: 14 }}>
-        <p style={{ fontWeight: 700, color: "#92400E", fontSize: 13, margin: "0 0 8px" }}>Fase de Reidratação (4 horas)</p>
+        <p style={{ fontWeight: 700, color: "var(--tx-amber)", fontSize: 13, margin: "0 0 8px" }}>Fase de Reidratação (4 horas)</p>
         <ItemList color="#F59E0B" items={["SRO: 75 mL/kg em 4 horas (OMS) ou 50–100 mL/kg (SBP)", peso ? "Para " + peso + " kg: " + sroPeso + " mL de SRO em 4 horas" : "Volume: 75 mL/kg em 4 horas", "Oferecer em pequenos volumes frequentes (colher, seringa)", "Reavaliar a cada 1 hora"]} />
       </div>
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
@@ -258,7 +258,7 @@ function TabPlanoC({ peso }) {
       <InfoBox color="#EF4444"><strong>OMS 2005 / SBP 2022 · Plano C — Desidratação Grave / Choque.</strong> Reidratação endovenosa imediata com solução isotônica.</InfoBox>
       <AlertBox text="Choque hipovolêmico: taquicardia, TEC > 3 s, pulsos fracos, alteração de consciência, hipotensão (sinal tardio)." color="#EF4444" />
       <div style={{ background: "var(--tint-red)", borderRadius: 10, padding: "12px 14px", border: "1px solid #FECACA", marginBottom: 14 }}>
-        <p style={{ fontWeight: 700, color: "#991B1B", fontSize: 13, margin: "0 0 8px" }}>Fase de Expansão (rápida)</p>
+        <p style={{ fontWeight: 700, color: "var(--tx-red)", fontSize: 13, margin: "0 0 8px" }}>Fase de Expansão (rápida)</p>
         <ItemList color="#EF4444" items={[peso ? "SF 0,9% ou RL: " + sf1 + " mL IV em 20–30 min (20 mL/kg)" : "SF 0,9% ou RL: 20 mL/kg IV em 20–30 min", "Reavaliar após cada bolus (TEC, FC, PA, consciência)", "Repetir se necessário: máx 60–80 mL/kg na 1ª hora", "Se choque séptico: antibiótico + vasopressor se refratário"]} />
       </div>
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)", marginBottom: 14 }}>
@@ -272,7 +272,7 @@ function TabPlanoC({ peso }) {
         ]} />
       </div>
       <div style={{ background: "var(--tint-amber)", borderRadius: 10, padding: "12px 14px", border: "1px solid #FED7AA" }}>
-        <p style={{ fontWeight: 700, color: "#92400E", fontSize: 13, margin: "0 0 8px" }}>Soluções disponíveis</p>
+        <p style={{ fontWeight: 700, color: "var(--tx-amber)", fontSize: 13, margin: "0 0 8px" }}>Soluções disponíveis</p>
         <ItemList color="#D97706" items={["SF 0,9%: Na 154 mEq/L, Cl 154 mEq/L — isotônica", "RL (Ringer Lactato): Na 130, K 4, Ca 3, Cl 109, Lac 28 mEq/L — preferida em expansão volumétrica", "SG5%+SF0,9%: glicose + isotônica — manutenção", "Evitar soluções hipotônicas (SG5% isolada) em expansão"]} />
       </div>
     </div>
@@ -293,7 +293,7 @@ export default function Hidratacao() {
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Holliday-Segar · Planos A / B / C</p>
       </div>
       <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#1E40AF", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg)</label>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg)</label>
         <input
           type="text" inputMode="decimal" placeholder="Ex: 12,5"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}

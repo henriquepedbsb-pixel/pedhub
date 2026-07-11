@@ -17,7 +17,7 @@ const getFator = (idadeAnos) => {
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const C   = '#7C3AED';
-const CLT = '#F5F3FF';
+const CLT = "var(--tint-purple)";
 const CBR = '#DDD6FE';
 
 // NaCl 3% = 0.5133 mEq/mL | KCl 10% = 1.341 mEq/mL | Ca Gluc 10% = 0.465 mEq/mL
@@ -39,7 +39,7 @@ function SeverityBadge({ label, range, cor, bg }) {
   return (
     <div style={{ flex: 1, backgroundColor: bg, borderRadius: '8px', padding: '8px', textAlign: 'center', border: `1px solid ${cor}20` }}>
       <p style={{ margin: 0, fontSize: '11px', fontWeight: '800', color: cor }}>{label}</p>
-      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{range}</p>
+      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{range}</p>
     </div>
   );
 }
@@ -48,9 +48,9 @@ function ResultBox({ label, valor, unit, sub, cor }) {
   const corFinal = cor || C;
   return (
     <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-      <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>{label}</p>
+      <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>{label}</p>
       <p style={{ margin: '4px 0 0 0', fontSize: '24px', fontWeight: '800', color: corFinal, lineHeight: 1 }}>{valor}</p>
-      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{unit}</p>
+      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{unit}</p>
       {sub && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: corFinal, fontWeight: '600' }}>{sub}</p>}
     </div>
   );
@@ -60,7 +60,7 @@ function Field({ label, val, set, ph, unit }) {
   const ativo = parseNum(val) > 0;
   return (
     <div>
-      <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>
+      <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>
         {label}{unit ? ` (${unit})` : ''}
       </label>
       <input
@@ -69,7 +69,7 @@ function Field({ label, val, set, ph, unit }) {
         value={val}
         onChange={e => set(e.target.value)}
         placeholder={ph}
-        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${ativo ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: ativo ? '700' : '400', color: ativo ? C : '#374151', boxSizing: 'border-box', outline: 'none' }}
+        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${ativo ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: ativo ? '700' : '400', color: ativo ? C : "var(--text-2)", boxSizing: 'border-box', outline: 'none' }}
       />
     </div>
   );
@@ -196,14 +196,14 @@ export default function Eletrolitos() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -213,7 +213,7 @@ export default function Eletrolitos() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #5B21B6 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -227,15 +227,15 @@ export default function Eletrolitos() {
       {/* Peso + Idade persistentes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
         <div style={card({ padding: '10px' })}>
-          <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
+          <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
           <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
         </div>
         <div style={card({ padding: '10px' })}>
-          <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
+          <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
           <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 3"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-          <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#9CA3AF' }}>Fator: {fat} (água corporal)</p>
+          <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: "var(--muted)" }}>Fator: {fat} (água corporal)</p>
         </div>
       </div>
 
@@ -254,13 +254,13 @@ export default function Eletrolitos() {
 
           {/* Classificação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio · Normal 135-145 mEq/L</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio · Normal 135-145 mEq/L</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
-              <SeverityBadge label="Leve" range="130-134" cor="#D97706" bg="#FFF7ED" />
-              <SeverityBadge label="Moderada" range="125-129" cor="#F97316" bg="#FFF7ED" />
-              <SeverityBadge label="Grave" range="< 125" cor="#DC2626" bg="#FEF2F2" />
+              <SeverityBadge label="Leve" range="130-134" cor="#D97706" bg="var(--tint-amber)" />
+              <SeverityBadge label="Moderada" range="125-129" cor="#F97316" bg="var(--tint-amber)" />
+              <SeverityBadge label="Grave" range="< 125" cor="#DC2626" bg="var(--tint-red)" />
             </div>
-            <p style={{ margin: 0, fontSize: '11px', color: '#6B7280' }}>Hipernatremia: Leve 145-155 · Moderada 155-165 · Grave &gt;165 mEq/L</p>
+            <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)" }}>Hipernatremia: Leve 145-155 · Moderada 155-165 · Grave &gt;165 mEq/L</p>
           </div>
 
           {/* Calculadora Na */}
@@ -270,9 +270,9 @@ export default function Eletrolitos() {
 
             {na > 0 && na < 135 && (
               <div style={{ marginTop: '12px' }}>
-                <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #DC2626' }}>
+                <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #DC2626' }}>
                   <p style={{ margin: '0 0 2px 0', fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>Hiponatremia{na < 125 ? ' GRAVE' : na < 130 ? ' MODERADA' : ' LEVE'}</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     {na < 125 ? 'Risco de edema cerebral e herniação · tratar imediatamente' : 'Avaliar sintomas e velocidade de instalação'}
                   </p>
                 </div>
@@ -282,8 +282,8 @@ export default function Eletrolitos() {
                       <ResultBox label="SINTOMÁTICO (agudo)" valor={calcs.naC?.bolus} unit="mL de NaCl 3%" sub="2-3 mL/kg em 30 min" />
                       <ResultBox label={`CORREÇÃO +${calcs.naC?.dNaMax24h} mEq/L`} valor={calcs.naC?.vol24h} unit="mL de NaCl 3%" sub="em 24h (máx 10 mEq/L/dia)" cor="#D97706" />
                     </div>
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                         <strong>Solução:</strong> NaCl 3% = 0,513 mEq/mL · Fórmula: ΔNa × {p} kg × {fat} / 0,513<br />
                         <strong>Preparo</strong> (se não houver 3% pronto): 15 mL de NaCl 20% + 85 mL de AD = 100 mL de NaCl 3%<br />
                         <strong>Via:</strong> bolus sintomático pode ser periférico · infusão contínua → acesso central preferível<br />
@@ -294,16 +294,16 @@ export default function Eletrolitos() {
                     </div>
                   </>
                 ) : (
-                  <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', padding: '8px' }}>Insira o peso acima para calcular</p>
+                  <p style={{ fontSize: '11px', color: "var(--muted)", textAlign: 'center', padding: '8px' }}>Insira o peso acima para calcular</p>
                 )}
               </div>
             )}
 
             {na > 145 && (
               <div style={{ marginTop: '12px' }}>
-                <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #D97706' }}>
-                  <p style={{ margin: '0 0 2px 0', fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>Hipernatremia{na > 165 ? ' GRAVE' : na > 155 ? ' MODERADA' : ' LEVE'}</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>Investigar perdas hídricas (febre, diabetes insipidus, diarréia osmótica)</p>
+                <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #D97706' }}>
+                  <p style={{ margin: '0 0 2px 0', fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>Hipernatremia{na > 165 ? ' GRAVE' : na > 155 ? ' MODERADA' : ' LEVE'}</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>Investigar perdas hídricas (febre, diabetes insipidus, diarréia osmótica)</p>
                 </div>
                 {p > 0 ? (
                   <>
@@ -311,8 +311,8 @@ export default function Eletrolitos() {
                       <ResultBox label="DÉFICIT DE ÁGUA LIVRE" valor={calcs.naC?.fwd_mL} unit="mL" sub="repor em 48-72h" />
                       <ResultBox label="TEMPO MÍNIMO" valor={calcs.naC?.horas} unit="horas" sub="máx 0,5 mEq/L/h" cor="#D97706" />
                     </div>
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                         Fórmula do déficit: {fat} × {p} kg × (Na atual/140 − 1) × 1000<br />
                         <strong>Diluente:</strong> SG 5% (água livre) ou NaCl 0,45% · repor o déficit em 48–72 h<br />
                         <strong>Via:</strong> periférico<br />
@@ -322,7 +322,7 @@ export default function Eletrolitos() {
                     </div>
                   </>
                 ) : (
-                  <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', padding: '8px' }}>Insira o peso acima para calcular</p>
+                  <p style={{ fontSize: '11px', color: "var(--muted)", textAlign: 'center', padding: '8px' }}>Insira o peso acima para calcular</p>
                 )}
               </div>
             )}
@@ -331,12 +331,12 @@ export default function Eletrolitos() {
           {/* Sódio corrigido (hiperglicemia) + Osmolaridade sérica */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <button style={accordBtn()} onClick={() => toggle('na-correcao')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio Corrigido & Osmolaridade</p>
-              {aberto === 'na-correcao' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio Corrigido & Osmolaridade</p>
+              {aberto === 'na-correcao' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'na-correcao' && (
               <div style={{ marginTop: '10px' }}>
-                <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#6B7280' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: "var(--muted)" }}>
                   Usa o <strong>sódio já preenchido</strong> na calculadora acima — informe também glicose e ureia.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
@@ -346,13 +346,13 @@ export default function Eletrolitos() {
 
                 {na > 0 && glic > 100 && calcs.correcao && (
                   <div style={{ marginBottom: '14px' }}>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>SÓDIO CORRIGIDO PARA HIPERGLICEMIA</p>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>SÓDIO CORRIGIDO PARA HIPERGLICEMIA</p>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                       <ResultBox label="Katz (fator 1,6)" valor={calcs.correcao.naKatz} unit="mEq/L" />
                       <ResultBox label="Hillier (fator 2,4)" valor={calcs.correcao.naHillier} unit="mEq/L" cor="#D97706" />
                     </div>
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                         Katz: Na + 1,6 × [(glicose − 100) / 100] · Hillier (mais preciso em glicemias muito altas, ex. CAD): Na + 2,4 × [(glicose − 100) / 100]<br />
                         <span style={{ color: '#D97706', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hiperglicemia mascara hiponatremia por efeito osmótico — use o valor CORRIGIDO para decidir tratamento, não o valor medido.</span>
                       </p>
@@ -360,15 +360,15 @@ export default function Eletrolitos() {
                   </div>
                 )}
                 {na > 0 && glicoseVal.length > 0 && glic <= 100 && (
-                  <p style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '10px' }}>Glicemia ≤ 100 mg/dL — fórmula de correção não se aplica (é específica para hiperglicemia)</p>
+                  <p style={{ fontSize: '11px', color: "var(--muted)", marginBottom: '10px' }}>Glicemia ≤ 100 mg/dL — fórmula de correção não se aplica (é específica para hiperglicemia)</p>
                 )}
 
                 {na > 0 && glic > 0 && ureiaN > 0 && calcs.correcao?.osm && (
                   <div>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>OSMOLARIDADE SÉRICA CALCULADA</p>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>OSMOLARIDADE SÉRICA CALCULADA</p>
                     <ResultBox label="Osmolaridade" valor={calcs.correcao.osm} unit="mOsm/L" sub={calcs.correcao.osmClass} cor={calcs.correcao.osmCor} />
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', marginTop: '8px' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginTop: '8px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                         Fórmula: 2 × Na + Glicose/18 + Ureia/6 (ureia sérica em mg/dL — padrão dos laboratórios brasileiros; se o valor de origem for BUN, o divisor correto é 2,8, não 6)<br />
                         Normal: 275–295 mOsm/L
                       </p>
@@ -376,7 +376,7 @@ export default function Eletrolitos() {
                   </div>
                 )}
                 {(!na || na === 0) && (
-                  <p style={{ fontSize: '11px', color: '#9CA3AF', textAlign: 'center', padding: '8px' }}>Preencha o sódio no campo "Calculadora" acima primeiro</p>
+                  <p style={{ fontSize: '11px', color: "var(--muted)", textAlign: 'center', padding: '8px' }}>Preencha o sódio no campo "Calculadora" acima primeiro</p>
                 )}
               </div>
             )}
@@ -385,28 +385,28 @@ export default function Eletrolitos() {
           {/* Sintomas + Etiologias */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('na-etiol')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Etiologias</p>
-              {aberto === 'na-etiol' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Etiologias</p>
+              {aberto === 'na-etiol' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'na-etiol' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px' }}>
+                <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>Hiponatremia — Sintomas</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     Náusea, cefaleia, letargia → confusão, convulsão, coma (Na &lt; 125 ou queda rápida)
                   </p>
-                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#6B7280' }}><strong>Causas:</strong> SIADH (meningite, pneumonia, pós-op), insuficiência suprarrenal, hipotiroidismo, perdas com reposição hipotônica</p>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}><strong>Causas:</strong> SIADH (meningite, pneumonia, pós-op), insuficiência suprarrenal, hipotiroidismo, perdas com reposição hipotônica</p>
                 </div>
-                <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>Hipernatremia — Sintomas</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>Hipernatremia — Sintomas</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     Irritabilidade, choro excessivo, letargia, febre → rigidez, convulsão, coma
                   </p>
-                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#6B7280' }}><strong>Causas:</strong> Diabetes insipidus, desidratação hipertônica (diarréia osmótica, febre prolongada), oferta insuficiente de água livre</p>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}><strong>Causas:</strong> Diabetes insipidus, desidratação hipertônica (diarréia osmótica, febre prolongada), oferta insuficiente de água livre</p>
                 </div>
-                <div style={{ backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#065F46' }}>SIADH — Critérios diagnósticos</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>Na sérico &lt;135 + Uosm &gt;100 mOsm/kg + UNa &gt;30 mEq/L + euvolemia + sem tireoide/adrenal/renal doentes</p>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>SIADH — Critérios diagnósticos</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>Na sérico &lt;135 + Uosm &gt;100 mOsm/kg + UNa &gt;30 mEq/L + euvolemia + sem tireoide/adrenal/renal doentes</p>
                 </div>
               </div>
             )}
@@ -420,15 +420,15 @@ export default function Eletrolitos() {
 
           {/* Classificação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Potássio · Normal 3,5-5,0 mEq/L</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Potássio · Normal 3,5-5,0 mEq/L</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
-              <SeverityBadge label="Hipo leve" range="3,0-3,5" cor="#D97706" bg="#FFF7ED" />
-              <SeverityBadge label="Hipo mod" range="2,5-3,0" cor="#F97316" bg="#FFF7ED" />
-              <SeverityBadge label="Hipo grave" range="< 2,5" cor="#DC2626" bg="#FEF2F2" />
+              <SeverityBadge label="Hipo leve" range="3,0-3,5" cor="#D97706" bg="var(--tint-amber)" />
+              <SeverityBadge label="Hipo mod" range="2,5-3,0" cor="#F97316" bg="var(--tint-amber)" />
+              <SeverityBadge label="Hipo grave" range="< 2,5" cor="#DC2626" bg="var(--tint-red)" />
             </div>
             <div style={{ display: 'flex', gap: '6px' }}>
-              <SeverityBadge label="Hiper mod" range="5,5-6,5" cor="#7C3AED" bg="#F5F3FF" />
-              <SeverityBadge label="Hiper grave" range="> 6,5" cor="#DC2626" bg="#FEF2F2" />
+              <SeverityBadge label="Hiper mod" range="5,5-6,5" cor="#7C3AED" bg="var(--tint-purple)" />
+              <SeverityBadge label="Hiper grave" range="> 6,5" cor="#DC2626" bg="var(--tint-red)" />
             </div>
           </div>
 
@@ -439,15 +439,15 @@ export default function Eletrolitos() {
 
             {k > 0 && k < 3.5 && p > 0 && calcs.kC && (
               <div style={{ marginTop: '12px' }}>
-                <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #D97706' }}>
+                <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #D97706' }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#D97706' }}>Hipocalemia — KCl 10% IV</p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                   <ResultBox label="DOSE 0,3 mEq/kg" valor={calcs.kC.vol03} unit="mL KCl 10%" sub={`= ${calcs.kC.dose03} mEq`} />
                   <ResultBox label="DOSE 0,5 mEq/kg" valor={calcs.kC.vol05} unit="mL KCl 10%" sub={`= ${calcs.kC.dose05} mEq`} cor="#D97706" />
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                     <strong>Diluente:</strong> diluir SEMPRE em SF 0,9% — nunca em soro glicosado (glicose → insulina → shift intracelular → piora a hipocalemia)<br />
                     KCl 10% = 1,341 mEq/mL<br />
                     <strong>Concentração máxima:</strong> 40 mEq/L periférico · 80 mEq/L central (com monitor)<br />
@@ -462,39 +462,39 @@ export default function Eletrolitos() {
 
             {k >= 5.5 && p > 0 && calcs.kC && (
               <div style={{ marginTop: '12px' }}>
-                <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #DC2626' }}>
+                <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #DC2626' }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '800', color: '#DC2626' }}>
                     {k >= 7 ? 'HIPERCALEMIA GRAVE — Risco de FV' : 'Hipercalemia — Iniciar protocolo'}
                   </p>
                 </div>
-                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>1. ESTABILIZAÇÃO DE MEMBRANA (imediato)</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>1. ESTABILIZAÇÃO DE MEMBRANA (imediato)</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                   <ResultBox label="Gluconato Ca 10%" valor={calcs.kC.volCa} unit="mL IV" sub="1 mL/kg em 5-10 min" />
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>= {calcs.kC.mgCa} mg</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#374151' }}>Máx 20 mL (2g)</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Efeito: 1-3 min · Duração: 30-60 min</p>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>= {calcs.kC.mgCa} mg</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Máx 20 mL (2g)</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Efeito: 1-3 min · Duração: 30-60 min</p>
                   </div>
                 </div>
-                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>2. SHIFT INTRACELULAR (15-30 min)</p>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', marginBottom: '8px' }}>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>Glicose + Insulina Regular</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>2. SHIFT INTRACELULAR (15-30 min)</p>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginBottom: '8px' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>Glicose + Insulina Regular</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     Glicose 50%: <strong>{calcs.kC.glicose * 2} mL</strong> → diluir p/ 25% antes de infundir<br />
                     Insulina regular: <strong>{calcs.kC.insulina} U</strong> IV (0,1 U/kg) · Monitorar glicemia!
                   </p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                     <strong>Salbutamol:</strong> {p < 25 ? '2,5' : '5'} mg nebulizado — shift K+ intracelular
                   </p>
                 </div>
-                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>3. REMOÇÃO DE K+ DO ORGANISMO</p>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>3. REMOÇÃO DE K+ DO ORGANISMO</p>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                   {['Bicarbonato 1-2 mEq/kg IV (se acidose metabólica concomitante)',
                     'Kayexalate/Sorcal 1 g/kg VO ou retal — remove K+ (ação em horas)',
                     'Furosemida 1-2 mg/kg IV (se função renal preservada)',
                     'Diálise se hipercalemia refratária ou insuficiência renal grave',
                   ].map((s, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '4px', alignItems: 'flex-start' }}>
+                    <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '4px', alignItems: 'flex-start' }}>
                       <span style={{ color: C, flexShrink: 0, fontWeight: '700' }}>{i + 1}.</span>{s}
                     </div>
                   ))}
@@ -503,8 +503,8 @@ export default function Eletrolitos() {
             )}
 
             {k > 0 && k >= 3.5 && k < 5.5 && (
-              <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />K+ {k} mEq/L — dentro do normal</p>
+              <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />K+ {k} mEq/L — dentro do normal</p>
               </div>
             )}
           </div>
@@ -512,8 +512,8 @@ export default function Eletrolitos() {
           {/* ECG hipercalemia */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('k-ecg')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Alterações de ECG — Hipercalemia</p>
-              {aberto === 'k-ecg' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Alterações de ECG — Hipercalemia</p>
+              {aberto === 'k-ecg' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'k-ecg' && (
               <div style={{ marginTop: '10px' }}>
@@ -524,9 +524,9 @@ export default function Eletrolitos() {
                   { k: '> 7,0', ecg: 'Onda sinusoidal (fusão QRS-T) · Bradicardia grave', cor: '#DC2626' },
                   { k: '> 8,0', ecg: 'Fibrilação ventricular · PCR', cor: '#7F1D1D' },
                 ].map((row, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '7px 10px', backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#FFF', borderRadius: '6px', marginBottom: '4px' }}>
+                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '7px 10px', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderRadius: '6px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '800', color: row.cor, width: '50px', flexShrink: 0 }}>K {row.k}</span>
-                    <span style={{ fontSize: '11px', color: '#374151' }}>{row.ecg}</span>
+                    <span style={{ fontSize: '11px', color: "var(--text-2)" }}>{row.ecg}</span>
                   </div>
                 ))}
               </div>
@@ -540,7 +540,7 @@ export default function Eletrolitos() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Cálcio · Valores de Referência</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Cálcio · Valores de Referência</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {[
                 { param: 'Ca total', valor: '8,5-10,5 mg/dL', normal: true },
@@ -548,14 +548,14 @@ export default function Eletrolitos() {
                 { param: 'Hipocalcemia leve', valor: '7,5-8,5 mg/dL', normal: false },
                 { param: 'Hipocalcemia sintomática', valor: '< 7,5 mg/dL ou Ca ionizado < 1,0 mmol/L', normal: false },
               ].map((row, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 10px', backgroundColor: row.normal ? '#F0FDF4' : '#FEF2F2', borderRadius: '8px' }}>
-                  <span style={{ fontSize: '12px', color: '#374151', fontWeight: '600' }}>{row.param}</span>
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 10px', backgroundColor: row.normal ? "var(--tint-green)" : "var(--tint-red)", borderRadius: '8px' }}>
+                  <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{row.param}</span>
                   <span style={{ fontSize: '11px', color: row.normal ? '#065F46' : '#DC2626', fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{row.valor}</span>
                 </div>
               ))}
             </div>
-            <div style={{ marginTop: '8px', backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '8px 10px' }}>
-              <p style={{ margin: 0, fontSize: '11px', color: '#1D4ED8' }}>
+            <div style={{ marginTop: '8px', backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '8px 10px' }}>
+              <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}>
                 <strong>Correção pelo albumina:</strong> Ca corrigido = Ca total + 0,8 × (4,0 − albumina g/dL)
               </p>
             </div>
@@ -572,8 +572,8 @@ export default function Eletrolitos() {
                   <ResultBox label="100 mg/kg (1 mL/kg)" valor={calcs.caC.vol1} unit="mL IV" sub={`${calcs.caC.mg1} mg total`} />
                   <ResultBox label="200 mg/kg (2 mL/kg)" valor={calcs.caC.vol2} unit="mL IV" sub={`${calcs.caC.mg2} mg total — máx 20 mL`} cor="#D97706" />
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                     Gluconato de cálcio 10% = 100 mg/mL do sal = 9,3 mg de Ca elementar/mL<br />
                     <strong>Diluente:</strong> diluir em SG 5% ou SF (ao menos 1:1) antes de infundir<br />
                     <strong>Via:</strong> acesso central preferível (extravasamento → necrose tecidual) · se periférico, veia calibrosa e vigiar o sítio · NUNCA IM ou SC<br />
@@ -583,10 +583,10 @@ export default function Eletrolitos() {
                 </div>
               </div>
             ) : ca > 0 && ca < 8.5 ? (
-              <p style={{ marginTop: '8px', fontSize: '11px', color: '#9CA3AF', textAlign: 'center' }}>Insira o peso acima para calcular</p>
+              <p style={{ marginTop: '8px', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : ca >= 8.5 && ca > 0 ? (
-              <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Ca {ca} mg/dL — dentro do normal</p>
+              <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Ca {ca} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>
@@ -594,17 +594,17 @@ export default function Eletrolitos() {
           {/* Sintomas e causas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('ca-sint')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Causas</p>
-              {aberto === 'ca-sint' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sintomas e Causas</p>
+              {aberto === 'ca-sint' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'ca-sint' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px' }}>
+                <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>Hipocalcemia — Sintomas</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     Tetania, parestesias, câimbras · Sinal de Chvostek (percutir n. facial → contração) · Sinal de Trousseau (manguito 3 min → espasmo carpopedal) · Laringoespasmo · Convulsão · QTc prolongado → risco arrítmico
                   </p>
-                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#6B7280' }}>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
                     <strong>Causas:</strong> Hipoparatireoidismo (pós-cirúrgico, DiGeorge), raquitismo, hipomagnesemia, sepse, pancreatite, transfusão maciça de sangue
                   </p>
                 </div>
@@ -619,15 +619,15 @@ export default function Eletrolitos() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Magnésio · Normal 1,5-2,5 mg/dL</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Magnésio · Normal 1,5-2,5 mg/dL</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
-              <SeverityBadge label="Leve" range="1,2-1,5" cor="#D97706" bg="#FFF7ED" />
-              <SeverityBadge label="Moderada" range="0,8-1,2" cor="#F97316" bg="#FFF7ED" />
-              <SeverityBadge label="Grave" range="< 0,8" cor="#DC2626" bg="#FEF2F2" />
+              <SeverityBadge label="Leve" range="1,2-1,5" cor="#D97706" bg="var(--tint-amber)" />
+              <SeverityBadge label="Moderada" range="0,8-1,2" cor="#F97316" bg="var(--tint-amber)" />
+              <SeverityBadge label="Grave" range="< 0,8" cor="#DC2626" bg="var(--tint-red)" />
             </div>
-            <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Mg e outros eletrólitos</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+            <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Mg e outros eletrólitos</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                 Hipomagnesemia → Hipocalemia REFRATÁRIA (Mg necessário para ATPase Na/K na bomba tubular renal)<br />
                 Hipomagnesemia → Hipocalcemia REFRATÁRIA (Mg necessário para secreção de PTH)<br />
                 <strong>Sempre dosar Mg em hipocalemia ou hipocalcemia refratária!</strong>
@@ -646,8 +646,8 @@ export default function Eletrolitos() {
                   <ResultBox label="25 mg/kg MgSO₄" valor={calcs.mgC.vol25} unit="mL de 50%" sub={`= ${calcs.mgC.dose25} mg MgSO₄`} />
                   <ResultBox label="50 mg/kg MgSO₄" valor={calcs.mgC.vol50} unit="mL de 50%" sub={`= ${calcs.mgC.dose50} mg — máx 2g`} cor="#D97706" />
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151', lineHeight: 1.7 }}>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                     MgSO₄ 50% = 500 mg/mL<br />
                     <strong>Diluente:</strong> diluir 1:10 em SF 0,9% ou SG 5% → concentração final 5% (50 mg/mL)<br />
                     <strong>Via:</strong> periférico (após diluir)<br />
@@ -658,10 +658,10 @@ export default function Eletrolitos() {
                 </div>
               </div>
             ) : mg > 0 && mg < 1.5 ? (
-              <p style={{ marginTop: '8px', fontSize: '11px', color: '#9CA3AF', textAlign: 'center' }}>Insira o peso acima para calcular</p>
+              <p style={{ marginTop: '8px', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : mg >= 1.5 && mg > 0 ? (
-              <div style={{ marginTop: '10px', backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#065F46', fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Mg {mg} mg/dL — dentro do normal</p>
+              <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Mg {mg} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>
@@ -669,8 +669,8 @@ export default function Eletrolitos() {
           {/* Indicações e usos clínicos */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('mg-ind')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Usos Clínicos do MgSO₄</p>
-              {aberto === 'mg-ind' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Usos Clínicos do MgSO₄</p>
+              {aberto === 'mg-ind' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'mg-ind' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -680,9 +680,9 @@ export default function Eletrolitos() {
                   { indicacao: 'Arritmia (torsades de pointes)', dose: '25-50 mg/kg IV em 5-15 min (urgência)', max: '2g', cor: '#DC2626' },
                   { indicacao: 'Pré-eclâmpsia materna (neonato)', dose: 'Neonato exposto → monitorar depressão res piratória', max: '—', cor: '#D97706' },
                 ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${item.cor}` }}>
+                  <div key={i} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${item.cor}` }}>
                     <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: item.cor }}>{item.indicacao}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#374151' }}>{item.dose} · Máx: {item.max}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>{item.dose} · Máx: {item.max}</p>
                   </div>
                 ))}
               </div>
@@ -692,8 +692,8 @@ export default function Eletrolitos() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

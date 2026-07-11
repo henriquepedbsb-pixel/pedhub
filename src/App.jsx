@@ -144,9 +144,9 @@ function Header() {
   return (
     <div style={{
       position: "sticky", top: 0, zIndex: 100,
-      background: "rgba(255,255,255,0.82)",
+      background: "var(--header-bg)",
       backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-      borderBottom: "1px solid #EEF0F4",
+      borderBottom: "1px solid var(--border)",
       boxShadow: "0 4px 16px rgba(16,24,40,0.04)",
       width: "100%",
     }}>
@@ -175,7 +175,7 @@ function Header() {
         </button>
         <span style={{
           fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 700, fontSize: 16, color: "#111827",
+          fontWeight: 700, fontSize: 16, color: "var(--text)",
           flex: 1,
         }}>
           {modulo.label}
@@ -200,12 +200,12 @@ function Loading() {
     }}>
       <div style={{
         width: 36, height: 36, borderRadius: "50%",
-        border: "3px solid #E5E7EB",
+        border: "3px solid var(--border)",
         borderTopColor: "#3B82F6",
         animation: "pedhub-spin 0.7s linear infinite",
       }} />
       <style>{`@keyframes pedhub-spin { to { transform: rotate(360deg); } }`}</style>
-      <p style={{ fontSize: 13, color: "#9CA3AF", margin: 0 }}>Carregando módulo…</p>
+      <p style={{ fontSize: 13, color: "var(--muted)", margin: 0 }}>Carregando módulo…</p>
     </div>
   );
 }
@@ -216,14 +216,14 @@ function RodapeGlobal() {
     <div style={{
       textAlign: "center",
       padding: "10px 16px 14px",
-      borderTop: "1px solid #F3F4F6",
-      background: "#fff",
+      borderTop: "1px solid var(--border)",
+      background: "var(--surface)",
     }}>
       <a
         href="mailto:henriquepedbsb@gmail.com?subject=Sugest%C3%A3o%20ou%20reclama%C3%A7%C3%A3o%20-%20PedHub"
         style={{
           fontSize: 11,
-          color: "#9CA3AF",
+          color: "var(--muted)",
           textDecoration: "underline",
           fontFamily: "'DM Sans', sans-serif",
         }}

@@ -5,9 +5,10 @@
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
 
 /* ─── Tokens de tema ────────────────────────────────────────────────────────
-   "Moldura" (bg/superfície/texto/borda) + tints semânticos por família.
-   Cores de acento vivas (vermelho/verde/âmbar fortes, ícones, barras) NÃO
-   usam tokens — permanecem fixas para preservar o significado clínico. */
+   Moldura (bg/superfície/texto/borda) + tints de fundo + TEXTO semântico.
+   Os tokens --tx-* resolvem o problema de textos semânticos escuros (ex.:
+   vermelho-900) que ficariam ilegíveis sobre superfícies escuras: no claro
+   mantêm o tom escuro; no escuro viram o tom claro correspondente. */
 :root {
   color-scheme: light;
   --bg:         #F6F8FB;
@@ -18,17 +19,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
   --text-2:     #374151;
   --muted:      #94A3B8;
   --header-bg:  rgba(255,255,255,0.82);
-  /* tints de caixas de alerta (fundo claro) */
-  --tint-blue:   #EFF6FF;
-  --tint-red:    #FEF2F2;
-  --tint-green:  #ECFDF5;
-  --tint-amber:  #FFF7ED;
-  --tint-purple: #F5F3FF;
-  --tint-teal:   #F0FDFA;
+  --tint-blue:   #EFF6FF; --tint-red: #FEF2F2; --tint-green: #ECFDF5;
+  --tint-amber:  #FFF7ED; --tint-purple: #F5F3FF; --tint-teal: #F0FDFA;
   --tint-slate:  #F8FAFC;
+  --tx-red:    #B91C1C; --tx-amber: #B45309; --tx-green: #047857;
+  --tx-blue:   #1D4ED8; --tx-purple: #6D28D9; --tx-teal: #0F766E;
 }
 
-/* Bloco escuro — reutilizado pela preferência do sistema e pelo toggle */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
@@ -40,13 +37,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
     --text-2:     #B4C0D3;
     --muted:      #8798B0;
     --header-bg:  rgba(15,23,42,0.82);
-    --tint-blue:   #172740;
-    --tint-red:    #331A1D;
-    --tint-green:  #16271E;
-    --tint-amber:  #302411;
-    --tint-purple: #221B38;
-    --tint-teal:   #102621;
+    --tint-blue:   #172740; --tint-red: #331A1D; --tint-green: #16271E;
+    --tint-amber:  #302411; --tint-purple: #221B38; --tint-teal: #102621;
     --tint-slate:  #1B2434;
+    --tx-red:    #FCA5A5; --tx-amber: #FCD34D; --tx-green: #6EE7B7;
+    --tx-blue:   #93C5FD; --tx-purple: #C4B5FD; --tx-teal: #5EEAD4;
   }
 }
 
@@ -60,13 +55,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
   --text-2:     #B4C0D3;
   --muted:      #8798B0;
   --header-bg:  rgba(15,23,42,0.82);
-  --tint-blue:   #172740;
-  --tint-red:    #331A1D;
-  --tint-green:  #16271E;
-  --tint-amber:  #302411;
-  --tint-purple: #221B38;
-  --tint-teal:   #102621;
+  --tint-blue:   #172740; --tint-red: #331A1D; --tint-green: #16271E;
+  --tint-amber:  #302411; --tint-purple: #221B38; --tint-teal: #102621;
   --tint-slate:  #1B2434;
+  --tx-red:    #FCA5A5; --tx-amber: #FCD34D; --tx-green: #6EE7B7;
+  --tx-blue:   #93C5FD; --tx-purple: #C4B5FD; --tx-teal: #5EEAD4;
 }
 
 :root[data-theme="light"] {
@@ -79,11 +72,35 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
   --text-2:     #374151;
   --muted:      #94A3B8;
   --header-bg:  rgba(255,255,255,0.82);
-  --tint-blue:   #EFF6FF;
-  --tint-red:    #FEF2F2;
-  --tint-green:  #ECFDF5;
-  --tint-amber:  #FFF7ED;
-  --tint-purple: #F5F3FF;
-  --tint-teal:   #F0FDFA;
+  --tint-blue:   #EFF6FF; --tint-red: #FEF2F2; --tint-green: #ECFDF5;
+  --tint-amber:  #FFF7ED; --tint-purple: #F5F3FF; --tint-teal: #F0FDFA;
   --tint-slate:  #F8FAFC;
+  --tx-red:    #B91C1C; --tx-amber: #B45309; --tx-green: #047857;
+  --tx-blue:   #1D4ED8; --tx-purple: #6D28D9; --tx-teal: #0F766E;
 }
+
+/* ─── Overrides p/ módulos que usam CLASSES Tailwind ────────────────────────
+   Sem escopo de tema: como os tokens já trocam por tema, no claro estas regras
+   resolvem para ~os mesmos valores originais (sem mudança visível) e no escuro
+   para os valores escuros. text-white e tons claros (100-300) ficam. */
+.bg-white { background-color: var(--surface) !important; }
+.bg-gray-50, .bg-slate-50, .bg-zinc-50, .bg-neutral-50 { background-color: var(--bg) !important; }
+.bg-gray-100, .bg-gray-200, .bg-gray-300, .bg-slate-100, .bg-slate-200, .bg-zinc-100, .bg-neutral-100 { background-color: var(--surface-2) !important; }
+.bg-red-50, .bg-rose-50, .bg-pink-50 { background-color: var(--tint-red) !important; }
+.bg-amber-50, .bg-yellow-50, .bg-orange-50 { background-color: var(--tint-amber) !important; }
+.bg-blue-50, .bg-indigo-50, .bg-sky-50 { background-color: var(--tint-blue) !important; }
+.bg-green-50, .bg-emerald-50, .bg-lime-50 { background-color: var(--tint-green) !important; }
+.bg-purple-50, .bg-violet-50, .bg-fuchsia-50 { background-color: var(--tint-purple) !important; }
+.bg-teal-50, .bg-cyan-50 { background-color: var(--tint-teal) !important; }
+
+.text-gray-800, .text-gray-900, .text-slate-800, .text-slate-900, .text-zinc-800, .text-zinc-900, .text-neutral-800, .text-neutral-900 { color: var(--text) !important; }
+.text-gray-600, .text-gray-700, .text-slate-600, .text-slate-700, .text-zinc-600, .text-zinc-700 { color: var(--text-2) !important; }
+.text-gray-300, .text-gray-400, .text-gray-500, .text-slate-300, .text-slate-400, .text-slate-500 { color: var(--muted) !important; }
+.text-red-700, .text-red-800, .text-red-900, .text-rose-700, .text-rose-800, .text-rose-900 { color: var(--tx-red) !important; }
+.text-amber-700, .text-amber-800, .text-amber-900, .text-orange-700, .text-orange-800, .text-orange-900, .text-yellow-700, .text-yellow-800, .text-yellow-900 { color: var(--tx-amber) !important; }
+.text-green-700, .text-green-800, .text-green-900, .text-emerald-700, .text-emerald-800, .text-emerald-900, .text-lime-800 { color: var(--tx-green) !important; }
+.text-blue-700, .text-blue-800, .text-blue-900, .text-sky-700, .text-sky-800, .text-sky-900 { color: var(--tx-blue) !important; }
+.text-indigo-700, .text-indigo-800, .text-indigo-900, .text-purple-700, .text-purple-800, .text-purple-900, .text-violet-800, .text-violet-900 { color: var(--tx-purple) !important; }
+.text-teal-700, .text-teal-800, .text-teal-900, .text-cyan-800, .text-cyan-900 { color: var(--tx-teal) !important; }
+
+.border-gray-100, .border-gray-200, .border-gray-300, .border-slate-100, .border-slate-200, .border-slate-300, .border-zinc-200 { border-color: var(--border) !important; }

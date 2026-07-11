@@ -145,7 +145,7 @@ function InfoBox({ children }) {
   return (
     <div style={{ background: C + "10", border: "1px solid " + C + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
       <Info size={15} color={C} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -153,8 +153,8 @@ function InfoBox({ children }) {
 function RxRow({ label, children }) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "5px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 12, gap: 8 }}>
-      <span style={{ color: "#6B7280", flexShrink: 0 }}>{label}</span>
-      <span style={{ fontWeight: 600, color: "#1F2937", textAlign: "right" }}>{children}</span>
+      <span style={{ color: "var(--muted)", flexShrink: 0 }}>{label}</span>
+      <span style={{ fontWeight: 600, color: "var(--text-2)", textAlign: "right" }}>{children}</span>
     </div>
   );
 }
@@ -228,10 +228,10 @@ function TabBIC() {
       </InfoBox>
 
       {/* Peso */}
-      <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid #E5E7EB" }}>
-        <label style={{ fontSize: 11.5, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Peso (g) *</label>
+      <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid var(--border)" }}>
+        <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 6 }}>Peso (g) *</label>
         <input type="text" inputMode="decimal" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)} placeholder="Ex: 1450"
-          style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #E5E7EB", outline: "none", background: "#fff", boxSizing: "border-box" }} />
+          style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
         {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{pkKg.toFixed(3)} kg</p>}
       </div>
 
@@ -240,7 +240,7 @@ function TabBIC() {
         {GRUPOS.map(g => (
           <button key={g} onClick={() => { setGrupo(g); setDrogaSel(null); }}
             style={{ flex: 1, padding: "7px 4px", fontSize: 10.5, fontWeight: grupo === g ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer",
-              background: grupo === g ? "#1E293B" : "#F3F4F6", color: grupo === g ? "#fff" : "#374151" }}>
+              background: grupo === g ? "var(--text-2)" : "var(--surface-2)", color: grupo === g ? "#fff" : "var(--text-2)" }}>
             {g}
           </button>
         ))}
@@ -251,22 +251,22 @@ function TabBIC() {
         {DROGAS.filter(dr => dr.grupo === grupo).map(dr => (
           <button key={dr.id} onClick={() => selDroga(dr)}
             style={{ padding: "10px 12px", borderRadius: 9, textAlign: "left", cursor: "pointer",
-              border: `1.5px solid ${drogaSel?.id === dr.id ? dr.cor : "#E5E7EB"}`,
-              background: drogaSel?.id === dr.id ? dr.cor + "12" : "#fff" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: drogaSel?.id === dr.id ? dr.cor : "#374151" }}>{dr.nome}</div>
-            <div style={{ fontSize: 10, color: "#9CA3AF", marginTop: 2 }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</div>
+              border: `1.5px solid ${drogaSel?.id === dr.id ? dr.cor : "var(--border)"}`,
+              background: drogaSel?.id === dr.id ? dr.cor + "12" : "var(--surface)" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: drogaSel?.id === dr.id ? dr.cor : "var(--text-2)" }}>{dr.nome}</div>
+            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</div>
           </button>
         ))}
       </div>
 
       {/* Dose input */}
       {d && (
-        <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid #E5E7EB" }}>
-          <label style={{ fontSize: 11.5, fontWeight: 600, color: "#374151", display: "block", marginBottom: 4 }}>
+        <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid var(--border)" }}>
+          <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 4 }}>
             Dose ({d.unidade}) — alvo {d.doseMin}–{d.doseMax}
           </label>
           <input type="text" inputMode="decimal" value={doseRaw} onChange={e => setDoseRaw(e.target.value)} placeholder={String(d.doseInicio)}
-            style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid " + d.cor + "60", outline: "none", background: "#fff", boxSizing: "border-box" }} />
+            style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid " + d.cor + "60", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
         </div>
       )}
 
@@ -277,7 +277,7 @@ function TabBIC() {
           {d.alertas.map((a, i) => (
             <div key={i} style={{ display: "flex", gap: 8, background: d.cor + "10", border: "1px solid " + d.cor + "30", borderRadius: 8, padding: "7px 12px", marginBottom: 8 }}>
               <AlertTriangle size={13} color={d.cor} style={{ flexShrink: 0, marginTop: 1 }} />
-              <span style={{ fontSize: 12, color: "#374151" }}>{a}</span>
+              <span style={{ fontSize: 12, color: "var(--text-2)" }}>{a}</span>
             </div>
           ))}
 
@@ -294,10 +294,10 @@ function TabBIC() {
                 {d.diluente} até {d.vol} mL
               </RxRow>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
-                <span style={{ fontSize: 12, color: "#6B7280" }}>Infundir</span>
+                <span style={{ fontSize: 12, color: "var(--muted)" }}>Infundir</span>
                 <span style={{ fontSize: 20, fontWeight: 800, color: C }}>{f2(rA)} mL/h</span>
               </div>
-              <div style={{ fontSize: 10, color: "#9CA3AF", textAlign: "right" }}>{d.mA_eq}</div>
+              <div style={{ fontSize: 10, color: "var(--muted)", textAlign: "right" }}>{d.mA_eq}</div>
             </div>
           </div>
 
@@ -311,20 +311,20 @@ function TabBIC() {
               <RxRow label="Preparar (padrão)">{d.mB_total} em {d.vol} mL {d.diluente}</RxRow>
               <RxRow label="Acesso">{d.acesso}</RxRow>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
-                <span style={{ fontSize: 12, color: "#6B7280" }}>Infundir para este peso</span>
+                <span style={{ fontSize: 12, color: "var(--muted)" }}>Infundir para este peso</span>
                 <span style={{ fontSize: 20, fontWeight: 800, color: "#D97706" }}>{f2(rB)} mL/h</span>
               </div>
             </div>
           </div>
 
           {/* Prescrição copiável */}
-          <div style={{ background: "#1E293B", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
+          <div style={{ background: "var(--text-2)", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", letterSpacing: ".07em", textTransform: "uppercase" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".07em", textTransform: "uppercase" }}>
                 Prescrição completa
               </span>
               <button onClick={copiar}
-                style={{ display: "flex", alignItems: "center", gap: 5, background: copied ? "#059669" : "#334155", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, color: "#fff", cursor: "pointer" }}>
+                style={{ display: "flex", alignItems: "center", gap: 5, background: copied ? "#059669" : "var(--text-2)", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, color: "#fff", cursor: "pointer" }}>
                 {copied ? <CheckCircle size={12} /> : <Copy size={12} />}
                 {copied ? "Copiado!" : "Copiar"}
               </button>
@@ -337,14 +337,14 @@ function TabBIC() {
       )}
 
       {/* Tabela de referência */}
-      <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
+      <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
           Doses de referência — NeoFax 2023
         </div>
         {DROGAS.map(dr => (
           <div key={dr.id} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 11, gap: 6 }}>
             <span style={{ color: dr.cor, fontWeight: 700, flexShrink: 0 }}>{dr.nome}</span>
-            <span style={{ color: "#374151", textAlign: "right" }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</span>
+            <span style={{ color: "var(--text-2)", textAlign: "right" }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</span>
           </div>
         ))}
       </div>
@@ -355,7 +355,7 @@ function TabBIC() {
 /* ── Componente principal ────────────────────────────────────────────────── */
 export default function DilucaoBic() {
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Diluição e BIC</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Drogas de Infusão Contínua · Neonatal</p>
@@ -363,10 +363,10 @@ export default function DilucaoBic() {
       <div style={{ padding: 16 }}>
         <TabBIC />
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> NeoFax 2023 · Harriet Lane · SBP.
             Verificar protocolo institucional. Não substitui prescrição médica individualizada.
           </p>

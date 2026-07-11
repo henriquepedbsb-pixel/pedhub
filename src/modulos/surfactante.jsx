@@ -8,7 +8,7 @@ const parseNum = (val) => {
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const C   = '#059669';
-const CLT = '#ECFDF5';
+const CLT = "var(--tint-green)";
 const CBR = '#6EE7B7';
 
 const TABS = [
@@ -59,14 +59,14 @@ export default function Surfactante() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -76,13 +76,13 @@ export default function Surfactante() {
 
   const chip = (ativo, cor = C) => ({
     flex: 1, padding: '8px 4px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-    backgroundColor: ativo ? cor : '#F3F4F6',
-    color: ativo ? '#FFF' : '#374151',
+    backgroundColor: ativo ? cor : "var(--surface-2)",
+    color: ativo ? '#FFF' : "var(--text-2)",
     fontSize: '11px', fontWeight: '600', textAlign: 'center',
   });
 
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #047857 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -112,40 +112,40 @@ export default function Surfactante() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Diagnóstico clínico</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                   Taquipneia · gemência expiratória · retração · cianose em prematuros · aparece nas primeiras horas de vida<br />
                   <strong>Escore de Silverman-Andersen:</strong> ver módulo Neonatologia 4
                 </p>
               </div>
-              <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#374151' }}>RX de tórax</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Padrão reticulogranular difuso ("vidro fosco") · broncograma aéreo · redução de volume pulmonar</p>
+              <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>RX de tórax</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Padrão reticulogranular difuso ("vidro fosco") · broncograma aéreo · redução de volume pulmonar</p>
               </div>
             </div>
           </div>
 
           {/* Indicações por IG */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6, flexShrink: 0 }} />Indicações por Idade Gestacional</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ marginRight: 6, flexShrink: 0 }} />Indicações por Idade Gestacional</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
+              <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>{'< 26 semanas'} — Profilático / Resgate precoce</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Administrar na sala de parto (1ª hora) · LISA ou INSURE antes de iniciar CPAP · independe de FiO₂</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Administrar na sala de parto (1ª hora) · LISA ou INSURE antes de iniciar CPAP · independe de FiO₂</p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>26-32 semanas — CPAP primeiro, LISA/INSURE se FiO₂ {'> 0,30'}</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Iniciar CPAP 5-6 cmH₂O · dar surfactante se FiO₂ {'>'} 0,30 para manter SpO₂ 90-95% · técnica LISA preferida</p>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>26-32 semanas — CPAP primeiro, LISA/INSURE se FiO₂ {'> 0,30'}</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Iniciar CPAP 5-6 cmH₂O · dar surfactante se FiO₂ {'>'} 0,30 para manter SpO₂ 90-95% · técnica LISA preferida</p>
               </div>
               <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>{'> 32 semanas'} — Resgate se FiO₂ {'> 0,30-0,40'}</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>CPAP como 1ª linha · surfactante se SDR com piora progressiva ou FiO₂ elevada · LISA ou INSURE</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>CPAP como 1ª linha · surfactante se SDR com piora progressiva ou FiO₂ elevada · LISA ou INSURE</p>
               </div>
             </div>
           </div>
 
           {/* Técnicas */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>⚙️ Técnicas de Administração</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⚙️ Técnicas de Administração</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
                 {
@@ -161,18 +161,18 @@ export default function Surfactante() {
                   vant: 'Alternativa quando LISA não disponível ou RN com SDR grave',
                 },
                 {
-                  sigla: 'Instilação', cor: '#6B7280',
+                  sigla: 'Instilação', cor: "var(--muted)",
                   nome: 'Via TOT (já intubado)',
                   desc: 'Administrar via tubo orotraqueal se RN já em VM invasiva',
                   vant: 'Sem técnica especial — via TOT em posicionamento padrão',
                 },
               ].map((t, i) => (
-                <div key={i} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${t.cor}` }}>
+                <div key={i} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${t.cor}` }}>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px' }}>
                     <span style={{ backgroundColor: t.cor, color: '#FFF', borderRadius: '6px', padding: '2px 8px', fontSize: '11px', fontWeight: '800' }}>{t.sigla}</span>
-                    <span style={{ fontSize: '11px', color: '#6B7280' }}>{t.nome}</span>
+                    <span style={{ fontSize: '11px', color: "var(--muted)" }}>{t.nome}</span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>{t.desc}</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>{t.desc}</p>
                   <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: t.cor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={11} style={{ flexShrink: 0 }} />{t.vant}</p>
                 </div>
               ))}
@@ -182,8 +182,8 @@ export default function Surfactante() {
           {/* Surfactantes disponíveis */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('surfs')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Pill size={15} style={{ marginRight: 6, flexShrink: 0 }} />Surfactantes Disponíveis no Brasil</p>
-              {aberto === 'surfs' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Pill size={15} style={{ marginRight: 6, flexShrink: 0 }} />Surfactantes Disponíveis no Brasil</p>
+              {aberto === 'surfs' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'surfs' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -191,9 +191,9 @@ export default function Surfactante() {
                   { nome: 'Poractant alfa', marca: 'Curosurf®', origem: 'Porcino', conc: '100 mg/mL', apres: '1,5 mL (150 mg) e 3,0 mL (300 mg)', dose1: '200 mg/kg (2 mL/kg)', dose2: '100 mg/kg (1 mL/kg)', cor: C },
                   { nome: 'Beractant', marca: 'Survanta®', origem: 'Bovino', conc: '25 mg/mL', apres: '4 mL (100 mg) e 8 mL (200 mg)', dose1: '100 mg/kg (4 mL/kg)', dose2: 'Repetir q6h (máx 4 doses/48h)', cor: '#D97706' },
                 ].map((s, i) => (
-                  <div key={i} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${s.cor}` }}>
+                  <div key={i} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${s.cor}` }}>
                     <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: s.cor }}>{s.nome} · {s.marca}</p>
-                    <div style={{ marginTop: '4px', fontSize: '11px', color: '#374151', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div style={{ marginTop: '4px', fontSize: '11px', color: "var(--text-2)", display: 'flex', flexDirection: 'column', gap: '2px' }}>
                       <div>Origem: <strong>{s.origem}</strong> · Conc: <strong>{s.conc}</strong></div>
                       <div>Apresentação: {s.apres}</div>
                       <div>1ª dose: <strong>{s.dose1}</strong></div>
@@ -213,15 +213,15 @@ export default function Surfactante() {
 
           {/* Peso */}
           <div style={card()}>
-            <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
+            <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
             <input type="number" inputMode="decimal" step="0.01" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 1,250"
               style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '20px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
-            {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${p} kg`}</p>}
+            {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${p} kg`}</p>}
           </div>
 
           {/* Selector surfactante */}
           <div style={card()}>
-            <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>SURFACTANTE</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>SURFACTANTE</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
               <button style={chip(surf === 'curosurf')} onClick={() => setSurf('curosurf')}>Curosurf® (100 mg/mL)</button>
               <button style={chip(surf === 'survanta', '#D97706')} onClick={() => setSurf('survanta')}>Survanta® (25 mg/mL)</button>
@@ -229,7 +229,7 @@ export default function Surfactante() {
 
             {surf === 'curosurf' && (
               <>
-                <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>DOSE</p>
+                <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>DOSE</p>
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
                   <button style={chip(dosaC === 'primeira')} onClick={() => setDosaC('primeira')}>1ª dose (200 mg/kg)</button>
                   <button style={chip(dosaC === 'segunda', '#D97706')} onClick={() => setDosaC('segunda')}>2ª/3ª dose (100 mg/kg)</button>
@@ -246,41 +246,41 @@ export default function Surfactante() {
                 <>
                   {/* Dose Curosurf */}
                   <div style={card({ border: `1px solid ${CBR}` })}>
-                    <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>
+                    <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>
                       CUROSURF® — {dosaC === 'primeira' ? '1ª DOSE (200 mg/kg)' : '2ª/3ª DOSE (100 mg/kg)'}
                     </p>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                       <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-                        <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#6B7280' }}>DOSE</p>
+                        <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DOSE</p>
                         <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>
                           {dosaC === 'primeira' ? calcs.cuDose1mg : calcs.cuDose2mg}
                         </p>
                         <p style={{ margin: 0, fontSize: '11px', color: C }}>mg</p>
                       </div>
-                      <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #BFDBFE' }}>
-                        <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#6B7280' }}>VOLUME</p>
-                        <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>
+                      <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #BFDBFE' }}>
+                        <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VOLUME</p>
+                        <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>
                           {dosaC === 'primeira' ? calcs.cuVol1 : calcs.cuVol2}
                         </p>
-                        <p style={{ margin: 0, fontSize: '11px', color: '#1D4ED8' }}>mL de 100 mg/mL</p>
+                        <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}>mL de 100 mg/mL</p>
                       </div>
                     </div>
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
+                    <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                       {dosaC === 'primeira' ? (
                         <>
-                          <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>
+                          <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
                             Ampola de <strong>3 mL</strong>: usar <strong>{calcs.cuVol1} mL</strong> de <strong>{calcs.cuAmp3_1} ampola(s)</strong>
                           </p>
-                          <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#374151' }}>
+                          <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                             Ampola de <strong>1,5 mL</strong>: {calcs.cuAmp15_1} ampola(s) necessária(s)
                           </p>
                         </>
                       ) : (
-                        <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>
+                        <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
                           Ampola de <strong>3 mL</strong>: usar <strong>{calcs.cuVol2} mL</strong> de <strong>{calcs.cuAmp3_2} ampola(s)</strong>
                         </p>
                       )}
-                      <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>
+                      <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
                         Dose máxima total: 400 mg/kg (4 mL/kg) = 2 doses de 200 + 0 OU 200 + 100 + 100 mg/kg
                       </p>
                     </div>
@@ -288,16 +288,16 @@ export default function Surfactante() {
 
                   {/* Tabela de doses rápidas */}
                   <div style={card()}>
-                    <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Tabela Rápida — Curosurf® (100 mg/mL)</p>
-                    <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Tabela Rápida — Curosurf® (100 mg/mL)</p>
+                    <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: CLT, padding: '7px 10px' }}>
                         {['Peso', '1ª dose (2 mL/kg)', '2ª dose (1 mL/kg)'].map((h, i) => (
                           <span key={i} style={{ fontSize: '10px', fontWeight: '700', color: C }}>{h}</span>
                         ))}
                       </div>
                       {[[0.6,1.2,0.6],[0.7,1.4,0.7],[0.8,1.6,0.8],[0.9,1.8,0.9],[1.0,2.0,1.0],[1.2,2.4,1.2],[1.5,3.0,1.5],[2.0,4.0,2.0]].map(([w,d1,d2], i) => (
-                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: Math.abs(p - w) < 0.05 ? CLT : (i % 2 === 0 ? '#F9FAFB' : '#FFF'), borderTop: '1px solid #E5E7EB', padding: '7px 10px' }}>
-                          <span style={{ fontSize: '12px', color: '#374151', fontWeight: Math.abs(p - w) < 0.05 ? '800' : '400' }}>{w} kg</span>
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: Math.abs(p - w) < 0.05 ? CLT : (i % 2 === 0 ? "var(--surface-2)" : "var(--surface)"), borderTop: '1px solid var(--border)', padding: '7px 10px' }}>
+                          <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: Math.abs(p - w) < 0.05 ? '800' : '400' }}>{w} kg</span>
                           <span style={{ fontSize: '12px', color: C, fontWeight: '700' }}>{d1} mL</span>
                           <span style={{ fontSize: '12px', color: '#D97706', fontWeight: '600' }}>{d2} mL</span>
                         </div>
@@ -309,21 +309,21 @@ export default function Surfactante() {
 
               {surf === 'survanta' && (
                 <div style={card({ border: '1px solid #FED7AA' })}>
-                  <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>SURVANTA® — 100 mg/kg = 4 mL/kg</p>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>SURVANTA® — 100 mg/kg = 4 mL/kg</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ backgroundColor: '#FFF7ED', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#6B7280' }}>DOSE</p>
+                    <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DOSE</p>
                       <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{calcs.svDoseMg}</p>
                       <p style={{ margin: 0, fontSize: '11px', color: '#D97706' }}>mg</p>
                     </div>
-                    <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#6B7280' }}>VOLUME</p>
-                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>{calcs.svVol}</p>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#1D4ED8' }}>mL de 25 mg/mL</p>
+                    <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VOLUME</p>
+                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calcs.svVol}</p>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}>mL de 25 mg/mL</p>
                     </div>
                   </div>
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                    <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
                       Ampola de <strong>8 mL</strong> (200 mg): {calcs.svAmp8} ampola(s) · dividir em 4 alíquotas (posições: sup, lat D, lat E, sup) · pode repetir q6h (máx 4 doses/48h)
                     </p>
                   </div>
@@ -332,22 +332,22 @@ export default function Surfactante() {
 
               {/* Atropina */}
               <div style={card()}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>Pré-medicação — Atropina (LISA/INSURE)</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>Pré-medicação — Atropina (LISA/INSURE)</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>DOSE (20 mcg/kg)</p>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DOSE (20 mcg/kg)</p>
                     <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: C, lineHeight: 1 }}>{calcs.atropMg} mg</p>
                   </div>
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>VOLUME (0,25 mg/mL)</p>
-                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: '#374151', lineHeight: 1 }}>{calcs.atropVol} mL</p>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VOLUME (0,25 mg/mL)</p>
+                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: "var(--text-2)", lineHeight: 1 }}>{calcs.atropVol} mL</p>
                   </div>
                 </div>
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>Atropina 0,25 mg/mL · dar IV 2-3 min antes do procedimento · previne bradicardia reflexa</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Atropina 0,25 mg/mL · dar IV 2-3 min antes do procedimento · previne bradicardia reflexa</p>
               </div>
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '20px', fontSize: '13px', color: '#9CA3AF', backgroundColor: '#FFF', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
+            <div style={{ textAlign: 'center', padding: '20px', fontSize: '13px', color: "var(--muted)", backgroundColor: "var(--surface)", borderRadius: '12px', border: '1px solid var(--border)' }}>
               Insira o peso do RN para calcular as doses
             </div>
           )}
@@ -360,24 +360,24 @@ export default function Surfactante() {
 
           {/* Seletor de técnica */}
           <div style={card()}>
-            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>TÉCNICA</p>
+            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>TÉCNICA</p>
             <div style={{ display: 'flex', gap: '6px' }}>
               <button style={chip(tecnica === 'lisa')} onClick={() => setTecnica('lisa')}>LISA / MIST</button>
               <button style={chip(tecnica === 'insure', '#D97706')} onClick={() => setTecnica('insure')}>INSURE</button>
-              <button style={chip(tecnica === 'tot', '#6B7280')} onClick={() => setTecnica('tot')}>Via TOT</button>
+              <button style={chip(tecnica === 'tot', "var(--muted)")} onClick={() => setTecnica('tot')}>Via TOT</button>
             </div>
           </div>
 
           {/* Preparo comum */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Thermometer size={15} style={{ marginRight: 6, flexShrink: 0 }} />Preparo do Surfactante (todas as técnicas)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Thermometer size={15} style={{ marginRight: 6, flexShrink: 0 }} />Preparo do Surfactante (todas as técnicas)</p>
             {['Retirar da geladeira 5 min antes — aquecer na palma da mão ou banho-maria 37°C',
               'Girar suavemente o frasco para homogeneizar — NÃO agitar vigorosamente',
               'Aspirar volume calculado com seringa (sem bolhas)',
               'Usar imediatamente após abrir — não guardar',
               'Curosurf: coloração bege/creme normal · Survanta: cor amarelo-pálida normal',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                 <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
@@ -401,7 +401,7 @@ export default function Surfactante() {
                 <div key={i} style={{ marginBottom: '12px' }}>
                   <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: C }}>Etapa {i + 1}: {step.titulo}</p>
                   {step.itens.map((item, j) => (
-                    <div key={j} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '4px', fontSize: '11px', color: '#374151' }}>
+                    <div key={j} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '4px', fontSize: '11px', color: "var(--text-2)" }}>
                       <span style={{ color: C, flexShrink: 0 }}>•</span>{item}
                     </div>
                   ))}
@@ -413,7 +413,7 @@ export default function Surfactante() {
           {/* INSURE */}
           {tecnica === 'insure' && (
             <div style={card({ border: '1px solid #FED7AA' })}>
-              <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#C2410C' }}>INSURE — Passo a Passo</p>
+              <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-amber)" }}>INSURE — Passo a Passo</p>
               {[
                 { titulo: 'Pré-medicação', desc: 'Morfina 0,05 mg/kg IV + Atropina 20 mcg/kg IV · aguardar 3 min · OU succinilcolina 1 mg/kg IV (intubação rápida)' },
                 { titulo: 'Intubação', desc: 'TOT sem cuff: 2,5 mm (<27s) · 3,0 mm (27-31s) · 3,5 mm (31-36s) · confirmar com CO₂ colorimétrico e ausculta' },
@@ -421,11 +421,11 @@ export default function Surfactante() {
                 { titulo: 'Extubação imediata', desc: 'Após última dose: extubação assim que RN iniciar esforço respiratório · transição para CPAP 5-6 cmH₂O · objetivo: < 30 min intubado' },
                 { titulo: 'CPAP pós-INSURE', desc: 'Manter CPAP 5-6 cmH₂O · reduzir FiO₂ conforme SpO₂ · reintubar se apneia persistente ou falha de CPAP' },
               ].map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: '#F9FAFB', borderRadius: '8px' }}>
+                <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: "var(--bg)", borderRadius: '8px' }}>
                   <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                   <div>
-                    <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>{step.titulo}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{step.desc}</p>
+                    <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{step.titulo}</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -435,10 +435,10 @@ export default function Surfactante() {
           {/* Via TOT */}
           {tecnica === 'tot' && (
             <div style={card()}>
-              <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#6B7280' }}>Via TOT (RN já intubado e em VM)</p>
+              <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--muted)" }}>Via TOT (RN já intubado e em VM)</p>
               {['Aspirar TOT se necessário · aguardar 5 min antes','Posicionar em decúbito dorsal','Instalar surfactante via TOT em bolus único (Curosurf) ou em 4 alíquotas rotacionando posições (Survanta)','Ventilar manualmente após cada alíquota (4-5 ventilações)','Não aspirar o TOT nas 1-2 horas após administração','Reduzir parâmetros ventilatórios conforme SpO₂ melhora — pode ser rápida!'].map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
-                  <span style={{ backgroundColor: '#6B7280', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
+                  <span style={{ backgroundColor: "var(--muted)", color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                   {item}
                 </div>
               ))}
@@ -454,8 +454,8 @@ export default function Surfactante() {
           {/* Monitorização */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Monitorização Pós-Surfactante</p>
-            <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #D97706' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C', display: 'flex', alignItems: 'flex-start', gap: 5 }}><AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />Melhora pode ser rápida — reduzir FiO₂ ativamente para evitar hiperoxia</p>
+            <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: '3px solid #D97706' }}>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)", display: 'flex', alignItems: 'flex-start', gap: 5 }}><AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />Melhora pode ser rápida — reduzir FiO₂ ativamente para evitar hiperoxia</p>
             </div>
             {[
               { param: 'SpO₂', meta: '90-95% (prematuros) · reduzir FiO₂ prontamente se ↑', freq: 'Contínuo' },
@@ -465,10 +465,10 @@ export default function Surfactante() {
               { param: 'Gasometria', meta: 'pH 7,25-7,45 · PaCO₂ 40-55 · PaO₂ 50-70 mmHg', freq: '1-2h após dose' },
               { param: 'RX tórax', meta: 'Melhora do padrão reticulogranular esperada em 6-12h', freq: '4-6h após ou se piora' },
             ].map((row, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '7px 10px', backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#FFF', borderRadius: '6px', marginBottom: '4px' }}>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '7px 10px', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderRadius: '6px', marginBottom: '4px' }}>
                 <div>
-                  <span style={{ fontSize: '12px', fontWeight: '700', color: '#374151' }}>{row.param}</span>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{row.meta}</p>
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{row.param}</span>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{row.meta}</p>
                 </div>
                 <span style={{ fontSize: '11px', color: C, fontWeight: '600', flexShrink: 0, marginLeft: '8px' }}>{row.freq}</span>
               </div>
@@ -477,16 +477,16 @@ export default function Surfactante() {
 
           {/* Critérios de dose adicional */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><RotateCcw size={15} style={{ marginRight: 6, flexShrink: 0 }} />Critérios para Dose Adicional</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><RotateCcw size={15} style={{ marginRight: 6, flexShrink: 0 }} />Critérios para Dose Adicional</p>
             <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: `3px solid ${C}` }}>
               <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Curosurf® — 2ª/3ª dose (100 mg/kg)</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                 Se FiO₂ ainda {'>'} 0,30 em CPAP 5-6 cmH₂O após 6-12h da 1ª dose · máximo 3 doses totais (400 mg/kg)
               </p>
             </div>
-            <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>Survanta® — dose adicional</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+            <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>Survanta® — dose adicional</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                 Repetir 100 mg/kg q6h se SDR persistente · máximo 4 doses em 48h
               </p>
             </div>
@@ -495,8 +495,8 @@ export default function Surfactante() {
           {/* Complicações */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('comp')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6, flexShrink: 0 }} />Complicações e Conduta</p>
-              {aberto === 'comp' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6, flexShrink: 0 }} />Complicações e Conduta</p>
+              {aberto === 'comp' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'comp' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -507,9 +507,9 @@ export default function Surfactante() {
                   { comp: 'Obstrução do TOT', conduta: 'Surfactante pode coagular · VPP com BVM · considerar troca do tubo' },
                   { comp: 'Hiperoxia pós-dose', conduta: 'Reduzir FiO₂ ativamente · PaO₂ > 80 mmHg por tempo prolongado = dano retiniano' },
                 ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
+                  <div key={i} style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
                     <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>{item.comp}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#374151' }}>{item.conduta}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>{item.conduta}</p>
                   </div>
                 ))}
               </div>
@@ -519,8 +519,8 @@ export default function Surfactante() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Sweet DG et al. European Consensus Guidelines on the Management of RDS 2022 · SBP Surfactante 2020 · Bula Curosurf® e Survanta®.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

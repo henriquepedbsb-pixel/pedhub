@@ -8,21 +8,21 @@ const parseNum = (val) => {
 
 // ─── Bell Modified Staging ────────────────────────────────────────────────────
 const BELL_STAGES = {
-  'I':    { label:'I — Suspeita', cor:'#D97706', bg:'#FFF7ED', borda:'#FED7AA',
+  'I':    { label:'I — Suspeita', cor:'#D97706', bg:"var(--tint-amber)", borda:'#FED7AA',
              manejo:'NPO 3 dias · ATB 3 dias · RX q8h · hemocultura · observação', duracao:'ATB 3 dias' },
-  'IIA':  { label:'IIA — Definitiva leve', cor:'#F97316', bg:'#FFF7ED', borda:'#FED7AA',
+  'IIA':  { label:'IIA — Definitiva leve', cor:'#F97316', bg:"var(--tint-amber)", borda:'#FED7AA',
              manejo:'NPO 7-14 dias · ATB 7 dias · NPT · RX q6h · cirurgia de plantão', duracao:'ATB 7 dias' },
-  'IIB':  { label:'IIB — Definitiva moderada', cor:'#EF4444', bg:'#FEF2F2', borda:'#FECACA',
+  'IIB':  { label:'IIB — Definitiva moderada', cor:'#EF4444', bg:"var(--tint-red)", borda:'#FECACA',
              manejo:'NPO 14 dias · ATB 10-14 dias (+ metronidazol) · NPT · corrigir acidose/coagulopatia · UTI', duracao:'ATB 10-14 dias' },
-  'IIIA': { label:'IIIA — Avançada com perfuração iminente', cor:'#DC2626', bg:'#FEF2F2', borda:'#FECACA',
+  'IIIA': { label:'IIIA — Avançada com perfuração iminente', cor:'#DC2626', bg:"var(--tint-red)", borda:'#FECACA',
              manejo:'UTI · VM · vasopressores · ATB máximo (+ metronidazol) · cirurgia urgente × drenagem peritoneal', duracao:'ATB 14 dias ou mais' },
-  'IIIB': { label:'IIIB — Perfuração intestinal confirmada', cor:'#7F1D1D', bg:'#FEF2F2', borda:'#FECACA',
+  'IIIB': { label:'IIIB — Perfuração intestinal confirmada', cor:'#7F1D1D', bg:"var(--tint-red)", borda:'#FECACA',
              manejo:'CIRURGIA DE EMERGÊNCIA · estabilizar e operar · laparotomia × drenagem peritoneal por peso', duracao:'ATB ≥ 14 dias pós-operatório' },
 };
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const C   = '#92400E';
-const CLT = '#FEF3C7';
+const CLT = "var(--tint-amber)";
 const CBR = '#FDE68A';
 
 const TABS = [
@@ -42,8 +42,8 @@ function OptionBtn({ label, ativo, onClick, cor }) {
         flex:1, padding:'7px 4px', borderRadius:'8px', border:'none',
         cursor:'pointer', fontSize:'11px', textAlign:'center',
         fontWeight: ativo ? '700' : '500',
-        backgroundColor: ativo ? btnCor : '#F3F4F6',
-        color: ativo ? '#FFF' : '#374151',
+        backgroundColor: ativo ? btnCor : "var(--surface-2)",
+        color: ativo ? '#FFF' : "var(--text-2)",
       }}
     >
       {label}
@@ -52,17 +52,17 @@ function OptionBtn({ label, ativo, onClick, cor }) {
 }
 
 function DoseRow({ label, dose, unit, vol, freq, ampola, cor }) {
-  const rowCor = cor || '#374151';
+  const rowCor = cor || "var(--text-2)";
   return (
-    <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px', border:'1px solid #E5E7EB', marginBottom:'8px' }}>
+    <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', border:'1px solid var(--border)', marginBottom:'8px' }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'4px' }}>
-        <span style={{ fontSize:'12px', fontWeight:'700', color:'#374151' }}>{label}</span>
+        <span style={{ fontSize:'12px', fontWeight:'700', color:"var(--text-2)" }}>{label}</span>
         <div style={{ textAlign:'right' }}>
           <p style={{ margin:0, fontSize:'18px', fontWeight:'800', color:rowCor, lineHeight:1 }}>{dose} {unit}</p>
-          <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:'#6B7280' }}>{vol} mL · {freq}</p>
+          <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{vol} mL · {freq}</p>
         </div>
       </div>
-      <p style={{ margin:0, fontSize:'10px', color:'#9CA3AF' }}>{ampola}</p>
+      <p style={{ margin:0, fontSize:'10px', color:"var(--muted)" }}>{ampola}</p>
     </div>
   );
 }
@@ -128,14 +128,14 @@ export default function NEC() {
   const tabBtn = (id) => ({
     padding:'8px 2px', borderRadius:'8px', fontSize:'11px',
     fontWeight: tab===id?'700':'500', cursor:'pointer', border:'none',
-    backgroundColor: tab===id ? C : '#F3F4F6',
-    color: tab===id ? '#FFF' : '#374151',
+    backgroundColor: tab===id ? C : "var(--surface-2)",
+    color: tab===id ? '#FFF' : "var(--text-2)",
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', minWidth:0,
   });
 
   const card = (extra={}) => ({
-    backgroundColor:'#FFF', borderRadius:'12px', padding:'14px',
-    border:'1px solid #E5E7EB', ...extra,
+    backgroundColor:"var(--surface)", borderRadius:'12px', padding:'14px',
+    border:'1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -145,7 +145,7 @@ export default function NEC() {
 
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:'#F9FAFB', minHeight:'100vh' }}>
+    <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
 
       {/* Header */}
       <div style={{ background:`linear-gradient(135deg, ${C} 0%, #78350F 100%)`, borderRadius:'14px', padding:'16px', marginBottom:'16px', color:'#FFF' }}>
@@ -173,7 +173,7 @@ export default function NEC() {
           <div style={card({ border:`1px solid ${CBR}` })}>
             <p style={{ margin:'0 0 8px 0', fontSize:'14px', fontWeight:'700', color:C, display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Enterocolite Necrosante (NEC)</p>
             <div style={{ backgroundColor:CLT, borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
-              <p style={{ margin:0, fontSize:'12px', color:'#92400E' }}>
+              <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)" }}>
                 <strong>Definição:</strong> Inflamação intestinal necrosante em neonatos · emergência GI mais comum em prematuros · mortalidade 20-30% (acima de 50% na forma cirúrgica)
               </p>
             </div>
@@ -182,7 +182,7 @@ export default function NEC() {
               'RN a termo: < 10% dos casos — geralmente com cardiopatia congênita ou asfixia',
               'Leite materno exclusivo reduz em 6-10x o risco de NEC',
             ].map((item, i) => (
-              <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:'#374151', marginBottom:'5px', alignItems:'flex-start' }}>
+              <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:"var(--text-2)", marginBottom:'5px', alignItems:'flex-start' }}>
                 <span style={{ color:C, flexShrink:0 }}>•</span>{item}
               </div>
             ))}
@@ -190,15 +190,15 @@ export default function NEC() {
 
           {/* Sinais clínicos */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Search size={15} />Sinais e Sintomas</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Search size={15} />Sinais e Sintomas</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
-              <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
-                <p style={{ margin:'0 0 6px 0', fontSize:'12px', fontWeight:'700', color:'#C2410C' }}>Sistêmicos</p>
-                <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>Instabilidade térmica · apneia · bradicardia · letargia · má perfusão · hipotensão · coagulação intravascular</p>
+              <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
+                <p style={{ margin:'0 0 6px 0', fontSize:'12px', fontWeight:'700', color:"var(--tx-amber)" }}>Sistêmicos</p>
+                <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>Instabilidade térmica · apneia · bradicardia · letargia · má perfusão · hipotensão · coagulação intravascular</p>
               </div>
-              <div style={{ backgroundColor:'#FEF2F2', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #DC2626' }}>
+              <div style={{ backgroundColor:"var(--tint-red)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #DC2626' }}>
                 <p style={{ margin:'0 0 6px 0', fontSize:'12px', fontWeight:'700', color:'#DC2626' }}>Gastrointestinais</p>
-                <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>Resíduos gástricos biliosos · distensão abdominal progressiva · ausência de ruídos hidroaéreos · dor à palpação · sangue nas fezes (oculto → vivo) · eritema de parede · massa palpável</p>
+                <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>Resíduos gástricos biliosos · distensão abdominal progressiva · ausência de ruídos hidroaéreos · dor à palpação · sangue nas fezes (oculto → vivo) · eritema de parede · massa palpável</p>
               </div>
             </div>
           </div>
@@ -206,24 +206,24 @@ export default function NEC() {
           {/* Achados radiológicos */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('rx')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937' }}>☢️ Achados Radiológicos (RX Abdome)</p>
-              {aberto==='rx'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}>☢️ Achados Radiológicos (RX Abdome)</p>
+              {aberto==='rx'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='rx' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'6px' }}>
                 {[
-                  { achado:'Distensão de alças', sig:'Inespecífico · estágio I', cor:'#6B7280' },
+                  { achado:'Distensão de alças', sig:'Inespecífico · estágio I', cor:"var(--muted)" },
                   { achado:'Pneumatose intestinal', sig:'PATOGNOMÔNICO de NEC · gás na parede intestinal · Estágio IIA', cor:'#F97316' },
                   { achado:'Gás na veia porta', sig:'Sinal grave · estágio IIB-IIIA · ramificações hiperecoicas no fígado (USG)', cor:'#EF4444' },
                   { achado:'Alça fixa (serial)', sig:'Mesma alça dilatada em RX seriados = isquemia/necrose · indicação cirúrgica relativa', cor:'#DC2626' },
                   { achado:'Pneumoperitônio', sig:'PERFURAÇÃO INTESTINAL · cirurgia emergência · Estágio IIIB', cor:'#7F1D1D' },
                 ].map((row, i) => (
-                  <div key={i} style={{ padding:'8px 10px', backgroundColor:i%2===0?'#F9FAFB':'#FFF', borderRadius:'8px', borderLeft:`3px solid ${row.cor}` }}>
+                  <div key={i} style={{ padding:'8px 10px', backgroundColor:i%2===0?"var(--surface-2)":"var(--surface)", borderRadius:'8px', borderLeft:`3px solid ${row.cor}` }}>
                     <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:row.cor }}>{row.achado}</p>
-                    <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:'#374151' }}>{row.sig}</p>
+                    <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>{row.sig}</p>
                   </div>
                 ))}
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#9CA3AF' }}>
+                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
                   Solicitar RX em AP e perfil (decúbito lateral D) · USG abdominal: útil para pneumatose, ascite e gás portal
                 </p>
               </div>
@@ -233,8 +233,8 @@ export default function NEC() {
           {/* Laboratório */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('lab')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><FlaskConical size={15} />Laboratório</p>
-              {aberto==='lab'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><FlaskConical size={15} />Laboratório</p>
+              {aberto==='lab'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='lab' && (
               <div style={{ marginTop:'10px' }}>
@@ -246,9 +246,9 @@ export default function NEC() {
                   { exam:'Coagulograma', achado:'TP/TTPa prolongados, D-dímero elevado, fibrinogênio baixo = CIVD' },
                   { exam:'Na⁺ sérico', achado:'Hiponatremia frequente · pode indicar perda de fluido para 3º espaço' },
                 ].map((row, i) => (
-                  <div key={i} style={{ display:'flex', gap:'8px', padding:'6px 0', borderBottom:i<5?'1px solid #F3F4F6':'none' }}>
+                  <div key={i} style={{ display:'flex', gap:'8px', padding:'6px 0', borderBottom:i<5?'1px solid var(--border)':'none' }}>
                     <span style={{ fontSize:'12px', fontWeight:'700', color:C, flexShrink:0, width:'95px' }}>{row.exam}</span>
-                    <span style={{ fontSize:'11px', color:'#374151' }}>{row.achado}</span>
+                    <span style={{ fontSize:'11px', color:"var(--text-2)" }}>{row.achado}</span>
                   </div>
                 ))}
               </div>
@@ -262,23 +262,23 @@ export default function NEC() {
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
 
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
-            <p style={{ margin:0, fontSize:'12px', color:'#92400E', fontWeight:'700' }}>
+            <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'700' }}>
               Estadiamento de Bell Modificado (Walsh & Kliegman 1986) · selecione os achados para classificar
             </p>
           </div>
 
           {/* RX finding */}
           <div style={card()}>
-            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>ACHADO RADIOLÓGICO MAIS GRAVE</p>
+            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>ACHADO RADIOLÓGICO MAIS GRAVE</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'5px' }}>
               {[
-                { id:'normal',          label:'Normal / Distensão inespecífica', cor:'#6B7280' },
+                { id:'normal',          label:'Normal / Distensão inespecífica', cor:"var(--muted)" },
                 { id:'pneumatose',      label:'Pneumatose intestinal', cor:'#F97316' },
                 { id:'portal_gas',      label:'Gás portal / Ascite', cor:'#EF4444' },
                 { id:'pneumoperitoneum',label:'Pneumoperitônio — perfuração confirmada', cor:'#7F1D1D' },
               ].map(opt=>(
                 <button key={opt.id} onClick={()=>setRx(opt.id)}
-                  style={{ padding:'8px 12px', borderRadius:'8px', border:`2px solid ${rx===opt.id?opt.cor:'#E5E7EB'}`, backgroundColor:rx===opt.id?opt.cor+'15':'#F9FAFB', cursor:'pointer', textAlign:'left', fontSize:'12px', fontWeight:rx===opt.id?'700':'400', color:rx===opt.id?opt.cor:'#374151' }}>
+                  style={{ padding:'8px 12px', borderRadius:'8px', border:`2px solid ${rx===opt.id?opt.cor:"var(--border)"}`, backgroundColor:rx===opt.id?opt.cor+'15':"var(--surface-2)", cursor:'pointer', textAlign:'left', fontSize:'12px', fontWeight:rx===opt.id?'700':'400', color:rx===opt.id?opt.cor:"var(--text-2)" }}>
                   {opt.label}
                 </button>
               ))}
@@ -287,7 +287,7 @@ export default function NEC() {
 
           {/* Systemic status */}
           <div style={card()}>
-            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>ESTADO SISTÊMICO</p>
+            <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>ESTADO SISTÊMICO</p>
             <div style={{ display:'flex', gap:'5px', flexWrap:'wrap' }}>
               {[
                 { id:'estavel',        label:'Estável' },
@@ -295,7 +295,7 @@ export default function NEC() {
                 { id:'choque',         label:'Choque / Vasopressor' },
               ].map(opt=>(
                 <button key={opt.id} onClick={()=>setSist(opt.id)}
-                  style={{ flex:'1 1 auto', padding:'8px 6px', borderRadius:'8px', border:`2px solid ${sistemic===opt.id?C:'#E5E7EB'}`, backgroundColor:sistemic===opt.id?CLT:'#F9FAFB', cursor:'pointer', textAlign:'center', fontSize:'11px', fontWeight:sistemic===opt.id?'700':'400', color:sistemic===opt.id?C:'#374151' }}>
+                  style={{ flex:'1 1 auto', padding:'8px 6px', borderRadius:'8px', border:`2px solid ${sistemic===opt.id?C:"var(--border)"}`, backgroundColor:sistemic===opt.id?CLT:"var(--surface-2)", cursor:'pointer', textAlign:'center', fontSize:'11px', fontWeight:sistemic===opt.id?'700':'400', color:sistemic===opt.id?C:"var(--text-2)" }}>
                   {opt.label}
                 </button>
               ))}
@@ -310,9 +310,9 @@ export default function NEC() {
                 <p style={{ margin:'0 0 6px 0', fontSize:'20px', fontWeight:'900', color:st.cor }}>
                   Estágio {st.label}
                 </p>
-                <div style={{ backgroundColor:'#FFF', borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
-                  <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>MANEJO</p>
-                  <p style={{ margin:0, fontSize:'12px', color:'#374151' }}>{st.manejo}</p>
+                <div style={{ backgroundColor:"var(--surface)", borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
+                  <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>MANEJO</p>
+                  <p style={{ margin:0, fontSize:'12px', color:"var(--text-2)" }}>{st.manejo}</p>
                 </div>
                 <div style={{ backgroundColor:st.cor+'20', borderRadius:'8px', padding:'8px 10px' }}>
                   <p style={{ margin:0, fontSize:'11px', color:st.cor, fontWeight:'700' }}>
@@ -324,7 +324,7 @@ export default function NEC() {
           })()}
 
           {!bellStage && (
-            <div style={{ textAlign:'center', padding:'14px', fontSize:'12px', color:'#9CA3AF', backgroundColor:'#FFF', borderRadius:'12px', border:'1px solid #E5E7EB' }}>
+            <div style={{ textAlign:'center', padding:'14px', fontSize:'12px', color:"var(--muted)", backgroundColor:"var(--surface)", borderRadius:'12px', border:'1px solid var(--border)' }}>
               Selecione achado radiológico e estado sistêmico para classificar
             </div>
           )}
@@ -332,8 +332,8 @@ export default function NEC() {
           {/* Referência rápida de todos os estágios */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('allstages')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Todos os Estágios — Referência Rápida</p>
-              {aberto==='allstages'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Todos os Estágios — Referência Rápida</p>
+              {aberto==='allstages'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='allstages' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'6px' }}>
@@ -345,9 +345,9 @@ export default function NEC() {
                   { est:'IIIA', desc:'+ Choque / vasopressor · Grande ascite — intestino íntegro' },
                   { est:'IIIB', desc:'+ Pneumoperitônio — perfuração confirmada → cirurgia emergência' },
                 ].map((row, i) => (
-                  <div key={i} style={{ display:'flex', gap:'10px', padding:'7px 10px', backgroundColor:i%2===0?'#F9FAFB':'#FFF', borderRadius:'6px' }}>
+                  <div key={i} style={{ display:'flex', gap:'10px', padding:'7px 10px', backgroundColor:i%2===0?"var(--surface-2)":"var(--surface)", borderRadius:'6px' }}>
                     <span style={{ fontSize:'12px', fontWeight:'800', color:C, width:'36px', flexShrink:0 }}>{row.est}</span>
-                    <span style={{ fontSize:'11px', color:'#374151' }}>{row.desc}</span>
+                    <span style={{ fontSize:'11px', color:"var(--text-2)" }}>{row.desc}</span>
                   </div>
                 ))}
               </div>
@@ -372,7 +372,7 @@ export default function NEC() {
               'Monitorização contínua: FC, FR, PA, SatO₂, diurese',
               'Consulta cirúrgica nos estágios II e III',
             ].map((item, i) => (
-              <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:'#374151', marginBottom:'5px', alignItems:'flex-start' }}>
+              <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:"var(--text-2)", marginBottom:'5px', alignItems:'flex-start' }}>
                 <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'16px', height:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'9px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
                 {item}
               </div>
@@ -381,22 +381,22 @@ export default function NEC() {
 
           {/* Calculadora ATB */}
           <div style={card()}>
-            <p style={{ margin:'0 0 12px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Pill size={15} />Calculadora de Antibióticos</p>
+            <p style={{ margin:'0 0 12px 0', fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Pill size={15} />Calculadora de Antibióticos</p>
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'10px' }}>
               <div>
-                <label style={{ fontSize:'11px', fontWeight:'700', color:'#6B7280', display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>PESO (kg)</label>
+                <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>PESO (kg)</label>
                 <input type="number" inputMode="decimal" value={peso} onChange={e=>setPeso(e.target.value)} placeholder="ex: 1,2"
                   style={{ width:'100%', padding:'8px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
               </div>
               <div>
-                <label style={{ fontSize:'11px', fontWeight:'700', color:'#6B7280', display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>IG (semanas)</label>
+                <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>IG (semanas)</label>
                 <input type="number" inputMode="decimal" step="1" value={igVal} onChange={e=>setIgVal(e.target.value)} placeholder="ex: 28"
                   style={{ width:'100%', padding:'8px 10px', borderRadius:'8px', border:`2px solid ${ig>0?'#3B82F6':'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:'#3B82F6', boxSizing:'border-box', outline:'none' }} />
               </div>
             </div>
 
-            <p style={{ margin:'0 0 5px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>IDADE PÓS-NATAL</p>
+            <p style={{ margin:'0 0 5px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>IDADE PÓS-NATAL</p>
             <div style={{ display:'flex', gap:'6px', marginBottom:'12px' }}>
               <OptionBtn label="< 7 dias" ativo={pnDias==='0-6'} onClick={()=>setPnDias('0-6')} />
               <OptionBtn label="≥ 7 dias" ativo={pnDias==='7+'} onClick={()=>setPnDias('7+')} />
@@ -404,14 +404,14 @@ export default function NEC() {
 
             {p > 0 && ig > 0 && atb ? (
               <div style={{ display:'flex', flexDirection:'column', gap:'0' }}>
-                <p style={{ margin:'0 0 8px 0', fontSize:'11px', fontWeight:'700', color:'#6B7280', letterSpacing:'0.04em' }}>1ª LINHA — Estágios I-IIA (Ampicilina + Gentamicina)</p>
+                <p style={{ margin:'0 0 8px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>1ª LINHA — Estágios I-IIA (Ampicilina + Gentamicina)</p>
                 <DoseRow label="Ampicilina" dose={atb.ampDose} unit="mg" vol={atb.ampVol} freq={`q${atb.ampInt}h IV`} ampola="Ampicilina 100 mg/mL · diluir e infundir em 30 min" cor={C} />
                 <DoseRow label={`Gentamicina (${atb.gDoseKg} mg/kg)`} dose={atb.gDose} unit="mg" vol={atb.gVol} freq={`q${atb.gInt}h IV`} ampola="Gentamicina 10 mg/mL · monitorar nível se uso prolongado" cor="#1D4ED8" />
                 <p style={{ margin:'8px 0', fontSize:'11px', fontWeight:'700', color:'#DC2626', letterSpacing:'0.04em' }}>+ Estágios IIB-III — Adicionar Metronidazol (anaeróbios)</p>
                 <DoseRow label="Metronidazol" dose={atb.mDose} unit="mg" vol={atb.mVol} freq={`q${atb.mInt}h IV`} ampola="Metronidazol 5 mg/mL · infundir em 30-60 min" cor="#7C3AED" />
               </div>
             ) : (
-              <div style={{ textAlign:'center', padding:'12px', fontSize:'12px', color:'#9CA3AF', backgroundColor:'#F9FAFB', borderRadius:'8px' }}>
+              <div style={{ textAlign:'center', padding:'12px', fontSize:'12px', color:"var(--muted)", backgroundColor:"var(--bg)", borderRadius:'8px' }}>
                 Insira peso e IG para calcular as doses
               </div>
             )}
@@ -420,20 +420,20 @@ export default function NEC() {
           {/* Nutrição e Alimentação */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('nutri')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Milk size={15} />Nutrição e Reintrodução Alimentar</p>
-              {aberto==='nutri'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Milk size={15} />Nutrição e Reintrodução Alimentar</p>
+              {aberto==='nutri'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='nutri' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'8px' }}>
                 <div style={{ backgroundColor:CLT, borderRadius:'8px', padding:'10px' }}>
                   <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:C }}>NPT durante NPO</p>
-                  <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:'#374151' }}>
+                  <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>
                     Iniciar nutrição parenteral assim que possível · glicose 4-8 mg/kg/min · AA 2-3 g/kg/dia · lipídeos 0,5-2 g/kg/dia · ver módulo de neonatologia para fórmulas
                   </p>
                 </div>
-                <div style={{ backgroundColor:'#ECFDF5', borderRadius:'8px', padding:'10px' }}>
-                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:'#065F46' }}>Reintrodução alimentar</p>
-                  <p style={{ margin:0, fontSize:'11px', color:'#374151' }}>
+                <div style={{ backgroundColor:"var(--tint-green)", borderRadius:'8px', padding:'10px' }}>
+                  <p style={{ margin:'0 0 4px 0', fontSize:'12px', fontWeight:'700', color:"var(--tx-green)" }}>Reintrodução alimentar</p>
+                  <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)" }}>
                     Estágio I-IIA: após 3-5 dias de NPO + melhora clínica + RX normal<br />
                     Estágio IIB-III: após 14 dias de NPO + resolução clínica e laboratorial<br />
                     <strong>Leite materno exclusivo:</strong> preferencial · iniciar com 10 mL/kg/dia e progredir 10-20 mL/kg/dia conforme tolerância
@@ -450,17 +450,17 @@ export default function NEC() {
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
 
           {/* Indicações absolutas e relativas */}
-          <div style={{ backgroundColor:'#FEF2F2', borderRadius:'12px', padding:'14px', border:'1px solid #FECACA' }}>
+          <div style={{ backgroundColor:"var(--tint-red)", borderRadius:'12px', padding:'14px', border:'1px solid #FECACA' }}>
             <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'800', color:'#DC2626', display:'flex', alignItems:'center', gap:6 }}><AlertTriangle size={15} />Indicações Cirúrgicas</p>
             <p style={{ margin:'0 0 8px 0', fontSize:'12px', fontWeight:'700', color:'#DC2626' }}>ABSOLUTAS:</p>
             {['Pneumoperitônio confirmado no RX (perfuração intestinal)',
               'Paracentese positiva (líquido marrom/esverdeado)',
             ].map((item, i) => (
-              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:'#374151', marginBottom:'4px', alignItems:'flex-start' }}>
+              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:"var(--text-2)", marginBottom:'4px', alignItems:'flex-start' }}>
                 <span style={{ color:'#DC2626', flexShrink:0, fontWeight:'700' }}>⟩</span>{item}
               </div>
             ))}
-            <p style={{ margin:'8px 0', fontSize:'12px', fontWeight:'700', color:'#C2410C' }}>RELATIVAS (considerar se presentes):</p>
+            <p style={{ margin:'8px 0', fontSize:'12px', fontWeight:'700', color:"var(--tx-amber)" }}>RELATIVAS (considerar se presentes):</p>
             {['Alça fixa em RX seriados (mesma alça por > 24-48h)',
               'Deterioração clínica apesar de tratamento máximo',
               'Celulite/eritema/edema progressivo de parede abdominal',
@@ -468,7 +468,7 @@ export default function NEC() {
               'Acidose metabólica + plaquetopenia refratárias',
               'Gás na veia porta (relativo — contexto clínico)',
             ].map((item, i) => (
-              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:'#374151', marginBottom:'4px', alignItems:'flex-start' }}>
+              <div key={i} style={{ display:'flex', gap:'6px', fontSize:'12px', color:"var(--text-2)", marginBottom:'4px', alignItems:'flex-start' }}>
                 <span style={{ color:'#F97316', flexShrink:0 }}>⟩</span>{item}
               </div>
             ))}
@@ -476,20 +476,20 @@ export default function NEC() {
 
           {/* Drenagem × Laparotomia */}
           <div style={card()}>
-            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Scale size={15} />Drenagem Peritoneal × Laparotomia</p>
+            <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Scale size={15} />Drenagem Peritoneal × Laparotomia</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
-              <div style={{ backgroundColor:'#EFF6FF', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #3B82F6' }}>
-                <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:'#1D4ED8' }}>Drenagem Peritoneal (DP)</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:'#374151' }}>Indicada em: ELBW (abaixo de 1.000 g) como ponte · hemodinamicamente instável para laparotomia · prematuros extremos de alto risco cirúrgico</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#6B7280' }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
+              <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #3B82F6' }}>
+                <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-blue)" }}>Drenagem Peritoneal (DP)</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Indicada em: ELBW (abaixo de 1.000 g) como ponte · hemodinamicamente instável para laparotomia · prematuros extremos de alto risco cirúrgico</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
               </div>
-              <div style={{ backgroundColor:'#FFF7ED', borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
-                <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:'#C2410C' }}>Laparotomia Exploradora</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:'#374151' }}>Tratamento definitivo · ressecção do intestino necrótico · criação de enterostomia · reconstrução de trânsito posterior (6-8 semanas)</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:'#6B7280' }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
+              <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
+                <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-amber)" }}>Laparotomia Exploradora</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Tratamento definitivo · ressecção do intestino necrótico · criação de enterostomia · reconstrução de trânsito posterior (6-8 semanas)</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
               </div>
-              <div style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'10px' }}>
-                <p style={{ margin:0, fontSize:'11px', color:'#374151', fontWeight:'600' }}>
+              <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px' }}>
+                <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)", fontWeight:'600' }}>
                   NEST Trial (2023): Sem diferença significativa em desfechos entre DP e laparotomia em ELBW · decisão individualizada conforme estabilidade e expertise do centro
                 </p>
               </div>
@@ -499,8 +499,8 @@ export default function NEC() {
           {/* Complicações e sequelas */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('seq')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><TrendingUp size={15} />Complicações e Sequelas</p>
-              {aberto==='seq'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><TrendingUp size={15} />Complicações e Sequelas</p>
+              {aberto==='seq'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='seq' && (
               <div style={{ marginTop:'10px', display:'flex', flexDirection:'column', gap:'6px' }}>
@@ -511,9 +511,9 @@ export default function NEC() {
                   { comp:'Hepatopatia por NPT', desc:'Com NPT prolongada · PNALD (colestase) · Omegaven/SMOF lipid: reduz risco' },
                   { comp:'Recorrência de NEC', desc:'4-8% dos sobreviventes · maior risco em prematuros < 28 semanas' },
                 ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor:'#F9FAFB', borderRadius:'8px', padding:'8px 10px', borderLeft:`3px solid ${C}` }}>
+                  <div key={i} style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'8px 10px', borderLeft:`3px solid ${C}` }}>
                     <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:C }}>{item.comp}</p>
-                    <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:'#6B7280' }}>{item.desc}</p>
+                    <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -523,8 +523,8 @@ export default function NEC() {
           {/* Prevenção */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('prev')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:'#1F2937', display:'flex', alignItems:'center', gap:6 }}><Shield size={15} />Prevenção da NEC</p>
-              {aberto==='prev'?<ChevronUp size={16} color="#6B7280"/>:<ChevronDown size={16} color="#6B7280"/>}
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)", display:'flex', alignItems:'center', gap:6 }}><Shield size={15} />Prevenção da NEC</p>
+              {aberto==='prev'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='prev' && (
               <div style={{ marginTop:'10px' }}>
@@ -536,7 +536,7 @@ export default function NEC() {
                   <div key={i} style={{ marginBottom:'8px' }}>
                     <p style={{ margin:'0 0 5px 0', fontSize:'11px', fontWeight:'700', color:C }}>{grupo.niv}</p>
                     {grupo.items.map((item, j) => (
-                      <div key={j} style={{ display:'flex', gap:'6px', fontSize:'11px', color:'#374151', marginBottom:'3px', alignItems:'flex-start' }}>
+                      <div key={j} style={{ display:'flex', gap:'6px', fontSize:'11px', color:"var(--text-2)", marginBottom:'3px', alignItems:'flex-start' }}>
                         <span style={{ color:C, flexShrink:0 }}>•</span>{item}
                       </div>
                     ))}
@@ -549,8 +549,8 @@ export default function NEC() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop:'20px', backgroundColor:'#F3F4F6', borderRadius:'10px', padding:'12px' }}>
-        <p style={{ margin:0, fontSize:'10px', color:'#6B7280', textAlign:'center', lineHeight:'1.6' }}>
+      <div style={{ marginTop:'20px', backgroundColor:"var(--surface-2)", borderRadius:'10px', padding:'12px' }}>
+        <p style={{ margin:0, fontSize:'10px', color:"var(--muted)", textAlign:'center', lineHeight:'1.6' }}>
           Walsh MC, Kliegman RM. Bell Modified Staging, Pediatric Clin North Am 1986 · Vermont Oxford Network NEC Guidelines 2022 · NeoFax 2023 · NEST Trial NEJM 2023.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

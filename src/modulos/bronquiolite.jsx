@@ -79,9 +79,9 @@ export default function Bronquiolite() {
   });
 
   const gravConfig = {
-    leve:     { cor: '#10B981', bg: '#ECFDF5', borda: '#6EE7B7', label: 'LEVE' },
-    moderada: { cor: '#D97706', bg: '#FFF7ED', borda: '#FED7AA', label: 'MODERADA' },
-    grave:    { cor: '#DC2626', bg: '#FEF2F2', borda: '#FECACA', label: 'GRAVE' },
+    leve:     { cor: '#10B981', bg: "var(--tint-green)", borda: '#6EE7B7', label: 'LEVE' },
+    moderada: { cor: '#D97706', bg: "var(--tint-amber)", borda: '#FED7AA', label: 'MODERADA' },
+    grave:    { cor: '#DC2626', bg: "var(--tint-red)", borda: '#FECACA', label: 'GRAVE' },
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -267,7 +267,7 @@ export default function Bronquiolite() {
               ))}
             </div>
             <div style={{ marginTop: '8px', backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #F97316' }}>
-              <p style={{ margin: 0, fontSize: '11px', color: '#C2410C', fontWeight: '600' }}>
+              <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>
                 Adrenalina nebulizada: pode reduzir sintomas na UE a curto prazo — NÃO prescrever para casa. Dose: 0,1 mL/kg de 1:1000 diluída em 3-5 mL SF (máx 3-5 mL)
               </p>
             </div>
@@ -277,7 +277,7 @@ export default function Bronquiolite() {
           <div style={card({ border: '1px solid #6EE7B7' })}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '8px', padding: '3px 10px', fontSize: '12px', fontWeight: '800' }}>LEVE</span>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#065F46' }}>Manejo Ambulatorial</p>
+              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--tx-green)" }}>Manejo Ambulatorial</p>
             </div>
             {[
               'Orientar família: evolução natural dura 7-10 dias (pico dias 3-5)',
@@ -298,7 +298,7 @@ export default function Bronquiolite() {
           <div style={card({ border: '1px solid #FED7AA' })}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '8px', padding: '3px 10px', fontSize: '12px', fontWeight: '800' }}>MODERADA</span>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#B45309' }}>Observação / Internação</p>
+              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--tx-amber)" }}>Observação / Internação</p>
             </div>
             {[
               'Monitorização contínua: SpO₂, FC, FR',
@@ -320,7 +320,7 @@ export default function Bronquiolite() {
           <div style={card({ border: '1px solid #FECACA' })}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <span style={{ backgroundColor: '#DC2626', color: '#FFF', borderRadius: '8px', padding: '3px 10px', fontSize: '12px', fontWeight: '800' }}>GRAVE</span>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#991B1B' }}>Internação Urgente / UTI</p>
+              <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--tx-red)" }}>Internação Urgente / UTI</p>
             </div>
             {[
               'Internação em UTI ou area de monitoração intensiva',
@@ -470,7 +470,7 @@ export default function Bronquiolite() {
 
           {/* Sinais de alerta para família */}
           <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '12px', padding: '14px', border: '1px solid #FED7AA' }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#C2410C' }}><AlertTriangle size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sinais de Alerta — Orientar Família</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-amber)" }}><AlertTriangle size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sinais de Alerta — Orientar Família</p>
             <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: "var(--text-2)" }}>Retornar imediatamente ao PS se:</p>
             {['Respiração muito rápida ou "puxando o ar" com força',
               'Lábios ou pele azulados (cianose)',
@@ -523,9 +523,9 @@ export default function Bronquiolite() {
                 <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>DOSE POR PESO</p>
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
                   <div style={{ flex: 1, backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px', textAlign: 'center', border: '1px solid #BFDBFE' }}>
-                    <p style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>50 mg</p>
+                    <p style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>50 mg</p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>para {'<'} 5 kg</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#1D4ED8', fontWeight: '600' }}>0,5 mL IM dose única</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: "var(--tx-blue)", fontWeight: '600' }}>0,5 mL IM dose única</p>
                   </div>
                   <div style={{ flex: 1, backgroundColor: CLT, borderRadius: '8px', padding: '10px', textAlign: 'center', border: `1px solid ${CBR}` }}>
                     <p style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: C, lineHeight: 1 }}>100 mg</p>
@@ -561,7 +561,7 @@ export default function Bronquiolite() {
 
                 {/* Palivizumab como alternativa */}
                 <div style={{ marginTop: '8px', backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #D97706' }}>
-                  <p style={{ margin: 0, fontSize: '10px', color: '#C2410C', fontWeight: '600' }}>
+                  <p style={{ margin: 0, fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>
                     Palivizumab (Synagis®) — alternativa quando nirsevimab indisponível: 15 mg/kg IM mensal × até 5 doses · somente grupos de alto risco
                   </p>
                 </div>

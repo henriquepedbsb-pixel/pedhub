@@ -10,15 +10,15 @@ const AZ_M    = "#1a6896";
 const AZ_L    = "#e3eef6";
 const FUNDO   = "#eef2f7";
 const BORDA   = "#c8d6df";
-const TEXTO   = "#1a2332";
+const TEXTO   = "var(--text)";
 const DETALHE = "#5a6e7f";
 const MUTED   = "#8fa3b1";
 const OK      = "#16a34a";
-const OK_L    = "#dcfce7";
+const OK_L    = "var(--tint-green)";
 const WARN    = "#d97706";
-const WARN_L  = "#fef3c7";
+const WARN_L  = "var(--tint-amber)";
 const DANGER  = "#dc2626";
-const DANGER_L = "#fee2e2";
+const DANGER_L = "var(--tint-red)";
 
 /* ── Constantes clínicas verificadas ── */
 const NACL_MEQ_ML = 3.4;   // NaCl 20%:          200 mg/mL ÷ 58,5 mg/mEq ≈ 3,4 mEq Na/mL
@@ -50,7 +50,7 @@ function getK(dia, diurese) {
 
 /* ── Estilo base card ── */
 const CARD = {
-  background: "#ffffff",
+  background: "var(--surface)",
   border: "1px solid " + BORDA,
   borderRadius: 13,
   padding: 18,
@@ -72,7 +72,7 @@ function CardHead({ icon: Icon, label }) {
 
 function IW({ children }) {
   return (
-    <div style={{ display: "flex", border: "1.5px solid " + BORDA, borderRadius: 9, overflow: "hidden", background: "#f8fbfd" }}>
+    <div style={{ display: "flex", border: "1.5px solid " + BORDA, borderRadius: 9, overflow: "hidden", background: "var(--tint-slate)" }}>
       {children}
     </div>
   );
@@ -88,7 +88,7 @@ function UT({ text }) {
 
 function Pill({ label, active, onClick }) {
   return (
-    <button onClick={onClick} style={{ padding: "5px 12px", border: "1.5px solid " + (active ? AZ_M : BORDA), borderRadius: 999, fontSize: 12, fontWeight: active ? 700 : 600, color: active ? "#fff" : DETALHE, background: active ? AZ_M : "#ffffff", cursor: "pointer" }}>
+    <button onClick={onClick} style={{ padding: "5px 12px", border: "1.5px solid " + (active ? AZ_M : BORDA), borderRadius: 999, fontSize: 12, fontWeight: active ? 700 : 600, color: active ? "#fff" : DETALHE, background: active ? AZ_M : "var(--surface)", cursor: "pointer" }}>
       {label}
     </button>
   );
@@ -315,7 +315,7 @@ export default function TigNeonatal() {
           {/* Dias de vida — stepper */}
           <div style={{ marginBottom: 14, textAlign: "center" }}>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: TEXTO, marginBottom: 8 }}>Dias de vida</label>
-            <div style={{ display: "inline-flex", alignItems: "center", background: "#f8fbfd", border: "1.5px solid " + BORDA, borderRadius: 10, overflow: "hidden" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", background: "var(--tint-slate)", border: "1.5px solid " + BORDA, borderRadius: 10, overflow: "hidden" }}>
               <button
                 onClick={() => mudarDia(-1)}
                 style={{ width: 52, height: 52, border: "none", background: "transparent", fontSize: 24, fontWeight: 300, color: AZ_M, cursor: "pointer", borderRight: "1px solid " + BORDA }}
@@ -404,7 +404,7 @@ export default function TigNeonatal() {
                 { label: "Glicose",      val: calc.gg.toFixed(1),  unit: "g / dia" },
                 { label: "Volume bomba", val: calc.mlh.toFixed(1), unit: "mL / h"  },
               ].map(({ label, val, unit }) => (
-                <div key={label} style={{ background: "#fff", border: "1px solid " + BORDA, borderRadius: 13, padding: 14, textAlign: "center", boxShadow: "0 1px 3px rgba(13,59,110,0.07)" }}>
+                <div key={label} style={{ background: "var(--surface)", border: "1px solid " + BORDA, borderRadius: 13, padding: 14, textAlign: "center", boxShadow: "0 1px 3px rgba(13,59,110,0.07)" }}>
                   <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: 6 }}>{label}</div>
                   <div style={{ fontSize: 28, fontWeight: 800, color: AZ_E, lineHeight: 1, letterSpacing: -1 }}>{val}</div>
                   <div style={{ fontSize: 11.5, fontWeight: 600, color: DETALHE, marginTop: 4 }}>{unit}</div>
@@ -449,7 +449,7 @@ export default function TigNeonatal() {
                 </div>
               </div>
             ) : (
-              <div style={{ background: "#fffef8", border: "1px solid " + BORDA, borderTop: "3px solid " + AZ_E, borderRadius: 13, overflow: "hidden", marginBottom: 12, boxShadow: "0 1px 4px rgba(13,59,110,0.09)" }}>
+              <div style={{ background: "var(--tint-amber)", border: "1px solid " + BORDA, borderTop: "3px solid " + AZ_E, borderRadius: 13, overflow: "hidden", marginBottom: 12, boxShadow: "0 1px 4px rgba(13,59,110,0.09)" }}>
                 <div style={{ background: "linear-gradient(135deg, #0d3b6e, #1a6896)", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{ fontSize: 20, fontWeight: 800, fontStyle: "italic", color: "#fff", lineHeight: 1 }}>Rx</span>
@@ -514,25 +514,25 @@ export default function TigNeonatal() {
 
                   {/* Alertas */}
                   {calc.k_dose === 0 && calc.dia === 1 && (
-                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#78350f", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "var(--tx-amber)", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <AlertTriangle size={12} color={WARN} style={{ flexShrink: 0, marginTop: 1 }} />
                       K suspenso no 1.º dia — sem diurese documentada (hipercalemia em RNPT)
                     </div>
                   )}
                   {calc.k_dose > 0 && calc.dia === 1 && !diurese && (
-                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#78350f", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "var(--tx-amber)", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <AlertTriangle size={12} color={WARN} style={{ flexShrink: 0, marginTop: 1 }} />
                       K iniciado manualmente sem diurese documentada — atenção a hipercalemia (RNPT)
                     </div>
                   )}
                   {calc.k_dose > 0 && calc.dia === 1 && diurese && (
-                    <div style={{ background: OK_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#14532d", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                    <div style={{ background: OK_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "var(--tx-green)", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <CheckCircle size={12} color={OK} style={{ flexShrink: 0, marginTop: 1 }} />
                       K iniciado ({calc.k_dose} mEq/kg/dia) — diurese presente
                     </div>
                   )}
                   {calc.sgItems.length > 0 && calc.sgItems[calc.sgItems.length - 1].overload && (
-                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#78350f", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                    <div style={{ background: WARN_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "var(--tx-amber)", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <AlertTriangle size={12} color={WARN} style={{ flexShrink: 0, marginTop: 1 }} />
                       Concentração acima de 50%: não atingível com SG 50%. Reduza a TIG ou aumente o volume.
                     </div>
@@ -545,7 +545,7 @@ export default function TigNeonatal() {
             <div style={CARD}>
               <CardHead icon={BarChart2} label="TIG na faixa de referência" />
               <div style={{ position: "relative", height: 10, borderRadius: 5, background: "linear-gradient(to right, #dc2626 0%, #dc2626 28.57%, #d97706 28.57%, #d97706 42.86%, #16a34a 42.86%, #16a34a 57.14%, #d97706 57.14%, #d97706 71.43%, #dc2626 71.43%, #dc2626 100%)", margin: "10px 0 6px" }}>
-                <div style={{ position: "absolute", top: "50%", left: rangePos + "%", transform: "translate(-50%,-50%)", width: 16, height: 16, borderRadius: "50%", background: "#fff", border: "2.5px solid " + AZ_E, boxShadow: "0 2px 6px rgba(0,0,0,0.28)" }} />
+                <div style={{ position: "absolute", top: "50%", left: rangePos + "%", transform: "translate(-50%,-50%)", width: 16, height: 16, borderRadius: "50%", background: "var(--surface)", border: "2.5px solid " + AZ_E, boxShadow: "0 2px 6px rgba(0,0,0,0.28)" }} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: MUTED, fontWeight: 500 }}>
                 {["0", "4", "6", "8", "10", "14+"].map(t => <span key={t}>{t}</span>)}
@@ -606,7 +606,7 @@ export default function TigNeonatal() {
               { r: "10–12",  l: "Alto — risco de hiperglicemia",        c: DANGER, hi: false },
               { r: "> 12",   l: "Muito alto — avaliar insulinoterapia", c: DANGER, hi: false },
             ].map(({ r, l, c, hi }) => (
-              <div key={r} style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", padding: "9px 11px", borderBottom: "1px solid #f3f4f6", background: hi ? OK_L : "transparent" }}>
+              <div key={r} style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", padding: "9px 11px", borderBottom: "1px solid var(--border)", background: hi ? OK_L : "transparent" }}>
                 <span style={{ fontSize: 12.5, fontWeight: hi ? 700 : 500, color: TEXTO, borderLeft: hi ? "3px solid " + OK : "none", paddingLeft: hi ? 8 : 0 }}>{r}</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: c, flexShrink: 0 }} />
@@ -634,10 +634,10 @@ export default function TigNeonatal() {
       </div>
 
       {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> SBP · AAP · ESPGHAN/ESPEN 2018 · NeoFax 2023.
             NaCl 20% = 3,4 mEq/mL · KCl 10% = 1,34 mEq/mL · conc. periférica máx: 12,5%.
             Não substitui julgamento clínico nem protocolo institucional.

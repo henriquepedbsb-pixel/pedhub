@@ -276,8 +276,8 @@ const DADOS = {
 };
 
 function interpretarInternacao(v) {
-  if (v === 'sim') return { bg: '#FEF2F2', border: '#FECACA', cor: '#991B1B', label: 'INTERNAÇÃO', badgeBg: '#FEE2E2', badgeCor: '#991B1B' };
-  if (v === 'condicional') return { bg: '#FFFBEB', border: '#FDE68A', cor: '#92400E', label: 'AVALIAR', badgeBg: '#FEF3C7', badgeCor: '#92400E' };
+  if (v === 'sim') return { bg: "var(--tint-red)", border: '#FECACA', cor: '#991B1B', label: 'INTERNAÇÃO', badgeBg: "var(--tint-red)", badgeCor: '#991B1B' };
+  if (v === 'condicional') return { bg: "var(--tint-amber)", border: '#FDE68A', cor: '#92400E', label: 'AVALIAR', badgeBg: "var(--tint-amber)", badgeCor: '#92400E' };
   return null;
 }
 
@@ -293,7 +293,7 @@ export default function Antibioticos() {
   const inter = interpretarInternacao(df.internacao);
 
   return (
-    <div style={{ ...F, background: '#F8FAFC', minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
+    <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
       {/* HEADER */}
       <div style={{ background: CP, padding: '20px 16px 16px' }}>
@@ -307,10 +307,10 @@ export default function Antibioticos() {
       </div>
 
       {/* CHIPS */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #E5E7EB', padding: '10px 12px', overflowX: 'auto' }}>
+      <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 8, minWidth: 'max-content' }}>
           {SINDROMES.map(s => (
-            <button key={s.id} onClick={() => handleSindrome(s.id)} style={{ padding: '8px 14px', borderRadius: 20, fontSize: 13, ...F, border: `1.5px solid ${sindrome === s.id ? CP : '#E5E7EB'}`, background: sindrome === s.id ? CP : '#F9FAFB', color: sindrome === s.id ? '#fff' : '#374151', fontWeight: sindrome === s.id ? 700 : 400, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+            <button key={s.id} onClick={() => handleSindrome(s.id)} style={{ padding: '8px 14px', borderRadius: 20, fontSize: 13, ...F, border: `1.5px solid ${sindrome === s.id ? CP : "var(--border)"}`, background: sindrome === s.id ? CP : "var(--surface-2)", color: sindrome === s.id ? '#fff' : "var(--text-2)", fontWeight: sindrome === s.id ? 700 : 400, cursor: 'pointer', whiteSpace: 'nowrap' }}>
               {s.label}
             </button>
           ))}
@@ -320,14 +320,14 @@ export default function Antibioticos() {
       {/* SELETOR DE FAIXA */}
       {ds.selectorLabel && ds.grupos.length > 1 && (
         <div style={{ padding: '12px 12px 0' }}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: 14, border: '1px solid #E5E7EB' }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>{ds.selectorLabel}</div>
+          <div style={{ background: "var(--surface)", borderRadius: 12, padding: 14, border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "var(--muted)", textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>{ds.selectorLabel}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {ds.grupos.map((g, i) => {
                 const badge = interpretarInternacao(g.internacao);
                 return (
-                  <button key={i} onClick={() => setFaixaIdx(i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 10, width: '100%', textAlign: 'left', border: `2px solid ${faixaIdx === i ? CP : '#E5E7EB'}`, background: faixaIdx === i ? CL : '#F9FAFB', cursor: 'pointer', ...F }}>
-                    <div style={{ fontSize: 13, fontWeight: faixaIdx === i ? 700 : 400, color: faixaIdx === i ? CD : '#374151' }}>{g.label}</div>
+                  <button key={i} onClick={() => setFaixaIdx(i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 10, width: '100%', textAlign: 'left', border: `2px solid ${faixaIdx === i ? CP : "var(--border)"}`, background: faixaIdx === i ? CL : "var(--surface-2)", cursor: 'pointer', ...F }}>
+                    <div style={{ fontSize: 13, fontWeight: faixaIdx === i ? 700 : 400, color: faixaIdx === i ? CD : "var(--text-2)" }}>{g.label}</div>
                     {badge && <span style={{ background: badge.badgeBg, color: badge.badgeCor, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
                   </button>
                 );
@@ -341,16 +341,16 @@ export default function Antibioticos() {
       <div style={{ padding: '12px' }}>
 
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#1F2937' }}>{ds.titulo}</div>
-          <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text-2)" }}>{ds.titulo}</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
             {ds.selectorLabel ? `${ds.selectorLabel}: ` : 'Faixa: '}<strong>{df.label}</strong> · {ds.fonte}
           </div>
         </div>
 
         {df.alerta && (
-          <div style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', borderRadius: 10, padding: 12, marginBottom: 12, display: 'flex', gap: 8 }}>
+          <div style={{ background: "var(--tint-red)", border: '1.5px solid #FECACA', borderRadius: 10, padding: 12, marginBottom: 12, display: 'flex', gap: 8 }}>
             <AlertTriangle size={16} color="#EF4444" style={{ flexShrink: 0, marginTop: 1 }} />
-            <div style={{ fontSize: 12, color: '#991B1B', fontWeight: 700, lineHeight: 1.6 }}>{df.alerta}</div>
+            <div style={{ fontSize: 12, color: "var(--tx-red)", fontWeight: 700, lineHeight: 1.6 }}>{df.alerta}</div>
           </div>
         )}
 
@@ -364,12 +364,12 @@ export default function Antibioticos() {
         )}
 
         {/* Agentes */}
-        <div style={{ background: '#fff', borderRadius: 12, padding: 14, border: '1px solid #E5E7EB', marginBottom: 10 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Agentes prováveis</div>
+        <div style={{ background: "var(--surface)", borderRadius: 12, padding: 14, border: '1px solid var(--border)', marginBottom: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Agentes prováveis</div>
           {df.agentes.map((a, i) => (
-            <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '5px 0', borderBottom: i < df.agentes.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
+            <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '5px 0', borderBottom: i < df.agentes.length - 1 ? '1px solid var(--border)' : 'none' }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: CP, flexShrink: 0, marginTop: 5 }} />
-              <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.5 }}>{a}</span>
+              <span style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5 }}>{a}</span>
             </div>
           ))}
         </div>
@@ -384,7 +384,7 @@ export default function Antibioticos() {
                 {pl.farmacos.map((f, fi) => {
                   const isObs = f.toLowerCase().startsWith('observação');
                   return (
-                    <span key={fi} style={{ background: isObs ? '#F3F4F6' : CP, color: isObs ? '#374151' : '#fff', fontSize: isObs ? 12 : 13, fontWeight: 700, fontStyle: isObs ? 'italic' : 'normal', padding: '4px 12px', borderRadius: 20, border: isObs ? '1px solid #E5E7EB' : 'none' }}>{f}</span>
+                    <span key={fi} style={{ background: isObs ? "var(--surface-2)" : CP, color: isObs ? "var(--text-2)" : '#fff', fontSize: isObs ? 12 : 13, fontWeight: 700, fontStyle: isObs ? 'italic' : 'normal', padding: '4px 12px', borderRadius: 20, border: isObs ? '1px solid var(--border)' : 'none' }}>{f}</span>
                   );
                 })}
               </div>
@@ -394,55 +394,55 @@ export default function Antibioticos() {
         </div>
 
         {/* Alternativa */}
-        <div style={{ background: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: 12, padding: 14, marginBottom: 10 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Alternativa</div>
+        <div style={{ background: "var(--bg)", border: '1px solid var(--border)', borderRadius: 12, padding: 14, marginBottom: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Alternativa</div>
           {df.alternativa.map((alt, i) => (
-            <div key={i} style={{ marginBottom: i < df.alternativa.length - 1 ? 10 : 0, paddingBottom: i < df.alternativa.length - 1 ? 10 : 0, borderBottom: i < df.alternativa.length - 1 ? '1px solid #E5E7EB' : 'none' }}>
+            <div key={i} style={{ marginBottom: i < df.alternativa.length - 1 ? 10 : 0, paddingBottom: i < df.alternativa.length - 1 ? 10 : 0, borderBottom: i < df.alternativa.length - 1 ? '1px solid var(--border)' : 'none' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: alt.obs ? 4 : 0 }}>
-                {alt.farmacos.map((f, fi) => <span key={fi} style={{ background: '#E5E7EB', color: '#374151', fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 20 }}>{f}</span>)}
+                {alt.farmacos.map((f, fi) => <span key={fi} style={{ background: "var(--surface-2)", color: "var(--text-2)", fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 20 }}>{f}</span>)}
               </div>
-              {alt.obs && <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.5 }}>{alt.obs}</div>}
+              {alt.obs && <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.5 }}>{alt.obs}</div>}
             </div>
           ))}
         </div>
 
         {/* Duração */}
-        <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ background: "var(--surface)", border: '1px solid var(--border)', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
           <Clock size={20} color={CP} style={{ flexShrink: 0 }} />
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duração do tratamento</div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#1F2937', marginTop: 2 }}>{df.duracao}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duração do tratamento</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-2)", marginTop: 2 }}>{df.duracao}</div>
           </div>
         </div>
 
         {/* Notas */}
         {df.notas.length > 0 && (
-          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: 14, marginBottom: 10 }}>
+          <div style={{ background: "var(--tint-blue)", border: '1px solid #BFDBFE', borderRadius: 12, padding: 14, marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <Info size={16} color="#3B82F6" />
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notas clínicas</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notas clínicas</div>
             </div>
             {df.notas.map((n, i) => (
               <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '5px 0', borderBottom: i < df.notas.length - 1 ? '1px solid #DBEAFE' : 'none' }}>
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#3B82F6', flexShrink: 0, marginTop: 5 }} />
-                <span style={{ fontSize: 12, color: '#1E3A8A', lineHeight: 1.6 }}>{n}</span>
+                <span style={{ fontSize: 12, color: "var(--tx-blue)", lineHeight: 1.6 }}>{n}</span>
               </div>
             ))}
           </div>
         )}
 
         {/* Cross-ref Pedfarma */}
-        <div style={{ background: '#F5F3FF', border: '1.5px solid #DDD6FE', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div style={{ background: "var(--tint-purple)", border: '1.5px solid #DDD6FE', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', gap: 10, alignItems: 'center' }}>
           <Pill size={20} color="#8B5CF6" style={{ flexShrink: 0 }} />
           <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#5B21B6' }}>Doses individuais por peso</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-purple)" }}>Doses individuais por peso</div>
             <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>Calcule doses por kg no módulo <strong>Pedfarma</strong>.</div>
           </div>
         </div>
       </div>
 
       {/* DISCLAIMER */}
-      <div style={{ margin: '0 12px 12px', padding: '12px 14px', background: '#F1F5F9', borderRadius: 10, fontSize: 11, color: '#64748B', lineHeight: 1.6 }}>
+      <div style={{ margin: '0 12px 12px', padding: '12px 14px', background: "var(--tint-slate)", borderRadius: 10, fontSize: 11, color: "var(--muted)", lineHeight: 1.6 }}>
         <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional. Adequar ao perfil de resistência local e ao antibiograma quando disponível. Fontes: SBP 2018 (Pneumonia PAC) · AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS).
       </div>
     </div>

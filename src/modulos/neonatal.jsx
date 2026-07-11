@@ -87,8 +87,8 @@ function ModuloCard({ modulo, onClick }) {
     <button
       onClick={onClick}
       style={{
-        background: "#fff",
-        border: "1.5px solid #F3F4F6",
+        background: "var(--surface)",
+        border: "1.5px solid var(--border)",
         borderRadius: 14,
         padding: "15px 13px",
         cursor: "pointer",
@@ -111,12 +111,12 @@ function ModuloCard({ modulo, onClick }) {
       <div>
         <p style={{
           fontWeight: 700, fontSize: 16,
-          color: "#111827", margin: "0 0 3px",
+          color: "var(--text)", margin: "0 0 3px",
           lineHeight: 1.3,
           wordBreak: "break-word", hyphens: "auto",
         }}>{label}</p>
         <p style={{
-          fontSize: 13, color: "#9CA3AF",
+          fontSize: 13, color: "var(--muted)",
           margin: 0, lineHeight: 1.45,
           wordBreak: "break-word",
         }}>{desc}</p>
@@ -136,7 +136,7 @@ export default function Neonatal() {
       fontFamily: "'DM Sans', sans-serif",
       maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
-      background: "#F9FAFB",
+      background: "var(--bg)",
     }}>
       {/* Hero */}
       <div style={{
@@ -178,14 +178,14 @@ export default function Neonatal() {
               <secao.Icon size={16} color={COR_HUB} />
               <p style={{
                 fontWeight: 700, fontSize: 12,
-                color: "#374151", margin: 0,
+                color: "var(--text-2)", margin: 0,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
               }}>
                 {secao.titulo}
               </p>
-              <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-              <span style={{ fontSize: 11, color: "#9CA3AF" }}>{secao.mods.length}</span>
+              <div style={{ flex: 1, height: 1, background: "var(--surface-2)" }} />
+              <span style={{ fontSize: 11, color: "var(--muted)" }}>{secao.mods.length}</span>
             </div>
 
             <div style={{
@@ -209,10 +209,10 @@ export default function Neonatal() {
       <div style={{
         textAlign: "center",
         padding: "16px 20px 32px",
-        borderTop: "1px solid #E5E7EB",
+        borderTop: "1px solid var(--border)",
       }}>
-        <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0, lineHeight: 1.6 }}>
-          <strong style={{ color: "#6B7280" }}>PedHub · Neonatologia</strong><br />
+        <p style={{ fontSize: 11, color: "var(--muted)", margin: 0, lineHeight: 1.6 }}>
+          <strong style={{ color: "var(--muted)" }}>PedHub · Neonatologia</strong><br />
           Apoio à decisão clínica — não substitui julgamento médico<br />
           Dr. Henrique Flávio G. Gomes · CRM-DF 14.611
         </p>

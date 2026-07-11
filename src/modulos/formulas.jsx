@@ -186,7 +186,7 @@ function InfoBox({ color, children }) {
       display: "flex", gap: 10,
     }}>
       <Info size={15} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>{children}</div>
+      <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.55 }}>{children}</div>
     </div>
   );
 }
@@ -199,19 +199,19 @@ function AlertBox({ text, color }) {
       padding: "8px 12px", marginTop: 6, marginBottom: 2,
     }}>
       <AlertTriangle size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
-      <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{text}</span>
+      <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{text}</span>
     </div>
   );
 }
 
 function FormulaCard({ f, open, onToggle }) {
   return (
-    <div style={{ borderRadius: 12, border: "1px solid #E5E7EB", marginBottom: 10, overflow: "hidden" }}>
+    <div style={{ borderRadius: 12, border: "1px solid var(--border)", marginBottom: 10, overflow: "hidden" }}>
       {/* Header — sempre visível */}
       <button
         onClick={onToggle}
         style={{
-          width: "100%", background: open ? f.cor + "15" : "#F9FAFB",
+          width: "100%", background: open ? f.cor + "15" : "var(--surface-2)",
           border: "none", cursor: "pointer", padding: "12px 14px",
           display: "flex", justifyContent: "space-between", alignItems: "center",
         }}
@@ -219,8 +219,8 @@ function FormulaCard({ f, open, onToggle }) {
         <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, textAlign: "left" }}>
           <div style={{
             width: 28, height: 28, borderRadius: "50%",
-            background: open ? f.cor : "#E5E7EB",
-            color: open ? "#fff" : "#6B7280",
+            background: open ? f.cor : "var(--border)",
+            color: open ? "#fff" : "var(--muted)",
             display: "flex", alignItems: "center", justifyContent: "center",
             fontWeight: 700, fontSize: 12, flexShrink: 0,
           }}>
@@ -228,20 +228,20 @@ function FormulaCard({ f, open, onToggle }) {
           </div>
           <div>
             <p style={{ fontWeight: 700, color: open ? f.cor : "#111827", fontSize: 14, margin: 0 }}>{f.cat}</p>
-            <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>{f.faixa}</p>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>{f.faixa}</p>
           </div>
         </div>
         {open
           ? <ChevronUp size={18} color={f.cor} />
-          : <ChevronDown size={18} color="#9CA3AF" />
+          : <ChevronDown size={18} color="var(--muted)" />
         }
       </button>
 
       {/* Conteúdo expandido */}
       {open && (
-        <div style={{ padding: "0 14px 14px", borderTop: "1px solid #F3F4F6" }}>
+        <div style={{ padding: "0 14px 14px", borderTop: "1px solid var(--border)" }}>
           {/* Indicação */}
-          <p style={{ fontSize: 12, color: "#374151", margin: "10px 0 4px", lineHeight: 1.5 }}>
+          <p style={{ fontSize: 12, color: "var(--text-2)", margin: "10px 0 4px", lineHeight: 1.5 }}>
             <strong>Indicação:</strong> {f.indicacao}
           </p>
           {f.alerta && <AlertBox text={f.alerta} color="#D97706" />}
@@ -249,17 +249,17 @@ function FormulaCard({ f, open, onToggle }) {
           {/* Comparativo Nestlé × Danone */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 12 }}>
             {[
-              { label: "NESTLÉ", data: f.nestle, bg: "#FFF7ED", border: "#FED7AA" },
-              { label: "DANONE", data: f.danone, bg: "#EFF6FF", border: "#BFDBFE" },
+              { label: "NESTLÉ", data: f.nestle, bg: "var(--tint-amber)", border: "#FED7AA" },
+              { label: "DANONE", data: f.danone, bg: "var(--tint-blue)", border: "#BFDBFE" },
             ].map(({ label, data, bg, border }) => (
               <div key={label} style={{ background: bg, border: "1px solid " + border, borderRadius: 10, padding: "10px 10px" }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: "#9CA3AF", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
-                <p style={{ fontWeight: 700, color: "#111827", fontSize: 13, margin: "0 0 6px", lineHeight: 1.3 }}>{data.produto}</p>
-                <p style={{ fontSize: 11, color: "#6B7280", margin: "0 0 6px", fontStyle: "italic" }}>{data.sub}</p>
+                <p style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
+                <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 6px", lineHeight: 1.3 }}>{data.produto}</p>
+                <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>{data.sub}</p>
                 {data.items.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: 5, marginBottom: 3 }}>
                     <span style={{ color: f.cor, fontWeight: 700, fontSize: 11, flexShrink: 0 }}>·</span>
-                    <span style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>{item}</span>
+                    <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.45 }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -283,14 +283,14 @@ function AplvStep({ step, isLast }) {
         }}>
           {step.passo}
         </div>
-        {!isLast && <div style={{ width: 2, background: "#E5E7EB", flex: 1, marginTop: 4, minHeight: 20 }} />}
+        {!isLast && <div style={{ width: 2, background: "var(--surface-2)", flex: 1, marginTop: 4, minHeight: 20 }} />}
       </div>
       <div style={{ flex: 1, paddingBottom: isLast ? 0 : 16 }}>
         <p style={{ fontWeight: 700, color: step.cor, fontSize: 14, margin: "7px 0 8px" }}>{step.titulo}</p>
         {step.items.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
             <CheckCircle size={13} color={step.cor} style={{ flexShrink: 0, marginTop: 2 }} />
-            <span style={{ fontSize: 12, color: "#1F2937", lineHeight: 1.5 }}>{item}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5 }}>{item}</span>
           </div>
         ))}
       </div>
@@ -310,7 +310,7 @@ export default function Formulas() {
   const tabs = ["Comparativo", "Escada APLV"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       {/* Header */}
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
@@ -320,7 +320,7 @@ export default function Formulas() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
           return (
@@ -330,7 +330,7 @@ export default function Formulas() {
               style={{
                 flex: 1, padding: "12px 8px", fontSize: 13,
                 fontWeight: active ? 700 : 500,
-                color: active ? PRIMARY : "#6B7280",
+                color: active ? PRIMARY : "var(--muted)",
                 background: "transparent", border: "none",
                 borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),
                 cursor: "pointer",
@@ -372,33 +372,33 @@ export default function Formulas() {
               são fundamentais para o crescimento e resolução da alergia.
             </InfoBox>
 
-            <div style={{ background: "#FEF2F2", borderRadius: 10, padding: "12px 14px", marginBottom: 20, border: "1px solid #FECACA" }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: "#991B1B", margin: "0 0 8px" }}>RESUMO — Fórmulas para APLV</p>
+            <div style={{ background: "var(--tint-red)", borderRadius: 10, padding: "12px 14px", marginBottom: 20, border: "1px solid #FECACA" }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-red)", margin: "0 0 8px" }}>RESUMO — Fórmulas para APLV</p>
               {[
                 { label: "1ª linha",   text: "EH (Extensamente Hidrolisada)",    cor: "#EF4444", produtos: "Alfaré (Nestlé) · Aptamil Pepti 1 (Danone)" },
                 { label: "2ª linha",   text: "AAF (Aminoácidos Livres)",          cor: "#DC2626", produtos: "Alfamino (Nestlé) · Neocate LCP (Danone)" },
                 { label: "≥ 6m não-IgE", text: "Soja (com vigilância)",          cor: "#D97706", produtos: "NAN Soja (Nestlé) · S-26 Gold Soja (Abbott)" },
-                { label: "PROIBIDAS",  text: "HA, SL, Confort, AR, padrão",      cor: "#9CA3AF", produtos: "Contêm proteína intacta ou peptídeos residuais" },
+                { label: "PROIBIDAS",  text: "HA, SL, Confort, AR, padrão",      cor: "var(--muted)", produtos: "Contêm proteína intacta ou peptídeos residuais" },
               ].map((item) => (
                 <div key={item.label} style={{ display: "flex", gap: 8, marginBottom: 6 }}>
                   <span style={{ fontWeight: 700, color: item.cor, fontSize: 11, minWidth: 68, flexShrink: 0 }}>{item.label}</span>
                   <div>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: "#111827", margin: 0 }}>{item.text}</p>
-                    <p style={{ fontSize: 11, color: "#6B7280", margin: 0 }}>{item.produtos}</p>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", margin: 0 }}>{item.text}</p>
+                    <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>{item.produtos}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <p style={{ fontWeight: 700, color: "#111827", fontSize: 15, margin: "0 0 12px" }}>Protocolo passo a passo</p>
+            <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 15, margin: "0 0 12px" }}>Protocolo passo a passo</p>
             {APLV_STEPS.map((step, i) => (
               <AplvStep key={step.passo} step={step} isLast={i === APLV_STEPS.length - 1} />
             ))}
 
-            <div style={{ background: "#F0FDF4", borderRadius: 10, padding: "12px 14px", marginTop: 20, border: "1px solid #BBF7D0" }}>
+            <div style={{ background: "var(--tint-green)", borderRadius: 10, padding: "12px 14px", marginTop: 20, border: "1px solid #BBF7D0" }}>
               <div style={{ display: "flex", gap: 8 }}>
                 <Info size={14} color="#059669" style={{ flexShrink: 0, marginTop: 2 }} />
-                <div style={{ fontSize: 11, color: "#374151", lineHeight: 1.5 }}>
+                <div style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.5 }}>
                   <strong>Duração da APLV:</strong> Não-IgE mediada: ~80% toleram LV até os 3 anos.
                   IgE mediada: tolerância mais lenta, reavaliação anual com alergista.
                   Nunca reintroduzir sem orientação médica em formas graves.
@@ -410,10 +410,10 @@ export default function Formulas() {
       </div>
 
       {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Dados de composição baseados nas embalagens dos
             fabricantes (jan/2024) — verificar atualização junto ao fabricante.
             Escolha de fórmula deve considerar indicação clínica, tolerância, disponibilidade e custo.

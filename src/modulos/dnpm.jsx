@@ -325,8 +325,8 @@ export default function Dnpm() {
               <div style={{ background: "var(--tint-amber)", border: "1px solid #FDE68A", borderLeft: "4px solid #F59E0B", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <AlertTriangle size={15} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#78350F" }}>Triagem recomendada nesta consulta</div>
-                  <div style={{ fontSize: 11.5, color: "#92400E", marginTop: 2 }}>{activeFaixa.triagem}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-amber)" }}>Triagem recomendada nesta consulta</div>
+                  <div style={{ fontSize: 11.5, color: "var(--tx-amber)", marginTop: 2 }}>{activeFaixa.triagem}</div>
                 </div>
               </div>
             )}
@@ -392,15 +392,15 @@ export default function Dnpm() {
               <div style={{ background: "var(--tint-red)", border: "1px solid #FECACA", borderLeft: "4px solid #EF4444", borderRadius: 13, padding: "12px 14px", marginBottom: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
                   <AlertTriangle size={15} color="#EF4444" />
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "#B91C1C" }}>Sinais de alarme — encaminhar se presentes</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--tx-red)" }}>Sinais de alarme — encaminhar se presentes</span>
                 </div>
                 {alarmes.map((a, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < alarmes.length - 1 ? 6 : 0, fontSize: 12.5, color: "#991B1B", lineHeight: 1.5 }}>
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < alarmes.length - 1 ? 6 : 0, fontSize: 12.5, color: "var(--tx-red)", lineHeight: 1.5 }}>
                     <div style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", background: "#EF4444", marginTop: 6 }} />
                     {a}
                   </div>
                 ))}
-                <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #FECACA", fontSize: 11.5, color: "#B91C1C", fontWeight: 600, display: "flex", alignItems: "flex-start", gap: 6 }}>
+                <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #FECACA", fontSize: 11.5, color: "var(--tx-red)", fontWeight: 600, display: "flex", alignItems: "flex-start", gap: 6 }}>
                   <AlertTriangle size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
                   Regressão de qualquer habilidade já adquirida (em qualquer faixa) → encaminhar imediatamente
                 </div>

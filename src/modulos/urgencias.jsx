@@ -776,13 +776,13 @@ function TabPCR({ d }) {
       <SectionTitle icon={AlertTriangle} color="#92400E" text="Causas Reversíveis (5H e 5T)" />
       <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
         <div style={{ flex: 1, background: "var(--tint-amber)", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
-          <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 H</p>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "var(--tx-amber)", margin: "0 0 6px" }}>5 H</p>
           {["Hipóxia", "Hipovolemia", "Hidrogênio (acidose)", "Hipo/Hipercalemia", "Hipotermia"].map((h, i) => (
             <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px" }}>· {h}</p>
           ))}
         </div>
         <div style={{ flex: 1, background: "var(--tint-amber)", borderRadius: 10, padding: "10px 12px", border: "1px solid #FDE68A" }}>
-          <p style={{ fontWeight: 700, fontSize: 12, color: "#92400E", margin: "0 0 6px" }}>5 T</p>
+          <p style={{ fontWeight: 700, fontSize: 12, color: "var(--tx-amber)", margin: "0 0 6px" }}>5 T</p>
           {["Tóxicos", "Tamponamento cardíaco", "Pneumotórax hipertensivo", "Trombose (coronária/pulmonar)", "Trauma"].map((t, i) => (
             <p key={i} style={{ fontSize: 11, color: "var(--text-2)", margin: "0 0 3px" }}>· {t}</p>
           ))}
@@ -1105,7 +1105,7 @@ export default function Urgencias() {
 
       {/* ── Peso (compartilhado) ── */}
       <div style={{ background: "var(--tint-red)", borderBottom: "1px solid #FECACA", padding: "12px 16px", margin: "12px 0 0" }}>
-        <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
+        <label style={{ fontSize: 11, color: "var(--tx-red)", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
           PESO DO PACIENTE (kg) — doses calculadas automaticamente
         </label>
         <div style={{ display: "flex", gap: 10 }}>
@@ -1140,7 +1140,7 @@ export default function Urgencias() {
           onClick={() => setMostrarBroselow((v) => !v)}
           style={{
             display: "flex", alignItems: "center", gap: 6, background: "none",
-            border: "none", cursor: "pointer", color: "#991B1B", fontSize: 12,
+            border: "none", cursor: "pointer", color: "var(--tx-red)", fontSize: 12,
             fontWeight: 700, padding: 0, marginTop: 10,
             fontFamily: "'DM Sans', sans-serif",
           }}
@@ -1151,7 +1151,7 @@ export default function Urgencias() {
 
         {mostrarBroselow && (
           <div style={{ marginTop: 10, background: "var(--surface)", border: "1px solid #FECACA", borderRadius: 10, padding: "12px 14px" }}>
-            <label style={{ fontSize: 11, color: "#991B1B", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
+            <label style={{ fontSize: 11, color: "var(--tx-red)", fontWeight: 700, display: "block", marginBottom: 6, letterSpacing: "0.05em" }}>
               ALTURA / COMPRIMENTO (cm)
             </label>
             <input

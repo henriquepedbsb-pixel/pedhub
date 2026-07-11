@@ -5,7 +5,7 @@ const PRIMARY = "#0891B2";
 
 function InfoBox({ color, children }) {
   return (
-    <div style={{ background: color + "18", border: "1px solid " + color + "44", borderRadius: 10, padding: "10px 12px", marginBottom: 14, fontSize: 12, color: "#1F2937", lineHeight: 1.6 }}>
+    <div style={{ background: color + "18", border: "1px solid " + color + "44", borderRadius: 10, padding: "10px 12px", marginBottom: 14, fontSize: 12, color: "var(--text-2)", lineHeight: 1.6 }}>
       {children}
     </div>
   );
@@ -41,7 +41,7 @@ function BtnSet({ vals, setVals, i, opt }) {
   const active = vals[i] === opt.v;
   return (
     <button onClick={() => setVals(x => x.map((v2, j) => j === i ? opt.v : v2))}
-      style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? COR_APGAR : "#F9FAFB", color: active ? "#fff" : "#374151", lineHeight: 1.3 }}>
+      style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: active ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer", background: active ? COR_APGAR : "var(--surface-2)", color: active ? "#fff" : "var(--text-2)", lineHeight: 1.3 }}>
       {opt.l}<br />({opt.v})
     </button>
   );
@@ -57,7 +57,7 @@ function ScoreCard({ label, vals, setVals }) {
       </div>
       {APGAR_PARAMS.map((p, i) => (
         <div key={i} style={{ marginBottom: 8 }}>
-          <p style={{ fontWeight: 600, fontSize: 12.5, color: "#374151", margin: "0 0 5px" }}>{p.nome}</p>
+          <p style={{ fontWeight: 600, fontSize: 12.5, color: "var(--text-2)", margin: "0 0 5px" }}>{p.nome}</p>
           <div style={{ display: "flex", gap: 5 }}>
             {p.opts.map(opt => (
               <BtnSet key={opt.v} vals={vals} setVals={setVals} i={i} opt={opt} />
@@ -71,13 +71,13 @@ function ScoreCard({ label, vals, setVals }) {
             <p style={{ fontWeight: 700, color: "#fff", fontSize: 15, margin: 0 }}>{cls.grau} — Score: {total}/10</p>
           </div>
           <div style={{ padding: "8px 14px", background: cls.cor + "15" }}>
-            <p style={{ fontSize: 12, color: "#374151", margin: 0 }}>{cls.conduta}</p>
+            <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>{cls.conduta}</p>
           </div>
         </div>
       )}
       {!cls && (
         <div style={{ borderRadius: 10, border: "1.5px dashed #E5E7EB", padding: "10px 14px", marginTop: 6, textAlign: "center" }}>
-          <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Selecione todos os critérios para ver a classificação</p>
+          <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>Selecione todos os critérios para ver a classificação</p>
         </div>
       )}
     </div>
@@ -95,10 +95,10 @@ function TabApgar() {
         <strong>Score de Apgar (1953).</strong> Avalia a adaptação extrauterina do RN. Realizado ao 1.º e 5.º minuto de vida; repetir ao 10.º se ≤ 6 no 5.º minuto. <em>Obs: coloração é o critério mais subjetivo e o último a normalizar.</em>
       </InfoBox>
       <ScoreCard label="1.º minuto" vals={vals1} setVals={setVals1} />
-      <div style={{ height: 1, background: "#F3F4F6", marginBottom: 18 }} />
+      <div style={{ height: 1, background: "var(--surface-2)", marginBottom: 18 }} />
       <ScoreCard label="5.º minuto" vals={vals5} setVals={setVals5} />
-      <div style={{ background: "#F5F3FF", borderRadius: 10, padding: "10px 12px", marginTop: 4 }}>
-        <p style={{ fontSize: 11.5, color: "#4C1D95", margin: 0, lineHeight: 1.6 }}>
+      <div style={{ background: "var(--tint-purple)", borderRadius: 10, padding: "10px 12px", marginTop: 4 }}>
+        <p style={{ fontSize: 11.5, color: "var(--tx-purple)", margin: 0, lineHeight: 1.6 }}>
           <strong>Referência rápida:</strong> 7–10 = normal · 4–6 = depressão leve/moderada · 0–3 = depressão grave
         </p>
       </div>
@@ -164,11 +164,11 @@ function TabCapurro() {
       </InfoBox>
       {CAPURRO_PARAMS.map((p, i) => (
         <div key={i} style={{ marginBottom: 12 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 6px" }}>{p.nome}</p>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 6px" }}>{p.nome}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {p.opts.map(opt => (
               <button key={opt.v} onClick={() => set(i, opt.v)}
-                style={{ padding: "8px 12px", fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 400, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_CAP : "#E5E7EB"), cursor: "pointer", background: vals[i] === opt.v ? COR_CAP : "#F9FAFB", color: vals[i] === opt.v ? "#fff" : "#374151", textAlign: "left" }}>
+                style={{ padding: "8px 12px", fontSize: 12, fontWeight: vals[i] === opt.v ? 700 : 400, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_CAP : "var(--border)"), cursor: "pointer", background: vals[i] === opt.v ? COR_CAP : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)", textAlign: "left" }}>
                 {opt.l}
                 <span style={{ float: "right", fontFamily: "monospace", fontSize: 11, opacity: 0.7 }}>{opt.v} pts</span>
               </button>
@@ -183,14 +183,14 @@ function TabCapurro() {
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: "2px 0 0" }}>Soma dos critérios: {total} pontos</p>
           </div>
           <div style={{ padding: "8px 14px", background: COR_CAP + "15" }}>
-            <p style={{ fontSize: 12, color: "#1F2937", margin: 0 }}>
+            <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>
               {+ig < 32 ? "Prematuro extremo / muito prematuro" : +ig < 37 ? "Prematuro tardio" : +ig < 42 ? "A termo" : "Pós-termo"}
             </p>
           </div>
         </div>
       ) : (
         <div style={{ borderRadius: 10, border: "1.5px dashed #E5E7EB", padding: "10px 14px", marginTop: 8, textAlign: "center" }}>
-          <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Selecione todos os critérios para calcular a IG</p>
+          <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>Selecione todos os critérios para calcular a IG</p>
         </div>
       )}
     </div>
@@ -262,11 +262,11 @@ function TabSilverman() {
 
       {SA_PARAMS.map((p, i) => (
         <div key={i} style={{ marginBottom: 10 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#374151", margin: "0 0 5px" }}>{p.nome}</p>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 5px" }}>{p.nome}</p>
           <div style={{ display: "flex", gap: 5 }}>
             {p.opts.map(opt => (
               <button key={opt.v} onClick={() => set(i, opt.v)}
-                style={{ flex: 1, padding: "8px 4px", fontSize: 11, fontWeight: vals[i] === opt.v ? 700 : 500, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_SA : "#E5E7EB"), cursor: "pointer", background: vals[i] === opt.v ? COR_SA : "#F9FAFB", color: vals[i] === opt.v ? "#fff" : "#374151", lineHeight: 1.3, textAlign: "center" }}>
+                style={{ flex: 1, padding: "8px 4px", fontSize: 11, fontWeight: vals[i] === opt.v ? 700 : 500, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_SA : "var(--border)"), cursor: "pointer", background: vals[i] === opt.v ? COR_SA : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)", lineHeight: 1.3, textAlign: "center" }}>
                 {opt.l}<br />
                 <span style={{ fontSize: 10, opacity: 0.7 }}>({opt.v})</span>
               </button>
@@ -290,7 +290,7 @@ function TabSilverman() {
               </div>
             </div>
             <div style={{ padding: "10px 14px", background: cls.cor + "15" }}>
-              <p style={{ fontSize: 12, color: "#1F2937", margin: 0, lineHeight: 1.55 }}>
+              <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0, lineHeight: 1.55 }}>
                 <strong>Conduta:</strong> {cls.conduta}
               </p>
             </div>
@@ -298,14 +298,14 @@ function TabSilverman() {
         </div>
       ) : (
         <div style={{ borderRadius: 10, border: "1.5px dashed " + COR_SA + "80", padding: "12px 14px", marginTop: 12, textAlign: "center" }}>
-          <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Selecione ao menos um critério para ver a classificação</p>
+          <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>Selecione ao menos um critério para ver a classificação</p>
         </div>
       )}
 
       {/* Tabela de referência */}
-      <div style={{ marginTop: 14, borderRadius: 10, overflow: "hidden", border: "1px solid #E5E7EB" }}>
-        <div style={{ background: "#F9FAFB", padding: "7px 12px", borderBottom: "1px solid #E5E7EB" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Classificação de referência</p>
+      <div style={{ marginTop: 14, borderRadius: 10, overflow: "hidden", border: "1px solid var(--border)" }}>
+        <div style={{ background: "var(--bg)", padding: "7px 12px", borderBottom: "1px solid var(--border)" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Classificação de referência</p>
         </div>
         {[
           { r: "0",    cor: "#10B981", g: "Sem desconforto",            c: "Monitorização rotina"              },
@@ -313,10 +313,10 @@ function TabSilverman() {
           { r: "4–6",  cor: "#F97316", g: "Desconforto moderado",        c: "CPAP · considerar UTIN"            },
           { r: "7–10", cor: "#DC2626", g: "Insuficiência respiratória",  c: "IOT + surfactante · UTIN imediato" },
         ].map(({ r, cor, g, c }) => (
-          <div key={r} style={{ display: "grid", gridTemplateColumns: "40px 1fr 1fr", padding: "8px 12px", borderBottom: "1px solid #F3F4F6", background: interacted && ((r === "0" && total === 0) || (r === "1–3" && total >= 1 && total <= 3) || (r === "4–6" && total >= 4 && total <= 6) || (r === "7–10" && total >= 7)) ? cor + "18" : "transparent" }}>
+          <div key={r} style={{ display: "grid", gridTemplateColumns: "40px 1fr 1fr", padding: "8px 12px", borderBottom: "1px solid var(--border)", background: interacted && ((r === "0" && total === 0) || (r === "1–3" && total >= 1 && total <= 3) || (r === "4–6" && total >= 4 && total <= 6) || (r === "7–10" && total >= 7)) ? cor + "18" : "transparent" }}>
             <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 13, color: cor }}>{r}</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{g}</span>
-            <span style={{ fontSize: 11, color: "#6B7280" }}>{c}</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>{g}</span>
+            <span style={{ fontSize: 11, color: "var(--muted)" }}>{c}</span>
           </div>
         ))}
       </div>
@@ -333,17 +333,17 @@ export default function Neonatologia4() {
   const cores = ["#5B21B6", PRIMARY, COR_SA];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia IV</h1>
         <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Apgar · Capurro · Silverman-Andersen</p>
       </div>
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #F3F4F6" }}>
+      <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
           return (
             <button key={i} onClick={() => setTab(i)}
-              style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? cores[i] : "#6B7280", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer" }}>
+              style={{ flex: 1, padding: "12px 6px", fontSize: 12, fontWeight: active ? 700 : 500, color: active ? cores[i] : "var(--muted)", background: "transparent", border: "none", borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"), cursor: "pointer" }}>
               {t}
             </button>
           );
@@ -354,10 +354,10 @@ export default function Neonatologia4() {
         {tab === 1 && <TabCapurro />}
         {tab === 2 && <TabSilverman />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "#F9FAFB", borderRadius: 10, padding: "12px 14px", border: "1px solid #E5E7EB" }}>
+      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="#9CA3AF" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
             <strong>Apoio à decisão clínica.</strong> Apgar 1953 · Capurro H et al., J Pediatr 1978 · Silverman-Andersen 1956. Scores clínicos de suporte — não substituem monitorização contínua e julgamento clínico.
           </p>
         </div>

@@ -22,14 +22,14 @@ const THOMPSON = [
 
 const getThompsonClass = (total) => {
   if (total === null) return null;
-  if (total <= 6)  return { label: 'EHI Leve',     cor: '#10B981', bg: '#ECFDF5', cooling: false, desc: 'Monitorar · sem critério de hipotermia pelo escore isolado' };
-  if (total <= 14) return { label: 'EHI Moderada', cor: '#D97706', bg: '#FFF7ED', cooling: true,  desc: 'Candidato à hipotermia — confirmar critério A e janela de 6h' };
-  return               { label: 'EHI Grave',     cor: '#DC2626', bg: '#FEF2F2', cooling: true,  desc: 'Candidato à hipotermia — prognóstico reservado · MRI obrigatória' };
+  if (total <= 6)  return { label: 'EHI Leve',     cor: '#10B981', bg: "var(--tint-green)", cooling: false, desc: 'Monitorar · sem critério de hipotermia pelo escore isolado' };
+  if (total <= 14) return { label: 'EHI Moderada', cor: '#D97706', bg: "var(--tint-amber)", cooling: true,  desc: 'Candidato à hipotermia — confirmar critério A e janela de 6h' };
+  return               { label: 'EHI Grave',     cor: '#DC2626', bg: "var(--tint-red)", cooling: true,  desc: 'Candidato à hipotermia — prognóstico reservado · MRI obrigatória' };
 };
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const C   = '#4F46E5';
-const CLT = '#EEF2FF';
+const CLT = "var(--tint-blue)";
 const CBR = '#C7D2FE';
 
 const TABS = [
@@ -88,14 +88,14 @@ export default function Hipotermia() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const accordBtn = () => ({
@@ -105,7 +105,7 @@ export default function Hipotermia() {
 
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #3730A3 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -117,7 +117,7 @@ export default function Hipotermia() {
       </div>
 
       {/* Alerta janela terapêutica */}
-      <div style={{ backgroundColor: '#FEF2F2', borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Clock size={16} color="#DC2626" style={{ flexShrink: 0 }} />
         <p style={{ margin: 0, fontSize: '12px', color: '#DC2626', fontWeight: '700' }}>
           JANELA TERAPÊUTICA: ≤ 6 horas do nascimento. Após esse prazo, hipotermia NÃO é indicada.
@@ -140,7 +140,7 @@ export default function Hipotermia() {
           {/* Critério A */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><CheckCircle2 size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critério A — Evento Perinatal</p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: "var(--muted)" }}>
               ≥ 1 dos critérios abaixo em RN ≥ 36 semanas:
             </p>
             {[
@@ -151,11 +151,11 @@ export default function Hipotermia() {
               { id: 'lactato',  label: 'Lactato ≥ 10 mmol/L na 1ª hora' },
             ].map(item => (
               <button key={item.id} onClick={() => toggleA(item.id)}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginBottom: '5px', backgroundColor: critA[item.id] ? CLT : '#F9FAFB', textAlign: 'left' }}>
-                <span style={{ width: '18px', height: '18px', borderRadius: '4px', border: `2px solid ${critA[item.id] ? C : '#D1D5DB'}`, backgroundColor: critA[item.id] ? C : '#FFF', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginBottom: '5px', backgroundColor: critA[item.id] ? CLT : "var(--surface-2)", textAlign: 'left' }}>
+                <span style={{ width: '18px', height: '18px', borderRadius: '4px', border: `2px solid ${critA[item.id] ? C : '#D1D5DB'}`, backgroundColor: critA[item.id] ? C : "var(--surface)", flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {critA[item.id] && <Check size={12} color="#FFF" />}
                 </span>
-                <span style={{ fontSize: '12px', color: '#374151', fontWeight: critA[item.id] ? '700' : '400' }}>{item.label}</span>
+                <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: critA[item.id] ? '700' : '400' }}>{item.label}</span>
               </button>
             ))}
             {critACount > 0 && (
@@ -169,16 +169,16 @@ export default function Hipotermia() {
 
           {/* Critério B */}
           <div style={card()}>
-            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Brain size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critério B — Encefalopatia Moderada ou Grave</p>
-            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#6B7280' }}>Exame neurológico ou Escore de Thompson ≥ 7 (aba Score)</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Brain size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critério B — Encefalopatia Moderada ou Grave</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: "var(--muted)" }}>Exame neurológico ou Escore de Thompson ≥ 7 (aba Score)</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#B45309' }}>EHI Moderada (Grau II)</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Letargia · hipotonia · reflexos diminuídos · sem sucção · convulsões frequentes · Thompson 7-14</p>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>EHI Moderada (Grau II)</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Letargia · hipotonia · reflexos diminuídos · sem sucção · convulsões frequentes · Thompson 7-14</p>
               </div>
-              <div style={{ backgroundColor: '#FEF2F2', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#991B1B' }}>EHI Grave (Grau III)</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Estupor/coma · hipotonia severa · reflexos ausentes · sem sucção · convulsões de difícil controle ou ausentes · Thompson ≥ 15</p>
+              <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #DC2626' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-red)" }}>EHI Grave (Grau III)</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Estupor/coma · hipotonia severa · reflexos ausentes · sem sucção · convulsões de difícil controle ou ausentes · Thompson ≥ 15</p>
               </div>
             </div>
           </div>
@@ -186,8 +186,8 @@ export default function Hipotermia() {
           {/* Exclusões */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('excl')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Ban size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critérios de Exclusão</p>
-              {aberto === 'excl' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Ban size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critérios de Exclusão</p>
+              {aberto === 'excl' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'excl' && (
               <div style={{ marginTop: '10px' }}>
@@ -199,7 +199,7 @@ export default function Hipotermia() {
                   'Sepse com choque refratário grave',
                   'Temperatura central já < 33°C espontaneamente (hipotermia espontânea profunda)',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: '#374151', marginBottom: '5px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: "var(--text-2)", marginBottom: '5px', alignItems: 'flex-start' }}>
                     <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: '1px' }} />{item}
                   </div>
                 ))}
@@ -216,7 +216,7 @@ export default function Hipotermia() {
               'EHI moderada ou grave (Critério B / Thompson ≥ 7)',
               'Sem critério de exclusão',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: '#374151', marginBottom: '4px', alignItems: 'flex-start' }}>
+              <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: "var(--text-2)", marginBottom: '4px', alignItems: 'flex-start' }}>
                 <Check size={13} color={C} style={{ flexShrink: 0, marginTop: '1px' }} />{item}
               </div>
             ))}
@@ -236,7 +236,7 @@ export default function Hipotermia() {
 
           <div style={card()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Calculator size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Escore de Thompson</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Calculator size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Escore de Thompson</p>
               {thompsonTotal !== null && (
                 <span style={{ backgroundColor: thompsonClass?.cor || C, color: '#FFF', borderRadius: '20px', padding: '4px 12px', fontSize: '14px', fontWeight: '800' }}>
                   {thompsonTotal} pts
@@ -245,9 +245,9 @@ export default function Hipotermia() {
             </div>
 
             {THOMPSON.map((item) => (
-              <div key={item.id} style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid #F3F4F6' }}>
+              <div key={item.id} style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: '700', color: '#374151' }}>{item.label}</span>
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{item.label}</span>
                   {scores[item.id] !== undefined && (
                     <span style={{ fontSize: '12px', fontWeight: '800', color: scores[item.id] === 0 ? '#10B981' : C }}>
                       +{scores[item.id]}
@@ -257,7 +257,7 @@ export default function Hipotermia() {
                 <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                   {item.opcoes.map((op, idx) => (
                     <button key={idx} onClick={() => setScore(item.id, idx)}
-                      style={{ flex: '1 1 auto', minWidth: '60px', padding: '5px 4px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: scores[item.id] === idx ? '700' : '400', backgroundColor: scores[item.id] === idx ? (idx === 0 ? '#10B981' : idx === 1 ? '#D97706' : '#DC2626') : '#F3F4F6', color: scores[item.id] === idx ? '#FFF' : '#374151', textAlign: 'center' }}>
+                      style={{ flex: '1 1 auto', minWidth: '60px', padding: '5px 4px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: scores[item.id] === idx ? '700' : '400', backgroundColor: scores[item.id] === idx ? (idx === 0 ? '#10B981' : idx === 1 ? '#D97706' : '#DC2626') : "var(--surface-2)", color: scores[item.id] === idx ? '#FFF' : "var(--text-2)", textAlign: 'center' }}>
                       {idx > 0 && <span style={{ marginRight: '2px', fontSize: '9px' }}>{idx}</span>}
                       {op}
                     </button>
@@ -275,7 +275,7 @@ export default function Hipotermia() {
                 <p style={{ margin: '4px 0', fontSize: '16px', fontWeight: '800', color: thompsonClass.cor }}>
                   {thompsonClass.label}
                 </p>
-                <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>{thompsonClass.desc}</p>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>{thompsonClass.desc}</p>
                 {thompsonClass.cooling && (
                   <div style={{ marginTop: '8px', backgroundColor: CLT, borderRadius: '8px', padding: '6px 10px' }}>
                     <p style={{ margin: 0, fontSize: '11px', color: C, fontWeight: '700' }}>
@@ -287,13 +287,13 @@ export default function Hipotermia() {
             )}
 
             {thompsonTotal === null && (
-              <div style={{ textAlign: 'center', padding: '12px', fontSize: '12px', color: '#9CA3AF', backgroundColor: '#F9FAFB', borderRadius: '8px' }}>
+              <div style={{ textAlign: 'center', padding: '12px', fontSize: '12px', color: "var(--muted)", backgroundColor: "var(--bg)", borderRadius: '8px' }}>
                 Selecione todos os parâmetros para calcular o escore
                 ({Object.keys(scores).length}/{THOMPSON.length} preenchidos)
               </div>
             )}
 
-            <button onClick={() => setScores({})} style={{ marginTop: '10px', width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #E5E7EB', backgroundColor: '#F9FAFB', cursor: 'pointer', fontSize: '12px', color: '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <button onClick={() => setScores({})} style={{ marginTop: '10px', width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: "var(--bg)", cursor: 'pointer', fontSize: '12px', color: "var(--muted)", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <RotateCcw size={13} /> Limpar escore
             </button>
           </div>
@@ -310,13 +310,13 @@ export default function Hipotermia() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
               {[
                 { label: 'ALVO', valor: '33,5°C', sub: '33-34°C (range)', bg: CLT, cor: C },
-                { label: 'DURAÇÃO', valor: '72h', sub: 'horas contínuas', bg: '#F0FDF4', cor: '#065F46' },
-                { label: 'PROIBIDO', valor: '< 33°C', sub: 'overshoot — arrisca', bg: '#FEF2F2', cor: '#DC2626' },
+                { label: 'DURAÇÃO', valor: '72h', sub: 'horas contínuas', bg: "var(--tint-green)", cor: '#065F46' },
+                { label: 'PROIBIDO', valor: '< 33°C', sub: 'overshoot — arrisca', bg: "var(--tint-red)", cor: '#DC2626' },
               ].map((item, i) => (
                 <div key={i} style={{ backgroundColor: item.bg, borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '9px', fontWeight: '700', color: '#6B7280' }}>{item.label}</p>
+                  <p style={{ margin: 0, fontSize: '9px', fontWeight: '700', color: "var(--muted)" }}>{item.label}</p>
                   <p style={{ margin: '4px 0 2px 0', fontSize: '18px', fontWeight: '800', color: item.cor, lineHeight: 1 }}>{item.valor}</p>
-                  <p style={{ margin: 0, fontSize: '9px', color: '#6B7280' }}>{item.sub}</p>
+                  <p style={{ margin: 0, fontSize: '9px', color: "var(--muted)" }}>{item.sub}</p>
                 </div>
               ))}
             </div>
@@ -324,21 +324,21 @@ export default function Hipotermia() {
 
           {/* Como resfriar */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Snowflake size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Como Resfriar</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Snowflake size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Como Resfriar</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>1ª opção — Cobertor/colchão servo-controlado</p>
-                <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#374151' }}>CritiCool, Blanketrol, Arctic Sun · ajuste automático de temperatura · preferência em UTI</p>
+                <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>CritiCool, Blanketrol, Arctic Sun · ajuste automático de temperatura · preferência em UTI</p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#B45309' }}>Resfriamento passivo (transporte / sem dispositivo)</p>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>Resfriamento passivo (transporte / sem dispositivo)</p>
                 {['Desligar incubadora/berço aquecido',
                   'Temperatura ambiente 22-24°C',
                   'Monitorar temperatura retal a cada 15-30 min',
                   'Não usar bolsas de gelo diretamente na pele (risco de overshoot e queimaduras)',
                   'Se temp < 33°C: reaquecimento leve com lençol',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                     <span style={{ color: '#D97706', flexShrink: 0 }}>•</span>{item}
                   </div>
                 ))}
@@ -349,8 +349,8 @@ export default function Hipotermia() {
           {/* Monitorização */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('monit')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Monitorização</p>
-              {aberto === 'monit' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Monitorização</p>
+              {aberto === 'monit' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'monit' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -365,9 +365,9 @@ export default function Hipotermia() {
                   { param: 'Creatinina + TGO/TGP', freq: 'Diário · lesão de órgão frequente na EHI' },
                   { param: 'US craniano', freq: '24-48h e dia 7 · MRI encéfalo: 5-7 dias (prognóstico)' },
                 ].map((row, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '7px 10px', backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#FFF', borderRadius: '6px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#374151', flexShrink: 0, marginRight: '8px' }}>{row.param}</span>
-                    <span style={{ fontSize: '11px', color: '#6B7280', textAlign: 'right' }}>{row.freq}</span>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '7px 10px', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderRadius: '6px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '600', color: "var(--text-2)", flexShrink: 0, marginRight: '8px' }}>{row.param}</span>
+                    <span style={{ fontSize: '11px', color: "var(--muted)", textAlign: 'right' }}>{row.freq}</span>
                   </div>
                 ))}
               </div>
@@ -377,13 +377,13 @@ export default function Hipotermia() {
           {/* Convulsão neonatal */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('conv')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Zap size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Convulsão Neonatal — Tratamento</p>
-              {aberto === 'conv' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Zap size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Convulsão Neonatal — Tratamento</p>
+              {aberto === 'conv' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'conv' && (
               <div style={{ marginTop: '10px' }}>
                 <div style={{ marginBottom: '10px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
+                  <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
                   <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 3,2"
                     style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
                 </div>
@@ -391,32 +391,32 @@ export default function Hipotermia() {
                   <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: C }}>1ª linha: Fenobarbital</p>
                   {p > 0 && fenoCalc ? (
                     <>
-                      <p style={{ margin: 0, fontSize: '12px', color: '#374151' }}>
+                      <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
                         <strong>Ataque:</strong> {fenoCalc.loading} mg IV em 15-20 min (20 mg/kg)
                       </p>
-                      <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: '#374151' }}>
+                      <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                         <strong>Se persistir:</strong> +{fenoCalc.adicional} mg IV (10 mg/kg) · máx total 40 mg/kg
                       </p>
-                      <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: '#374151' }}>
+                      <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                         <strong>Manutenção (após 24h):</strong> {fenoCalc.manutencao} mg/dia IV ou VO (4 mg/kg/dia)
                       </p>
                     </>
                   ) : (
-                    <p style={{ margin: 0, fontSize: '11px', color: '#9CA3AF' }}>Insira o peso para calcular as doses</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)" }}>Insira o peso para calcular as doses</p>
                   )}
                 </div>
-                <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #D97706' }}>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: '#B45309' }}>2ª linha — se falha do fenobarb:</p>
+                <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #D97706' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>2ª linha — se falha do fenobarb:</p>
                   {['Levetiracetam: 40-60 mg/kg IV em 15 min (crescente evidência neonatal)',
                     'Midazolam: 0,15 mg/kg IV bolus → infusão 0,1-0,4 mg/kg/h',
                     'Lidocaína: protocolo específico — consultar neurologista neonatal',
                   ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
+                    <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                       <span style={{ color: '#D97706', flexShrink: 0 }}>→</span>{item}
                     </div>
                   ))}
                 </div>
-                <p style={{ margin: 0, fontSize: '10px', color: '#9CA3AF', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
+                <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
                   <AlertTriangle size={11} style={{ flexShrink: 0, marginTop: '1px' }} />Convulsão sutil: desvio do olhar, pedaling, sugar, apneia — pode ser eletroencefalográfica sem clínica · exige aEEG/EEG para diagnóstico
                 </p>
               </div>
@@ -430,7 +430,7 @@ export default function Hipotermia() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
           {/* Alerta */}
-          <div style={{ backgroundColor: '#FEF2F2', borderRadius: '10px', padding: '10px 12px', border: '1px solid #FECACA' }}>
+          <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', border: '1px solid #FECACA' }}>
             <p style={{ margin: 0, fontSize: '12px', color: '#DC2626', fontWeight: '700', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
               <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: '1px' }} />Reaquecimento gradual obrigatório. Rápido → convulsões e lesão neurológica adicional. Nunca ultrapassar 37,5°C.
             </p>
@@ -441,17 +441,17 @@ export default function Hipotermia() {
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Calculator size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Calculadora de Reaquecimento</p>
 
             <div style={{ marginBottom: '10px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>TEMPERATURA ATUAL (°C)</label>
+              <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>TEMPERATURA ATUAL (°C)</label>
               <input type="number" inputMode="decimal" step="0.1" value={tempAtual} onChange={e => setTempAtual(e.target.value)} placeholder="33,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${parseNum(tempAtual) > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '6px', letterSpacing: '0.04em' }}>TAXA DE REAQUECIMENTO (°C/h)</label>
+              <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '6px', letterSpacing: '0.04em' }}>TAXA DE REAQUECIMENTO (°C/h)</label>
               <div style={{ display: 'flex', gap: '6px' }}>
                 {['0.2', '0.3', '0.4', '0.5'].map(v => (
                   <button key={v} onClick={() => setTaxaReq(v)}
-                    style={{ flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: taxaReq === v ? C : '#F3F4F6', color: taxaReq === v ? '#FFF' : '#374151' }}>
+                    style={{ flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: taxaReq === v ? C : "var(--surface-2)", color: taxaReq === v ? '#FFF' : "var(--text-2)" }}>
                     {v}°/h
                   </button>
                 ))}
@@ -462,24 +462,24 @@ export default function Hipotermia() {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>DELTA TEMP</p>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DELTA TEMP</p>
                     <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{reqCalc.deltaT}°C</p>
                     <p style={{ margin: 0, fontSize: '10px', color: C }}>{parseNum(tempAtual)}°C → 37,0°C</p>
                   </div>
-                  <div style={{ backgroundColor: '#F0FDF4', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: '#6B7280' }}>TEMPO ESTIMADO</p>
-                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#065F46', lineHeight: 1 }}>{reqCalc.horas}h</p>
+                  <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>TEMPO ESTIMADO</p>
+                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{reqCalc.horas}h</p>
                     <p style={{ margin: 0, fontSize: '10px', color: '#6EE7B7' }}>a {taxaReq}°C/hora</p>
                   </div>
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                     Meta: alcançar <strong>37,0°C</strong> em aproximadamente <strong>{reqCalc.horas} horas</strong> · verificar temperatura a cada 30-60 min durante o reaquecimento · monitorar ECG e EEG continuamente
                   </p>
                 </div>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: '#9CA3AF' }}>
+              <div style={{ textAlign: 'center', padding: '10px', fontSize: '11px', color: "var(--muted)" }}>
                 Insira a temperatura atual para calcular
               </div>
             )}
@@ -487,7 +487,7 @@ export default function Hipotermia() {
 
           {/* Protocolo de reaquecimento */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Protocolo de Reaquecimento</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><ClipboardList size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Protocolo de Reaquecimento</p>
             {[
               { titulo: 'Taxa recomendada', desc: '0,2-0,5°C por hora · preferência 0,3-0,4°C/h · não ultrapassar 0,5°C/h' },
               { titulo: 'Alvo final', desc: '37,0°C · NUNCA ultrapassar 37,5°C (hipertermia = dano adicional)' },
@@ -496,11 +496,11 @@ export default function Hipotermia() {
               { titulo: 'Glucose', desc: 'Risco de hipoglicemia ao reaquecimento · monitorar q1-2h e manter alvo 70-150 mg/dL' },
               { titulo: 'Pós-normotermia', desc: 'Evitar febre (> 37,5°C) nas 72h pós-reaquecimento · febre = pior prognóstico' },
             ].map((step, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: '#F9FAFB', borderRadius: '8px' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: "var(--bg)", borderRadius: '8px' }}>
                 <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 <div>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>{step.titulo}</p>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6B7280' }}>{step.desc}</p>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{step.titulo}</p>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -509,29 +509,29 @@ export default function Hipotermia() {
           {/* Prognóstico */}
           <div style={card()}>
             <button style={accordBtn()} onClick={() => toggle('prog')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937', display: 'flex', alignItems: 'center' }}><Microscope size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Prognóstico e Seguimento</p>
-              {aberto === 'prog' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><Microscope size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Prognóstico e Seguimento</p>
+              {aberto === 'prog' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'prog' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: C }}>Benefício da hipotermia (NNT ≈ 7)</p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>Reduz morte e sequela grave em ~25% · maior benefício em EHI moderada · EHI grave: ainda reduz mortalidade mas sequelas frequentes</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>Reduz morte e sequela grave em ~25% · maior benefício em EHI moderada · EHI grave: ainda reduz mortalidade mas sequelas frequentes</p>
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#374151' }}>Exames de prognóstico:</p>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--text-2)" }}>Exames de prognóstico:</p>
                   {['MRI encéfalo: 5-7 dias (padrão ouro) — localização e extensão da lesão',
                     'aEEG: padrão de recuperação após 6h prediz desfecho',
                     'Potencial evocado somatossensorial: preditor independente',
                     'Biomarcadores: NfL, GFAP (ainda em estudo)',
                   ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: '#374151', marginTop: '3px', alignItems: 'flex-start' }}>
+                    <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                       <span style={{ color: C, flexShrink: 0 }}>•</span>{item}
                     </div>
                   ))}
                 </div>
-                <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#065F46', fontWeight: '600' }}>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-green)", fontWeight: '600' }}>
                     Seguimento neurológico obrigatório: 1, 3, 6, 12, 24 meses e após · fisioterapia, TO, fonoaudiologia precocemente · PNEE (Programa de Neurodesenvolvimento)
                   </p>
                 </div>
@@ -542,8 +542,8 @@ export default function Hipotermia() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

@@ -496,7 +496,7 @@ export default function Pedfarma() {
             padding: "10px 12px", cursor: "pointer",
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "#C2410C" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "var(--tx-amber)" }}>
             <ArrowLeftRight size={15} />
             Conversor de Corticosteroides
           </span>

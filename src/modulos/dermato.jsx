@@ -278,7 +278,7 @@ function DiferencialAchados({ onSelecionar }) {
     <div>
       <div style={{ display: "flex", gap: 8, background: "var(--tint-blue)", border: "1px solid #BFDBFE", borderRadius: 10, padding: "10px 12px", marginBottom: 12 }}>
         <Info size={15} color="#1D4ED8" style={{ flexShrink: 0, marginTop: 1 }} />
-        <p style={{ fontSize: 11, color: "#1E40AF", lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: 11, color: "var(--tx-blue)", lineHeight: 1.5, margin: 0 }}>
           Marque os achados observados. A ferramenta ordena as hipóteses por
           número de achados compatíveis — apoio ao raciocínio, não substitui a
           avaliação clínica nem emite diagnóstico.
@@ -437,7 +437,7 @@ export default function Dermato() {
                 <BlocoTratamento d={d} grupo={grupoSel[d.id]} onGrupo={onGrupo} />
                 {d.alarme && d.alarme.length > 0 && (
                   <div style={{ background: "var(--tint-red)", borderRadius: 8, padding: "8px 12px", marginTop: 10, border: "1px solid #FECACA" }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: "#991B1B", margin: "0 0 5px" }}>SINAIS DE ALARME</p>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-red)", margin: "0 0 5px" }}>SINAIS DE ALARME</p>
                     {d.alarme.map((c, i) => (
                       <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
                         <AlertTriangle size={12} color="#EF4444" style={{ flexShrink: 0, marginTop: 2 }} />

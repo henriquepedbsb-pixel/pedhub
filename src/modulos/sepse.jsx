@@ -16,7 +16,7 @@ const parseNum = (val) => {
 const VASOATIVOS = [
   {
     id: 'epi', nome: 'Epinefrina', alt: 'Adrenalina',
-    cor: '#DC2626', corBg: '#FEF2F2', corBorder: '#FECACA',
+    cor: '#DC2626', corBg: "var(--tint-red)", corBorder: '#FECACA',
     indicacao: '1ª linha · disfunção miocárdica / baixo DC',
     ref: 'SSC 2026, rec. 31',
     apresentacao: 'Ampola 1 mg/mL (1:1000)',
@@ -29,7 +29,7 @@ const VASOATIVOS = [
   },
   {
     id: 'norep', nome: 'Norepinefrina', alt: 'Noradrenalina',
-    cor: '#7C3AED', corBg: '#F5F3FF', corBorder: '#DDD6FE',
+    cor: '#7C3AED', corBg: "var(--tint-purple)", corBorder: '#DDD6FE',
     indicacao: '1ª linha · vasoplegic shock (resistência vascular baixa)',
     ref: 'SSC 2026, rec. 31',
     apresentacao: 'Ampola 4 mg/4 mL (1 mg/mL)',
@@ -42,7 +42,7 @@ const VASOATIVOS = [
   },
   {
     id: 'dopa', nome: 'Dopamina', alt: null,
-    cor: '#D97706', corBg: '#FFF7ED', corBorder: '#FED7AA',
+    cor: '#D97706', corBg: "var(--tint-amber)", corBorder: '#FED7AA',
     indicacao: 'Alternativa · catecol de 1ª linha indisponível',
     ref: 'SSC 2026 (sem rec. como 1ª linha)',
     apresentacao: 'Ampola 50 mg/10 mL (5 mg/mL)',
@@ -55,7 +55,7 @@ const VASOATIVOS = [
   },
   {
     id: 'dobuta', nome: 'Dobutamina', alt: null,
-    cor: '#1D4ED8', corBg: '#EFF6FF', corBorder: '#BFDBFE',
+    cor: '#1D4ED8', corBg: "var(--tint-blue)", corBorder: '#BFDBFE',
     indicacao: '2ª linha · disfunção miocárdica + PA preservada',
     ref: 'SSC 2026, rec. 34 (condicional)',
     apresentacao: 'Ampola 250 mg/20 mL (12,5 mg/mL)',
@@ -68,7 +68,7 @@ const VASOATIVOS = [
   },
   {
     id: 'vaso', nome: 'Vasopressina', alt: null,
-    cor: '#065F46', corBg: '#ECFDF5', corBorder: '#6EE7B7',
+    cor: '#065F46', corBg: "var(--tint-green)", corBorder: '#6EE7B7',
     indicacao: '2ª linha · altas doses de catecol sem resposta',
     ref: 'SSC 2026, rec. 33 (condicional)',
     apresentacao: 'Ampola 20 UI/mL',
@@ -81,7 +81,7 @@ const VASOATIVOS = [
   },
   {
     id: 'milri', nome: 'Milrinona', alt: null,
-    cor: '#0891B2', corBg: '#ECFEFF', corBorder: '#A5F3FC',
+    cor: '#0891B2', corBg: "var(--tint-teal)", corBorder: '#A5F3FC',
     indicacao: '2ª linha · inodilatador · disfunção cardíaca + vasoplegia',
     ref: 'SSC 2026, rec. 34 (condicional)',
     apresentacao: 'Ampola 10 mg/10 mL (1 mg/mL)',
@@ -156,7 +156,7 @@ const TABS = [
 ];
 
 const C       = '#DC2626';
-const CLIGHT  = '#FEF2F2';
+const CLIGHT  = "var(--tint-red)";
 const CBORDER = '#FECACA';
 
 // ─── Componente ──────────────────────────────────────────────────────────────
@@ -217,20 +217,20 @@ export default function Sepse() {
   const tabBtn = (id) => ({
     padding: '8px 2px', borderRadius: '8px', fontSize: '11px',
     fontWeight: tab === id ? '700' : '500', cursor: 'pointer', border: 'none',
-    backgroundColor: tab === id ? C : '#F3F4F6',
-    color: tab === id ? '#FFFFFF' : '#374151',
+    backgroundColor: tab === id ? C : "var(--surface-2)",
+    color: tab === id ? '#FFFFFF' : "var(--text-2)",
     flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: 0,
   });
 
   const card = (extra = {}) => ({
-    backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '14px',
-    border: '1px solid #E5E7EB', ...extra,
+    backgroundColor: "var(--surface)", borderRadius: '12px', padding: '14px',
+    border: '1px solid var(--border)', ...extra,
   });
 
   const chip = (ativo, cor = C) => ({
     flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-    backgroundColor: ativo ? cor : '#F3F4F6',
-    color: ativo ? '#FFFFFF' : '#374151',
+    backgroundColor: ativo ? cor : "var(--surface-2)",
+    color: ativo ? '#FFFFFF' : "var(--text-2)",
     fontSize: '12px', fontWeight: '600',
   });
 
@@ -241,7 +241,7 @@ export default function Sepse() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #B91C1C 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -271,19 +271,19 @@ export default function Sepse() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `4px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: C }}>Sepse</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#374151' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                   Infecção + disfunção orgânica ameaçadora à vida — respiratória, cardiovascular, coagulação e/ou neurológica
                 </p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '4px solid #F97316' }}>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: '#C2410C' }}>Choque Séptico</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#374151' }}>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '4px solid #F97316' }}>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--tx-amber)" }}>Choque Séptico</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                   Sepse + ≥1 critério cardiovascular: <strong>hipotensão</strong> OU <strong>lactato ≥5 mmol/L</strong> OU <strong>vasoativo em uso</strong>
                 </p>
               </div>
-              <div style={{ backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '10px', borderLeft: '4px solid #10B981' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46' }}>Faixa etária</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+              <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px', borderLeft: '4px solid #10B981' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)" }}>Faixa etária</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                   ≥37 semanas ao nascimento até 18 anos. Para neonatos prematuros → módulo Neonatologia.
                 </p>
               </div>
@@ -292,7 +292,7 @@ export default function Sepse() {
 
           {/* Sinais de alerta */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🚨 Quando Suspeitar</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🚨 Quando Suspeitar</p>
             {[
               'Febre ou hipotermia com alteração do estado geral',
               'Taquicardia persistente ou desproporcional',
@@ -304,7 +304,7 @@ export default function Sepse() {
               'Petéquias ou púrpura em contexto febril',
               'Lactato ≥ 2 mmol/L',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                 <span style={{ color: C, fontSize: '14px', lineHeight: '1.2', flexShrink: 0 }}>•</span>{item}
               </div>
             ))}
@@ -313,8 +313,8 @@ export default function Sepse() {
           {/* Fatores de risco — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('risco')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>⚠️ Fatores de Risco</p>
-              {aberto === 'risco' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⚠️ Fatores de Risco</p>
+              {aberto === 'risco' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'risco' && (
               <div style={{ marginTop: '10px' }}>
@@ -328,7 +328,7 @@ export default function Sepse() {
                   'Desnutrição grave',
                   'Quimioterapia ou corticosteroides sistêmicos crônicos',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+                  <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                     <span style={{ color: '#F59E0B', flexShrink: 0 }}>▸</span>{item}
                   </div>
                 ))}
@@ -337,8 +337,8 @@ export default function Sepse() {
           </div>
 
           {/* Primeiros 15 min */}
-          <div style={{ backgroundColor: '#ECFDF5', borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#065F46' }}>⚡ Primeiros 15 minutos</p>
+          <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>⚡ Primeiros 15 minutos</p>
             {[
               'Reconhecer e acionar equipe — avaliar necessidade de UTI precocemente',
               'Acesso venoso calibroso (periférico ou intraósseo)',
@@ -349,7 +349,7 @@ export default function Sepse() {
               'Oxigênio suplementar conforme SpO₂ e clínica',
               'Reavaliação clínica a cada 15-30 minutos',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: '#065F46' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: "var(--tx-green)" }}>
                 <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
@@ -364,9 +364,9 @@ export default function Sepse() {
 
           {/* Parâmetros editáveis */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📊 Parâmetros do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>📊 Parâmetros do Paciente</p>
             <div style={{ marginBottom: '10px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
+              <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
               <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 12,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none', border: `2px solid ${p > 0 ? C : '#D1D5DB'}` }} />
             </div>
@@ -380,18 +380,18 @@ export default function Sepse() {
                 { label: 'SpO₂ (%)',            value: spo2, set: setSpo2, ph: '98'   },
               ].map((c, i) => (
                 <div key={i}>
-                  <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{c.label}</label>
+                  <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{c.label}</label>
                   <input type="number" inputMode="decimal" value={c.value} onChange={e => c.set(e.target.value)} placeholder={c.ph}
-                    style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1.5px solid #D1D5DB', fontSize: '14px', boxSizing: 'border-box', outline: 'none', color: '#1F2937' }} />
+                    style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', outline: 'none', color: "var(--text-2)" }} />
                 </div>
               ))}
             </div>
             <div style={{ marginTop: '10px' }}>
-              <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>LACTATO (mmol/L)</label>
+              <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>LACTATO (mmol/L)</label>
               <input type="number" inputMode="decimal" step="0.1" value={lactato} onChange={e => setLactato(e.target.value)} placeholder="ex: 2,4"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '18px', fontWeight: lac >= 2 ? '700' : '400', border: `2px solid ${lac >= 5 ? C : lac >= 2 ? '#F59E0B' : '#D1D5DB'}`, color: lac >= 5 ? C : lac >= 2 ? '#B45309' : '#1F2937' }} />
               {lac >= 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: C, fontWeight: '700' }}>🔴 Critério de choque séptico (Phoenix 2024)</p>}
-              {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#B45309', fontWeight: '600' }}>⚠ Hipoperfusão tecidual — indicação de tratamento imediato</p>}
+              {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ Hipoperfusão tecidual — indicação de tratamento imediato</p>}
             </div>
           </div>
 
@@ -400,7 +400,7 @@ export default function Sepse() {
             <div style={card({ border: `1px solid ${CBORDER}` })}>
               <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C }}>🔴 Alertas Clínicos</p>
               {alertas.map((a, i) => (
-                <div key={i} style={{ borderRadius: '8px', padding: '8px 10px', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#B45309' : '#1D4ED8', backgroundColor: a.tipo === 'critico' ? CLIGHT : a.tipo === 'alerta' ? '#FFF7ED' : '#EFF6FF', borderLeft: `3px solid ${a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#F59E0B' : '#3B82F6'}` }}>
+                <div key={i} style={{ borderRadius: '8px', padding: '8px 10px', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#B45309' : '#1D4ED8', backgroundColor: a.tipo === 'critico' ? CLIGHT : a.tipo === 'alerta' ? "var(--tint-amber)" : "var(--tint-blue)", borderLeft: `3px solid ${a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#F59E0B' : '#3B82F6'}` }}>
                   {a.msg}
                 </div>
               ))}
@@ -409,9 +409,9 @@ export default function Sepse() {
 
           {/* Calculadora de fluidos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💧 Calculadora de Fluidos</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>💧 Calculadora de Fluidos</p>
             <div style={{ marginBottom: '10px' }}>
-              <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>VOLUME POR BOLUS</p>
+              <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VOLUME POR BOLUS</p>
               <div style={{ display: 'flex', gap: '6px' }}>
                 {[10, 15, 20].map(v => (
                   <button key={v} style={chip(volBolus === v)} onClick={() => setVolBolus(v)}>{v} mL/kg</button>
@@ -419,7 +419,7 @@ export default function Sepse() {
               </div>
             </div>
             <div style={{ marginBottom: '12px' }}>
-              <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.04em' }}>CONTEXTO</p>
+              <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>CONTEXTO</p>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <button style={chip(comUTI, '#3B82F6')} onClick={() => setComUTI(true)}>Com UTI</button>
                 <button style={chip(!comUTI, '#3B82F6')} onClick={() => setComUTI(false)}>Sem UTI</button>
@@ -428,23 +428,23 @@ export default function Sepse() {
             {p > 0 && calc ? (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
-                  <div style={{ backgroundColor: '#EFF6FF', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: '#1D4ED8', lineHeight: 1 }}>{calc.bolus}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>mL / bolus</p>
+                  <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calc.bolus}</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL / bolus</p>
                     <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>({volBolus} mL/kg)</p>
                   </div>
-                  <div style={{ backgroundColor: comUTI ? '#F0FDF4' : CLIGHT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                  <div style={{ backgroundColor: comUTI ? "var(--tint-green)" : CLIGHT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? '#065F46' : C, lineHeight: 1 }}>{calc.maximo}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#6B7280' }}>mL máximo</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL máximo</p>
                     <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: comUTI ? '#6EE7B7' : '#FCA5A5' }}>({comUTI ? 60 : 40} mL/kg · 1ª hora)</p>
                   </div>
                 </div>
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', fontSize: '12px', color: '#374151', lineHeight: '1.6' }}>
+                <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', fontSize: '12px', color: "var(--text-2)", lineHeight: '1.6' }}>
                   Administrar em bolus de <strong>{calc.bolus} mL</strong> (10-20 min cada) · até <strong>~{calc.nBolus} bolus</strong> na 1ª hora · reavaliar após cada bolus · Ringer Lactato preferível ao SF 0,9%
                 </div>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '12px', fontSize: '12px', color: '#9CA3AF' }}>
+              <div style={{ textAlign: 'center', padding: '12px', fontSize: '12px', color: "var(--muted)" }}>
                 Insira o peso para calcular os volumes
               </div>
             )}
@@ -452,7 +452,7 @@ export default function Sepse() {
 
           {/* Exames iniciais */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🧪 Exames Iniciais</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🧪 Exames Iniciais</p>
             {[
               { urg: true,  txt: 'Hemocultura ≥2 sítios — obter ANTES do ATB (não atrasar >5 min)' },
               { urg: true,  txt: 'Lactato sérico (arterial ou venoso)' },
@@ -464,7 +464,7 @@ export default function Sepse() {
               { urg: false, txt: 'Radiografia de tórax' },
               { urg: false, txt: 'Procalcitonina — NÃO usar para desescalonamento rotineiro se houver stewardship ativo (SSC 2026, rec. 14)' },
             ].map((e, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: '#374151' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: e.urg ? C : '#D1D5DB', flexShrink: 0, marginTop: '4px' }} />
                 {e.urg && <strong style={{ color: C, flexShrink: 0 }}>[Urgente]</strong>}{' '}{e.txt}
               </div>
@@ -474,17 +474,17 @@ export default function Sepse() {
           {/* Score de Rodwell — ferramenta complementar, sepse neonatal precoce */}
           <div style={card({ border: '1px solid #A7F3D0' })}>
             <button style={accordionBtn()} onClick={() => toggle('rodwell')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#065F46' }}>🩸 Score de Rodwell — Sepse Neonatal Precoce</p>
-              {aberto === 'rodwell' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>🩸 Score de Rodwell — Sepse Neonatal Precoce</p>
+              {aberto === 'rodwell' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'rodwell' && (
               <div style={{ marginTop: '10px' }}>
-                <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981', marginBottom: '10px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#065F46', lineHeight: 1.5 }}>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981', marginBottom: '10px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-green)", lineHeight: 1.5 }}>
                     <strong>Contexto diferente do Phoenix acima.</strong> Rodwell (1988) é uma triagem <strong>hematológica</strong> (hemograma) para sepse neonatal <strong>precoce</strong> — RN nas primeiras ~72h de vida. Phoenix é critério de <strong>disfunção orgânica</strong> para toda a faixa pediátrica. Use Rodwell como apoio à decisão de iniciar/manter antibiótico em RN com hemograma disponível; use Phoenix para classificar gravidade em qualquer idade pediátrica.
                   </p>
                 </div>
-                <p style={{ fontWeight: 700, color: '#111827', fontSize: 13, margin: '0 0 8px' }}>Marque os critérios presentes no hemograma:</p>
+                <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: '0 0 8px' }}>Marque os critérios presentes no hemograma:</p>
                 {RODWELL_ITEMS.map((item, i) => (
                   <button
                     key={i}
@@ -492,24 +492,24 @@ export default function Sepse() {
                     style={{
                       width: '100%', display: 'flex', alignItems: 'flex-start', gap: 10,
                       padding: '9px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer',
-                      background: rodwellVals[i] ? '#ECFDF510' : '#F9FAFB',
-                      border: '1.5px solid ' + (rodwellVals[i] ? '#10B981' : '#E5E7EB'),
+                      background: rodwellVals[i] ? '#ECFDF510' : "var(--surface-2)",
+                      border: '1.5px solid ' + (rodwellVals[i] ? '#10B981' : "var(--border)"),
                       textAlign: 'left',
                     }}
                   >
                     <div style={{
                       width: 20, height: 20, borderRadius: 6, marginTop: 1,
-                      background: rodwellVals[i] ? '#10B981' : '#E5E7EB',
+                      background: rodwellVals[i] ? '#10B981' : "var(--border)",
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     }}>
                       {rodwellVals[i] && <CheckCircle size={13} color="#fff" />}
                     </div>
-                    <span style={{ fontSize: 12, color: '#374151', lineHeight: 1.45 }}>{item}</span>
+                    <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>{item}</span>
                   </button>
                 ))}
-                <div style={{ background: '#F3F4F6', borderRadius: 10, padding: '10px 14px', margin: '8px 0', display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontWeight: 600, fontSize: 13, color: '#374151' }}>Pontuação total</span>
-                  <span style={{ fontWeight: 800, fontSize: 17, color: '#111827' }}>{rodwellTotal} / 7</span>
+                <div style={{ background: "var(--surface-2)", borderRadius: 10, padding: '10px 14px', margin: '8px 0', display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)" }}>Pontuação total</span>
+                  <span style={{ fontWeight: 800, fontSize: 17, color: "var(--text)" }}>{rodwellTotal} / 7</span>
                 </div>
                 <div style={{ borderRadius: 10, border: '2px solid ' + rodwellRes.color, overflow: 'hidden' }}>
                   <div style={{ background: rodwellRes.color, padding: '10px 14px' }}>
@@ -520,7 +520,7 @@ export default function Sepse() {
                     {rodwellRes.condutas.map((c, i) => (
                       <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
                         <CheckCircle size={12} color={rodwellRes.color} style={{ flexShrink: 0, marginTop: 2 }} />
-                        <span style={{ fontSize: 11, color: '#1F2937', lineHeight: 1.4 }}>{c}</span>
+                        <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.4 }}>{c}</span>
                       </div>
                     ))}
                   </div>
@@ -541,22 +541,22 @@ export default function Sepse() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
               <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `4px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: C }}>🔴 Choque Séptico → ≤ 1 hora</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Iniciar imediatamente após hemocultura · não atrasar para exames · amplo espectro (SSC 2026, rec. 6 — forte)</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Iniciar imediatamente após hemocultura · não atrasar para exames · amplo espectro (SSC 2026, rec. 6 — forte)</p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '4px solid #F97316' }}>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: '#C2410C' }}>🟠 Sepse sem Choque → ≤ 3 horas</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Avaliação rápida e diagnóstico diferencial permitidos · se suspeita sólida, antecipar (recs. 7-8)</p>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '4px solid #F97316' }}>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: "var(--tx-amber)" }}>🟠 Sepse sem Choque → ≤ 3 horas</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Avaliação rápida e diagnóstico diferencial permitidos · se suspeita sólida, antecipar (recs. 7-8)</p>
               </div>
             </div>
-            <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-              <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#1F2937' }}>Princípios</p>
+            <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+              <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>Princípios</p>
               {[
                 'Cobrir todos os patógenos prováveis (amplo espectro)',
                 'Desescalonar ao identificar patógeno e sensibilidade',
                 'Imunocomprometido ou MDR → terapia combinada',
                 'PCT NÃO deve guiar desescalonamento rotineiro (rec. 14)',
               ].map((s, i) => (
-                <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: '#374151', marginBottom: '4px', alignItems: 'flex-start' }}>
+                <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '4px', alignItems: 'flex-start' }}>
                   <span style={{ color: '#10B981', flexShrink: 0 }}>✓</span>{s}
                 </div>
               ))}
@@ -565,23 +565,23 @@ export default function Sepse() {
 
           {/* Fluidoterapia */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1D4ED8' }}>💧 Fluidoterapia</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-blue)" }}>💧 Fluidoterapia</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#1D4ED8' }}>Com UTI (rec. 19)</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Bolus de 10-20 mL/kg · máximo 40-60 mL/kg na 1ª hora · cristaloide balanceado</p>
+              <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-blue)" }}>Com UTI (rec. 19)</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Bolus de 10-20 mL/kg · máximo 40-60 mL/kg na 1ª hora · cristaloide balanceado</p>
               </div>
-              <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>Sem UTI (recs. 20-21)</p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>
+              <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>Sem UTI (recs. 20-21)</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                   <strong>Com hipotensão:</strong> até 40 mL/kg em bolus de 10-20 mL/kg<br />
                   <strong>Sem hipotensão:</strong> NÃO dar bolus — iniciar fluido de manutenção
                 </p>
               </div>
-              <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: '#374151' }}>Suspender fluido se: (rec. 22)</p>
+              <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--text-2)" }}>Suspender fluido se: (rec. 22)</p>
                 {['Choque revertido (TRC, FC, PA normalizaram)', 'Sinais de sobrecarga hídrica (edema pulmonar, hepatomegalia)', 'Volume máximo atingido → escalonar vasoativo'].map((s, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: '#374151', marginBottom: '3px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginBottom: '3px', alignItems: 'flex-start' }}>
                     <span style={{ color: C, flexShrink: 0 }}>✗</span>{s}
                   </div>
                 ))}
@@ -592,16 +592,16 @@ export default function Sepse() {
           {/* Vasoativos — visão geral */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#7C3AED' }}>💊 Vasoativos — Seleção</p>
-            <div style={{ backgroundColor: '#F5F3FF', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #7C3AED', marginBottom: '8px' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#5B21B6' }}>1ª linha — Epinefrina OU Norepinefrina (rec. 31)</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Sem superioridade definida entre as duas (SSC 2026) · escolha pela fisiologia</p>
-              <div style={{ marginTop: '6px', fontSize: '11px', color: '#374151', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div style={{ backgroundColor: "var(--tint-purple)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #7C3AED', marginBottom: '8px' }}>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-purple)" }}>1ª linha — Epinefrina OU Norepinefrina (rec. 31)</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Sem superioridade definida entre as duas (SSC 2026) · escolha pela fisiologia</p>
+              <div style={{ marginTop: '6px', fontSize: '11px', color: "var(--text-2)", display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <div>🔵 <strong>Epinefrina</strong> — disfunção miocárdica / baixo DC</div>
                 <div>🟣 <strong>Norepinefrina</strong> — vasoplegic shock (RVS baixa)</div>
               </div>
             </div>
-            <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px' }}>
-              <p style={{ margin: 0, fontSize: '11px', color: '#374151' }}>
+            <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+              <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                 <strong>Iniciar por acesso periférico</strong> — não atrasar por ausência de CVC (rec. 32) · risco de extravasamento ≈2,5% · obter acesso central assim que possível
               </p>
             </div>
@@ -613,14 +613,14 @@ export default function Sepse() {
 
             {/* Peso indicator / mini input */}
             {p > 0 ? (
-              <div style={{ backgroundColor: '#F0FDF4', borderRadius: '8px', padding: '8px 10px', marginBottom: '12px', borderLeft: '3px solid #10B981' }}>
-                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#065F46' }}>📍 Peso: {p} kg — cálculos individualizados abaixo</p>
+              <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '8px 10px', marginBottom: '12px', borderLeft: '3px solid #10B981' }}>
+                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>📍 Peso: {p} kg — cálculos individualizados abaixo</p>
               </div>
             ) : (
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO PACIENTE (kg)</label>
+                <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO PACIENTE (kg)</label>
                 <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
-                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid #D1D5DB', fontSize: '16px', fontWeight: '600', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '16px', fontWeight: '600', color: C, boxSizing: 'border-box', outline: 'none' }} />
               </div>
             )}
 
@@ -628,7 +628,7 @@ export default function Sepse() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '14px' }}>
               {VASOATIVOS.map(d => (
                 <button key={d.id} onClick={() => setDrugSel(d.id)}
-                  style={{ padding: '9px 4px', borderRadius: '8px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${drugSel === d.id ? d.cor : '#E5E7EB'}`, backgroundColor: drugSel === d.id ? d.corBg : '#F9FAFB', fontSize: '11px', fontWeight: drugSel === d.id ? '700' : '500', color: drugSel === d.id ? d.cor : '#6B7280' }}>
+                  style={{ padding: '9px 4px', borderRadius: '8px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${drugSel === d.id ? d.cor : "var(--border)"}`, backgroundColor: drugSel === d.id ? d.corBg : "var(--surface-2)", fontSize: '11px', fontWeight: drugSel === d.id ? '700' : '500', color: drugSel === d.id ? d.cor : "var(--muted)" }}>
                   {d.nome}
                   {d.alt && <span style={{ display: 'block', fontSize: '9px', opacity: 0.7, marginTop: '1px' }}>{d.alt}</span>}
                 </button>
@@ -647,43 +647,43 @@ export default function Sepse() {
                     <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: d.cor }}>
                       {d.nome}{d.alt ? ` (${d.alt})` : ''}
                     </p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#374151' }}>{d.indicacao}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: '#6B7280' }}>{d.ref} · {d.apresentacao}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>{d.indicacao}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{d.ref} · {d.apresentacao}</p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', fontWeight: '700', color: d.cor }}>
                       Dose: {d.doseMin}–{d.doseMax} {d.unidade} · início: {d.doseStart} {d.unidade}
                     </p>
                   </div>
 
                   {/* Dilution */}
-                  <div style={{ backgroundColor: '#F9FAFB', borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.06em' }}>DILUIÇÃO PADRÃO — SERINGA 50 mL</p>
-                    <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#374151' }}>
+                  <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>DILUIÇÃO PADRÃO — SERINGA 50 mL</p>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: "var(--text-2)" }}>
                       <strong>{d.mgKgDil} {d.tipo}/kg</strong> em <strong>{d.volDil} mL</strong> de SG5%
                     </p>
                     {dil ? (
-                      <div style={{ backgroundColor: '#FFF', borderRadius: '8px', padding: '10px', border: `1.5px solid ${d.corBorder}` }}>
+                      <div style={{ backgroundColor: "var(--surface)", borderRadius: '8px', padding: '10px', border: `1.5px solid ${d.corBorder}` }}>
                         <p style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: d.cor }}>
                           {dil.qtd.toFixed(1)} {d.tipo} de {d.nome}
                         </p>
-                        <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#1F2937' }}>
+                        <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                           Retirar <strong>{dil.volDroga.toFixed(2)} mL</strong> da ampola
                         </p>
-                        <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: '#1F2937' }}>
+                        <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                           + Completar com <strong>{dil.volSG5.toFixed(2)} mL</strong> de SG5% → 50 mL total
                         </p>
-                        <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>
+                        <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
                           Concentração final: {dil.concFinal.toFixed(4)} {d.tipo}/mL
                         </p>
                       </div>
                     ) : (
-                      <p style={{ margin: 0, fontSize: '11px', color: '#9CA3AF' }}>Insira o peso acima para calcular a diluição individual</p>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)" }}>Insira o peso acima para calcular a diluição individual</p>
                     )}
                   </div>
 
                   {/* Velocity table */}
                   <div style={{ marginBottom: '10px' }}>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: '#6B7280', letterSpacing: '0.06em' }}>VELOCIDADE DE INFUSÃO (mL/h)</p>
-                    <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>VELOCIDADE DE INFUSÃO (mL/h)</p>
+                    <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: d.corBg, padding: '7px 12px' }}>
                         <span style={{ fontSize: '10px', fontWeight: '700', color: d.cor }}>DOSE ({d.unidade})</span>
                         <span style={{ fontSize: '10px', fontWeight: '700', color: d.cor }}>VELOCIDADE (mL/h)</span>
@@ -692,8 +692,8 @@ export default function Sepse() {
                         const vel = calcVel(d, dose);
                         const isS = dose === d.doseStart;
                         return (
-                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: isS ? d.corBg : (i % 2 === 0 ? '#F9FAFB' : '#FFF'), borderTop: '1px solid #E5E7EB', padding: '7px 12px', alignItems: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#374151', fontWeight: isS ? '700' : '400' }}>
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: isS ? d.corBg : (i % 2 === 0 ? "var(--surface-2)" : "var(--surface)"), borderTop: '1px solid var(--border)', padding: '7px 12px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: isS ? '700' : '400' }}>
                               {dose}{isS && <span style={{ fontSize: '9px', color: d.cor, marginLeft: '4px' }}>← início</span>}
                             </span>
                             <span style={{ fontSize: '14px', color: isS ? d.cor : '#1F2937', fontWeight: '800' }}>{vel}</span>
@@ -701,15 +701,15 @@ export default function Sepse() {
                         );
                       })}
                     </div>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9CA3AF' }}>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
                       Velocidade independente do peso com esta diluição ({d.mgKgDil} {d.tipo}/kg em {d.volDil} mL)
                     </p>
                   </div>
 
                   {/* Drug warning */}
                   {d.alerta && (
-                    <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '9px 10px', borderLeft: '3px solid #F97316' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#C2410C', fontWeight: '600' }}>⚠ {d.alerta}</p>
+                    <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '9px 10px', borderLeft: '3px solid #F97316' }}>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ {d.alerta}</p>
                     </div>
                   )}
                 </div>
@@ -720,22 +720,22 @@ export default function Sepse() {
           {/* Corticosteroides — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('cortico')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>💊 Corticosteroides (recs. 40-41)</p>
-              {aberto === 'cortico' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>💊 Corticosteroides (recs. 40-41)</p>
+              {aberto === 'cortico' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'cortico' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ backgroundColor: '#ECFDF5', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981' }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#065F46' }}>✓ Insuficiência adrenal suspeita ou documentada</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Dose de estresse independente da hemodinâmica</p>
+                <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981' }}>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)" }}>✓ Insuficiência adrenal suspeita ou documentada</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Dose de estresse independente da hemodinâmica</p>
                 </div>
                 <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>✗ Não usar rotineiramente (rec. 40)</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Estabilidade com fluido + vasoativo → NÃO usar hidrocortisona IV</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Estabilidade com fluido + vasoativo → NÃO usar hidrocortisona IV</p>
                 </div>
-                <div style={{ backgroundColor: '#FFF7ED', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#C2410C' }}>? Evidência insuficiente (rec. 41)</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Choque instável apesar de fluido + vasoativo → pode usar OU não usar hidrocortisona IV</p>
+                <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>? Evidência insuficiente (rec. 41)</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Choque instável apesar de fluido + vasoativo → pode usar OU não usar hidrocortisona IV</p>
                 </div>
               </div>
             )}
@@ -744,8 +744,8 @@ export default function Sepse() {
           {/* Controle de foco — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('foco')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🎯 Controle de Foco (recs. 17-18)</p>
-              {aberto === 'foco' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🎯 Controle de Foco (recs. 17-18)</p>
+              {aberto === 'foco' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'foco' && (
               <div style={{ marginTop: '10px' }}>
@@ -756,7 +756,7 @@ export default function Sepse() {
                   'Consulta cirúrgica e infectologia para focos passíveis de controle',
                   'Decisão de remover dispositivo depende do patógeno e risco cirúrgico',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: '#374151', marginBottom: '5px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: "var(--text-2)", marginBottom: '5px', alignItems: 'flex-start' }}>
                     <span style={{ color: '#F59E0B', flexShrink: 0 }}>▸</span>{item}
                   </div>
                 ))}
@@ -772,7 +772,7 @@ export default function Sepse() {
 
           {/* Metas de ressuscitação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#065F46' }}>🎯 Metas de Ressuscitação</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>🎯 Metas de Ressuscitação</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {[
                 { param: 'TRC',              meta: '≤ 2 segundos',                                              cor: '#10B981' },
@@ -785,8 +785,8 @@ export default function Sepse() {
                 { param: 'Lactato seriado',  meta: 'Tendência de queda',                                        cor: '#3B82F6' },
                 { param: 'SpO₂ (ventilado)', meta: '88-92% — alvo conservador pós-ressuscitação (rec. 39, novo 2026)', cor: '#F59E0B' },
               ].map((m, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: '#F9FAFB', borderRadius: '8px' }}>
-                  <span style={{ fontSize: '12px', color: '#1F2937', fontWeight: '600', flexShrink: 0, marginRight: '8px' }}>{m.param}</span>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: "var(--bg)", borderRadius: '8px' }}>
+                  <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: '600', flexShrink: 0, marginRight: '8px' }}>{m.param}</span>
                   <span style={{ fontSize: '11px', color: m.cor, fontWeight: '700', textAlign: 'right' }}>{m.meta}</span>
                 </div>
               ))}
@@ -795,10 +795,10 @@ export default function Sepse() {
 
           {/* POCUS */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🔊 POCUS à Beira do Leito (rec. 29)</p>
-            <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px', borderLeft: '3px solid #3B82F6', marginBottom: '8px' }}>
-              <p style={{ margin: 0, fontSize: '12px', fontWeight: '600', color: '#1D4ED8' }}>Recomendação condicional — novo SSC 2026</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Usar POCUS cardíaco e pulmonar para guiar ressuscitação, se treinamento e recursos disponíveis</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🔊 POCUS à Beira do Leito (rec. 29)</p>
+            <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #3B82F6', marginBottom: '8px' }}>
+              <p style={{ margin: 0, fontSize: '12px', fontWeight: '600', color: "var(--tx-blue)" }}>Recomendação condicional — novo SSC 2026</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Usar POCUS cardíaco e pulmonar para guiar ressuscitação, se treinamento e recursos disponíveis</p>
             </div>
             {[
               'Avaliar função ventricular (disfunção miocárdica séptica)',
@@ -808,7 +808,7 @@ export default function Sepse() {
               'Diferenciar etiologias de choque (obstrutivo, cardiogênico, distributivo)',
               'Lung US — linhas B, consolidações, pneumotórax',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#374151', marginBottom: '4px', alignItems: 'flex-start' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: "var(--text-2)", marginBottom: '4px', alignItems: 'flex-start' }}>
                 <span style={{ color: '#3B82F6', flexShrink: 0 }}>•</span>{item}
               </div>
             ))}
@@ -816,7 +816,7 @@ export default function Sepse() {
 
           {/* Reavaliação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>📈 Reavaliação Contínua</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>📈 Reavaliação Contínua</p>
             {[
               'Reavaliar após CADA bolus — sinais de sobrecarga hídrica',
               'Lactato seriado — queda indica resposta ao tratamento',
@@ -827,7 +827,7 @@ export default function Sepse() {
               'Investigar e tratar foco infeccioso (controle de fonte)',
               'Implementar reabilitação precoce individualizada (rec. 59, novo 2026)',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#374151', marginBottom: '6px', alignItems: 'flex-start' }}>
+              <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: "var(--text-2)", marginBottom: '6px', alignItems: 'flex-start' }}>
                 <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
@@ -837,14 +837,14 @@ export default function Sepse() {
           {/* Pós-sepse — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('posalta')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>🏥 Seguimento Pós-Sepse (rec. 61, novo 2026)</p>
-              {aberto === 'posalta' ? <ChevronUp size={16} color="#6B7280" /> : <ChevronDown size={16} color="#6B7280" />}
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🏥 Seguimento Pós-Sepse (rec. 61, novo 2026)</p>
+              {aberto === 'posalta' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'posalta' && (
               <div style={{ marginTop: '10px' }}>
-                <div style={{ backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '10px', marginBottom: '8px' }}>
-                  <p style={{ margin: 0, fontSize: '11px', fontWeight: '600', color: '#1D4ED8' }}>Good Practice Statement — SSC 2026</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#374151' }}>Até 1/3 dos sobreviventes terão sequelas físicas, cognitivas ou psicossociais (PICS-P)</p>
+                <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px', marginBottom: '8px' }}>
+                  <p style={{ margin: 0, fontSize: '11px', fontWeight: '600', color: "var(--tx-blue)" }}>Good Practice Statement — SSC 2026</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Até 1/3 dos sobreviventes terão sequelas físicas, cognitivas ou psicossociais (PICS-P)</p>
                 </div>
                 {[
                   'Avaliar fatores de risco para morbidade pós-sepse antes da alta',
@@ -853,7 +853,7 @@ export default function Sepse() {
                   'Avaliar função cognitiva, motora e emocional após alta',
                   'Maior risco: PRISM alto, vasoativo >48h, UTI prolongada, comorbidades, adolescentes',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: '#374151', marginBottom: '5px', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '12px', color: "var(--text-2)", marginBottom: '5px', alignItems: 'flex-start' }}>
                     <span style={{ color: '#3B82F6', flexShrink: 0 }}>▸</span>{item}
                   </div>
                 ))}
@@ -864,8 +864,8 @@ export default function Sepse() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: '#6B7280', textAlign: 'center', lineHeight: '1.6' }}>
+      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
+        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
           Weiss SL et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med / Pediatr Crit Care Med (2026). Rodwell JD et al. J Pediatr 1988;112:761-767.<br />
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
         </p>

@@ -120,7 +120,7 @@ const ESCADA = [
     degrau: 1,
     rotulo: 'Dor Leve (1–3)',
     cor: '#22C55E',
-    corFundo: '#F0FDF4',
+    corFundo: "var(--tint-green)",
     drogas: [
       'Dipirona 15–25 mg/kg/dose VO/IV 6/6h (máx 1 g/dose) · ≥ 3 meses',
       'Paracetamol 10–15 mg/kg/dose VO 4/4–6/6h (máx 75 mg/kg/dia ou 4 g/dia)',
@@ -132,7 +132,7 @@ const ESCADA = [
     degrau: 2,
     rotulo: 'Dor Moderada (4–6)',
     cor: '#F59E0B',
-    corFundo: '#FFFBEB',
+    corFundo: "var(--tint-amber)",
     drogas: [
       'Tramadol 1–2 mg/kg/dose VO/IV 6/6–8/8h (máx 100 mg/dose) · ≥ 1 ano',
       'Associar analgésico não opioide do Degrau 1',
@@ -242,7 +242,7 @@ export default function Dor() {
   ];
 
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', backgroundColor: '#F9FAFB', minHeight: '100vh', padding: '16px' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', backgroundColor: "var(--bg)", minHeight: '100vh', padding: '16px' }}>
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div style={{
@@ -272,8 +272,8 @@ export default function Dor() {
               cursor: 'pointer',
               fontSize: '12px',
               fontWeight: '700',
-              backgroundColor: abaAtiva === aba.id ? '#F97316' : '#F3F4F6',
-              color: abaAtiva === aba.id ? '#FFFFFF' : '#6B7280',
+              backgroundColor: abaAtiva === aba.id ? '#F97316' : "var(--surface-2)",
+              color: abaAtiva === aba.id ? '#FFFFFF' : "var(--muted)",
             }}
           >
             {aba.label}
@@ -291,7 +291,7 @@ export default function Dor() {
             backgroundColor: 'white', borderRadius: '12px',
             padding: '14px', marginBottom: '12px', border: '1px solid #FED7AA',
           }}>
-            <p style={{ fontSize: '12px', fontWeight: '700', color: '#374151', margin: '0 0 10px' }}>
+            <p style={{ fontSize: '12px', fontWeight: '700', color: "var(--text-2)", margin: '0 0 10px' }}>
               Selecionar escala por faixa etária
             </p>
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -303,16 +303,16 @@ export default function Dor() {
                     flex: 1,
                     padding: '8px 4px',
                     borderRadius: '10px',
-                    border: escalaAtiva === e.id ? '2px solid #F97316' : '1px solid #E5E7EB',
-                    backgroundColor: escalaAtiva === e.id ? '#FFF7ED' : 'white',
+                    border: escalaAtiva === e.id ? '2px solid #F97316' : '1px solid var(--border)',
+                    backgroundColor: escalaAtiva === e.id ? "var(--tint-amber)" : 'white',
                     cursor: 'pointer',
                     textAlign: 'center',
                   }}
                 >
-                  <div style={{ fontSize: '13px', fontWeight: '700', color: escalaAtiva === e.id ? '#EA580C' : '#374151' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '700', color: escalaAtiva === e.id ? '#EA580C' : "var(--text-2)" }}>
                     {e.label}
                   </div>
-                  <div style={{ fontSize: '10px', color: '#9CA3AF', marginTop: '2px', lineHeight: 1.3 }}>
+                  <div style={{ fontSize: '10px', color: "var(--muted)", marginTop: '2px', lineHeight: 1.3 }}>
                     {e.idade}
                   </div>
                 </button>
@@ -324,10 +324,10 @@ export default function Dor() {
           {escalaAtiva === 'flacc' && (
             <div>
               <div style={{
-                backgroundColor: '#FFF7ED', borderRadius: '10px',
+                backgroundColor: "var(--tint-amber)", borderRadius: '10px',
                 padding: '10px 12px', marginBottom: '10px', borderLeft: '3px solid #F97316',
               }}>
-                <p style={{ fontSize: '12px', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '12px', color: "var(--tx-amber)", margin: 0, lineHeight: 1.5 }}>
                   <strong>FLACC</strong> — Lactentes e crianças sem comunicação verbal efetiva.
                   Score 0–10. Validada a partir de 2 meses.
                   Referência: Merkel et al., Pediatric Nursing 1997.
@@ -338,16 +338,16 @@ export default function Dor() {
                 <div key={cat.id} style={{
                   backgroundColor: 'white', borderRadius: '12px',
                   padding: '12px 14px', marginBottom: '8px',
-                  border: '1px solid #F3F4F6', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                  border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>
                       {cat.nome}
                     </span>
                     {flacc[cat.id] !== null && (
                       <span style={{
                         fontSize: '13px', fontWeight: '700', color: '#F97316',
-                        backgroundColor: '#FFF7ED', padding: '2px 10px', borderRadius: '8px',
+                        backgroundColor: "var(--tint-amber)", padding: '2px 10px', borderRadius: '8px',
                       }}>
                         {flacc[cat.id]}
                       </span>
@@ -361,12 +361,12 @@ export default function Dor() {
                         style={{
                           padding: '9px 12px',
                           borderRadius: '8px',
-                          border: flacc[cat.id] === op.v ? '2px solid #F97316' : '1px solid #E5E7EB',
-                          backgroundColor: flacc[cat.id] === op.v ? '#FFF7ED' : '#F9FAFB',
+                          border: flacc[cat.id] === op.v ? '2px solid #F97316' : '1px solid var(--border)',
+                          backgroundColor: flacc[cat.id] === op.v ? "var(--tint-amber)" : "var(--surface-2)",
                           cursor: 'pointer',
                           textAlign: 'left',
                           fontSize: '13px',
-                          color: flacc[cat.id] === op.v ? '#EA580C' : '#374151',
+                          color: flacc[cat.id] === op.v ? '#EA580C' : "var(--text-2)",
                           fontWeight: flacc[cat.id] === op.v ? '600' : '400',
                         }}
                       >
@@ -408,8 +408,8 @@ export default function Dor() {
                 onClick={resetFlacc}
                 style={{
                   width: '100%', marginTop: '8px', padding: '10px',
-                  borderRadius: '10px', border: '1px solid #E5E7EB',
-                  backgroundColor: 'white', color: '#9CA3AF',
+                  borderRadius: '10px', border: '1px solid var(--border)',
+                  backgroundColor: 'white', color: "var(--muted)",
                   fontSize: '13px', cursor: 'pointer', fontWeight: '600',
                 }}
               >
@@ -422,10 +422,10 @@ export default function Dor() {
           {escalaAtiva === 'wong' && (
             <div>
               <div style={{
-                backgroundColor: '#FFF7ED', borderRadius: '10px',
+                backgroundColor: "var(--tint-amber)", borderRadius: '10px',
                 padding: '10px 12px', marginBottom: '10px', borderLeft: '3px solid #F97316',
               }}>
-                <p style={{ fontSize: '12px', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '12px', color: "var(--tx-amber)", margin: 0, lineHeight: 1.5 }}>
                   <strong>Wong-Baker FACES</strong> — Para crianças de 3–7 anos. Mostrar a escala
                   e perguntar: "Qual desses rostos mostra o quanto você está sentindo dor agora?"
                   Referência: Wong & Baker, 1988.
@@ -434,7 +434,7 @@ export default function Dor() {
 
               <div style={{
                 backgroundColor: 'white', borderRadius: '12px', padding: '16px',
-                border: '1px solid #F3F4F6', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', flexWrap: 'wrap' }}>
                   {WONG_FACES.map(f => (
@@ -445,17 +445,17 @@ export default function Dor() {
                         width: '54px',
                         padding: '8px 4px 6px',
                         borderRadius: '10px',
-                        border: wongBaker === f.valor ? '2px solid #F97316' : '1px solid #E5E7EB',
-                        backgroundColor: wongBaker === f.valor ? '#FFF7ED' : '#F9FAFB',
+                        border: wongBaker === f.valor ? '2px solid #F97316' : '1px solid var(--border)',
+                        backgroundColor: wongBaker === f.valor ? "var(--tint-amber)" : "var(--surface-2)",
                         cursor: 'pointer',
                         textAlign: 'center',
                       }}
                     >
                       <FaceSVG valor={f.valor} />
-                      <div style={{ fontSize: '15px', fontWeight: '800', color: '#374151', marginTop: '4px' }}>
+                      <div style={{ fontSize: '15px', fontWeight: '800', color: "var(--text-2)", marginTop: '4px' }}>
                         {f.valor}
                       </div>
-                      <div style={{ fontSize: '9px', color: '#9CA3AF', lineHeight: 1.3, marginTop: '2px' }}>
+                      <div style={{ fontSize: '9px', color: "var(--muted)", lineHeight: 1.3, marginTop: '2px' }}>
                         {f.desc}
                       </div>
                     </button>
@@ -494,10 +494,10 @@ export default function Dor() {
           {escalaAtiva === 'nrs' && (
             <div>
               <div style={{
-                backgroundColor: '#FFF7ED', borderRadius: '10px',
+                backgroundColor: "var(--tint-amber)", borderRadius: '10px',
                 padding: '10px 12px', marginBottom: '10px', borderLeft: '3px solid #F97316',
               }}>
-                <p style={{ fontSize: '12px', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '12px', color: "var(--tx-amber)", margin: 0, lineHeight: 1.5 }}>
                   <strong>NRS — Escala Numérica de Dor</strong> — Para crianças ≥ 8 anos e
                   adolescentes. Perguntar: "De 0 a 10, que nota você dá para a sua dor agora?"
                 </p>
@@ -505,7 +505,7 @@ export default function Dor() {
 
               <div style={{
                 backgroundColor: 'white', borderRadius: '12px', padding: '16px',
-                border: '1px solid #F3F4F6', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}>
                 <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', flexWrap: 'wrap' }}>
                   {[0,1,2,3,4,5,6,7,8,9,10].map(n => {
@@ -518,9 +518,9 @@ export default function Dor() {
                           width: '40px',
                           height: '44px',
                           borderRadius: '10px',
-                          border: nrs === n ? `2px solid ${c}` : '1px solid #E5E7EB',
-                          backgroundColor: nrs === n ? c : '#F9FAFB',
-                          color: nrs === n ? 'white' : '#374151',
+                          border: nrs === n ? `2px solid ${c}` : '1px solid var(--border)',
+                          backgroundColor: nrs === n ? c : "var(--surface-2)",
+                          color: nrs === n ? 'white' : "var(--text-2)",
                           fontSize: '17px',
                           fontWeight: '800',
                           cursor: 'pointer',
@@ -574,18 +574,18 @@ export default function Dor() {
         <div>
           {/* Contraindicações */}
           <div style={{
-            backgroundColor: '#FEF2F2', borderRadius: '12px',
+            backgroundColor: "var(--tint-red)", borderRadius: '12px',
             padding: '12px 14px', marginBottom: '12px', border: '1px solid #FECACA',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
               <AlertTriangle size={13} color="#DC2626" />
-              <span style={{ fontSize: '12px', fontWeight: '700', color: '#991B1B' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: "var(--tx-red)" }}>
                 Contraindicações importantes
               </span>
             </div>
             <ul style={{ margin: 0, paddingLeft: '16px' }}>
               {CONTRAINDICACOES.map((c, i) => (
-                <li key={i} style={{ fontSize: '12px', color: '#991B1B', lineHeight: '1.7' }}>{c}</li>
+                <li key={i} style={{ fontSize: '12px', color: "var(--tx-red)", lineHeight: '1.7' }}>{c}</li>
               ))}
             </ul>
           </div>
@@ -618,7 +618,7 @@ export default function Dor() {
                     {d.degrau}
                   </div>
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>
                       Degrau {d.degrau}
                     </div>
                     <div style={{ fontSize: '12px', color: d.cor, fontWeight: '600' }}>
@@ -628,7 +628,7 @@ export default function Dor() {
                 </div>
                 {expandido === d.degrau
                   ? <ChevronUp size={18} color={d.cor} />
-                  : <ChevronDown size={18} color="#9CA3AF" />}
+                  : <ChevronDown size={18} color="var(--muted)" />}
               </button>
 
               {expandido === d.degrau && (
@@ -636,7 +636,7 @@ export default function Dor() {
                   <div style={{ backgroundColor: d.corFundo, borderRadius: '8px', padding: '10px 12px', marginTop: '8px' }}>
                     <ul style={{ margin: 0, paddingLeft: '18px' }}>
                       {d.drogas.map((dr, i) => (
-                        <li key={i} style={{ fontSize: '13px', color: '#374151', lineHeight: '1.7', marginBottom: '2px' }}>
+                        <li key={i} style={{ fontSize: '13px', color: "var(--text-2)", lineHeight: '1.7', marginBottom: '2px' }}>
                           {dr}
                         </li>
                       ))}
@@ -645,18 +645,18 @@ export default function Dor() {
 
                   {d.alerta && (
                     <div style={{
-                      backgroundColor: '#FEF2F2', borderRadius: '8px',
+                      backgroundColor: "var(--tint-red)", borderRadius: '8px',
                       padding: '8px 12px', marginTop: '8px', borderLeft: '3px solid #EF4444',
                     }}>
-                      <p style={{ fontSize: '12px', color: '#991B1B', margin: 0, lineHeight: 1.5 }}>
+                      <p style={{ fontSize: '12px', color: "var(--tx-red)", margin: 0, lineHeight: 1.5 }}>
                         {d.alerta}
                       </p>
                     </div>
                   )}
 
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginTop: '8px' }}>
-                    <Info size={12} color="#9CA3AF" style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <p style={{ fontSize: '11px', color: '#9CA3AF', margin: 0, lineHeight: 1.5 }}>
+                    <Info size={12} color="var(--muted)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <p style={{ fontSize: '11px', color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
                       Doses resumidas — consultar módulo Pedfarma para posologia completa.
                     </p>
                   </div>
@@ -666,10 +666,10 @@ export default function Dor() {
           ))}
 
           <div style={{
-            backgroundColor: '#EFF6FF', borderRadius: '10px',
+            backgroundColor: "var(--tint-blue)", borderRadius: '10px',
             padding: '12px 14px', marginTop: '4px', border: '1px solid #BFDBFE',
           }}>
-            <p style={{ fontSize: '12px', color: '#1E40AF', margin: 0, lineHeight: 1.6 }}>
+            <p style={{ fontSize: '12px', color: "var(--tx-blue)", margin: 0, lineHeight: 1.6 }}>
               Fonte: WHO Analgesic Ladder (adapt. pediátrica) · AAP 2022 · SBP 2020 · SBCP 2021
             </p>
           </div>
@@ -682,10 +682,10 @@ export default function Dor() {
       {abaAtiva === 'nao-farm' && (
         <div>
           <div style={{
-            backgroundColor: '#FFF7ED', borderRadius: '10px',
+            backgroundColor: "var(--tint-amber)", borderRadius: '10px',
             padding: '10px 14px', marginBottom: '12px', borderLeft: '3px solid #F97316',
           }}>
-            <p style={{ fontSize: '12px', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '12px', color: "var(--tx-amber)", margin: 0, lineHeight: 1.5 }}>
               Medidas não farmacológicas são complementares e devem ser associadas
               à analgesia farmacológica quando indicada.
             </p>
@@ -695,7 +695,7 @@ export default function Dor() {
             <div key={i} style={{
               backgroundColor: 'white',
               borderRadius: '12px',
-              border: '1px solid #F3F4F6',
+              border: '1px solid var(--border)',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               marginBottom: '10px',
               overflow: 'hidden',
@@ -708,19 +708,19 @@ export default function Dor() {
                   background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
                 }}
               >
-                <span style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937' }}>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>
                   {grupo.faixa}
                 </span>
                 {expandido === 'nf' + i
                   ? <ChevronUp size={18} color="#F97316" />
-                  : <ChevronDown size={18} color="#9CA3AF" />}
+                  : <ChevronDown size={18} color="var(--muted)" />}
               </button>
 
               {expandido === 'nf' + i && (
-                <div style={{ padding: '0 16px 14px', borderTop: '1px solid #F3F4F6' }}>
+                <div style={{ padding: '0 16px 14px', borderTop: '1px solid var(--border)' }}>
                   <ul style={{ margin: '8px 0 0', paddingLeft: '18px' }}>
                     {grupo.medidas.map((m, j) => (
-                      <li key={j} style={{ fontSize: '13px', color: '#374151', lineHeight: '1.7', marginBottom: '2px' }}>
+                      <li key={j} style={{ fontSize: '13px', color: "var(--text-2)", lineHeight: '1.7', marginBottom: '2px' }}>
                         {m}
                       </li>
                     ))}
@@ -731,10 +731,10 @@ export default function Dor() {
           ))}
 
           <div style={{
-            backgroundColor: '#EFF6FF', borderRadius: '10px',
+            backgroundColor: "var(--tint-blue)", borderRadius: '10px',
             padding: '12px 14px', marginTop: '4px', border: '1px solid #BFDBFE',
           }}>
-            <p style={{ fontSize: '12px', color: '#1E40AF', margin: 0, lineHeight: 1.6 }}>
+            <p style={{ fontSize: '12px', color: "var(--tx-blue)", margin: 0, lineHeight: 1.6 }}>
               Fonte: AAP 2022 · SBP 2020 · Cochrane Reviews (sacarose oral neonatal, evidência Ia)
             </p>
           </div>
@@ -743,11 +743,11 @@ export default function Dor() {
 
       {/* ── Disclaimer ─────────────────────────────────────────────────────── */}
       <div style={{
-        backgroundColor: '#F3F4F6', borderRadius: '10px', padding: '12px',
+        backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px',
         marginTop: '20px', display: 'flex', gap: '8px', alignItems: 'flex-start',
       }}>
-        <AlertCircle size={14} style={{ color: '#9CA3AF', flexShrink: 0, marginTop: '1px' }} />
-        <p style={{ fontSize: '11px', color: '#9CA3AF', margin: 0, lineHeight: '1.5' }}>
+        <AlertCircle size={14} style={{ color: "var(--muted)", flexShrink: 0, marginTop: '1px' }} />
+        <p style={{ fontSize: '11px', color: "var(--muted)", margin: 0, lineHeight: '1.5' }}>
           Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
           Doses resumidas — consultar módulo Pedfarma para posologia completa.
         </p>
