@@ -2,6 +2,8 @@
 /* eslint-disable react-refresh/only-export-components -- exporta calcularDose/DRUGS (funções/dados puros) para testes unitários */
 import { useState } from "react";
 import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 const PRIMARY = "#8B5CF6";
 
@@ -485,6 +487,7 @@ export default function Pedfarma() {
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
         {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {peso} kg — use a dose como referência para calcular</p>}
+        <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
       </div>
 
       {/* Conversor de equivalência de corticosteroides */}
