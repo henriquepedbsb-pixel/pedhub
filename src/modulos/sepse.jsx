@@ -1,5 +1,8 @@
+/* eslint-disable react-refresh/only-export-components -- exporta cálculos de vasoativa/Rodwell para testes */
 import { useState, useMemo } from 'react';
 import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -13,7 +16,7 @@ const parseNum = (val) => {
 //   mcg/kg/min → fator = 60 × volDil / (mgKgDil × 1000)
 //   U/kg/h     → fator = volDil / mgKgDil
 // Resultado: V(mL/h) = dose × fator  (independente do peso para esta diluição)
-const VASOATIVOS = [
+export const VASOATIVOS = [
   {
     id: 'epi', nome: 'Epinefrina', alt: 'Adrenalina',
     cor: '#DC2626', corBg: "var(--tint-red)", corBorder: '#FECACA',
@@ -94,7 +97,7 @@ const VASOATIVOS = [
   },
 ];
 
-const calcDiluicao = (droga, p) => {
+export const calcDiluicao = (droga, p) => {
   if (p <= 0) return null;
   const qtd      = droga.mgKgDil * p;
   const volDroga = qtd / droga.concAmpola;
@@ -103,7 +106,7 @@ const calcDiluicao = (droga, p) => {
   return { qtd, volDroga, volSG5, concFinal };
 };
 
-const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
+export const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
 
 // ─── Score de Rodwell — triagem hematológica de sepse neonatal precoce ──────
 // Rodwell et al. 1988 · 7 critérios hematológicos, 1 ponto cada.
@@ -124,7 +127,7 @@ const RODWELL_ITEMS = [
   "Plaquetopenia (≤ 150.000/mm³)",
 ];
 
-function rodwellResult(score) {
+export function rodwellResult(score) {
   if (score <= 2) {
     return {
       grau: "Baixa probabilidade de sepse",
@@ -369,6 +372,7 @@ export default function Sepse() {
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
               <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 12,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none', border: `2px solid ${p > 0 ? C : '#D1D5DB'}` }} />
+              <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {[

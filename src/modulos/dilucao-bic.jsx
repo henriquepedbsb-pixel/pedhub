@@ -7,6 +7,8 @@
 /* eslint-disable react-refresh/only-export-components -- exporta rateA/rateB/DROGAS para testes unitários */
 import { useState } from "react";
 import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoG } from "../lib/sanity";
 
 const PRIMARY = "#0D9488";
 const C = "#DC2626";
@@ -233,6 +235,7 @@ function TabBIC() {
         <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 6 }}>Peso (g) *</label>
         <input type="text" inputMode="decimal" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)} placeholder="Ex: 1450"
           style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
+        <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoRaw).replace(",", ".")))} />
         {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{pkKg.toFixed(3)} kg</p>}
       </div>
 

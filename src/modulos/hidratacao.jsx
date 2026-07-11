@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components -- exporta holliday/parsePeso (funções puras) para testes unitários */
 import { useState } from "react";
 import { Droplets, Info, AlertTriangle, CheckCircle } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 const PRIMARY = "#3B82F6";
 
@@ -300,6 +302,7 @@ export default function Hidratacao() {
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
+        <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
         {peso && <p style={{ fontSize: 12, fontWeight: 700, color: PRIMARY, margin: "4px 0 0" }}>{peso} kg · Holliday: {holliday(peso).vol} mL/dia ({holliday(peso).volHora} mL/h)</p>}
       </div>
       <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>

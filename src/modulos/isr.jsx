@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -309,6 +311,7 @@ export default function ISR() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>

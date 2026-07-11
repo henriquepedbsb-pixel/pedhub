@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components -- exporta correções puras (K/Ca/Mg) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -227,6 +229,7 @@ export default function Eletrolitos() {
           <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
           <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+          <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
         </div>
         <div style={card({ padding: '10px' })}>
           <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
