@@ -559,8 +559,8 @@ export default function Vacinal() {
                 return (
                   <div key={i} style={{
                     borderRadius: 10,
-                    border: "1.5px solid " + (perdida ? "#FECACA" : aplicavel ? "#A5F3FC" : "var(--border)"),
-                    background: perdida ? "var(--tint-red)" : aplicavel ? "#F0FDFF" : "var(--surface-2)",
+                    border: "1.5px solid " + (perdida ? "rgba(239,68,68,0.35)" : aplicavel ? "rgba(6,182,212,0.35)" : "var(--border)"),
+                    background: perdida ? "var(--tint-red)" : aplicavel ? "var(--tint-teal)" : "var(--surface-2)",
                     marginBottom: 10, padding: "11px 14px",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, gap: 8 }}>
