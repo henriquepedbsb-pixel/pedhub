@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw } from 'lucide-react';
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -216,6 +218,7 @@ export default function Surfactante() {
             <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
             <input type="number" inputMode="decimal" step="0.01" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 1,250"
               style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '20px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+              <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${p} kg`}</p>}
           </div>
 

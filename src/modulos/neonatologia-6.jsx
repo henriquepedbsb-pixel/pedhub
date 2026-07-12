@@ -1,6 +1,8 @@
 // Preview — Reanimação RN ≥34 semanas · Diretrizes SBP 2026
 import { useState } from "react";
 import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 const BG  = "#0284C7";
 const BGL = "var(--tint-blue)";
@@ -587,6 +589,7 @@ export default function App() {
             onChange={e => setPeso(e.target.value)}
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-400"
           />
+          <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
         </div>
         <div className="flex-1">
           <p className="text-xs text-gray-500 mb-1 font-medium">IG (semanas)</p>

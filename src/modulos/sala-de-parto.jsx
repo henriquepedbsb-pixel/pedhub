@@ -1,4 +1,6 @@
 import { useState } from "react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 import {
   Baby,
   Wind,
@@ -136,6 +138,7 @@ export default function SalaDeParto() {
             placeholder="Ex: 1,8"
             className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-amber-500"
           />
+          <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoStr).replace(',', '.')))} />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-500 mb-1">

@@ -16,6 +16,8 @@ import {
   IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW,
   getPretermPercs, percFromBand5, percFromBand3, classify,
 } from "./percentis";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoG } from "../lib/sanity";
 
 const COR = "#DB2777";
 const COR_LITE = "#FCE7F3";
@@ -310,6 +312,7 @@ export default function ClassificacaoRN() {
         <CardTitle>Medidas ao nascer (pelo menos uma)</CardTitle>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <Input label="Peso ao nascer" val={peso} set={setPeso} ph="ex: 1500" unit="g" />
+          <AvisoSanidade msg={avisoPesoG(parseFloat(String(peso).replace(',', '.')))} />
           <Input label="Estatura ao nascer" val={estatura} set={setEstatura} ph="ex: 38,0" unit="cm" />
           <Input label="Perímetro cefálico ao nascer" val={pc} set={setPc} ph="ex: 27,0" unit="cm" />
         </div>

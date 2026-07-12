@@ -6,6 +6,8 @@
 
 import { useState } from "react";
 import { Info, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoG } from "../lib/sanity";
 
 const PRIMARY = "#0D9488";
 const C = "#6366F1";
@@ -386,6 +388,7 @@ function TabNPT() {
         <Grid2>
           <Fld label="Peso (g) *">
             <Inp value={pesoG} set={setPesoG} placeholder="Ex: 1450" mode="decimal" />
+            <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoG).replace(',', '.')))} />
           </Fld>
           <Fld label="Volume total (mL/kg/dia) *">
             <Inp value={volKgD} set={setVolKgD} placeholder="80–150" mode="decimal" />

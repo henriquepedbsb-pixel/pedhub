@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Info, AlertTriangle, CheckCircle, Droplets } from "lucide-react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 
 const PRIMARY = "#0D9488";
 
@@ -68,6 +70,7 @@ function TabHipoglicemia() {
           onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #FDE68A", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
+        <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(',', '.')))} />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
             Bolus D10%: {bolus} mL IV · TIG 4–8 mg/kg/min → {infD10_4}–{infD10_8} mL/h

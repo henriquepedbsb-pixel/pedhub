@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 import {
   Heart, Wind, AlertTriangle, CheckCircle,
   ChevronDown, ChevronUp, Activity,
@@ -88,6 +90,7 @@ function MedicCalculator() {
       <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 5 }}>Peso ao nascer (kg)</label>
       <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 1,2"
         style={{ width: "100%", padding: "10px 12px", border: "1.5px solid #CBD5E1", borderRadius: 8, fontSize: 15, boxSizing: "border-box", fontFamily: "DM Sans, sans-serif", marginBottom: 12 }} />
+        <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
       <div style={{ background: "var(--tint-teal)", border: "1.5px solid #5EEAD4", borderRadius: 10, padding: 13 }}>
         <p style={{ margin: "0 0 8px", fontSize: 11, fontWeight: 700, color: COR_NEO, letterSpacing: 0.5, textTransform: "uppercase" }}>Adrenalina diluída (1 mg + 9 mL SF = 0,1 mg/mL)</p>
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, marginBottom: 8, borderBottom: "1px solid #99F6E4", alignItems: "flex-start" }}>

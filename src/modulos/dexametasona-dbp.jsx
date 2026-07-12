@@ -6,6 +6,8 @@
  */
 
 import { useState } from "react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoG } from "../lib/sanity";
 import {
   Info, AlertTriangle, CheckCircle, Copy, ExternalLink,
 } from "lucide-react";
@@ -159,6 +161,7 @@ function TabDART() {
       </div>
 
       <PesoInput value={pesoRaw} set={setPesoRaw} cor={C} />
+      <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoRaw).replace(',', '.')))} />
 
       {fases && (
         <>

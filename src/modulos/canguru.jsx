@@ -5,6 +5,8 @@
  */
 
 import { useState } from 'react';
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoG } from "../lib/sanity";
 import {
   Scale, Calendar, Droplets, Pill,
   Printer, AlertTriangle, CheckCircle,
@@ -407,6 +409,7 @@ function TabPrescricao() {
         <Grid2>
           <Fld label="Peso atual (g) *">
             <Inp value={pesoG} onChange={setPesoG} placeholder="1450" mode="decimal" />
+            <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoG).replace(',', '.')))} />
           </Fld>
           <Fld label="Peso nasc. (g) *">
             <Inp value={pesornG} onChange={setPesornG} placeholder="1200" mode="decimal" />

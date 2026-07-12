@@ -1,4 +1,6 @@
 import { useState } from "react";
+import AvisoSanidade from "../components/AvisoSanidade";
+import { avisoPesoKg } from "../lib/sanity";
 import {
   AlertTriangle,
   Activity,
@@ -1121,6 +1123,7 @@ export default function Urgencias() {
               background: "var(--surface)", color: "var(--text)",
             }}
           />
+          <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(',', '.')))} />
           {peso && (
             <div style={{
               background: PRIMARY, color: "#fff", borderRadius: 8,
