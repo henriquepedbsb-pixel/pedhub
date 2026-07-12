@@ -2,6 +2,8 @@
 // Hub Pediatria Geral — tela de entrada para os módulos de Pediatria Geral
 
 import { useNavigate } from "react-router-dom";
+import { useFavoritos } from "../lib/favoritos";
+import FavoritoStar from "../components/FavoritoStar";
 import {
   Stethoscope,
   AlertTriangle,
@@ -143,12 +145,12 @@ function ModuloCard({ modulo, onClick }) {
 /* ─── Hub Pediatria Geral ─────────────────────────────────────────────────── */
 export default function PediatriaGeral() {
   const navigate = useNavigate();
+  const favRotas = useFavoritos();
   const totalMods = SECOES.reduce((acc, s) => acc + s.mods.length, 0);
 
   return (
-    <div style={{
+    <div className="ph-shell" style={{
       fontFamily: "'DM Sans', sans-serif",
-      maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
       background: "var(--bg)",
     }}>
@@ -204,15 +206,14 @@ export default function PediatriaGeral() {
 
             <div style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
               gap: 10,
             }}>
               {secao.mods.map((m) => (
-                <ModuloCard
-                  key={m.rota}
-                  modulo={m}
-                  onClick={() => navigate(m.rota)}
-                />
+                <div key={m.rota} style={{ position: "relative" }}>
+                  <ModuloCard modulo={m} onClick={() => navigate(m.rota)} />
+                  <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
+                </div>
               ))}
             </div>
           </div>

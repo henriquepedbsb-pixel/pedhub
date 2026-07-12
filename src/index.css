@@ -4,6 +4,12 @@
 
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
 
+/* Coluna de leitura compartilhada (home, sub-hubs e cabeçalho): estreita no
+   celular, alarga no desktop para aproveitar o espaço lateral. */
+.ph-shell { width: 100%; max-width: 480px; margin: 0 auto; }
+@media (min-width: 620px) { .ph-shell { max-width: 600px; } }
+@media (min-width: 860px) { .ph-shell { max-width: 720px; } }
+
 /* ─── Tokens de tema ────────────────────────────────────────────────────────
    Moldura (bg/superfície/texto/borda) + tints de fundo + TEXTO semântico.
    Os tokens --tx-* resolvem o problema de textos semânticos escuros (ex.:

@@ -141,6 +141,8 @@ function Header() {
   if (!modulo) return null;
 
   const destinoVoltar = modulo.voltar || "/";
+  // Sub-hubs acompanham a coluna larga do desktop; módulos seguem em 480.
+  const ehSubHub = location.pathname === "/pediatria-geral" || location.pathname === "/neonatal";
 
   return (
     <div style={{
@@ -151,11 +153,14 @@ function Header() {
       boxShadow: "0 4px 16px rgba(16,24,40,0.04)",
       width: "100%",
     }}>
-      <div style={{
-        maxWidth: 480, margin: "0 auto",
-        display: "flex", alignItems: "center",
-        padding: "11px 16px", gap: 12,
-      }}>
+      <div
+        className={ehSubHub ? "ph-shell" : undefined}
+        style={{
+          maxWidth: ehSubHub ? undefined : 480, margin: "0 auto",
+          display: "flex", alignItems: "center",
+          padding: "11px 16px", gap: 12,
+        }}
+      >
         <button
           onClick={() => navigate(destinoVoltar)}
           aria-label="Voltar"

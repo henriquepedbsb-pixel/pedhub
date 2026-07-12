@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useFavoritos } from "./lib/favoritos";
+import FavoritoStar from "./components/FavoritoStar";
 import {
   Activity,
   AlertTriangle,
@@ -27,6 +29,7 @@ import {
   Scale,
   Search,
   Shield,
+  Star,
   Stethoscope,
   Sun,
   Syringe,
@@ -266,6 +269,48 @@ function ModuloCard({ modulo, onClick }) {
   );
 }
 
+/* ─── Card compacto (ícone + rótulo, sem descrição) — usado nos favoritos ─── */
+function QuickCard({ modulo, onClick }) {
+  const { label, Icon, cor } = modulo;
+  return (
+    <button
+      onClick={onClick}
+      className="ph-press ph-rise"
+      style={{
+        "--sh": "0 1px 3px rgba(16,24,40,0.06)",
+        "--sh-hover": `0 12px 24px ${cor}26, 0 3px 8px rgba(16,24,40,0.08)`,
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        borderRadius: 14,
+        padding: "12px 10px",
+        cursor: "pointer",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 8,
+        width: "100%",
+      }}
+    >
+      <div style={{
+        width: 40, height: 40, borderRadius: 12,
+        background: `linear-gradient(135deg, ${cor}24, ${cor}12)`,
+        border: `1px solid ${cor}22`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
+      }}>
+        <Icon size={20} color={cor} />
+      </div>
+      <p style={{
+        fontWeight: 700, fontSize: 12.5,
+        color: "var(--text)", margin: 0,
+        lineHeight: 1.25,
+        wordBreak: "break-word", hyphens: "auto",
+      }}>{label}</p>
+    </button>
+  );
+}
+
 /* ─── Card "Em breve" (placeholder, não navega) ──────────────────────────── */
 function BreveCard({ modulo, onClick }) {
   const { label, desc, Icon } = modulo;
@@ -320,7 +365,6 @@ function PediatriaGateway({ count, onClick }) {
         "--sh": "0 4px 16px rgba(30,64,175,0.28)",
         "--sh-hover": "0 18px 38px rgba(30,64,175,0.40)",
         position: "relative", overflow: "hidden",
-        gridColumn: "1 / -1",
         background: "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)",
         border: "none",
         borderRadius: 18,
@@ -369,7 +413,6 @@ function NeonatalGateway({ count, onClick }) {
         "--sh": "0 4px 16px rgba(14,116,144,0.28)",
         "--sh-hover": "0 18px 38px rgba(14,116,144,0.40)",
         position: "relative", overflow: "hidden",
-        gridColumn: "1 / -1",
         background: "linear-gradient(135deg, #0E7490 0%, #155E75 100%)",
         border: "none",
         borderRadius: 18,
@@ -432,10 +475,15 @@ export default function PedHub() {
   const totalPediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral").length;
   const totalNeonatal = MODULOS.filter(m => m.grupo === "Neonatologia").length;
 
+  /* Favoritos do usuário: resolve as rotas salvas para os módulos, na ordem. */
+  const favRotas = useFavoritos();
+  const favItems = favRotas
+    .map(rota => MODULOS.find(m => m.rota === rota))
+    .filter(Boolean);
+
   return (
-    <div style={{
+    <div className="ph-shell" style={{
       fontFamily: "'DM Sans', sans-serif",
-      maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
       background: "var(--bg)",
     }}>
@@ -546,9 +594,12 @@ export default function PedHub() {
               <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
               <span style={{ fontSize: 11, color: "var(--muted)" }}>{resultadosBusca.length + resultadosBreve.length}</span>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
               {resultadosBusca.map(m => (
-                <ModuloCard key={m.rota} modulo={m} onClick={() => navigate(m.rota)} />
+                <div key={m.rota} style={{ position: "relative" }}>
+                  <ModuloCard modulo={m} onClick={() => navigate(m.rota)} />
+                  <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
+                </div>
               ))}
               {resultadosBreve.map(m => (
                 <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
@@ -561,7 +612,7 @@ export default function PedHub() {
             )}
           </div>
         ) : (
-          /* ── Modo navegação: portais Pediatria Geral + Neonatologia ── */
+          /* ── Modo navegação: portais em cima, favoritos embaixo ── */
           <>
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
@@ -569,13 +620,14 @@ export default function PedHub() {
                   fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                   letterSpacing: "0.07em", textTransform: "uppercase",
                 }}>
-                  Pediatria Geral
+                  Explorar
                 </p>
                 <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-                <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalPediatria}</span>
+                <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalPediatria + totalNeonatal}</span>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
                 <PediatriaGateway count={totalPediatria} onClick={() => navigate("/pediatria-geral")} />
+                <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
               </div>
             </div>
 
@@ -585,14 +637,40 @@ export default function PedHub() {
                   fontWeight: 700, fontSize: 12, color: "var(--text-2)", margin: 0,
                   letterSpacing: "0.07em", textTransform: "uppercase",
                 }}>
-                  Neonatologia
+                  Favoritos
                 </p>
                 <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-                <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalNeonatal}</span>
+                <span style={{ fontSize: 11, color: "var(--muted)" }}>{favItems.length}</span>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
-              </div>
+              {favItems.length > 0 ? (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(104px, 1fr))", gap: 10 }}>
+                  {favItems.map(m => (
+                    <div key={m.rota} style={{ position: "relative" }}>
+                      <QuickCard modulo={m} onClick={() => navigate(m.rota)} />
+                      <FavoritoStar rota={m.rota} ativo />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{
+                  border: "1.5px dashed var(--border)",
+                  borderRadius: 14,
+                  padding: "18px 16px",
+                  display: "flex", alignItems: "center", gap: 12,
+                  background: "var(--surface)",
+                }}>
+                  <div style={{
+                    width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+                    background: "var(--tint-amber)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <Star size={19} color="#F59E0B" fill="#F59E0B" />
+                  </div>
+                  <p style={{ fontSize: 12.5, color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
+                    Toque na <strong style={{ color: "var(--text-2)" }}>estrela</strong> de qualquer módulo (na busca ou dentro dos grupos) para tê-lo aqui, a um toque.
+                  </p>
+                </div>
+              )}
             </div>
 
             {EM_BREVE.length > 0 && (

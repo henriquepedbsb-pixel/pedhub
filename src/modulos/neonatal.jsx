@@ -2,6 +2,8 @@
 // Hub Neonatal — tela de entrada para os módulos de Neonatologia
 
 import { useNavigate } from "react-router-dom";
+import { useFavoritos } from "../lib/favoritos";
+import FavoritoStar from "../components/FavoritoStar";
 import {
   Baby,
   Scale,
@@ -129,12 +131,12 @@ function ModuloCard({ modulo, onClick }) {
 /* ─── Hub Neonatal ───────────────────────────────────────────────────────── */
 export default function Neonatal() {
   const navigate = useNavigate();
+  const favRotas = useFavoritos();
   const totalMods = SECOES.reduce((acc, s) => acc + s.mods.length, 0);
 
   return (
-    <div style={{
+    <div className="ph-shell" style={{
       fontFamily: "'DM Sans', sans-serif",
-      maxWidth: 480, margin: "0 auto",
       minHeight: "100vh",
       background: "var(--bg)",
     }}>
@@ -190,15 +192,14 @@ export default function Neonatal() {
 
             <div style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
               gap: 10,
             }}>
               {secao.mods.map((m) => (
-                <ModuloCard
-                  key={m.rota}
-                  modulo={m}
-                  onClick={() => navigate(m.rota)}
-                />
+                <div key={m.rota} style={{ position: "relative" }}>
+                  <ModuloCard modulo={m} onClick={() => navigate(m.rota)} />
+                  <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
+                </div>
               ))}
             </div>
           </div>
