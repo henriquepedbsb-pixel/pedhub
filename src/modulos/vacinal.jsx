@@ -28,7 +28,7 @@ const CALENDAR = [
     privado: [
       "Pentavalente ou Hexavalente (1ª)",
       "VIP (1ª)",
-      "Pneumo 13 ou 15 (1ª)",
+      "Pneumo 20 — VPC20 (1ª)",
       "Rotavírus (1ª)",
       "MenB Bexsero (1ª)",
     ],
@@ -49,7 +49,7 @@ const CALENDAR = [
     privado: [
       "Pentavalente ou Hexavalente (2ª)",
       "VIP (2ª)",
-      "Pneumo 13 ou 15 (2ª)",
+      "Pneumo 20 — VPC20 (2ª)",
       "Rotavírus (2ª)",
       "MenB (2ª)",
     ],
@@ -88,7 +88,7 @@ const CALENDAR = [
     ],
     privado: [
       "SCRV Tetraviral SCR+Varicela (1ª)",
-      "Pneumo 13/15 (reforço)",
+      "Pneumo 20 — VPC20 (reforço)",
       "MenACWY (reforço)",
       "Hepatite A (1ª)",
       "MenB (3ª — reforço)",
