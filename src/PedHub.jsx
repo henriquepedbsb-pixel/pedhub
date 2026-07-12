@@ -101,6 +101,75 @@ const MODULOS = [
   { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D", grupo: "Neonatologia" },
 ];
 
+/* ─── Palavras-chave de busca por módulo ─────────────────────────────────────
+   Sinônimos, fármacos, protocolos e condições que NÃO estão no título/desc,
+   para a busca encontrar "o que eu preciso" e não só "o nome do módulo". */
+const SEARCH_TAGS = {
+  "/percentis-oms": "peso altura estatura perimetro cefalico crescimento imc z-escore curva",
+  "/urgencias": "adrenalina epinefrina pals rcp parada anafilaxia asma crise convulsiva estado de mal choque cetoacidose cad salbutamol emergencia reanimacao",
+  "/formulas": "leite formula infantil hidrolisado aminoacido soja aplv alergia proteina leite vaca desmame nan aptamil",
+  "/gastropediatria": "refluxo drge constipacao obstipacao alergia proteina leite vaca aplv omeprazol regurgitacao",
+  "/pedfarma": "amoxicilina paracetamol dipirona ibuprofeno azitromicina cefalexina antibiotico corticoide prednisolona dexametasona omeprazol ondansetrona dose bula prescricao medicamento remedio",
+  "/vacinal": "vacina imunizacao calendario sbim pni atraso bcg hepatite pentavalente triplice meningo pneumo rotavirus febre amarela hpv",
+  "/hidratacao": "manutencao liquido soro reidratacao tro plano volume holliday segar desidratacao venoso",
+  "/scores": "gorelick westley pews finnegan crupe desidratacao abstinencia dor triagem escore",
+  "/febre-sem-foco": "febre lactente rochester pecarn bacteremia ibg sepse oculta neonato",
+  "/tce-leve": "trauma cranio cabeca cranioencefalico pecarn tomografia observacao",
+  "/dnpm": "desenvolvimento neuropsicomotor marcos atraso denver",
+  "/dermato": "dermatite atopica impetigo escabiose sarna urticaria pele coceira prurido",
+  "/sepse": "choque septico ssc surviving phoenix vasoativa noradrenalina lactato rodwell",
+  "/isr": "intubacao sequencia rapida via aerea dificil cetamina rocuronio succinilcolina laringoscopia",
+  "/ventilacao": "ventilador mecanica pards volume corrente peep desmame indice oxigenacao vm",
+  "/eletrolitos": "sodio potassio calcio magnesio hiponatremia hipernatremia hipocalemia hipercalemia correcao kcl gluconato",
+  "/bronquiolite": "vsr sibilancia oxigenio alto fluxo oaf nirsevimab lactente chiado",
+  "/analgesia-sedacao": "sedacao analgesia flacc wat-1 abstinencia fentanil midazolam morfina bic desmame",
+  "/dor": "escala dor flacc wong-baker faces nrs analgesia escada oms",
+  "/antibioticos": "antibiotico atb empirico pneumonia itu meningite celulite escolha sindrome",
+  "/sedacao": "sedacao procedimento cetamina midazolam fentanil propofol jejum checklist",
+  "/exames-lab": "hemograma laboratorio valores referencia hormonio tsh ferritina vitamina d leucograma",
+  "/torchs": "torch sifilis toxoplasmose citomegalovirus cmv rubeola herpes zika congenita",
+  "/intoxicacoes": "intoxicacao envenenamento ingestao acidental antidoto ciatox acetilcisteina naloxona",
+  "/aleitamento": "amamentacao leite materno pega mamada introducao alimentar",
+  "/oftalmologia": "reflexo vermelho olhinho catarata visao triagem visual",
+  "/doencas-exantematicas": "sarampo rubeola exantema subito escarlatina eritema infeccioso mao pe boca varicela",
+  "/convulsao-febril": "convulsao febril crise febre puncao lombar",
+  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico",
+  "/adolescencia": "adolescente tanner puberdade contracepcao saude mental",
+  "/teste-tea-tdah": "autismo tea tdah m-chat rastreio deficit atencao hiperatividade",
+  "/cuidados-pele-rn": "pele recem-nascido banho emoliente cordao umbilical higiene",
+  "/neonatologia-1": "reanimacao neonatal sala parto prematuro rnpt vpp apgar",
+  "/neonatologia-6": "reanimacao neonatal sala parto termo rnt vpp apgar",
+  "/neonatologia-2": "hipoglicemia glicemia gel dextrose glicose neonatal",
+  "/neonatologia-3": "ictericia bilirrubina fototerapia exsanguineotransfusao aap kernicterus",
+  "/neonatologia-4": "apgar capurro silverman ballard idade gestacional score",
+  "/neonatologia-5": "npt nutricao parenteral aminoacido lipidio glicose eletrolito neonatal",
+  "/hipotermia": "hipotermia terapeutica ehi encefalopatia asfixia thompson resfriamento",
+  "/surfactante": "surfactante lisa insure curosurf prematuro sdr membrana hialina",
+  "/nec": "enterocolite necrosante bell prematuro abdome",
+  "/canguru": "metodo canguru prescricao receituario ucin",
+  "/tig-neonatal": "tig taxa infusao glicose vig glicemia npt",
+  "/dexametasona-dbp": "dexametasona displasia broncopulmonar dbp dart corticoide prematuro",
+  "/dilucao-bic": "bomba infusao bic vasoativa dopamina dobutamina adrenalina noradrenalina milrinona pge1 dose",
+  "/dor-neonatal": "dor neonatal nips pipp n-pass cries escala",
+  "/idade-gestacional": "idade gestacional corrigida igpm cronologica pos-menstrual prematuro",
+  "/percentis": "percentil curva fenton intergrowth oms peso estatura perimetro cefalico",
+  "/sala-de-parto": "sala parto tot canula sonda cateter umbilical calibre",
+  "/triagem-neonatal": "triagem pezinho olhinho orelhinha coracaozinho teste",
+  "/pca": "pca canal arterial persistente hspda ibuprofeno paracetamol indometacina",
+  "/malformacoes-cirurgicas-neonatais": "malformacao cirurgica gastrosquise onfalocele hernia diafragmatica atresia",
+  "/rop": "retinopatia prematuridade rop triagem oftalmologica",
+  "/seguimento-prematuro-risco": "seguimento prematuro follow-up alto risco calendario consultas",
+};
+
+/* Normaliza para busca: remove acentos e caixa (ex.: "ictericia" acha "Icterícia"). */
+const normalizarBusca = (s) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+
+/* Casa se TODAS as palavras da busca aparecem em label + desc + tags. */
+const casaBusca = (m, termos) => {
+  const hay = normalizarBusca(`${m.label} ${m.desc} ${SEARCH_TAGS[m.rota] || ""}`);
+  return termos.every(t => hay.includes(t));
+};
+
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
 const EM_BREVE = [];
 
@@ -356,15 +425,9 @@ export default function PedHub() {
 
   const buscando = busca.trim().length > 0;
 
-  const termo = busca.toLowerCase();
-  const resultadosBusca = MODULOS.filter(m =>
-    m.label.toLowerCase().includes(termo) ||
-    m.desc.toLowerCase().includes(termo)
-  );
-  const resultadosBreve = EM_BREVE.filter(m =>
-    m.label.toLowerCase().includes(termo) ||
-    m.desc.toLowerCase().includes(termo)
-  );
+  const termos = normalizarBusca(busca.trim()).split(/\s+/).filter(Boolean);
+  const resultadosBusca = MODULOS.filter(m => casaBusca(m, termos));
+  const resultadosBreve = EM_BREVE.filter(m => casaBusca(m, termos));
 
   const totalPediatria = MODULOS.filter(m => m.grupo === "Pediatria Geral").length;
   const totalNeonatal = MODULOS.filter(m => m.grupo === "Neonatologia").length;
