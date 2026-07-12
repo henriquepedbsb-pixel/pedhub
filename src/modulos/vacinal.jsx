@@ -30,13 +30,12 @@ const CALENDAR = [
       "VIP (1ª)",
       "Pneumo 20 — VPC20 (1ª)",
       "Rotavírus (1ª)",
-      "MenB Bexsero (1ª)",
     ],
   },
   {
     faixa: "3 meses — somente meningocócica", minDias: 85, maxDias: 105,
     sus:     ["MenC conjugada (1ª)"],
-    privado: ["MenACWY ou MenC conjugada (1ª)"],
+    privado: ["MenACWY ou MenC conjugada (1ª)", "MenB Bexsero (1ª)"],
   },
   {
     faixa: "4 meses", minDias: 115, maxDias: 135,
@@ -51,13 +50,12 @@ const CALENDAR = [
       "VIP (2ª)",
       "Pneumo 20 — VPC20 (2ª)",
       "Rotavírus (2ª)",
-      "MenB (2ª)",
     ],
   },
   {
     faixa: "5 meses — somente meningocócica", minDias: 140, maxDias: 165,
     sus:     ["MenC conjugada (2ª)"],
-    privado: ["MenACWY ou MenC conjugada (2ª)"],
+    privado: ["MenACWY ou MenC conjugada (2ª)", "MenB Bexsero (2ª)"],
   },
   {
     faixa: "6 meses", minDias: 175, maxDias: 200,
@@ -518,7 +516,7 @@ export default function Vacinal() {
               "Visitas de 3 e 5 meses (SUS): exclusivas para vacina meningocócica C, sem coadministração com outras vacinas do esquema básico",
               "Influenza: anual a partir de 6 meses · 2 doses (intervalo 30 dias) na 1ª vacinação · Dose única nos anos seguintes",
               "HPV: 2 doses para imunocompetentes 9–14 anos (intervalo 6 meses) · 3 doses se imunocomprometidos ou a partir de 15 anos",
-              "MenB (Bexsero): esquema privado — 3 doses aos 2, 4 e 12 meses",
+              "MenB (Bexsero): esquema privado (SBIm) — 3 e 5 meses + reforço entre 12 e 15 meses",
               "Febre Amarela: dose única até 2 anos · Reforço único após 10 anos se viagem para área de risco",
               "Varicela: 2 doses no esquema privado — tetraviral 12m + monocomponente 15m ou 4–5a",
             ].map((nota, i) => (

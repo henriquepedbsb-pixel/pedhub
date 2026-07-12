@@ -1,13 +1,19 @@
-// Aviso de "nova versão disponível" (PWA em modo prompt).
-// Aparece quando um novo service worker está pronto; ao tocar em Atualizar,
-// ativa a nova versão e recarrega.
+// Atualização automática do PWA.
+// Quando um novo service worker está pronto, aplica a nova versão e recarrega
+// sozinho — sem depender de o usuário tocar em nada. Mostra um aviso breve
+// ("Atualizando…") só como feedback antes do recarregamento.
+import { useEffect } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
 export default function ReloadPrompt() {
   const {
-    needRefresh: [needRefresh, setNeedRefresh],
+    needRefresh: [needRefresh],
     updateServiceWorker,
-  } = useRegisterSW();
+  } = useRegisterSW({ immediate: true });
+
+  useEffect(() => {
+    if (needRefresh) updateServiceWorker(true); // ativa a nova versão + recarrega
+  }, [needRefresh, updateServiceWorker]);
 
   if (!needRefresh) return null;
 
@@ -16,36 +22,16 @@ export default function ReloadPrompt() {
       role="status"
       style={{
         position: 'fixed', left: '50%', bottom: 20, transform: 'translateX(-50%)',
-        zIndex: 400, display: 'flex', alignItems: 'center', gap: 12,
+        zIndex: 400, display: 'flex', alignItems: 'center', gap: 10,
         maxWidth: 'calc(100% - 32px)',
         background: 'var(--surface)', color: 'var(--text)',
         border: '1px solid var(--border)', borderRadius: 14,
-        padding: '10px 12px 10px 16px',
+        padding: '10px 16px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.28)',
-        fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+        fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
       }}
     >
-      <span style={{ fontWeight: 600 }}>Nova versão disponível</span>
-      <button
-        onClick={() => updateServiceWorker(true)}
-        style={{
-          background: '#1D4ED8', color: '#fff', border: 'none', borderRadius: 9,
-          padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-          fontFamily: "'DM Sans', sans-serif", WebkitTapHighlightColor: 'transparent',
-        }}
-      >
-        Atualizar
-      </button>
-      <button
-        onClick={() => setNeedRefresh(false)}
-        aria-label="Dispensar"
-        style={{
-          background: 'transparent', color: 'var(--muted)', border: 'none',
-          padding: '6px 8px', fontSize: 18, lineHeight: 1, cursor: 'pointer',
-        }}
-      >
-        ×
-      </button>
+      Atualizando para a versão mais recente…
     </div>
   );
 }
