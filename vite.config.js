@@ -5,6 +5,26 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/pedhub/',
+  build: {
+    rollupOptions: {
+      output: {
+        // React/ReactDOM/Router num chunk "vendor" — raramente mudam, então
+        // ficam em cache entre atualizações (só o código do app é rebaixado).
+        // lucide-react NÃO entra aqui de propósito: seus ícones já são
+        // divididos por módulo lazy; agrupá-los carregaria todos de uma vez.
+        manualChunks(id) {
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/scheduler/')
+          ) {
+            return 'vendor';
+          }
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
