@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta interpolate (limiares de bilirrubina) para testes */
 /**
  * neonatologia-3.jsx — PedHub
  * Icterícia Neonatal · Calculadora AAP 2022 / SBP 2021
@@ -95,7 +96,7 @@ function cloneTbls() {
 }
 
 /* ── Interpolação AAP ── */
-function interpolate(hours, key, igW, tbls) {
+export function interpolate(hours, key, igW, tbls) {
   const tbl = tbls[key];
   let ri = tbl.igKeys.length - 1;
   for (let i = 0; i < tbl.igKeys.length; i++) {

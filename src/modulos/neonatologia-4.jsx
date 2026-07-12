@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta scores puros (Apgar/Silverman) para testes */
 import { useState } from "react";
 import { Info } from "lucide-react";
 
@@ -29,8 +30,8 @@ const APGAR_PARAMS = [
 
 const COR_APGAR = "#5B21B6";
 
-function calcTotal(v) { return v.every(x => x !== null) ? v.reduce((a, b) => a + b, 0) : null; }
-function apgarClass(t) {
+export function calcTotal(v) { return v.every(x => x !== null) ? v.reduce((a, b) => a + b, 0) : null; }
+export function apgarClass(t) {
   if (t === null) return null;
   if (t <= 3) return { cor: "#DC2626", grau: "Depressão neonatal grave", conduta: "Reanimação imediata — NRP 2020" };
   if (t <= 6) return { cor: "#F97316", grau: "Depressão leve a moderada", conduta: "Estimulação e O₂; monitorar; repetir em 5 min se < 7" };
@@ -235,7 +236,7 @@ const SA_PARAMS = [
 
 const COR_SA = "#0EA5E9";
 
-function saClass(total) {
+export function saClass(total) {
   if (total === 0) return { cor: "#10B981", grau: "Sem desconforto respiratório", conduta: "Monitorização de rotina" };
   if (total <= 3)  return { cor: "#F59E0B", grau: "Desconforto leve",            conduta: "O₂ suplementar (Hood ou cateter nasal) · monitorização contínua · reavaliar em 30 min" };
   if (total <= 6)  return { cor: "#F97316", grau: "Desconforto moderado",         conduta: "CPAP nasal · considerar surfactante se SDRI · internar UTIN" };
