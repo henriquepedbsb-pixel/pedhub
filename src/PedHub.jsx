@@ -74,7 +74,7 @@ const MODULOS = [
   { rota: "/oftalmologia",     label: "Oftalmologia",         desc: "Reflexo vermelho · triagem visual",     Icon: Eye,           cor: "#1E3A8A", grupo: "Pediatria Geral" },
   { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D", grupo: "Pediatria Geral" },
   { rota: "/convulsao-febril", label: "Convulsão Febril",     desc: "Classificação simples × complexa · critérios de PL", Icon: Zap, cor: "#D946EF", grupo: "Pediatria Geral" },
-  { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
+  { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · hipertensão arterial", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
   { rota: "/adolescencia",     label: "Adolescência",            desc: "Tanner · saúde mental · contracepção",  Icon: Users,       cor: "#7E22CE", grupo: "Pediatria Geral" },
   { rota: "/teste-tea-tdah",   label: "Rastreio TEA/TDAH",       desc: "M-CHAT-R/F · DSM-5 · fluxo de encaminhamento", Icon: Brain, cor: "#3730A3", grupo: "Pediatria Geral" },
 
@@ -136,7 +136,7 @@ const SEARCH_TAGS = {
   "/oftalmologia": "reflexo vermelho olhinho catarata visao triagem visual",
   "/doencas-exantematicas": "sarampo rubeola exantema subito escarlatina eritema infeccioso mao pe boca varicela",
   "/convulsao-febril": "convulsao febril crise febre puncao lombar",
-  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico",
+  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico hipertensao arterial pressao pa percentil has normotenso pressao alta",
   "/adolescencia": "adolescente tanner puberdade contracepcao saude mental",
   "/teste-tea-tdah": "autismo tea tdah m-chat rastreio deficit atencao hiperatividade",
   "/cuidados-pele-rn": "pele recem-nascido banho emoliente cordao umbilical higiene",
