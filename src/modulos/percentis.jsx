@@ -1,6 +1,16 @@
 /* eslint-disable react-refresh/only-export-components -- exporta helpers/dados compartilhados com outros módulos; Fast Refresh não se aplica a este módulo de rota lazy. */
-// src/modulos/percentis.jsx — PedHub v1.3
+// src/modulos/percentis.jsx — PedHub v1.4
 // Curvas: OMS 0–60m | Intergrowth-21st (nasc.) 24–42s | Intergrowth Postnatal 27–64s | Fenton 2013 24–40s
+//
+// v1.4 — Reorganização + z-score contínuo:
+//   • Aba única "Prematuro (Intergrowth)" reúne, na mesma tela, dois blocos:
+//       – Ao nascimento (Intergrowth-21st Newborn) → classificação AIG/PIG/GIG
+//       – Seguimento pós-natal (Intergrowth Postnatal) por IGPM atual
+//     Antes eram duas abas separadas ("Interg. Nasc." e "Interg. Postnatal").
+//   • Z-score das curvas de prematuro deixa de ser preso a faixas discretas
+//     (que travavam em ±2,33). Agora é interpolado/extrapolado linearmente em
+//     z entre os centis publicados (P3/P5/P10/P50/P90/P95/P97), podendo
+//     ultrapassar ±2 DP em bebês muito pequenos ou muito grandes.
 //
 // v1.3 — Nova aba Intergrowth Postnatal:
 //   • Padrão distinto do "Intergrowth (nasc.)": não é foto ao nascer, é
@@ -449,12 +459,58 @@ function parseNum(s) {
   return isNaN(n) ? null : n;
 }
 
-// Conversão percentil → Z aproximado (para tabelas pré-termo)
-// Valores derivados da distribuição normal padrão
-const PERC_Z_MAP = {1:-2.33, 5:-1.64, 8:-1.41, 30:-0.52, 70:0.52, 92:1.41, 95:1.64, 99:2.33};
-function percToZ(p) {
-  if (p === null) return null;
-  return PERC_Z_MAP[p] !== undefined ? PERC_Z_MAP[p].toFixed(2) : null;
+// ─────────────────────────────────────────────────────────────────────────────
+// Z-score contínuo a partir de bandas de centis (tabelas pré-termo)
+//
+// As curvas de prematuro (Intergrowth nasc./postnatal, Fenton) só trazem centis
+// publicados, não os coeficientes LMS. Para não travar o z em ±2,33, ancoramos
+// cada centil ao seu z na normal padrão e interpolamos linearmente em z ao longo
+// da medida. Fora dos centis extremos, extrapolamos com a inclinação da banda
+// mais próxima — permitindo |z| > 2 em bebês muito pequenos/grandes.
+//
+// Percentil real de cada posição da banda, por tamanho:
+//   3 valores → [P10, P50, P90]
+//   5 valores → [P3, P10, P50, P90, P97]
+//   7 valores → [P3, P5, P10, P50, P90, P95, P97]
+// ─────────────────────────────────────────────────────────────────────────────
+const CENTILE_Z = { 3:-1.8808, 5:-1.6449, 10:-1.2816, 50:0, 90:1.2816, 95:1.6449, 97:1.8808 };
+const BAND_CENTILES = {
+  3: [10, 50, 90],
+  5: [3, 10, 50, 90, 97],
+  7: [3, 5, 10, 50, 90, 95, 97],
+};
+function zFromBand(val, band) {
+  if (!band || val === null || val === "") return null;
+  const v = parseFloat(String(val).replace(",", "."));
+  if (isNaN(v)) return null;
+  const centiles = BAND_CENTILES[band.length];
+  if (!centiles) return null;
+  const zs = centiles.map(c => CENTILE_Z[c]);
+  const n = band.length;
+  // Extrapola abaixo do menor centil com a inclinação do 1º intervalo
+  if (v <= band[0]) {
+    const slope = (zs[1] - zs[0]) / (band[1] - band[0]);
+    return zs[0] + (v - band[0]) * slope;
+  }
+  // Extrapola acima do maior centil com a inclinação do último intervalo
+  if (v >= band[n - 1]) {
+    const slope = (zs[n - 1] - zs[n - 2]) / (band[n - 1] - band[n - 2]);
+    return zs[n - 1] + (v - band[n - 1]) * slope;
+  }
+  // Interpola dentro da banda
+  for (let i = 0; i < n - 1; i++) {
+    if (v >= band[i] && v <= band[i + 1]) {
+      const t = (v - band[i]) / (band[i + 1] - band[i]);
+      return zs[i] + t * (zs[i + 1] - zs[i]);
+    }
+  }
+  return null;
+}
+// z contínuo → { z: "±d.dd", perc: número 0–100 com 1 casa } ou null
+function bandResult(val, band) {
+  const z = zFromBand(val, band);
+  if (z === null) return null;
+  return { z: z.toFixed(2), perc: Math.round(normCDF(z) * 1000) / 10 };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -587,7 +643,7 @@ export default function Percentis({ somenteOMS = false }) {
   const [tab, setTab] = useState(0);
   const TABS = somenteOMS
     ? ["OMS (0–60m)"]
-    : ["OMS (0–60m)", "Interg. Nasc.", "Interg. Postnatal", "Fenton 2013"];
+    : ["OMS (0–60m)", "Prematuro (Intergrowth)", "Fenton 2013"];
 
   // OMS
   const [oSexo, setOSexo]     = useState("M");
@@ -607,7 +663,7 @@ export default function Percentis({ somenteOMS = false }) {
   const [pRes, setPRes]     = useState(null);
 
   // Intergrowth Postnatal (acompanhamento longitudinal por IGPM atual)
-  const [nSexo, setNSexo]     = useState("M");
+  // Sexo é compartilhado com o bloco "ao nascimento" (pSexo) na mesma aba.
   const [nIgpm, setNIgpm]     = useState("");
   const [nPeso, setNPeso]     = useState("");
   const [nAltura, setNAltura] = useState("");
@@ -658,14 +714,14 @@ export default function Percentis({ somenteOMS = false }) {
     const pesoG  = parseNum(pPeso);
     const compCm = parseNum(pComp);
     const pcCm   = parseNum(pPc);
-    const percP  = pesoG  ? percFromBand5(pesoG,  bandP) : null;
-    const percL  = compCm ? percFromBand3(compCm, bandL) : null;
-    const percC  = pcCm   ? percFromBand3(pcCm,   bandC) : null;
+    const rP = pesoG  ? bandResult(pesoG,  bandP) : null;
+    const rL = compCm ? bandResult(compCm, bandL) : null;
+    const rC = pcCm   ? bandResult(pcCm,   bandC) : null;
     setPRes({
       ig: igW,
-      peso:  pesoG  ? { perc:percP, z:percToZ(percP), cl:classify(percP), val:pesoG,  band:bandP } : null,
-      comp:  compCm ? { perc:percL, z:percToZ(percL), cl:classify(percL), val:compCm, band:bandL } : null,
-      pc:    pcCm   ? { perc:percC, z:percToZ(percC), cl:classify(percC), val:pcCm,   band:bandC } : null,
+      peso:  rP ? { perc:rP.perc, z:rP.z, cl:classify(rP.perc), val:pesoG,  band:bandP } : null,
+      comp:  rL ? { perc:rL.perc, z:rL.z, cl:classify(rL.perc), val:compCm, band:bandL } : null,
+      pc:    rC ? { perc:rC.perc, z:rC.z, cl:classify(rC.perc), val:pcCm,   band:bandC } : null,
     });
   }
 
@@ -673,20 +729,20 @@ export default function Percentis({ somenteOMS = false }) {
     const igpm = parseNum(nIgpm);
     if (!igpm || igpm < 27 || igpm > 64) { alert("IGPM atual: 27–64 semanas"); return; }
     const igpmW  = Math.round(igpm);
-    const bandP  = getPretermPercs(IGPOST_PW[nSexo], igpmW);
-    const bandL  = getPretermPercs(IGPOST_LW[nSexo], igpmW);
-    const bandC  = getPretermPercs(IGPOST_CW[nSexo], igpmW);
+    const bandP  = getPretermPercs(IGPOST_PW[pSexo], igpmW);
+    const bandL  = getPretermPercs(IGPOST_LW[pSexo], igpmW);
+    const bandC  = getPretermPercs(IGPOST_CW[pSexo], igpmW);
     const pesoG  = parseNum(nPeso);
     const altCm  = parseNum(nAltura);
     const pcCm   = parseNum(nPc);
-    const percP  = pesoG ? percFromBand7(pesoG, bandP) : null;
-    const percL  = altCm ? percFromBand7(altCm, bandL) : null;
-    const percC  = pcCm  ? percFromBand7(pcCm,  bandC) : null;
+    const rP = pesoG ? bandResult(pesoG, bandP) : null;
+    const rL = altCm ? bandResult(altCm, bandL) : null;
+    const rC = pcCm  ? bandResult(pcCm,  bandC) : null;
     setNRes({
       igpm: igpmW,
-      peso:   pesoG ? { perc:percP, z:percToZ(percP), cl:classify(percP), val:pesoG, band:bandP } : null,
-      altura: altCm ? { perc:percL, z:percToZ(percL), cl:classify(percL), val:altCm, band:bandL } : null,
-      pc:     pcCm  ? { perc:percC, z:percToZ(percC), cl:classify(percC), val:pcCm,  band:bandC } : null,
+      peso:   rP ? { perc:rP.perc, z:rP.z, cl:classify(rP.perc), val:pesoG, band:bandP } : null,
+      altura: rL ? { perc:rL.perc, z:rL.z, cl:classify(rL.perc), val:altCm, band:bandL } : null,
+      pc:     rC ? { perc:rC.perc, z:rC.z, cl:classify(rC.perc), val:pcCm,  band:bandC } : null,
     });
   }
 
@@ -797,37 +853,30 @@ export default function Percentis({ somenteOMS = false }) {
         </div>
       )}
 
-      {/* ─── Tab Intergrowth (nascimento) ─── */}
+      {/* ─── Tab Prematuro (Intergrowth): nascimento + pós-natal na mesma tela ─── */}
       {!somenteOMS && tab === 1 && (
-        <PretermTab
-          sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
-          ig={pIg}     setIg={setPIg}
-          peso={pPeso} setPeso={setPPeso}
-          comp={pComp} setComp={setPComp}
-          pc={pPc}     setPc={setPPc}
-          calc={() => calcPreterm(true)}
-          res={pRes}
-          igRange="24–42 semanas"
-          titulo="Intergrowth-21st (nascimento)"
-          subtitulo="Villar J et al. Lancet 2014"
-        />
-      )}
-
-      {/* ─── Tab Intergrowth Postnatal ─── */}
-      {!somenteOMS && tab === 2 && (
-        <PostnatalTab
-          sexo={nSexo} setSexo={v => { setNSexo(v); setNRes(null); }}
-          igpm={nIgpm} setIgpm={setNIgpm}
-          peso={nPeso} setPeso={setNPeso}
-          altura={nAltura} setAltura={setNAltura}
-          pc={nPc}     setPc={setNPc}
-          calc={calcPostnatal}
-          res={nRes}
+        <PrematuroTab
+          sexo={pSexo}
+          setSexo={v => { setPSexo(v); setPRes(null); setNRes(null); }}
+          /* ao nascimento (Intergrowth-21st Newborn) */
+          ig={pIg}       setIg={setPIg}
+          nPeso={pPeso}  setNPeso={setPPeso}
+          nComp={pComp}  setNComp={setPComp}
+          nPc={pPc}      setNPc={setPPc}
+          calcNasc={() => calcPreterm(true)}
+          resNasc={pRes}
+          /* seguimento pós-natal (Intergrowth Postnatal) */
+          igpm={nIgpm}   setIgpm={setNIgpm}
+          poPeso={nPeso} setPoPeso={setNPeso}
+          poAlt={nAltura} setPoAlt={setNAltura}
+          poPc={nPc}     setPoPc={setNPc}
+          calcPost={calcPostnatal}
+          resPost={nRes}
         />
       )}
 
       {/* ─── Tab Fenton ─── */}
-      {!somenteOMS && tab === 3 && (
+      {!somenteOMS && tab === 2 && (
         <PretermTab
           sexo={pSexo} setSexo={v => { setPSexo(v); setPRes(null); }}
           ig={pIg}     setIg={setPIg}
@@ -848,8 +897,9 @@ export default function Percentis({ somenteOMS = false }) {
         <p style={{ margin:0, fontSize:"11px", color:"var(--muted)", lineHeight:"1.5" }}>
           <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
           Valores derivados das publicações originais (OMS 2006, Intergrowth-21st 2014,
-          Intergrowth-21st Postnatal 2015, Fenton 2013). Z-scores em tabelas pré-termo são
-          aproximações derivadas dos percentis de referência.
+          Intergrowth-21st Postnatal 2015, Fenton 2013). Nas curvas de prematuro o z-score é
+          interpolado/extrapolado a partir dos centis publicados (P3–P97) e pode ultrapassar
+          ±2 DP nos extremos.
         </p>
       </div>
     </div>
@@ -919,17 +969,24 @@ function PretermTab({ sexo, setSexo, ig, setIg, peso, setPeso, comp, setComp, pc
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sub-componente — Intergrowth Postnatal (acompanhamento longitudinal por
-// IGPM atual, distinto do PretermTab que classifica foto ao nascer)
+// Sub-componente — Prematuro (Intergrowth-21st), tudo na mesma tela:
+//   Bloco A: classificação AIG/PIG/GIG ao nascer (Newborn Size Standards)
+//   Bloco B: seguimento pós-natal longitudinal por IGPM atual (Postnatal)
+// Sexo é único (mesmo bebê) e vale para os dois blocos.
 // ─────────────────────────────────────────────────────────────────────────────
-function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, setAltura, pc, setPc, calc, res }) {
+function PrematuroTab({
+  sexo, setSexo,
+  ig, setIg, nPeso, setNPeso, nComp, setNComp, nPc, setNPc, calcNasc, resNasc,
+  igpm, setIgpm, poPeso, setPoPeso, poAlt, setPoAlt, poPc, setPoPc, calcPost, resPost,
+}) {
   return (
     <div>
+      {/* Sexo (compartilhado pelos dois blocos) */}
       <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
-          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Intergrowth Postnatal</p>
-          <span style={{ fontSize:"11px", color:"var(--muted)" }}>Villar J et al. Lancet Glob Health 2015</span>
+          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Prematuro · Intergrowth-21st</p>
+          <span style={{ fontSize:"11px", color:"var(--muted)" }}>Villar J et al. Lancet 2014/2015</span>
         </div>
         <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Sexo</p>
         <div style={{ display:"flex", gap:"8px" }}>
@@ -938,46 +995,90 @@ function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, set
         </div>
       </div>
 
-      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+      {/* ── Bloco A: ao nascimento (Newborn Size Standards) ── */}
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"12px",
         boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
-        <p style={{ margin:"0 0 12px", fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>
-          Medidas atuais
-        </p>
-        <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
-          <Input label="IGPM atual (27–64 semanas)" val={igpm}   set={setIgpm}   ph="ex: 44"   unit="semanas" />
-          <Input label="Peso atual"                 val={peso}   set={setPeso}   ph="ex: 3200" unit="g"       />
-          <Input label="Estatura atual"              val={altura} set={setAltura} ph="ex: 48,0" unit="cm"      />
-          <Input label="Perímetro Cefálico atual"    val={pc}     set={setPc}     ph="ex: 34,0" unit="cm"      />
+        <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
+          <span style={{ width:"22px", height:"22px", borderRadius:"6px", background:"var(--tint-purple)",
+            color:"#8B5CF6", display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize:"12px", fontWeight:"800" }}>1</span>
+          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Ao nascimento — AIG/PIG/GIG</p>
         </div>
+        <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
+          <Input label="IG ao nascimento (24–42 semanas)" val={ig}    set={setIg}    ph="ex: 30"   unit="semanas" />
+          <Input label="Peso ao nascimento"               val={nPeso} set={setNPeso} ph="ex: 1500" unit="g"       />
+          <Input label="Comprimento"                       val={nComp} set={setNComp} ph="ex: 38,0" unit="cm"      />
+          <Input label="Perímetro Cefálico"               val={nPc}   set={setNPc}   ph="ex: 27,0" unit="cm"      />
+        </div>
+        <button onClick={calcNasc} style={{
+          width:"100%", marginTop:"12px", padding:"12px", borderRadius:"12px", border:"none",
+          background:"#8B5CF6", color:"#FFFFFF", fontSize:"15px", fontWeight:"700", cursor:"pointer",
+        }}>
+          Classificar ao nascer
+        </button>
+
+        {resNasc && (
+          <div style={{ marginTop:"16px" }}>
+            <h3 style={{ margin:"0 0 12px", fontSize:"14px", fontWeight:"700", color:"var(--text-2)" }}>
+              Nascimento — {resNasc.ig} semanas · {sexo === "M" ? "Menino" : "Menina"}
+            </h3>
+            <CardPT label="Peso"               data={resNasc.peso} />
+            <CardPT label="Comprimento"        data={resNasc.comp} />
+            <CardPT label="Perímetro Cefálico" data={resNasc.pc}   />
+            <div style={{ background:"var(--tint-purple)", borderRadius:"10px", padding:"10px", marginTop:"8px",
+              display:"flex", gap:"8px", alignItems:"flex-start" }}>
+              <Info size={14} color="#8B5CF6" style={{ marginTop:"1px", flexShrink:0 }} />
+              <p style={{ margin:0, fontSize:"12px", color:"#6D28D9" }}>
+                <strong>AIG</strong> (P10–P90) · <strong>PIG</strong> (&lt;P10) · <strong>GIG</strong> (&gt;P90).
+                Z-score interpolado dos centis publicados. Classificação por peso tem maior relevância clínica.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      <button onClick={calc} style={{
-        width:"100%", padding:"14px", borderRadius:"12px", border:"none",
-        background:"#059669", color:"#FFFFFF", fontSize:"16px", fontWeight:"700", cursor:"pointer",
-      }}>
-        Avaliar Crescimento
-      </button>
-
-      {res && (
-        <div style={{ marginTop:"20px" }}>
-          <h3 style={{ margin:"0 0 12px", fontSize:"15px", fontWeight:"700", color:"var(--text-2)" }}>
-            Resultado — IGPM {res.igpm} semanas · {sexo === "M" ? "Menino" : "Menina"}
-          </h3>
-          <CardPT label="Peso"               data={res.peso}   />
-          <CardPT label="Estatura"           data={res.altura} />
-          <CardPT label="Perímetro Cefálico" data={res.pc}     />
-          <div style={{ background:"var(--tint-green)", borderRadius:"10px", padding:"10px", marginTop:"8px",
-            display:"flex", gap:"8px", alignItems:"flex-start" }}>
-            <Info size={14} color="#059669" style={{ marginTop:"1px", flexShrink:0 }} />
-            <p style={{ margin:0, fontSize:"12px", color:"var(--tx-green)" }}>
-              Válido para acompanhamento pós-natal de prematuros (nascidos 27–36+6 semanas) até
-              64 semanas de IGPM, quando as curvas se fundem com os padrões OMS sem ajuste.
-              Diferente da aba "Interg. Nasc." — aqui a referência é o crescimento longitudinal,
-              não o tamanho ao nascer.
-            </p>
-          </div>
+      {/* ── Bloco B: seguimento pós-natal (Postnatal Growth Standards) ── */}
+      <div style={{ background:"var(--surface)", borderRadius:"12px", padding:"16px", marginBottom:"16px",
+        boxShadow:"0 1px 3px rgba(0,0,0,0.08)" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
+          <span style={{ width:"22px", height:"22px", borderRadius:"6px", background:"var(--tint-green)",
+            color:"#059669", display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize:"12px", fontWeight:"800" }}>2</span>
+          <p style={{ margin:0, fontWeight:"700", color:"var(--text-2)", fontSize:"14px" }}>Seguimento pós-natal — por IGPM atual</p>
         </div>
-      )}
+        <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
+          <Input label="IGPM atual (27–64 semanas)" val={igpm}   set={setIgpm}   ph="ex: 44"   unit="semanas" />
+          <Input label="Peso atual"                 val={poPeso} set={setPoPeso} ph="ex: 3200" unit="g"       />
+          <Input label="Estatura atual"              val={poAlt}  set={setPoAlt}  ph="ex: 48,0" unit="cm"      />
+          <Input label="Perímetro Cefálico atual"    val={poPc}   set={setPoPc}   ph="ex: 34,0" unit="cm"      />
+        </div>
+        <button onClick={calcPost} style={{
+          width:"100%", marginTop:"12px", padding:"12px", borderRadius:"12px", border:"none",
+          background:"#059669", color:"#FFFFFF", fontSize:"15px", fontWeight:"700", cursor:"pointer",
+        }}>
+          Avaliar crescimento
+        </button>
+
+        {resPost && (
+          <div style={{ marginTop:"16px" }}>
+            <h3 style={{ margin:"0 0 12px", fontSize:"14px", fontWeight:"700", color:"var(--text-2)" }}>
+              Pós-natal — IGPM {resPost.igpm} semanas · {sexo === "M" ? "Menino" : "Menina"}
+            </h3>
+            <CardPT label="Peso"               data={resPost.peso}   />
+            <CardPT label="Estatura"           data={resPost.altura} />
+            <CardPT label="Perímetro Cefálico" data={resPost.pc}     />
+            <div style={{ background:"var(--tint-green)", borderRadius:"10px", padding:"10px", marginTop:"8px",
+              display:"flex", gap:"8px", alignItems:"flex-start" }}>
+              <Info size={14} color="#059669" style={{ marginTop:"1px", flexShrink:0 }} />
+              <p style={{ margin:0, fontSize:"12px", color:"var(--tx-green)" }}>
+                Acompanhamento longitudinal de prematuros (nascidos 27–36+6 semanas) até 64 semanas
+                de IGPM, quando as curvas se fundem com os padrões OMS. Diferente do bloco 1 (tamanho
+                ao nascer): aqui a referência é o crescimento ao longo do tempo.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -988,4 +1089,4 @@ function PostnatalTab({ sexo, setSexo, igpm, setIgpm, peso, setPeso, altura, set
 // deste módulo.
 // ─────────────────────────────────────────────────────────────────────────────
 export { IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW, IGPOST_PW, IGPOST_LW, IGPOST_CW,
-         getPretermPercs, percFromBand5, percFromBand3, percFromBand7, classify };
+         getPretermPercs, percFromBand5, percFromBand3, percFromBand7, classify, zFromBand };
