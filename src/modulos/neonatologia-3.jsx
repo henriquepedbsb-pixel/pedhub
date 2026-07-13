@@ -962,7 +962,7 @@ export default function IctericiaNeonatal() {
                                 onBlur={e=>commitEdit(key,ri,ci,e.target.value)}
                                 onKeyDown={e=>e.key==='Enter'&&e.target.blur()}
                                 style={{width:'100%',border:'none',outline:`2px solid ${C.aap}`,
-                                  padding:'5px 4px',fontSize:13,textAlign:'center',background:"var(--tint-blue)"}}
+                                  padding:'5px 4px',fontSize:13,textAlign:'center',background:"var(--tint-blue)",color:"var(--text)"}}
                               />
                             </td>
                           );
@@ -1022,7 +1022,7 @@ export default function IctericiaNeonatal() {
                         defaultValue={row[field]}
                         onBlur={e=>commitEdit('E',ri,null,e.target.value,field)}
                         onKeyDown={e=>e.key==='Enter'&&e.target.blur()}
-                        style={{width:50,border:'none',outline:`2px solid ${C.aap}`,padding:'2px 4px',fontSize:13,textAlign:'center',borderRadius:4}}
+                        style={{width:50,border:'none',outline:`2px solid ${C.aap}`,padding:'2px 4px',fontSize:13,textAlign:'center',borderRadius:4,background:"var(--surface)",color:"var(--text)"}}
                       />
                     );
                     return (
@@ -1205,7 +1205,7 @@ function ZoneBox({z,title,subtitle,items}) {
 const inpStyle = {
   width:'100%', padding:'8px 10px', border:`1.5px solid ${C.borda}`,
   borderRadius:RS, fontSize:14, background:"var(--tint-slate)",
-  boxSizing:'border-box', outline:'none', color:C.texto,
+  boxSizing:'border-box', outline:'none', color:"var(--text)",
 };
 const selStyle = {
   ...inpStyle, appearance:'auto',
