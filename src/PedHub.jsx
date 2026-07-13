@@ -136,7 +136,7 @@ const SEARCH_TAGS = {
   "/oftalmologia": "reflexo vermelho olhinho catarata visao triagem visual",
   "/doencas-exantematicas": "sarampo rubeola exantema subito escarlatina eritema infeccioso mao pe boca varicela",
   "/convulsao-febril": "convulsao febril crise febre puncao lombar",
-  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico hipertensao arterial pressao pa percentil has normotenso pressao alta",
+  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico hipertensao arterial pressao pa percentil has normotenso pressao alta tratamento anti-hipertensivo dose recem nascido neonatal dionne rn lactente",
   "/adolescencia": "adolescente tanner puberdade contracepcao saude mental",
   "/teste-tea-tdah": "autismo tea tdah m-chat rastreio deficit atencao hiperatividade",
   "/cuidados-pele-rn": "pele recem-nascido banho emoliente cordao umbilical higiene",
