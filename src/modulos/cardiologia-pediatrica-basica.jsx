@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo de PA (percentil pediátrico) para uso nos testes; Fast Refresh não se aplica a este módulo de rota lazy. */
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -9,144 +8,30 @@ import {
   Activity,
   Gauge,
   Table,
+  Pill,
+  Calculator,
+  Salad,
+  Zap,
 } from "lucide-react";
+import {
+  avaliarPA,
+  colunaPorEstatura,
+  PERC_ESTATURA,
+  PA_ESTAGIOS,
+} from "../lib/pa-pediatrica.js";
+import {
+  INDICACOES_MEDICAMENTO,
+  ALVOS_PA,
+  TRAT_POR_DOENCA,
+  PRIMEIRA_LINHA,
+  SEGUNDA_LINHA,
+  CRISE_EMERGENCIA,
+  CRISE_URGENCIA,
+  DOSE_CALC,
+  calcularDose,
+} from "../lib/pa-tratamento.js";
 
 const COR = "#BE123C"; // rose-700 — cor do módulo Cardiologia Pediátrica Básica
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MOTOR DE PERCENTIL DE PRESSÃO ARTERIAL PEDIÁTRICA
-//
-// Método: regressão polinomial de 4º grau do "Fourth Report on the Diagnosis,
-// Evaluation, and Treatment of High Blood Pressure in Children and Adolescents"
-// (NHBPEP, Pediatrics 2004;114:555-576, Apêndice B). É o mesmo método que gera
-// as tabelas clássicas de PA por idade/sexo/percentil de estatura e que está por
-// trás da maioria das calculadoras pediátricas de PA.
-//
-// PA esperada (mediana) = a + Σ b_i·(idade−10)^i + Σ c_j·(Zestatura)^j
-// Percentil da PA observada: Z = (PA − esperada) / DP → normal padrão.
-//
-// Validação interna (reprodução das tabelas publicadas, percentil de estatura P50):
-//   • PAS bate com a tabela impressa em ±1 mmHg em todas as idades (1–17a).
-//   • PAD coincide no ancoradouro (10a: 61/76/80/88) com desvio ≤3 mmHg nos
-//     extremos — clinicamente irrelevante para a classificação em faixas.
-// Válido para 1–17 anos. Fora dessa faixa, ver notas no componente.
-// ─────────────────────────────────────────────────────────────────────────────
-const PA_COEF = {
-  M: {
-    S: { a: 102.19768, b: [1.82416, 0.12776, 0.00249, -0.00135], c: [2.73157, -0.19618, -0.04659, 0.00947], dp: 10.7128 },
-    D: { a: 61.01217,  b: [0.68314, -0.09835, 0.01711, 0.00045], c: [1.46993, -0.07849, -0.03144, 0.00967], dp: 11.6032 },
-  },
-  F: {
-    S: { a: 102.01027, b: [1.94397, 0.00598, -0.00789, -0.00059], c: [2.03526, 0.02534, -0.01884, 0.00121], dp: 10.4855 },
-    D: { a: 60.50510,  b: [1.01301, 0.01157, 0.00424, -0.00137], c: [1.16641, 0.12795, -0.03869, -0.00079], dp: 10.9573 },
-  },
-};
-
-// Percentil de estatura → Z (mesma tabela do Fourth Report)
-export const ESTATURA_PERCENTIS = [
-  { label: "P5", z: -1.645 },
-  { label: "P10", z: -1.28 },
-  { label: "P25", z: -0.674 },
-  { label: "P50", z: 0 },
-  { label: "P75", z: 0.674 },
-  { label: "P90", z: 1.28 },
-  { label: "P95", z: 1.645 },
-];
-
-// PA esperada (mediana) para idade (anos, decimal aceito) e Z de estatura
-export function paEsperada(sexo, tipo, idadeAnos, zEstatura) {
-  const k = PA_COEF[sexo]?.[tipo];
-  if (!k) return null;
-  const A = idadeAnos - 10;
-  let v = k.a;
-  for (let i = 0; i < 4; i++) v += k.b[i] * Math.pow(A, i + 1);
-  for (let j = 0; j < 4; j++) v += k.c[j] * Math.pow(zEstatura, j + 1);
-  return v;
-}
-
-// Valor de PA em um dado percentil (z) — usado para os limiares P90/P95/P99
-export function paNoPercentil(sexo, tipo, idadeAnos, zEstatura, z) {
-  const esp = paEsperada(sexo, tipo, idadeAnos, zEstatura);
-  if (esp === null) return null;
-  return esp + z * PA_COEF[sexo][tipo].dp;
-}
-
-function normCDF(z) {
-  const t = 1 / (1 + 0.2316419 * Math.abs(z));
-  const d = 0.3989423 * Math.exp((-z * z) / 2);
-  let p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
-  return z > 0 ? 1 - p : p;
-}
-
-// Percentil (0–100) da PA observada
-export function percentilPA(sexo, tipo, idadeAnos, zEstatura, pa) {
-  const esp = paEsperada(sexo, tipo, idadeAnos, zEstatura);
-  if (esp === null || pa == null || isNaN(pa)) return null;
-  const z = (pa - esp) / PA_COEF[sexo][tipo].dp;
-  return Math.round(normCDF(z) * 1000) / 10;
-}
-
-const Z90 = 1.28155;
-const Z95 = 1.64485;
-const Z99 = 2.32635;
-
-// Estágio de UM componente (sistólico ou diastólico)
-//   0 = normotenso · 1 = limítrofe/pré-HAS · 2 = HAS estágio 1 · 3 = HAS estágio 2
-// Classificação clássica (Fourth Report / SBC):
-//   < P90 → normal | P90–<P95 (ou ≥120/80 em adolescente) → limítrofe
-//   P95 até P99+5mmHg → estágio 1 | > P99+5mmHg → estágio 2
-function estagioComponente(sexo, tipo, idadeAnos, zEstatura, pa, isAdolescente) {
-  if (pa == null || isNaN(pa)) return null;
-  const p90 = paNoPercentil(sexo, tipo, idadeAnos, zEstatura, Z90);
-  const p95 = paNoPercentil(sexo, tipo, idadeAnos, zEstatura, Z95);
-  const p99 = paNoPercentil(sexo, tipo, idadeAnos, zEstatura, Z99);
-  const cortAdol = tipo === "S" ? 120 : 80;
-  if (pa > p99 + 5) return 3;
-  if (pa >= p95) return 2;
-  if (pa >= p90 || (isAdolescente && pa >= cortAdol)) return 1;
-  return 0;
-}
-
-// Avaliação completa a partir dos dados do paciente
-export function avaliarPA({ sexo, idadeAnos, zEstatura, pas, pad }) {
-  if (!sexo || idadeAnos == null || isNaN(idadeAnos)) return null;
-  if (idadeAnos < 1 || idadeAnos >= 18) return { foraFaixa: true, idadeAnos };
-  const isAdol = idadeAnos >= 13;
-  const pS = percentilPA(sexo, "S", idadeAnos, zEstatura, pas);
-  const pD = percentilPA(sexo, "D", idadeAnos, zEstatura, pad);
-  const eS = estagioComponente(sexo, "S", idadeAnos, zEstatura, pas, isAdol);
-  const eD = estagioComponente(sexo, "D", idadeAnos, zEstatura, pad, isAdol);
-  const estagios = [eS, eD].filter((e) => e !== null);
-  if (estagios.length === 0) return null;
-  const estagio = Math.max(...estagios);
-  return {
-    foraFaixa: false,
-    percentilS: pS,
-    percentilD: pD,
-    estagioS: eS,
-    estagioD: eD,
-    estagio,
-    limiares: {
-      S: pas != null && !isNaN(pas) ? {
-        p90: Math.round(paNoPercentil(sexo, "S", idadeAnos, zEstatura, Z90)),
-        p95: Math.round(paNoPercentil(sexo, "S", idadeAnos, zEstatura, Z95)),
-        p99: Math.round(paNoPercentil(sexo, "S", idadeAnos, zEstatura, Z99)),
-      } : null,
-      D: pad != null && !isNaN(pad) ? {
-        p90: Math.round(paNoPercentil(sexo, "D", idadeAnos, zEstatura, Z90)),
-        p95: Math.round(paNoPercentil(sexo, "D", idadeAnos, zEstatura, Z95)),
-        p99: Math.round(paNoPercentil(sexo, "D", idadeAnos, zEstatura, Z99)),
-      } : null,
-    },
-  };
-}
-
-export const ESTAGIO_INFO = [
-  { label: "Normotenso", curto: "Normal", cor: "#059669", bg: "#ECFDF5", borda: "#6EE7B7", faixa: "PAS e PAD < P90" },
-  { label: "PA limítrofe (pré-hipertensão)", curto: "Limítrofe", cor: "#D97706", bg: "#FFFBEB", borda: "#FCD34D", faixa: "P90 a <P95 ou ≥120/80" },
-  { label: "HAS estágio 1", curto: "Estágio 1", cor: "#EA580C", bg: "#FFF7ED", borda: "#FDBA74", faixa: "P95 até P99 + 5 mmHg" },
-  { label: "HAS estágio 2", curto: "Estágio 2", cor: "#DC2626", bg: "#FEF2F2", borda: "#FCA5A5", faixa: "> P99 + 5 mmHg" },
-];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTES DE UI
@@ -251,7 +136,7 @@ function CampoNum({ label, unit, value, onChange, placeholder }) {
       </label>
       <input
         type="text"
-        inputMode="numeric"
+        inputMode="decimal"
         autoComplete="off"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -269,13 +154,14 @@ function parseNum(s) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ABA: HIPERTENSÃO ARTERIAL — calculadora de percentil
+// ABA: HIPERTENSÃO ARTERIAL — classificador de PA por percentil
 // ─────────────────────────────────────────────────────────────────────────────
 function AbaHipertensao() {
   const [sexo, setSexo] = useState("M");
   const [anos, setAnos] = useState("");
   const [meses, setMeses] = useState("");
-  const [percEst, setPercEst] = useState(3); // índice em ESTATURA_PERCENTIS → P50
+  const [percEst, setPercEst] = useState(3); // índice em PERC_ESTATURA → P50
+  const [estCm, setEstCm] = useState("");
   const [pas, setPas] = useState("");
   const [pad, setPad] = useState("");
   const [tabelaAberta, setTabelaAberta] = useState(false);
@@ -286,22 +172,25 @@ function AbaHipertensao() {
   const idadeAnos = anosN + mesesN / 12;
   const pasN = parseNum(pas);
   const padN = parseNum(pad);
+  const cmN = parseNum(estCm);
+
+  // Coluna de estatura: se a altura em cm for informada, usa a coluna mais
+  // próxima na tabela; senão usa o percentil selecionado.
+  const colunaCm =
+    cmN != null && (anosN > 0 || mesesN > 0)
+      ? colunaPorEstatura(sexo, idadeAnos, cmN)
+      : null;
+  const coluna = colunaCm != null ? colunaCm : percEst;
 
   const preenchido =
     (anosN > 0 || mesesN > 0) && (pasN != null || padN != null);
 
   const resultado = preenchido
-    ? avaliarPA({
-        sexo,
-        idadeAnos,
-        zEstatura: ESTATURA_PERCENTIS[percEst].z,
-        pas: pasN,
-        pad: padN,
-      })
+    ? avaliarPA({ sexo, idadeAnos, coluna, pas: pasN, pad: padN })
     : null;
 
   const info =
-    resultado && !resultado.foraFaixa ? ESTAGIO_INFO[resultado.estagio] : null;
+    resultado && !resultado.foraFaixa ? PA_ESTAGIOS[resultado.estagio] : null;
 
   return (
     <div className="space-y-4">
@@ -312,8 +201,8 @@ function AbaHipertensao() {
           Classificador de PA por percentil
         </p>
         <p className="text-[11px] text-gray-400 mb-3">
-          Informe os dados e a pressão aferida — o app calcula o percentil e a
-          classificação (1–17 anos).
+          Informe os dados e a pressão aferida — o app localiza o percentil e
+          classifica pela diretriz (1–17 anos).
         </p>
 
         {/* Sexo */}
@@ -347,32 +236,51 @@ function AbaHipertensao() {
           <CampoNum label="Idade — meses" value={meses} onChange={setMeses} placeholder="ex.: 6" />
         </div>
 
+        {/* Estatura em cm (opcional) */}
+        <div className="mb-3">
+          <CampoNum
+            label="Estatura (opcional — tem prioridade sobre o percentil)"
+            unit="cm"
+            value={estCm}
+            onChange={setEstCm}
+            placeholder="ex.: 131"
+          />
+        </div>
+
         {/* Percentil de estatura */}
         <div className="mb-3">
           <label className="text-xs font-semibold text-gray-600">
             Percentil de estatura
-            <span className="font-normal text-gray-400"> (se desconhecido, use P50)</span>
+            <span className="font-normal text-gray-400"> (usado se a estatura em cm não for informada)</span>
           </label>
           <div className="grid grid-cols-7 gap-1 mt-1">
-            {ESTATURA_PERCENTIS.map((p, i) => {
-              const a = i === percEst;
+            {PERC_ESTATURA.map((p, i) => {
+              const ativoPeloCm = colunaCm != null && i === colunaCm;
+              const ativoPeloSel = colunaCm == null && i === percEst;
+              const a = ativoPeloCm || ativoPeloSel;
               return (
                 <button
-                  key={p.label}
+                  key={p}
                   type="button"
-                  onClick={() => setPercEst(i)}
+                  onClick={() => { setEstCm(""); setPercEst(i); }}
                   className="py-1.5 rounded-lg text-[11px] font-semibold border"
                   style={{
                     background: a ? COR : "#F9FAFB",
                     color: a ? "#fff" : "#6B7280",
                     borderColor: a ? COR : "#E5E7EB",
+                    opacity: colunaCm != null && !ativoPeloCm ? 0.5 : 1,
                   }}
                 >
-                  {p.label}
+                  {p}
                 </button>
               );
             })}
           </div>
+          {colunaCm != null && (
+            <p className="text-[11px] text-gray-400 mt-1">
+              Estatura {cmN} cm → coluna {PERC_ESTATURA[colunaCm]} (mais próxima na tabela).
+            </p>
+          )}
         </div>
 
         {/* Pressão */}
@@ -384,10 +292,10 @@ function AbaHipertensao() {
         {/* Resultado */}
         {resultado && resultado.foraFaixa && (
           <div className="mt-3 rounded-xl px-3 py-2.5 text-sm bg-blue-50 text-blue-800 border border-blue-200">
-            Estas tabelas de percentil valem para <strong>1 a 17 anos</strong>.
+            Estas tabelas valem para <strong>1 a 17 anos</strong>.
             {idadeAnos < 1
-              ? " Para lactentes < 1 ano, use referências específicas de PA neonatal/infantil."
-              : " Para ≥ 18 anos, aplique os critérios de PA do adulto (ex.: ≥140/90 = HAS estágio 1)."}
+              ? " Para lactentes < 1 ano, use referências específicas (2º Task Force); para RN, a tabela de Dionne et al."
+              : " Para ≥ 18 anos, aplique os critérios de PA do adulto (ex.: ≥ 140/90 = HAS estágio 1)."}
           </div>
         )}
 
@@ -413,7 +321,7 @@ function AbaHipertensao() {
                   {pasN != null ? `${pasN} mmHg` : "—"}
                 </div>
                 <div className="text-xs font-semibold" style={{ color: info.cor }}>
-                  {resultado.percentilS != null ? `P${resultado.percentilS}` : "—"}
+                  {resultado.faixaS || "—"}
                 </div>
               </div>
               <div className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
@@ -424,33 +332,39 @@ function AbaHipertensao() {
                   {padN != null ? `${padN} mmHg` : "—"}
                 </div>
                 <div className="text-xs font-semibold" style={{ color: info.cor }}>
-                  {resultado.percentilD != null ? `P${resultado.percentilD}` : "—"}
+                  {resultado.faixaD || "—"}
                 </div>
               </div>
             </div>
-            {(resultado.limiares.S || resultado.limiares.D) && (
+            {(resultado.limiares.s || resultado.limiares.d) && (
               <div className="mt-2 text-[11px] text-gray-500 leading-relaxed">
                 Limiares deste paciente —
-                {resultado.limiares.S && (
-                  <> PAS: P90 {resultado.limiares.S.p90} · P95 {resultado.limiares.S.p95} · P99 {resultado.limiares.S.p99}.</>
+                {resultado.limiares.s && (
+                  <> PAS: P90 {resultado.limiares.s.p90} · P95 {resultado.limiares.s.p95} · P95+12 {resultado.limiares.s.p95_12}.</>
                 )}
-                {resultado.limiares.D && (
-                  <> PAD: P90 {resultado.limiares.D.p90} · P95 {resultado.limiares.D.p95} · P99 {resultado.limiares.D.p99}.</>
+                {resultado.limiares.d && (
+                  <> PAD: P90 {resultado.limiares.d.p90} · P95 {resultado.limiares.d.p95} · P95+12 {resultado.limiares.d.p95_12}.</>
                 )}
               </div>
             )}
+            {resultado.isAdol && (
+              <p className="mt-2 text-[11px] text-gray-600">
+                A partir de 13 anos aplicam-se os critérios de PA do adulto
+                (Quadro 4). Avalie individualmente conforme o estágio puberal.
+              </p>
+            )}
             {resultado.estagio >= 1 && (
               <p className="mt-2 text-[11px] text-gray-600">
-                Confirmar em <strong>≥ 3 ocasiões distintas</strong> antes de firmar
-                diagnóstico de HAS. PA elevada exige reavaliação; estágios 1 e 2
-                indicam investigação/encaminhamento.
+                PA ≥ P90: medir mais 2 vezes na visita e usar a média. Confirmar
+                em <strong>≥ 3 ocasiões distintas</strong> antes de firmar o
+                diagnóstico de HAS.
               </p>
             )}
           </div>
         )}
         <p className="text-[11px] text-gray-400 mt-3">
-          Uma única aferição elevada não define hipertensão. A classificação usa
-          o maior percentil entre sistólica e diastólica.
+          A classificação usa o maior nível entre sistólica e diastólica. Uma
+          única aferição elevada não define hipertensão.
         </p>
       </div>
 
@@ -474,27 +388,28 @@ function AbaHipertensao() {
         {tabelaAberta && (
           <div className="px-4 pb-4">
             <div className="overflow-hidden rounded-xl border border-gray-200">
-              {ESTAGIO_INFO.map((e, i) => (
+              {PA_ESTAGIOS.map((e, i) => (
                 <div
                   key={e.label}
-                  className="flex items-center justify-between px-3 py-2.5 text-sm"
+                  className="flex items-center justify-between px-3 py-2.5 text-sm gap-3"
                   style={{
                     background: e.bg,
                     borderTop: i === 0 ? "none" : "1px solid #F3F4F6",
                   }}
                 >
-                  <span className="font-semibold" style={{ color: e.cor }}>
+                  <span className="font-semibold shrink-0" style={{ color: e.cor }}>
                     {e.label}
                   </span>
-                  <span className="text-xs text-gray-600 text-right">{e.faixa}</span>
+                  <span className="text-[11px] text-gray-600 text-right">{e.faixa}</span>
                 </div>
               ))}
             </div>
             <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
-              Percentis calculados por idade, sexo e percentil de estatura. Em
-              adolescentes, PA ≥ 120/80 mmHg já caracteriza PA limítrofe mesmo
-              abaixo do P90. Classificação clássica do Fourth Report (NHBPEP 2004),
-              referência das diretrizes brasileiras (SBC).
+              Percentis por idade, sexo e percentil de estatura (Quadro 4). Para
+              1–13 anos vale o menor entre o limiar do percentil e o corte
+              absoluto de adulto; a partir de 13 anos usam-se os cortes do adulto
+              (Normotenso &lt; 120/80 · Elevada 120–129/&lt;80 · Estágio 1
+              130–139/80–89 · Estágio 2 ≥ 140/90).
             </p>
           </div>
         )}
@@ -520,21 +435,21 @@ function AbaHipertensao() {
         {tecnicaAberta && (
           <div className="px-4 pb-4 text-sm text-gray-700 space-y-3">
             <ul className="space-y-1.5">
-              <Bullet>Aferir a partir dos 3 anos em toda consulta; antes disso, se houver fator de risco (prematuridade, cardiopatia, nefropatia, uso de drogas hipertensoras).</Bullet>
-              <Bullet>Criança sentada, em repouso ≥ 5 min, braço direito apoiado ao nível do coração.</Bullet>
-              <Bullet><strong>Manguito adequado:</strong> câmara cobrindo ~40% da circunferência do braço e 80–100% do comprimento — manguito pequeno superestima a PA.</Bullet>
-              <Bullet>Método auscultatório é o padrão para confirmar; oscilométrico elevado deve ser reconfirmado por ausculta.</Bullet>
-              <Bullet>Confirmar PA elevada em <strong>≥ 3 ocasiões distintas</strong> antes do diagnóstico de HAS.</Bullet>
+              <Bullet>Medir a PA anualmente a partir dos 3 anos; antes disso, se houver fator de risco (prematuridade &lt; 32 sem, muito baixo peso, cateter umbilical, cardiopatia, nefropatia, drogas hipertensoras, etc.).</Bullet>
+              <Bullet>Criança sentada/deitada, em repouso &gt; 5 min, bexiga vazia, sem exercício na última hora; braço direito apoiado ao nível do coração.</Bullet>
+              <Bullet><strong>Manguito adequado:</strong> escolhido pela circunferência do braço (câmara cobrindo ~40% da largura e 80–100% do comprimento) — manguito pequeno superestima a PA.</Bullet>
+              <Bullet>Técnica auscultatória é a preferencial (PAS = fase I de Korotkoff; PAD = fase V). Medida oscilométrica alterada deve ser confirmada por ausculta.</Bullet>
+              <Bullet>Se a 1ª medida for ≥ P90, medir mais 2 vezes na visita e usar a média. Confirmar em <strong>≥ 3 ocasiões distintas</strong> para diagnóstico de HAS.</Bullet>
             </ul>
             <AlertaBox tone="red">
-              PA em nível de estágio 2, sintomática (cefaleia, alterações visuais, convulsão) ou com lesão de órgão-alvo é emergência/urgência — avaliação imediata.
+              PA em estágio 2, sintomática (cefaleia, alterações visuais, convulsão) ou com lesão de órgão-alvo é urgência/emergência — avaliação imediata.
             </AlertaBox>
             <AlertaBox tone="blue">
-              HAS na criança é frequentemente secundária (renal, renovascular, coarctação, endócrina), tanto mais quanto menor a idade e maior o estágio. Investigar e encaminhar.
+              Quanto menor a idade e maior o estágio, maior a chance de HAS secundária (renal, renovascular, coarctação, endócrina). Investigar e encaminhar.
             </AlertaBox>
             <div>
-              <FonteTag>Fourth Report / NHBPEP</FonteTag>
-              <FonteTag>SBC</FonteTag>
+              <FonteTag>SBP 2019 (Nefrologia)</FonteTag>
+              <FonteTag>AAP 2017 / Flynn et al.</FonteTag>
             </div>
           </div>
         )}
@@ -660,6 +575,289 @@ function AbaSopro() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ABA: TRATAMENTO (fundamentado no Manual SBP 2019)
+// ─────────────────────────────────────────────────────────────────────────────
+function CartaoColapsavel({ title, icon: Icon, children, aberto, onToggle }) {
+  return (
+    <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-4 py-3 text-left"
+      >
+        <span className="flex items-center gap-2 font-semibold text-gray-800 text-sm">
+          <Icon size={18} style={{ color: COR }} />
+          {title}
+        </span>
+        {aberto ? (
+          <ChevronUp size={18} className="text-gray-400" />
+        ) : (
+          <ChevronDown size={18} className="text-gray-400" />
+        )}
+      </button>
+      {aberto && <div className="px-4 pb-4 text-sm text-gray-700 space-y-3">{children}</div>}
+    </div>
+  );
+}
+
+function AbaTratamento() {
+  const [abertas, setAbertas] = useState({ dose: true, primeira: false, segunda: false, crise: false });
+  const toggle = (k) => setAbertas((p) => ({ ...p, [k]: !p[k] }));
+
+  const [medIdx, setMedIdx] = useState(0);
+  const [peso, setPeso] = useState("");
+  const pesoN = parseNum(peso);
+  const medSel = DOSE_CALC[medIdx];
+  const dose = pesoN != null ? calcularDose(medSel, pesoN) : null;
+
+  return (
+    <div className="space-y-4">
+      {/* Não medicamentoso */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-3">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <Salad size={16} style={{ color: COR }} />
+          Tratamento não medicamentoso (sempre)
+        </p>
+        <ul className="space-y-1.5">
+          <Bullet><strong>Dieta DASH:</strong> reduzir sal, gorduras saturadas, colesterol, carne vermelha, açúcares e bebidas açucaradas; rica em potássio, magnésio, cálcio, proteínas e fibras (frutas, verduras, grãos, peixe, aves, castanhas).</Bullet>
+          <Bullet><strong>Atividade física:</strong> sempre encorajada, inclusive em sobrepeso/obesidade; adequada à idade. Em obesos, preferir baixo impacto articular (natação, bicicleta ergométrica, musculação com acompanhamento).</Bullet>
+          <Bullet><strong>Atletas:</strong> liberar competição/treino intenso só após controle da PA. HVE ou HAS estágio 2 restringem esportes estáticos de alto impacto até o controle.</Bullet>
+        </ul>
+        <AlertaBox tone="green">
+          Mudanças de estilo de vida são mantidas mesmo quando se inicia medicação.
+        </AlertaBox>
+      </div>
+
+      {/* Calculadora de dose */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4">
+        <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+          <Calculator size={16} style={{ color: COR }} />
+          Calculadora de dose — 1ª linha (mg/kg/dia)
+        </p>
+        <p className="text-[11px] text-gray-400 mb-3">
+          Fármacos preferenciais com posologia por peso e apresentação disponível
+          no Brasil. Confira sempre antes de prescrever.
+        </p>
+
+        <div className="flex flex-col gap-1 mb-3">
+          <label className="text-xs font-semibold text-gray-600">Fármaco</label>
+          <select
+            value={medIdx}
+            onChange={(e) => setMedIdx(Number(e.target.value))}
+            className="px-3 py-2.5 rounded-xl border-[1.5px] border-gray-200 text-base bg-white outline-none focus:border-rose-400"
+          >
+            {DOSE_CALC.map((m, i) => (
+              <option key={m.id} value={i}>
+                {m.nome} ({m.classe}) · {m.faixa}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <CampoNum label="Peso" unit="kg" value={peso} onChange={setPeso} placeholder="ex.: 25" />
+
+        {dose && (
+          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
+                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose inicial</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.inicial} mg/dia</div>
+                <div className="text-[11px] text-gray-500">{medSel.inicialTxt}</div>
+              </div>
+              <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
+                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose máxima</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.maxima} mg/dia</div>
+                <div className="text-[11px] text-gray-500">{medSel.maximaTxt}</div>
+              </div>
+            </div>
+            {dose.limitado && (
+              <p className="text-[11px] text-amber-700 mt-2">
+                Dose máxima limitada pelo teto absoluto da faixa etária/apresentação.
+              </p>
+            )}
+            <p className="text-[11px] text-gray-500 mt-2">
+              Intervalo: {medSel.intervalo} · {medSel.apres}
+            </p>
+          </div>
+        )}
+        <p className="text-[11px] text-gray-400 mt-3">
+          Introduzir um anti-hipertensivo por vez; só associar outro após atingir a
+          dose máxima do primeiro (salvo efeitos colaterais). Betabloqueador não é
+          1ª linha; IECA e BRA são os preferenciais na maioria dos casos.
+        </p>
+      </div>
+
+      {/* Quando iniciar + alvos */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-3">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <ClipboardList size={16} style={{ color: COR }} />
+          Quando iniciar medicação e alvos
+        </p>
+        <p className="text-xs font-semibold text-gray-700">Indicações (Quadro 7):</p>
+        <ul className="space-y-1.5">
+          {INDICACOES_MEDICAMENTO.map((i) => (
+            <Bullet key={i}>{i}</Bullet>
+          ))}
+        </ul>
+        <p className="text-xs font-semibold text-gray-700 pt-1">Alvos de PA:</p>
+        <ul className="space-y-1.5">
+          {ALVOS_PA.map((a) => (
+            <Bullet key={a}>{a}</Bullet>
+          ))}
+        </ul>
+        <p className="text-xs font-semibold text-gray-700 pt-1">Escolha por doença de base (Tabela 7):</p>
+        <div className="overflow-hidden rounded-xl border border-gray-200">
+          {TRAT_POR_DOENCA.map((t, i) => (
+            <div
+              key={t.doenca}
+              className="flex justify-between gap-3 px-3 py-2 text-xs"
+              style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}
+            >
+              <span className="font-semibold text-gray-700 shrink-0">{t.doenca}</span>
+              <span className="text-gray-600 text-right">{t.meds}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 1ª linha — tabela completa */}
+      <CartaoColapsavel title="Medicamentos de 1ª linha (doses)" icon={Pill} aberto={abertas.primeira} onToggle={() => toggle("primeira")}>
+        {PRIMEIRA_LINHA.map((c) => (
+          <div key={c.classe} className="space-y-2">
+            <p className="font-semibold text-gray-800 text-[13px]">{c.classe}</p>
+            <p className="text-[11px] text-gray-500">
+              <strong>Contraindicações:</strong> {c.contra}. <strong>Adversos comuns:</strong> {c.comuns}. <strong>Graves:</strong> {c.graves}.
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <table className="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 text-gray-500">
+                    <th className="text-left px-2 py-1.5 font-semibold">Fármaco</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Idade</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Inicial</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Máxima</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Interv.</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Apresentação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {c.farmacos.map((f, i) => (
+                    <tr key={f.nome + f.faixa} style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                      <td className="px-2 py-1.5 font-medium text-gray-800 whitespace-nowrap">{f.nome}</td>
+                      <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.faixa}</td>
+                      <td className="px-2 py-1.5 text-gray-600">{f.inicial}</td>
+                      <td className="px-2 py-1.5 text-gray-600">{f.maxima}</td>
+                      <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.intervalo}</td>
+                      <td className="px-2 py-1.5 text-gray-500">{f.apres}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
+        <p className="text-[11px] text-gray-400">
+          Não há anti-hipertensivo com apresentação pediátrica (solução/xarope) no
+          Brasil — muitos exigem manipulação em farmácia especializada.
+        </p>
+      </CartaoColapsavel>
+
+      {/* 2ª linha */}
+      <CartaoColapsavel title="Medicamentos de 2ª linha" icon={Pill} aberto={abertas.segunda} onToggle={() => toggle("segunda")}>
+        <p className="text-[11px] text-gray-500">
+          Reservados a pacientes que não respondem a ≥ 2 agentes preferenciais.
+        </p>
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
+          <table className="w-full text-[11px] border-collapse">
+            <thead>
+              <tr className="bg-gray-50 text-gray-500">
+                <th className="text-left px-2 py-1.5 font-semibold">Fármaco</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Classe</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Inicial</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Máxima</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Interv.</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SEGUNDA_LINHA.map((f, i) => (
+                <tr key={f.nome} style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                  <td className="px-2 py-1.5 font-medium text-gray-800 whitespace-nowrap">{f.nome}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.classe}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.inicial}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.maxima}</td>
+                  <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.intervalo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CartaoColapsavel>
+
+      {/* Crise hipertensiva */}
+      <CartaoColapsavel title="Crise hipertensiva" icon={Zap} aberto={abertas.crise} onToggle={() => toggle("crise")}>
+        <AlertaBox tone="red">
+          Reduzir a PA em <strong>no máximo 25% nas primeiras 8 horas</strong>.
+          Emergência (EH) = risco a cardiovascular/rins/SNC → droga IV imediata.
+          Urgência (UH) = HAS grave sem lesão de órgão-alvo → pode iniciar via oral.
+        </AlertaBox>
+        <div>
+          <p className="text-xs font-semibold text-gray-700 mb-1">Emergência hipertensiva</p>
+          <div className="space-y-1.5">
+            {CRISE_EMERGENCIA.map((f) => (
+              <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
+                <div className="flex justify-between gap-2">
+                  <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
+                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                </div>
+                <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
+                <div className="text-[11px] text-gray-400">{f.obs}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-gray-700 mb-1 pt-1">Urgência hipertensiva</p>
+          <div className="space-y-1.5">
+            {CRISE_URGENCIA.map((f) => (
+              <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
+                <div className="flex justify-between gap-2">
+                  <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
+                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                </div>
+                <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
+                <div className="text-[11px] text-gray-400">{f.obs}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CartaoColapsavel>
+
+      {/* Seguimento */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-2">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <Activity size={16} style={{ color: COR }} />
+          Seguimento
+        </p>
+        <ul className="space-y-1.5">
+          <Bullet>No início/ajuste de medicação: reavaliar a cada 4–6 semanas para titular dose ou associar droga.</Bullet>
+          <Bullet>Após controle da PA: retornos a cada 3–4 meses, monitorando sintomas, efeitos colaterais e adesão.</Bullet>
+          <Bullet>Doença crônica — seguimento de longo prazo mesmo após controle e eventual retirada da medicação.</Bullet>
+        </ul>
+        <div>
+          <FonteTag>SBP 2019 (Nefrologia)</FonteTag>
+          <FonteTag>AAP 2017 / Flynn et al.</FonteTag>
+          <FonteTag>7ª Diretriz Bras. HAS</FonteTag>
+        </div>
+        <AlertaBox tone="amber">
+          Doses de apoio ao raciocínio — não substituem a bula, o julgamento clínico
+          nem a avaliação do nefrologista/cardiologista pediátrico.
+        </AlertaBox>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CardiologiaPediatricaBasica() {
@@ -680,10 +878,11 @@ export default function CardiologiaPediatricaBasica() {
 
       {/* Abas */}
       <div className="px-4 pt-4">
-        <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
+        <div className="flex gap-1.5 p-1 bg-gray-100 rounded-xl">
           {[
-            { id: "sopro", label: "Sopro cardíaco" },
-            { id: "hipertensao", label: "Hipertensão arterial" },
+            { id: "sopro", label: "Sopro" },
+            { id: "hipertensao", label: "Hipertensão" },
+            { id: "tratamento", label: "Tratamento" },
           ].map((t) => {
             const a = aba === t.id;
             return (
@@ -706,7 +905,9 @@ export default function CardiologiaPediatricaBasica() {
       </div>
 
       <div className="px-4 pt-4">
-        {aba === "sopro" ? <AbaSopro /> : <AbaHipertensao />}
+        {aba === "sopro" && <AbaSopro />}
+        {aba === "hipertensao" && <AbaHipertensao />}
+        {aba === "tratamento" && <AbaTratamento />}
       </div>
 
       {/* Disclaimer padrão do módulo */}
