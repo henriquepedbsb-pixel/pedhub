@@ -12,6 +12,7 @@ import {
   Calculator,
   Salad,
   Zap,
+  Baby,
 } from "lucide-react";
 import {
   avaliarPA,
@@ -19,6 +20,16 @@ import {
   PERC_ESTATURA,
   PA_ESTAGIOS,
 } from "../lib/pa-pediatrica.js";
+import {
+  DIONNE,
+  DIONNE_SEMANAS,
+  avaliarPANeonatal,
+  semanaMaisProxima,
+  PA_NEO_ESTAGIOS,
+  CAUSAS_HAS_RN,
+} from "../lib/pa-neonatal.js";
+import GraficoPercentilPA from "../components/GraficoPercentilPA.jsx";
+import GraficoPercentilNeonatal from "../components/GraficoPercentilNeonatal.jsx";
 import {
   INDICACOES_MEDICAMENTO,
   ALVOS_PA,
@@ -367,6 +378,49 @@ function AbaHipertensao() {
           única aferição elevada não define hipertensão.
         </p>
       </div>
+
+      {/* Gráfico de percentil (curvas por idade) */}
+      {info && (
+        <div className="border border-gray-200 rounded-2xl bg-white p-4">
+          <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+            <Activity size={16} style={{ color: COR }} />
+            Curvas de percentil ({sexo === "M" ? "meninos" : "meninas"} · estatura {PERC_ESTATURA[resultado.colunaUsada]})
+          </p>
+          <p className="text-[11px] text-gray-400 mb-3">
+            O ponto marca a PA do paciente na idade atual, entre as curvas de referência.
+          </p>
+          <div className="space-y-3">
+            {pasN != null && (
+              <GraficoPercentilPA
+                sexo={sexo}
+                coluna={resultado.colunaUsada}
+                componente="s"
+                titulo="Pressão sistólica (mmHg)"
+                idadePaciente={idadeAnos}
+                valorPaciente={pasN}
+                corPaciente={info.cor}
+              />
+            )}
+            {padN != null && (
+              <GraficoPercentilPA
+                sexo={sexo}
+                coluna={resultado.colunaUsada}
+                componente="d"
+                titulo="Pressão diastólica (mmHg)"
+                idadePaciente={idadeAnos}
+                valorPaciente={padN}
+                corPaciente={info.cor}
+              />
+            )}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P90</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(217,119,6,0.4)" }} />Elevada P90–P95</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Estágio 1 P95–+12</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(220,38,38,0.42)" }} />Estágio 2 ≥ P95+12</span>
+          </div>
+        </div>
+      )}
 
       {/* Tabela de referência (grau de normalidade por percentil) */}
       <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
@@ -858,6 +912,252 @@ function AbaTratamento() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ABA: RECÉM-NASCIDO / < 1 ANO (tabela de Dionne)
+// ─────────────────────────────────────────────────────────────────────────────
+function AbaNeonatal() {
+  const [semana, setSemana] = useState(40); // idade pós-concepção (semanas)
+  const [pas, setPas] = useState("");
+  const [pad, setPad] = useState("");
+  const [pam, setPam] = useState("");
+  const [tabelaAberta, setTabelaAberta] = useState(false);
+
+  const pasN = parseNum(pas);
+  const padN = parseNum(pad);
+  const pamN = parseNum(pam);
+
+  const preenchido = pasN != null || padN != null || pamN != null;
+  const resultado = preenchido
+    ? avaliarPANeonatal({ idadePosConcep: semana, pas: pasN, pad: padN, pam: pamN })
+    : null;
+  const info =
+    resultado && resultado.estagio != null ? PA_NEO_ESTAGIOS[resultado.estagio] : null;
+  const semRef = semanaMaisProxima(semana);
+
+  return (
+    <div className="space-y-4">
+      <AlertaBox tone="blue">
+        Abaixo de 1 ano a definição de HAS é mais difícil e as tabelas não foram
+        atualizadas. Para o <strong>recém-nascido</strong> usa-se a tabela de
+        Dionne (por idade pós-concepção, após 2 semanas de vida). Para o
+        <strong> pós-neonatal &lt; 1 ano</strong>, usam-se as curvas do 2º Task
+        Force (não reproduzidas aqui).
+      </AlertaBox>
+
+      {/* Calculadora Dionne */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4">
+        <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+          <Baby size={16} style={{ color: COR }} />
+          PA do recém-nascido (Dionne)
+        </p>
+        <p className="text-[11px] text-gray-400 mb-3">
+          Idade pós-concepção = idade gestacional ao nascer + idade pós-natal.
+          Valores válidos após ~2 semanas de vida.
+        </p>
+
+        <div className="flex flex-col gap-1 mb-3">
+          <label className="text-xs font-semibold text-gray-600">
+            Idade pós-concepção
+            <span className="font-normal text-gray-400"> ({semana} semanas)</span>
+          </label>
+          <input
+            type="range"
+            min={DIONNE_SEMANAS[0]}
+            max={DIONNE_SEMANAS[DIONNE_SEMANAS.length - 1]}
+            step={2}
+            value={semana}
+            onChange={(e) => setSemana(Number(e.target.value))}
+            className="w-full accent-rose-700"
+          />
+          <div className="flex justify-between text-[10px] text-gray-400">
+            {DIONNE_SEMANAS.map((s) => (
+              <span key={s}>{s}</span>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          <CampoNum label="PAS" unit="mmHg" value={pas} onChange={setPas} placeholder="sist." />
+          <CampoNum label="PAD" unit="mmHg" value={pad} onChange={setPad} placeholder="diast." />
+          <CampoNum label="PAM" unit="mmHg" value={pam} onChange={setPam} placeholder="média" />
+        </div>
+
+        {/* Valores de referência da semana selecionada */}
+        {semRef && (
+          <div className="mt-3 overflow-hidden rounded-xl border border-gray-200">
+            <div className="grid grid-cols-4 bg-gray-50 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+              <div className="px-2 py-1.5">{semRef} sem</div>
+              <div className="px-2 py-1.5 text-center">P50</div>
+              <div className="px-2 py-1.5 text-center">P95</div>
+              <div className="px-2 py-1.5 text-center">P99</div>
+            </div>
+            {[
+              { k: "pas", label: "PAS" },
+              { k: "pad", label: "PAD" },
+              { k: "pam", label: "PAM" },
+            ].map((row, i) => (
+              <div key={row.k} className="grid grid-cols-4 text-xs" style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                <div className="px-2 py-1.5 font-semibold text-gray-700">{row.label}</div>
+                {DIONNE[semRef][row.k].map((v, j) => (
+                  <div key={j} className="px-2 py-1.5 text-center text-gray-700">{v}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {info && (
+          <div className="mt-3 rounded-xl p-3 border" style={{ background: info.bg, borderColor: info.borda }}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Classificação ({semRef} sem)
+              </span>
+              <span className="text-lg font-extrabold" style={{ color: info.cor }}>
+                {info.label}
+              </span>
+            </div>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {[
+                { k: "pas", label: "PAS", val: pasN },
+                { k: "pad", label: "PAD", val: padN },
+                { k: "pam", label: "PAM", val: pamN },
+              ].map((c) => (
+                <div key={c.k} className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
+                  <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{c.label}</div>
+                  <div className="text-sm font-bold text-gray-800">{c.val != null ? c.val : "—"}</div>
+                  <div className="text-[11px] font-semibold" style={{ color: info.cor }}>{resultado.faixas[c.k] || "—"}</div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-2 text-[11px] text-gray-600">
+              PA ≥ P95 = hipertensão; ≥ P99 = hipertensão grave. Classificação pelo
+              maior nível. Confirmar com medidas repetidas e técnica adequada.
+            </p>
+          </div>
+        )}
+        <p className="text-[11px] text-gray-400 mt-3">
+          A classificação usa o maior nível entre PAS, PAD e PAM.
+        </p>
+      </div>
+
+      {/* Gráfico de percentil (curvas de Dionne) */}
+      {info && (
+        <div className="border border-gray-200 rounded-2xl bg-white p-4">
+          <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+            <Activity size={16} style={{ color: COR }} />
+            Curvas de percentil (Dionne)
+          </p>
+          <p className="text-[11px] text-gray-400 mb-3">
+            O ponto marca a PA do paciente em {resultado.semana} semanas de idade
+            pós-concepção.
+          </p>
+          <div className="space-y-3">
+            {[
+              { k: "pas", val: pasN, t: "Pressão sistólica (mmHg)" },
+              { k: "pad", val: padN, t: "Pressão diastólica (mmHg)" },
+              { k: "pam", val: pamN, t: "Pressão arterial média (mmHg)" },
+            ]
+              .filter((c) => c.val != null)
+              .map((c) => (
+                <GraficoPercentilNeonatal
+                  key={c.k}
+                  componente={c.k}
+                  titulo={c.t}
+                  semanaPaciente={resultado.semana}
+                  valorPaciente={c.val}
+                  corPaciente={info.cor}
+                />
+              ))}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P95</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Hipertensão P95–P99</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(220,38,38,0.42)" }} />Grave ≥ P99</span>
+          </div>
+        </div>
+      )}
+
+      {/* Tabela completa */}
+      <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+        <button
+          type="button"
+          onClick={() => setTabelaAberta((v) => !v)}
+          className="w-full flex items-center justify-between px-4 py-3 text-left"
+        >
+          <span className="flex items-center gap-2 font-semibold text-gray-800 text-sm">
+            <Table size={18} style={{ color: COR }} />
+            Tabela de Dionne completa (26–44 semanas)
+          </span>
+          {tabelaAberta ? (
+            <ChevronUp size={18} className="text-gray-400" />
+          ) : (
+            <ChevronDown size={18} className="text-gray-400" />
+          )}
+        </button>
+        {tabelaAberta && (
+          <div className="px-4 pb-4">
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <table className="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 text-gray-500">
+                    <th className="px-2 py-1.5 text-left font-semibold">Sem.</th>
+                    <th className="px-2 py-1.5 font-semibold" colSpan={3}>PAS (P50/95/99)</th>
+                    <th className="px-2 py-1.5 font-semibold" colSpan={3}>PAD</th>
+                    <th className="px-2 py-1.5 font-semibold" colSpan={3}>PAM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...DIONNE_SEMANAS].reverse().map((s, i) => (
+                    <tr key={s} style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                      <td className="px-2 py-1.5 font-semibold text-gray-700">{s}</td>
+                      {["pas", "pad", "pam"].flatMap((k) =>
+                        DIONNE[s][k].map((v, j) => (
+                          <td key={k + j} className="px-2 py-1.5 text-center text-gray-600">{v}</td>
+                        ))
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[11px] text-gray-400 mt-2">
+              Valores estimados após 2 semanas de vida, por idade pós-concepção.
+              Adaptado de Dionne et al. (Pediatr Nephrol 2012) via Manual SBP 2019.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Causas e conduta no RN */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-3">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <AlertTriangle size={16} style={{ color: COR }} />
+          Causas e conduta no recém-nascido
+        </p>
+        <p className="text-xs font-semibold text-gray-700">Causas mais frequentes (Quadro 5):</p>
+        <ul className="space-y-1.5">
+          {CAUSAS_HAS_RN.map((c) => (
+            <Bullet key={c}>{c}</Bullet>
+          ))}
+        </ul>
+        <AlertaBox tone="amber">
+          <strong>Tratamento:</strong> o manual não traz esquema medicamentoso
+          específico para menores de 1 ano — usam-se os mesmos fármacos da aba
+          Tratamento. Na prática: <strong>Captopril</strong> tem faixa neonatal
+          (0,05 mg/kg/dia); a maioria dos demais é a partir de 1 mês; na crise,
+          as drogas endovenosas (nitroprussiato, esmolol, hidralazina). HAS no RN
+          é quase sempre secundária — investigar a causa e conduzir com
+          nefrologia/cardiologia pediátrica, em ambiente de UTI quando indicado.
+        </AlertaBox>
+        <div>
+          <FonteTag>Dionne et al. 2012</FonteTag>
+          <FonteTag>SBP 2019 (Nefrologia)</FonteTag>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CardiologiaPediatricaBasica() {
@@ -872,17 +1172,18 @@ export default function CardiologiaPediatricaBasica() {
           Cardiologia Pediátrica Básica
         </h1>
         <p className="text-rose-100 text-xs mt-1">
-          Sopro inocente × patológico · hipertensão arterial
+          Sopro · hipertensão arterial · tratamento · PA do recém-nascido
         </p>
       </div>
 
       {/* Abas */}
       <div className="px-4 pt-4">
-        <div className="flex gap-1.5 p-1 bg-gray-100 rounded-xl">
+        <div className="flex gap-1 p-1 bg-gray-100 rounded-xl">
           {[
             { id: "sopro", label: "Sopro" },
             { id: "hipertensao", label: "Hipertensão" },
             { id: "tratamento", label: "Tratamento" },
+            { id: "neonatal", label: "RN < 1 ano" },
           ].map((t) => {
             const a = aba === t.id;
             return (
@@ -890,7 +1191,7 @@ export default function CardiologiaPediatricaBasica() {
                 key={t.id}
                 type="button"
                 onClick={() => setAba(t.id)}
-                className="flex-1 py-2 rounded-lg text-sm font-semibold transition-colors"
+                className="flex-1 py-2 rounded-lg text-xs font-semibold transition-colors"
                 style={{
                   background: a ? "#fff" : "transparent",
                   color: a ? COR : "#6B7280",
@@ -908,6 +1209,7 @@ export default function CardiologiaPediatricaBasica() {
         {aba === "sopro" && <AbaSopro />}
         {aba === "hipertensao" && <AbaHipertensao />}
         {aba === "tratamento" && <AbaTratamento />}
+        {aba === "neonatal" && <AbaNeonatal />}
       </div>
 
       {/* Disclaimer padrão do módulo */}
