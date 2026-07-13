@@ -322,13 +322,13 @@ function TabBIC() {
           </div>
 
           {/* Prescrição copiável */}
-          <div style={{ background: "var(--text-2)", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
+          <div style={{ background: "#1E293B", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".07em", textTransform: "uppercase" }}>
                 Prescrição completa
               </span>
               <button onClick={copiar}
-                style={{ display: "flex", alignItems: "center", gap: 5, background: copied ? "#059669" : "var(--text-2)", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, color: "#fff", cursor: "pointer" }}>
+                style={{ display: "flex", alignItems: "center", gap: 5, background: copied ? "#059669" : "#334155", border: "none", borderRadius: 6, padding: "5px 12px", fontSize: 11, fontWeight: 700, color: "#fff", cursor: "pointer" }}>
                 {copied ? <CheckCircle size={12} /> : <Copy size={12} />}
                 {copied ? "Copiado!" : "Copiar"}
               </button>

@@ -201,7 +201,7 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
                   <span style={{ fontSize:'12px', color:"var(--text-2)", fontWeight:isStart?'700':'400' }}>
                     {dose}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
                   </span>
-                  <span style={{ fontSize:'13px', color:isStart?droga.cor:'#1F2937', fontWeight:'800' }}>{vel}</span>
+                  <span style={{ fontSize:'13px', color:isStart?droga.cor:"var(--text)", fontWeight:'800' }}>{vel}</span>
                 </div>
               );
             })}

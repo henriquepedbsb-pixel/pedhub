@@ -393,7 +393,7 @@ export default function Sepse() {
             <div style={{ marginTop: '10px' }}>
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>LACTATO (mmol/L)</label>
               <input type="number" inputMode="decimal" step="0.1" value={lactato} onChange={e => setLactato(e.target.value)} placeholder="ex: 2,4"
-                style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '18px', fontWeight: lac >= 2 ? '700' : '400', border: `2px solid ${lac >= 5 ? C : lac >= 2 ? '#F59E0B' : '#D1D5DB'}`, color: lac >= 5 ? C : lac >= 2 ? '#B45309' : '#1F2937' }} />
+                style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '18px', fontWeight: lac >= 2 ? '700' : '400', border: `2px solid ${lac >= 5 ? C : lac >= 2 ? '#F59E0B' : '#D1D5DB'}`, color: lac >= 5 ? C : lac >= 2 ? '#B45309' : "var(--text)" }} />
               {lac >= 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: C, fontWeight: '700' }}>🔴 Critério de choque séptico (Phoenix 2024)</p>}
               {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ Hipoperfusão tecidual — indicação de tratamento imediato</p>}
             </div>
@@ -438,7 +438,7 @@ export default function Sepse() {
                     <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>({volBolus} mL/kg)</p>
                   </div>
                   <div style={{ backgroundColor: comUTI ? "var(--tint-green)" : CLIGHT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? '#065F46' : C, lineHeight: 1 }}>{calc.maximo}</p>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? "var(--tx-green)" : C, lineHeight: 1 }}>{calc.maximo}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL máximo</p>
                     <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: comUTI ? '#6EE7B7' : '#FCA5A5' }}>({comUTI ? 60 : 40} mL/kg · 1ª hora)</p>
                   </div>
@@ -700,7 +700,7 @@ export default function Sepse() {
                             <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: isS ? '700' : '400' }}>
                               {dose}{isS && <span style={{ fontSize: '9px', color: d.cor, marginLeft: '4px' }}>← início</span>}
                             </span>
-                            <span style={{ fontSize: '14px', color: isS ? d.cor : '#1F2937', fontWeight: '800' }}>{vel}</span>
+                            <span style={{ fontSize: '14px', color: isS ? d.cor : "var(--text)", fontWeight: '800' }}>{vel}</span>
                           </div>
                         );
                       })}

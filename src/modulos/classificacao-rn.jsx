@@ -360,7 +360,7 @@ export default function ClassificacaoRN() {
               {res.pesoIG && <ResultPercentil label="Peso" data={res.pesoIG} />}
               {res.estIG && <ResultPercentil label="Estatura" data={res.estIG} />}
               {res.pcIG && <ResultPercentil label="Perímetro Cefálico" data={res.pcIG} />}
-              <div style={{ background: COR_LITE, borderRadius: 10, padding: 10, marginTop: 4, marginBottom: 10, display: "flex", gap: 8, alignItems: "flex-start" }}>
+              <div style={{ background: "var(--tint-red)", borderRadius: 10, padding: 10, marginTop: 4, marginBottom: 10, display: "flex", gap: 8, alignItems: "flex-start" }}>
                 <Info size={14} color={COR} style={{ marginTop: 1, flexShrink: 0 }} />
                 <p style={{ margin: 0, fontSize: 12, color: "var(--tx-red)" }}>
                   <strong>AIG</strong> (P10–P90) · <strong>PIG</strong> (&lt;P10) · <strong>GIG</strong> (&gt;P90) —

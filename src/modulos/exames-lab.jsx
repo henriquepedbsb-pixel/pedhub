@@ -7,7 +7,7 @@ const CS = '#0EA5E9';
 const CD = '#0284C7';
 const CL = "var(--tint-blue)";
 const CB = '#BAE6FD';
-const CT = '#0C4A6E';
+const CT = "var(--tx-blue)";
 
 const CATS = [
   { id: 'hemograma',     label: 'Hemograma'     },

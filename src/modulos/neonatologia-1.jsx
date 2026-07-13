@@ -361,9 +361,9 @@ function TabSepse() {
         </Caixa>
         <p style={{ margin: "0 0 5px", fontSize: 12, fontWeight: 700, color: "var(--text-2)" }}>Conduta pelo risco estimado (EOS/1000 nascidos vivos):</p>
         {[
-          { risco: "< 0,65 / 1000", cor: "#166534", bg: "var(--tint-green)", borda: "#86EFAC", conduta: "Cuidados de rotina. Observação clínica." },
-          { risco: "0,65 – 1,54 / 1000", cor: "#92400E", bg: "var(--tint-amber)", borda: "#FDE68A", conduta: "Observação clínica serial por 24–48h." },
-          { risco: "≥ 1,54 / 1000", cor: "#991B1B", bg: "var(--tint-red)", borda: "#FECACA", conduta: "Considerar hemoculturas + antibióticos empíricos." },
+          { risco: "< 0,65 / 1000", cor: "var(--tx-green)", bg: "var(--tint-green)", borda: "#86EFAC", conduta: "Cuidados de rotina. Observação clínica." },
+          { risco: "0,65 – 1,54 / 1000", cor: "var(--tx-amber)", bg: "var(--tint-amber)", borda: "#FDE68A", conduta: "Observação clínica serial por 24–48h." },
+          { risco: "≥ 1,54 / 1000", cor: "var(--tx-red)", bg: "var(--tint-red)", borda: "#FECACA", conduta: "Considerar hemoculturas + antibióticos empíricos." },
         ].map((r, i) => (
           <Caixa key={i} cor={r.bg} borda={r.borda} mb={7}>
             <p style={{ margin: "0 0 3px", fontSize: 12, fontWeight: 700, color: r.cor }}>{r.risco}</p>

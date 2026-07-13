@@ -522,7 +522,7 @@ export default function Eletrolitos() {
                   { k: '> 6,0', ecg: 'Prolongamento do PR · Achatamento da onda P', cor: '#F97316' },
                   { k: '> 6,5', ecg: 'Alargamento do QRS · Bloqueios de ramo', cor: '#EF4444' },
                   { k: '> 7,0', ecg: 'Onda sinusoidal (fusão QRS-T) · Bradicardia grave', cor: '#DC2626' },
-                  { k: '> 8,0', ecg: 'Fibrilação ventricular · PCR', cor: '#7F1D1D' },
+                  { k: '> 8,0', ecg: 'Fibrilação ventricular · PCR', cor: "var(--tx-red)" },
                 ].map((row, i) => (
                   <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '7px 10px', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderRadius: '6px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '800', color: row.cor, width: '50px', flexShrink: 0 }}>K {row.k}</span>
@@ -550,7 +550,7 @@ export default function Eletrolitos() {
               ].map((row, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 10px', backgroundColor: row.normal ? "var(--tint-green)" : "var(--tint-red)", borderRadius: '8px' }}>
                   <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{row.param}</span>
-                  <span style={{ fontSize: '11px', color: row.normal ? '#065F46' : '#DC2626', fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{row.valor}</span>
+                  <span style={{ fontSize: '11px', color: row.normal ? "var(--tx-green)" : "var(--tx-red)", fontWeight: '700', textAlign: 'right', maxWidth: '55%' }}>{row.valor}</span>
                 </div>
               ))}
             </div>

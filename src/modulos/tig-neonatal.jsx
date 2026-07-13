@@ -11,11 +11,11 @@ import {
 const AZ_E    = "#0d3b6e";
 const AZ_M    = "#1a6896";
 const AZ_L    = "#e3eef6";
-const FUNDO   = "#eef2f7";
-const BORDA   = "#c8d6df";
+const FUNDO   = "var(--tint-slate)";
+const BORDA   = "var(--border)";
 const TEXTO   = "var(--text)";
-const DETALHE = "#5a6e7f";
-const MUTED   = "#8fa3b1";
+const DETALHE = "var(--text-2)";
+const MUTED   = "var(--muted)";
 const OK      = "#16a34a";
 const OK_L    = "var(--tint-green)";
 const WARN    = "#d97706";

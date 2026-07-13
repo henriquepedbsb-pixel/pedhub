@@ -221,7 +221,7 @@ function DiferencialAchados({ onSelecionar }) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-sm text-gray-800">{r.label}</span>
                       {r.patognomonico && (
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-red-900 bg-red-100 rounded-full px-2 py-0.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-red-900 bg-red-50 rounded-full px-2 py-0.5">
                           achado patognomônico
                         </span>
                       )}

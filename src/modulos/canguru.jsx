@@ -1163,7 +1163,7 @@ function Inp({ value, onChange, placeholder, mode }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: "var(--text)", outline: 'none', boxSizing: 'border-box' }}
     />
   );
 }
@@ -1175,7 +1175,7 @@ function DateInp({ value, onChange }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       max={HOJE_ISO}
-      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: "var(--text)", outline: 'none', boxSizing: 'border-box' }}
     />
   );
 }
@@ -1206,7 +1206,7 @@ function BtnSel({ active, onClick, children }) {
 
 function SelectFm({ value, onChange }) {
   return (
-    <select value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: COR.texto, outline: 'none' }}>
+    <select value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: "var(--text)", outline: 'none' }}>
       {Object.entries(FORMULAS).map(([k, f]) => (
         <option key={k} value={k}>{f.nome}</option>
       ))}
@@ -1287,7 +1287,7 @@ function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 })
           style={{
             width: 74, padding: '7px 9px', borderRadius: RS,
             border: `1.5px solid ${edited ? COR.warn : COR.borda}`,
-            fontSize: 13, fontWeight: 700, color: COR.texto, background: "var(--surface)",
+            fontSize: 13, fontWeight: 700, color: "var(--text)", background: "var(--surface)",
             outline: 'none', boxSizing: 'border-box',
           }}
         />
