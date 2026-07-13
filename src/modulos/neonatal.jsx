@@ -192,7 +192,7 @@ export default function Neonatal() {
 
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
+              gridTemplateColumns: "1fr 1fr",
               gap: 10,
             }}>
               {secao.mods.map((m) => (
