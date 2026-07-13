@@ -8,6 +8,10 @@ import {
   Activity,
   Gauge,
   Table,
+  Pill,
+  Calculator,
+  Salad,
+  Zap,
 } from "lucide-react";
 import {
   avaliarPA,
@@ -15,6 +19,17 @@ import {
   PERC_ESTATURA,
   PA_ESTAGIOS,
 } from "../lib/pa-pediatrica.js";
+import {
+  INDICACOES_MEDICAMENTO,
+  ALVOS_PA,
+  TRAT_POR_DOENCA,
+  PRIMEIRA_LINHA,
+  SEGUNDA_LINHA,
+  CRISE_EMERGENCIA,
+  CRISE_URGENCIA,
+  DOSE_CALC,
+  calcularDose,
+} from "../lib/pa-tratamento.js";
 
 const COR = "#BE123C"; // rose-700 — cor do módulo Cardiologia Pediátrica Básica
 
@@ -560,6 +575,289 @@ function AbaSopro() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ABA: TRATAMENTO (fundamentado no Manual SBP 2019)
+// ─────────────────────────────────────────────────────────────────────────────
+function CartaoColapsavel({ title, icon: Icon, children, aberto, onToggle }) {
+  return (
+    <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-4 py-3 text-left"
+      >
+        <span className="flex items-center gap-2 font-semibold text-gray-800 text-sm">
+          <Icon size={18} style={{ color: COR }} />
+          {title}
+        </span>
+        {aberto ? (
+          <ChevronUp size={18} className="text-gray-400" />
+        ) : (
+          <ChevronDown size={18} className="text-gray-400" />
+        )}
+      </button>
+      {aberto && <div className="px-4 pb-4 text-sm text-gray-700 space-y-3">{children}</div>}
+    </div>
+  );
+}
+
+function AbaTratamento() {
+  const [abertas, setAbertas] = useState({ dose: true, primeira: false, segunda: false, crise: false });
+  const toggle = (k) => setAbertas((p) => ({ ...p, [k]: !p[k] }));
+
+  const [medIdx, setMedIdx] = useState(0);
+  const [peso, setPeso] = useState("");
+  const pesoN = parseNum(peso);
+  const medSel = DOSE_CALC[medIdx];
+  const dose = pesoN != null ? calcularDose(medSel, pesoN) : null;
+
+  return (
+    <div className="space-y-4">
+      {/* Não medicamentoso */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-3">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <Salad size={16} style={{ color: COR }} />
+          Tratamento não medicamentoso (sempre)
+        </p>
+        <ul className="space-y-1.5">
+          <Bullet><strong>Dieta DASH:</strong> reduzir sal, gorduras saturadas, colesterol, carne vermelha, açúcares e bebidas açucaradas; rica em potássio, magnésio, cálcio, proteínas e fibras (frutas, verduras, grãos, peixe, aves, castanhas).</Bullet>
+          <Bullet><strong>Atividade física:</strong> sempre encorajada, inclusive em sobrepeso/obesidade; adequada à idade. Em obesos, preferir baixo impacto articular (natação, bicicleta ergométrica, musculação com acompanhamento).</Bullet>
+          <Bullet><strong>Atletas:</strong> liberar competição/treino intenso só após controle da PA. HVE ou HAS estágio 2 restringem esportes estáticos de alto impacto até o controle.</Bullet>
+        </ul>
+        <AlertaBox tone="green">
+          Mudanças de estilo de vida são mantidas mesmo quando se inicia medicação.
+        </AlertaBox>
+      </div>
+
+      {/* Calculadora de dose */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4">
+        <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+          <Calculator size={16} style={{ color: COR }} />
+          Calculadora de dose — 1ª linha (mg/kg/dia)
+        </p>
+        <p className="text-[11px] text-gray-400 mb-3">
+          Fármacos preferenciais com posologia por peso e apresentação disponível
+          no Brasil. Confira sempre antes de prescrever.
+        </p>
+
+        <div className="flex flex-col gap-1 mb-3">
+          <label className="text-xs font-semibold text-gray-600">Fármaco</label>
+          <select
+            value={medIdx}
+            onChange={(e) => setMedIdx(Number(e.target.value))}
+            className="px-3 py-2.5 rounded-xl border-[1.5px] border-gray-200 text-base bg-white outline-none focus:border-rose-400"
+          >
+            {DOSE_CALC.map((m, i) => (
+              <option key={m.id} value={i}>
+                {m.nome} ({m.classe}) · {m.faixa}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <CampoNum label="Peso" unit="kg" value={peso} onChange={setPeso} placeholder="ex.: 25" />
+
+        {dose && (
+          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
+                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose inicial</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.inicial} mg/dia</div>
+                <div className="text-[11px] text-gray-500">{medSel.inicialTxt}</div>
+              </div>
+              <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
+                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose máxima</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.maxima} mg/dia</div>
+                <div className="text-[11px] text-gray-500">{medSel.maximaTxt}</div>
+              </div>
+            </div>
+            {dose.limitado && (
+              <p className="text-[11px] text-amber-700 mt-2">
+                Dose máxima limitada pelo teto absoluto da faixa etária/apresentação.
+              </p>
+            )}
+            <p className="text-[11px] text-gray-500 mt-2">
+              Intervalo: {medSel.intervalo} · {medSel.apres}
+            </p>
+          </div>
+        )}
+        <p className="text-[11px] text-gray-400 mt-3">
+          Introduzir um anti-hipertensivo por vez; só associar outro após atingir a
+          dose máxima do primeiro (salvo efeitos colaterais). Betabloqueador não é
+          1ª linha; IECA e BRA são os preferenciais na maioria dos casos.
+        </p>
+      </div>
+
+      {/* Quando iniciar + alvos */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-3">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <ClipboardList size={16} style={{ color: COR }} />
+          Quando iniciar medicação e alvos
+        </p>
+        <p className="text-xs font-semibold text-gray-700">Indicações (Quadro 7):</p>
+        <ul className="space-y-1.5">
+          {INDICACOES_MEDICAMENTO.map((i) => (
+            <Bullet key={i}>{i}</Bullet>
+          ))}
+        </ul>
+        <p className="text-xs font-semibold text-gray-700 pt-1">Alvos de PA:</p>
+        <ul className="space-y-1.5">
+          {ALVOS_PA.map((a) => (
+            <Bullet key={a}>{a}</Bullet>
+          ))}
+        </ul>
+        <p className="text-xs font-semibold text-gray-700 pt-1">Escolha por doença de base (Tabela 7):</p>
+        <div className="overflow-hidden rounded-xl border border-gray-200">
+          {TRAT_POR_DOENCA.map((t, i) => (
+            <div
+              key={t.doenca}
+              className="flex justify-between gap-3 px-3 py-2 text-xs"
+              style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}
+            >
+              <span className="font-semibold text-gray-700 shrink-0">{t.doenca}</span>
+              <span className="text-gray-600 text-right">{t.meds}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 1ª linha — tabela completa */}
+      <CartaoColapsavel title="Medicamentos de 1ª linha (doses)" icon={Pill} aberto={abertas.primeira} onToggle={() => toggle("primeira")}>
+        {PRIMEIRA_LINHA.map((c) => (
+          <div key={c.classe} className="space-y-2">
+            <p className="font-semibold text-gray-800 text-[13px]">{c.classe}</p>
+            <p className="text-[11px] text-gray-500">
+              <strong>Contraindicações:</strong> {c.contra}. <strong>Adversos comuns:</strong> {c.comuns}. <strong>Graves:</strong> {c.graves}.
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <table className="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 text-gray-500">
+                    <th className="text-left px-2 py-1.5 font-semibold">Fármaco</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Idade</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Inicial</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Máxima</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Interv.</th>
+                    <th className="text-left px-2 py-1.5 font-semibold">Apresentação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {c.farmacos.map((f, i) => (
+                    <tr key={f.nome + f.faixa} style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                      <td className="px-2 py-1.5 font-medium text-gray-800 whitespace-nowrap">{f.nome}</td>
+                      <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.faixa}</td>
+                      <td className="px-2 py-1.5 text-gray-600">{f.inicial}</td>
+                      <td className="px-2 py-1.5 text-gray-600">{f.maxima}</td>
+                      <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.intervalo}</td>
+                      <td className="px-2 py-1.5 text-gray-500">{f.apres}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
+        <p className="text-[11px] text-gray-400">
+          Não há anti-hipertensivo com apresentação pediátrica (solução/xarope) no
+          Brasil — muitos exigem manipulação em farmácia especializada.
+        </p>
+      </CartaoColapsavel>
+
+      {/* 2ª linha */}
+      <CartaoColapsavel title="Medicamentos de 2ª linha" icon={Pill} aberto={abertas.segunda} onToggle={() => toggle("segunda")}>
+        <p className="text-[11px] text-gray-500">
+          Reservados a pacientes que não respondem a ≥ 2 agentes preferenciais.
+        </p>
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
+          <table className="w-full text-[11px] border-collapse">
+            <thead>
+              <tr className="bg-gray-50 text-gray-500">
+                <th className="text-left px-2 py-1.5 font-semibold">Fármaco</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Classe</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Inicial</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Máxima</th>
+                <th className="text-left px-2 py-1.5 font-semibold">Interv.</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SEGUNDA_LINHA.map((f, i) => (
+                <tr key={f.nome} style={{ borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }}>
+                  <td className="px-2 py-1.5 font-medium text-gray-800 whitespace-nowrap">{f.nome}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.classe}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.inicial}</td>
+                  <td className="px-2 py-1.5 text-gray-600">{f.maxima}</td>
+                  <td className="px-2 py-1.5 text-gray-600 whitespace-nowrap">{f.intervalo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CartaoColapsavel>
+
+      {/* Crise hipertensiva */}
+      <CartaoColapsavel title="Crise hipertensiva" icon={Zap} aberto={abertas.crise} onToggle={() => toggle("crise")}>
+        <AlertaBox tone="red">
+          Reduzir a PA em <strong>no máximo 25% nas primeiras 8 horas</strong>.
+          Emergência (EH) = risco a cardiovascular/rins/SNC → droga IV imediata.
+          Urgência (UH) = HAS grave sem lesão de órgão-alvo → pode iniciar via oral.
+        </AlertaBox>
+        <div>
+          <p className="text-xs font-semibold text-gray-700 mb-1">Emergência hipertensiva</p>
+          <div className="space-y-1.5">
+            {CRISE_EMERGENCIA.map((f) => (
+              <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
+                <div className="flex justify-between gap-2">
+                  <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
+                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                </div>
+                <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
+                <div className="text-[11px] text-gray-400">{f.obs}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-gray-700 mb-1 pt-1">Urgência hipertensiva</p>
+          <div className="space-y-1.5">
+            {CRISE_URGENCIA.map((f) => (
+              <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
+                <div className="flex justify-between gap-2">
+                  <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
+                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                </div>
+                <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
+                <div className="text-[11px] text-gray-400">{f.obs}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CartaoColapsavel>
+
+      {/* Seguimento */}
+      <div className="border border-gray-200 rounded-2xl bg-white p-4 space-y-2">
+        <p className="font-semibold text-gray-800 text-sm flex items-center gap-2">
+          <Activity size={16} style={{ color: COR }} />
+          Seguimento
+        </p>
+        <ul className="space-y-1.5">
+          <Bullet>No início/ajuste de medicação: reavaliar a cada 4–6 semanas para titular dose ou associar droga.</Bullet>
+          <Bullet>Após controle da PA: retornos a cada 3–4 meses, monitorando sintomas, efeitos colaterais e adesão.</Bullet>
+          <Bullet>Doença crônica — seguimento de longo prazo mesmo após controle e eventual retirada da medicação.</Bullet>
+        </ul>
+        <div>
+          <FonteTag>SBP 2019 (Nefrologia)</FonteTag>
+          <FonteTag>AAP 2017 / Flynn et al.</FonteTag>
+          <FonteTag>7ª Diretriz Bras. HAS</FonteTag>
+        </div>
+        <AlertaBox tone="amber">
+          Doses de apoio ao raciocínio — não substituem a bula, o julgamento clínico
+          nem a avaliação do nefrologista/cardiologista pediátrico.
+        </AlertaBox>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CardiologiaPediatricaBasica() {
@@ -580,10 +878,11 @@ export default function CardiologiaPediatricaBasica() {
 
       {/* Abas */}
       <div className="px-4 pt-4">
-        <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
+        <div className="flex gap-1.5 p-1 bg-gray-100 rounded-xl">
           {[
-            { id: "sopro", label: "Sopro cardíaco" },
-            { id: "hipertensao", label: "Hipertensão arterial" },
+            { id: "sopro", label: "Sopro" },
+            { id: "hipertensao", label: "Hipertensão" },
+            { id: "tratamento", label: "Tratamento" },
           ].map((t) => {
             const a = aba === t.id;
             return (
@@ -606,7 +905,9 @@ export default function CardiologiaPediatricaBasica() {
       </div>
 
       <div className="px-4 pt-4">
-        {aba === "sopro" ? <AbaSopro /> : <AbaHipertensao />}
+        {aba === "sopro" && <AbaSopro />}
+        {aba === "hipertensao" && <AbaHipertensao />}
+        {aba === "tratamento" && <AbaTratamento />}
       </div>
 
       {/* Disclaimer padrão do módulo */}
