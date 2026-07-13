@@ -8,17 +8,17 @@ import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-re
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
 const C = {
   bg:       "var(--tint-slate)",
-  card:     "#FFFFFF",
+  card:     "var(--surface)",
   text:     "var(--text-2)",
   sub:      "var(--text-2)",
   muted:    "var(--muted)",
   border:   "var(--tint-slate)",
 
-  ok:       "#059669",  okBg:    "#D1FAE5",
+  ok:       "#059669",  okBg:    "var(--tint-green)",
   warn:     "#B45309",  warnBg:  "var(--tint-amber)",
   bad:      "#DC2626",  badBg:   "var(--tint-red)",
 
-  nips:     "#0EA5E9",  nipsBg:  "#E0F2FE",
+  nips:     "#0EA5E9",  nipsBg:  "var(--tint-blue)",
   pipp:     "#7C3AED",  pippBg:  "var(--tint-purple)",
   npass:    "#10B981",  npassBg: "var(--tint-green)",
   cries:    "#EF4444",  criesBg: "var(--tint-red)",

@@ -27,7 +27,7 @@ function Accordion({ title, cor, badge, children }) {
     <div style={{ borderRadius: 10, border: "1px solid var(--border)", marginBottom: 8, overflow: "hidden" }}>
       <button onClick={() => setOpen(!open)} style={{ width: "100%", background: open ? cor + "15" : "var(--surface-2)", border: "none", cursor: "pointer", padding: "11px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontWeight: 700, color: open ? cor : "#111827", fontSize: 13, textAlign: "left" }}>{title}</span>
+          <span style={{ fontWeight: 700, color: open ? cor : "var(--text)", fontSize: 13, textAlign: "left" }}>{title}</span>
           {badge && <span style={{ fontSize: 10, fontWeight: 700, color: cor, background: cor + "20", padding: "2px 7px", borderRadius: 10 }}>{badge}</span>}
         </div>
         {open ? <ChevronUp size={16} color={cor} /> : <ChevronDown size={16} color="var(--muted)" />}

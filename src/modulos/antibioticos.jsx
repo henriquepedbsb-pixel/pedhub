@@ -276,8 +276,8 @@ const DADOS = {
 };
 
 function interpretarInternacao(v) {
-  if (v === 'sim') return { bg: "var(--tint-red)", border: '#FECACA', cor: '#991B1B', label: 'INTERNAÇÃO', badgeBg: "var(--tint-red)", badgeCor: '#991B1B' };
-  if (v === 'condicional') return { bg: "var(--tint-amber)", border: '#FDE68A', cor: '#92400E', label: 'AVALIAR', badgeBg: "var(--tint-amber)", badgeCor: '#92400E' };
+  if (v === 'sim') return { bg: "var(--tint-red)", border: '#FECACA', cor: "var(--tx-red)", label: 'INTERNAÇÃO', badgeBg: "var(--tint-red)", badgeCor: "var(--tx-red)" };
+  if (v === 'condicional') return { bg: "var(--tint-amber)", border: '#FDE68A', cor: "var(--tx-amber)", label: 'AVALIAR', badgeBg: "var(--tint-amber)", badgeCor: "var(--tx-amber)" };
   return null;
 }
 

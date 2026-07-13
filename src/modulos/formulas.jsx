@@ -227,7 +227,7 @@ function FormulaCard({ f, open, onToggle }) {
             {f.num}
           </div>
           <div>
-            <p style={{ fontWeight: 700, color: open ? f.cor : "#111827", fontSize: 14, margin: 0 }}>{f.cat}</p>
+            <p style={{ fontWeight: 700, color: open ? f.cor : "var(--text)", fontSize: 14, margin: 0 }}>{f.cat}</p>
             <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>{f.faixa}</p>
           </div>
         </div>

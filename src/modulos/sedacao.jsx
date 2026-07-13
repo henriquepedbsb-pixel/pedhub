@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Syringe, AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
 
 const CI = '#6366F1';
-const CD = '#4338CA';
+const CD = "var(--tx-blue)";
 const CL = "var(--tint-blue)";
 const CB = '#C7D2FE';
-const CT = '#312E81';
+const CT = "var(--tx-blue)";
 
 const ABAS = [
   { id: 'procedimentos', label: 'Procedimentos' },
@@ -142,7 +142,7 @@ export default function Sedacao() {
                 <button onClick={() => toggle(f.id)} style={{ width: '100%', textAlign: 'left', padding: '14px', background: aberto ? f.fundo : "var(--surface)", border: 'none', cursor: 'pointer', ...F, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 15, fontWeight: 800, color: aberto ? f.cor : '#1F2937' }}>{f.nome}</span>
+                      <span style={{ fontSize: 15, fontWeight: 800, color: aberto ? f.cor : "var(--text)" }}>{f.nome}</span>
                       <span style={{ fontSize: 11, fontWeight: 600, color: "var(--muted)", background: "var(--surface-2)", padding: '2px 8px', borderRadius: 20 }}>{f.classe}</span>
                     </div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>

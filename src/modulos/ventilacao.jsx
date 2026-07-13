@@ -399,7 +399,7 @@ export default function Ventilacao() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: calcs.dpAlerta ? "var(--tint-red)" : "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : '#065F46', lineHeight: 1 }}>{calcs.dp}</p>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : "var(--tx-green)", lineHeight: 1 }}>{calcs.dp}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cmH₂O (DP)</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
                   </div>

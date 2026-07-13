@@ -143,7 +143,7 @@ const ESCADA = [
     degrau: 3,
     rotulo: 'Dor Intensa (7–10)',
     cor: '#EF4444',
-    corFundo: '#FFF5F5',
+    corFundo: "var(--tint-red)",
     drogas: [
       'Morfina 0,1–0,2 mg/kg/dose IV/SC 3/3–4/4h (máx 15 mg/dose)',
       'Associar analgésico não opioide do Degrau 1',
@@ -288,7 +288,7 @@ export default function Dor() {
         <div>
           {/* Seletor de escala */}
           <div style={{
-            backgroundColor: 'white', borderRadius: '12px',
+            backgroundColor: "var(--surface)", borderRadius: '12px',
             padding: '14px', marginBottom: '12px', border: '1px solid #FED7AA',
           }}>
             <p style={{ fontSize: '12px', fontWeight: '700', color: "var(--text-2)", margin: '0 0 10px' }}>
@@ -304,7 +304,7 @@ export default function Dor() {
                     padding: '8px 4px',
                     borderRadius: '10px',
                     border: escalaAtiva === e.id ? '2px solid #F97316' : '1px solid var(--border)',
-                    backgroundColor: escalaAtiva === e.id ? "var(--tint-amber)" : 'white',
+                    backgroundColor: escalaAtiva === e.id ? "var(--tint-amber)" : "var(--surface)",
                     cursor: 'pointer',
                     textAlign: 'center',
                   }}
@@ -336,7 +336,7 @@ export default function Dor() {
 
               {FLACC_CATS.map(cat => (
                 <div key={cat.id} style={{
-                  backgroundColor: 'white', borderRadius: '12px',
+                  backgroundColor: "var(--surface)", borderRadius: '12px',
                   padding: '12px 14px', marginBottom: '8px',
                   border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 }}>
@@ -381,7 +381,7 @@ export default function Dor() {
               {/* Resultado FLACC */}
               <div style={{
                 borderRadius: '12px', padding: '18px', marginTop: '4px', textAlign: 'center',
-                backgroundColor: flaccCompleto ? flaccInterp.cor : '#D1D5DB',
+                backgroundColor: flaccCompleto ? flaccInterp.cor : '#64748B',
               }}>
                 <div style={{ fontSize: '44px', fontWeight: '800', color: 'white', lineHeight: 1 }}>
                   {flaccScore}
@@ -409,7 +409,7 @@ export default function Dor() {
                 style={{
                   width: '100%', marginTop: '8px', padding: '10px',
                   borderRadius: '10px', border: '1px solid var(--border)',
-                  backgroundColor: 'white', color: "var(--muted)",
+                  backgroundColor: "var(--surface)", color: "var(--muted)",
                   fontSize: '13px', cursor: 'pointer', fontWeight: '600',
                 }}
               >
@@ -433,7 +433,7 @@ export default function Dor() {
               </div>
 
               <div style={{
-                backgroundColor: 'white', borderRadius: '12px', padding: '16px',
+                backgroundColor: "var(--surface)", borderRadius: '12px', padding: '16px',
                 border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', flexWrap: 'wrap' }}>
@@ -504,7 +504,7 @@ export default function Dor() {
               </div>
 
               <div style={{
-                backgroundColor: 'white', borderRadius: '12px', padding: '16px',
+                backgroundColor: "var(--surface)", borderRadius: '12px', padding: '16px',
                 border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}>
                 <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -593,7 +593,7 @@ export default function Dor() {
           {/* Escada analgésica */}
           {ESCADA.map(d => (
             <div key={d.degrau} style={{
-              backgroundColor: 'white',
+              backgroundColor: "var(--surface)",
               borderRadius: '12px',
               border: `1px solid ${d.cor}40`,
               boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
@@ -693,7 +693,7 @@ export default function Dor() {
 
           {NAO_FARM.map((grupo, i) => (
             <div key={i} style={{
-              backgroundColor: 'white',
+              backgroundColor: "var(--surface)",
               borderRadius: '12px',
               border: '1px solid var(--border)',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',

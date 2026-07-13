@@ -311,7 +311,7 @@ function DiferencialAchados({ onSelecionar }) {
                   background: on ? PRIMARY + "12" : "var(--surface-2)",
                   borderRadius: 10, padding: "8px 10px", cursor: "pointer",
                   fontSize: 12, fontWeight: on ? 600 : 400,
-                  color: on ? "#831843" : "var(--text-2)",
+                  color: on ? "var(--text)" : "var(--text-2)",
                 }}
               >
                 <span style={{
@@ -418,7 +418,7 @@ export default function Dermato() {
             <button onClick={() => toggle(d.id)} style={{ width: "100%", background: expanded === d.id ? d.cor + "15" : "var(--surface-2)", border: "none", cursor: "pointer", padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 12, height: 12, borderRadius: "50%", background: d.cor }} />
-                <span style={{ fontWeight: 700, color: expanded === d.id ? d.cor : "#111827", fontSize: 14 }}>{d.nome}</span>
+                <span style={{ fontWeight: 700, color: expanded === d.id ? d.cor : "var(--text)", fontSize: 14 }}>{d.nome}</span>
               </div>
               {expanded === d.id ? <ChevronUp size={17} color={d.cor} /> : <ChevronDown size={17} color="var(--muted)" />}
             </button>
