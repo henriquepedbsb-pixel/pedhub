@@ -5,6 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PedHub from "./PedHub"; // importação direta — não lazy
 import ReloadPrompt from "./ReloadPrompt";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 /* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
@@ -242,9 +243,11 @@ function RodapeGlobal() {
 
 /* ─── App principal ──────────────────────────────────────────────────────── */
 export default function App() {
+  const location = useLocation();
   return (
     <>
       <Header />
+      <ErrorBoundary rotaKey={location.pathname}>
       <Suspense fallback={<Loading />}>
         <Routes>
           {/* Home */}
@@ -315,6 +318,7 @@ export default function App() {
           <Route path="*"                  element={<PedHub />} />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
       <RodapeGlobal />
       <ReloadPrompt />
     </>

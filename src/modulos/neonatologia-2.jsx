@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras (bolus/infusão/gel) para testes unitários */
 import { useState } from "react";
 import { Info, AlertTriangle, CheckCircle, Droplets } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
@@ -5,10 +6,19 @@ import { avisoPesoKg } from "../lib/sanity";
 
 const PRIMARY = "#0D9488";
 
-function parsePeso(s) {
+export function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 10 ? v : null;
 }
+
+/* ─── Cálculos de dose (puros, testáveis) ──────────────────────────────────── */
+/* Bolus de D10% na hipoglicemia: 2 mL/kg. */
+export const bolusD10mL = (peso) => peso * 2;
+/* TIG (mg/kg/min) → vazão de D10% em mL/h. D10% = 100 mg/mL; 60 min/h. */
+export const infusaoD10mLh = (tig, peso) => (peso * tig * 100) / 10 / 60;
+/* Gel de dextrose 40%: 0,5 mL/kg (= 200 mg/kg). */
+export const gelDextroseVolML = (peso) => 0.5 * peso;
+export const gelDextroseMg = (peso) => 200 * peso;
 
 function InfoBox({ color, children }) {
   return (
@@ -47,10 +57,10 @@ function TabHipoglicemia() {
   const [pesoRaw, setPesoRaw] = useState("");
   const peso = parsePeso(pesoRaw);
 
-  const bolus    = peso ? (peso * 2).toFixed(1) : null;
-  const infD10_4 = peso ? (peso * 4 * 100 / 10 / 60).toFixed(2) : null;
-  const infD10_6 = peso ? (peso * 6 * 100 / 10 / 60).toFixed(2) : null;
-  const infD10_8 = peso ? (peso * 8 * 100 / 10 / 60).toFixed(2) : null;
+  const bolus    = peso ? bolusD10mL(peso).toFixed(1) : null;
+  const infD10_4 = peso ? infusaoD10mLh(4, peso).toFixed(2) : null;
+  const infD10_6 = peso ? infusaoD10mLh(6, peso).toFixed(2) : null;
+  const infD10_8 = peso ? infusaoD10mLh(8, peso).toFixed(2) : null;
 
   return (
     <div>
@@ -160,8 +170,8 @@ function TabGelDextrose() {
   const [pesoRaw, setPesoRaw] = useState("");
   const peso = parsePeso(pesoRaw);
 
-  const gVol  = peso ? (0.5 * peso).toFixed(2) : null;  // 0,5 mL/kg
-  const gMg   = peso ? (200 * peso).toFixed(0) : null;  // 200 mg/kg
+  const gVol  = peso ? gelDextroseVolML(peso).toFixed(2) : null;  // 0,5 mL/kg
+  const gMg   = peso ? gelDextroseMg(peso).toFixed(0) : null;     // 200 mg/kg
 
   return (
     <div>
