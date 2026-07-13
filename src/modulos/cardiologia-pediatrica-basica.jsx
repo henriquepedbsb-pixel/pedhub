@@ -29,6 +29,7 @@ import {
   CAUSAS_HAS_RN,
 } from "../lib/pa-neonatal.js";
 import GraficoPercentilPA from "../components/GraficoPercentilPA.jsx";
+import GraficoPercentilNeonatal from "../components/GraficoPercentilNeonatal.jsx";
 import {
   INDICACOES_MEDICAMENTO,
   ALVOS_PA,
@@ -1037,6 +1038,43 @@ function AbaNeonatal() {
           A classificação usa o maior nível entre PAS, PAD e PAM.
         </p>
       </div>
+
+      {/* Gráfico de percentil (curvas de Dionne) */}
+      {info && (
+        <div className="border border-gray-200 rounded-2xl bg-white p-4">
+          <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+            <Activity size={16} style={{ color: COR }} />
+            Curvas de percentil (Dionne)
+          </p>
+          <p className="text-[11px] text-gray-400 mb-3">
+            O ponto marca a PA do paciente em {resultado.semana} semanas de idade
+            pós-concepção.
+          </p>
+          <div className="space-y-3">
+            {[
+              { k: "pas", val: pasN, t: "Pressão sistólica (mmHg)" },
+              { k: "pad", val: padN, t: "Pressão diastólica (mmHg)" },
+              { k: "pam", val: pamN, t: "Pressão arterial média (mmHg)" },
+            ]
+              .filter((c) => c.val != null)
+              .map((c) => (
+                <GraficoPercentilNeonatal
+                  key={c.k}
+                  componente={c.k}
+                  titulo={c.t}
+                  semanaPaciente={resultado.semana}
+                  valorPaciente={c.val}
+                  corPaciente={info.cor}
+                />
+              ))}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P95</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Hipertensão P95–P99</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(220,38,38,0.42)" }} />Grave ≥ P99</span>
+          </div>
+        </div>
+      )}
 
       {/* Tabela completa */}
       <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
