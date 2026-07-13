@@ -28,6 +28,7 @@ import {
   PA_NEO_ESTAGIOS,
   CAUSAS_HAS_RN,
 } from "../lib/pa-neonatal.js";
+import GraficoPercentilPA from "../components/GraficoPercentilPA.jsx";
 import {
   INDICACOES_MEDICAMENTO,
   ALVOS_PA,
@@ -376,6 +377,49 @@ function AbaHipertensao() {
           única aferição elevada não define hipertensão.
         </p>
       </div>
+
+      {/* Gráfico de percentil (curvas por idade) */}
+      {info && (
+        <div className="border border-gray-200 rounded-2xl bg-white p-4">
+          <p className="font-semibold text-gray-800 text-sm mb-1 flex items-center gap-2">
+            <Activity size={16} style={{ color: COR }} />
+            Curvas de percentil ({sexo === "M" ? "meninos" : "meninas"} · estatura {PERC_ESTATURA[resultado.colunaUsada]})
+          </p>
+          <p className="text-[11px] text-gray-400 mb-3">
+            O ponto marca a PA do paciente na idade atual, entre as curvas de referência.
+          </p>
+          <div className="space-y-3">
+            {pasN != null && (
+              <GraficoPercentilPA
+                sexo={sexo}
+                coluna={resultado.colunaUsada}
+                componente="s"
+                titulo="Pressão sistólica (mmHg)"
+                idadePaciente={idadeAnos}
+                valorPaciente={pasN}
+                corPaciente={info.cor}
+              />
+            )}
+            {padN != null && (
+              <GraficoPercentilPA
+                sexo={sexo}
+                coluna={resultado.colunaUsada}
+                componente="d"
+                titulo="Pressão diastólica (mmHg)"
+                idadePaciente={idadeAnos}
+                valorPaciente={padN}
+                corPaciente={info.cor}
+              />
+            )}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P90</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(217,119,6,0.4)" }} />Elevada P90–P95</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Estágio 1 P95–+12</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(220,38,38,0.42)" }} />Estágio 2 ≥ P95+12</span>
+          </div>
+        </div>
+      )}
 
       {/* Tabela de referência (grau de normalidade por percentil) */}
       <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
