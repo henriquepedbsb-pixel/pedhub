@@ -24,6 +24,14 @@ export function holliday(w) {
   return { vol: Math.min(vol, 2400), capped, volHora: parseFloat((Math.min(vol, 2400) / 24).toFixed(1)) };
 }
 
+// Fraciona o volume diário em soros de no máximo `maxFrasco` mL (frasco de SG 5% = 500 mL),
+// distribuindo o volume igualmente. Ex.: 1200 mL → 3 soros de 400 mL.
+export function fracionarSoros(vol, maxFrasco = 500) {
+  const n = Math.max(1, Math.ceil(vol / maxFrasco));
+  const mlPorSoro = Math.round(vol / n);
+  return { n, mlPorSoro };
+}
+
 function InfoBox({ color, children }) {
   return (
     <div style={{ background: color + "12", border: "1px solid " + color + "30", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 10 }}>
@@ -85,7 +93,13 @@ function TabHolliday({ peso }) {
   const kMeq     = parseFloat((kPerKg  * peso).toFixed(1));
   const naclMl   = parseFloat((naMeq / NACL20_MEQ_ML).toFixed(1));
   const kclMl    = parseFloat((kMeq  / KCL10_MEQ_ML).toFixed(1));
-  const sg5Ml    = Math.max(0, Math.round(vol - naclMl - kclMl));
+
+  // Fracionamento em soros de SG 5% (frasco de 500 mL) — eletrólitos divididos igualmente
+  const { n: nSoros, mlPorSoro } = fracionarSoros(vol);
+  const naclPorSoro  = parseFloat((naclMl / nSoros).toFixed(1));
+  const kclPorSoro   = parseFloat((kclMl  / nSoros).toFixed(1));
+  const sgPorSoro    = Math.max(0, Math.round(mlPorSoro - naclPorSoro - kclPorSoro));
+  const horasPorSoro = parseFloat((mlPorSoro / volHora).toFixed(1));
 
   const corTipo  = tipoSol === "iso" ? PRIMARY : "#8B5CF6";
   const notaVol  = peso <= 10 ? peso + " kg × 100 mL"
@@ -95,7 +109,8 @@ function TabHolliday({ peso }) {
   return (
     <div>
       <InfoBox color={PRIMARY}>
-        <strong>Fórmula de Holliday-Segar.</strong> Necessidade hídrica diária de manutenção.
+        <strong>Fórmula de Holliday-Segar.</strong> Necessidade hídrica diária de manutenção,
+        já fracionada em soros de SG 5% (frasco de 500 mL) com os eletrólitos divididos em cada soro.
         Excluir restrição hídrica (IRA, ICC, SIADH).
       </InfoBox>
       {capped && <AlertBox text="Peso > 20 kg: volume máximo de 2.400 mL/dia (adulto jovem)." color="#D97706" />}
@@ -145,18 +160,25 @@ function TabHolliday({ peso }) {
           />
         </div>
 
-        {/* Receita de prescrição */}
+        {/* Receita de prescrição — fracionada em soros de SG 5% (500 mL) */}
         <div style={{
           background: corTipo + "08", border: "1.5px solid " + corTipo + "30",
           borderRadius: 10, padding: "12px 14px", marginBottom: 10,
         }}>
-          <p style={{ fontWeight: 700, fontSize: 12, color: corTipo, margin: "0 0 10px", letterSpacing: "0.04em" }}>
-            PRESCRIÇÃO — {vol} mL em 24h ({volHora} mL/h)
+          <p style={{ fontWeight: 700, fontSize: 12, color: corTipo, margin: "0 0 4px", letterSpacing: "0.04em" }}>
+            PRESCRIÇÃO — {nSoros} {nSoros > 1 ? "soros" : "soro"} de {mlPorSoro} mL
+          </p>
+          <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 10px" }}>
+            Total {vol} mL em 24h ({volHora} mL/h) · frasco de SG 5% 500 mL fracionado
+          </p>
+
+          <p style={{ fontWeight: 700, fontSize: 11, color: "var(--text-2)", margin: "0 0 6px", letterSpacing: "0.03em" }}>
+            CADA SORO ({mlPorSoro} mL):
           </p>
           {[
-            { label: "SG 5%", value: sg5Ml + " mL", destaque: false },
-            { label: "NaCl 20%", value: naclMl + " mL", destaque: false },
-            { label: "KCl 10% *", value: kclMl + " mL", destaque: false },
+            { label: "SG 5%", value: sgPorSoro + " mL" },
+            { label: "NaCl 20%", value: naclPorSoro + " mL" },
+            { label: "KCl 10% *", value: kclPorSoro + " mL" },
           ].map((row, i) => (
             <div key={i} style={{
               display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -171,9 +193,14 @@ function TabHolliday({ peso }) {
             display: "flex", justifyContent: "space-between", alignItems: "center",
             padding: "7px 0 0", borderTop: "1.5px solid " + corTipo + "40", marginTop: 4,
           }}>
-            <span style={{ fontSize: 12, color: "var(--text-2)", fontWeight: 700 }}>Taxa de infusão</span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: corTipo }}>{volHora} mL/h</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)", fontWeight: 700 }}>Correr cada soro em</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: corTipo }}>{horasPorSoro} h ({volHora} mL/h)</span>
           </div>
+          {nSoros > 1 && (
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", fontWeight: 600 }}>
+              Repetir {nSoros}× em 24h ({nSoros} × {mlPorSoro} mL = {nSoros * mlPorSoro} mL)
+            </p>
+          )}
         </div>
 
         <AlertBox
