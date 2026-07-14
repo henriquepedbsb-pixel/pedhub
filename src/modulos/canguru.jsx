@@ -186,8 +186,8 @@ function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
   const fosIndicado = ig < 32 || pesorn < 1500;
   const fosSuspenso = fosIndicado && igCorrSem >= 40;
   const fosAtivo    = fosIndicado && !fosSuspenso;
-  const pAlvoMid    = 87.5 * pk;
-  const pNecRaw     = fosAtivo ? Math.max(0, pAlvoMid - dP) : 0;
+  const pAlvo       = 75 * pk;   // alvo fixo de 75 mg P/kg/dia (evita cálculo dúbio no intervalo 75–100)
+  const pNecRaw     = fosAtivo ? Math.max(0, pAlvo - dP) : 0;
   const pVol        = pNecRaw / FOS_P_ML;
   const pTom        = pVol / 4;
   const pSuficDieta = fosAtivo && dP >= 75 * pk;
