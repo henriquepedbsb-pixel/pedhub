@@ -28,7 +28,7 @@ export function holliday(w) {
 // distribuindo o volume igualmente. Ex.: 1200 mL → 3 soros de 400 mL.
 export function fracionarSoros(vol, maxFrasco = 500) {
   const n = Math.max(1, Math.ceil(vol / maxFrasco));
-  const mlPorSoro = Math.round(vol / n);
+  const mlPorSoro = parseFloat((vol / n).toFixed(1));
   return { n, mlPorSoro };
 }
 
@@ -98,7 +98,7 @@ function TabHolliday({ peso }) {
   const { n: nSoros, mlPorSoro } = fracionarSoros(vol);
   const naclPorSoro  = parseFloat((naclMl / nSoros).toFixed(1));
   const kclPorSoro   = parseFloat((kclMl  / nSoros).toFixed(1));
-  const sgPorSoro    = Math.max(0, Math.round(mlPorSoro - naclPorSoro - kclPorSoro));
+  const sgPorSoro    = Math.max(0, parseFloat((mlPorSoro - naclPorSoro - kclPorSoro).toFixed(1)));
   const horasPorSoro = parseFloat((mlPorSoro / volHora).toFixed(1));
 
   const corTipo  = tipoSol === "iso" ? PRIMARY : "#8B5CF6";
@@ -198,7 +198,7 @@ function TabHolliday({ peso }) {
           </div>
           {nSoros > 1 && (
             <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", fontWeight: 600 }}>
-              Repetir {nSoros}× em 24h ({nSoros} × {mlPorSoro} mL = {nSoros * mlPorSoro} mL)
+              Repetir {nSoros}× em 24h ({nSoros} × {mlPorSoro} mL = {vol} mL)
             </p>
           )}
         </div>

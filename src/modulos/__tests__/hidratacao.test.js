@@ -34,6 +34,10 @@ describe('fracionarSoros (fracionamento em frascos de SG 5% 500 mL)', () => {
     expect(fracionarSoros(1200)).toEqual({ n: 3, mlPorSoro: 400 });
   });
 
+  it('12 kg (Holliday = 1100 mL) → 3 soros iguais, sem arredondar', () => {
+    expect(fracionarSoros(1100)).toEqual({ n: 3, mlPorSoro: 366.7 });
+  });
+
   it('volume ≤ 500 mL → 1 soro único', () => {
     expect(fracionarSoros(500)).toEqual({ n: 1, mlPorSoro: 500 });
     expect(fracionarSoros(350)).toEqual({ n: 1, mlPorSoro: 350 });
