@@ -90,8 +90,8 @@ const WESTLEY_PARAMS = [
 
 export function westleyResult(score) {
   if (score <= 2)  return { grau: "Crupe leve",      color: "#10B981", condutas: ["Dexametasona 0,15–0,3 mg/kg VO dose única (máx 10 mg)", "Alta com orientações · Retorno se piora"] };
-  if (score <= 5)  return { grau: "Crupe moderado",  color: "#D97706", condutas: ["Dexametasona 0,3–0,6 mg/kg VO/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada 0,5 mL/kg sol. 1:1.000 (máx 5 mL) + 3 mL SF", "Observar ≥ 3–4 h após epinefrina · alta ou internação conforme resposta"] };
-  if (score <= 11) return { grau: "Crupe grave",     color: "#EF4444", condutas: ["Dexametasona 0,6 mg/kg IV/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada imediata: 0,5 mL/kg sol. 1:1.000 (máx 5 mL)", "O₂ suplementar · monitorização contínua · internação"] };
+  if (score <= 5)  return { grau: "Crupe moderado",  color: "#D97706", condutas: ["Dexametasona 0,3–0,6 mg/kg VO/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada 1:1.000 sem diluir — 3 mL (< 4 anos) ou 5 mL (≥ 4 anos)", "Observar ≥ 3–4 h após epinefrina · alta ou internação conforme resposta"] };
+  if (score <= 11) return { grau: "Crupe grave",     color: "#EF4444", condutas: ["Dexametasona 0,6 mg/kg IV/IM dose única (máx 10 mg)", "L-Epinefrina nebulizada imediata 1:1.000 sem diluir — 3 mL (< 4 anos) ou 5 mL (≥ 4 anos)", "O₂ suplementar · monitorização contínua · internação"] };
   return { grau: "Falência respiratória iminente", color: "var(--tx-red)", condutas: ["UTI / sala de reanimação — IMEDIATO", "Preparar via aérea avançada (intubação)", "Adrenalina IV + Dexametasona IV + O₂ 100%"] };
 }
 
