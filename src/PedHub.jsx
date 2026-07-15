@@ -1,7 +1,7 @@
 // src/PedHub.jsx — Tela inicial do PedHub
 // Importação DIRETA em App.jsx (não lazy)
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "./lib/favoritos";
 import FavoritoStar from "./components/FavoritoStar";
@@ -458,6 +458,11 @@ export default function PedHub() {
   const [busca, setBusca] = useState("");
   const [toastN, setToastN] = useState(0);
 
+  // Navegação como TRANSIÇÃO: o clique repinta o feedback de toque na hora e o
+  // render pesado do módulo/sub-hub de destino roda em prioridade baixa (não
+  // bloqueia o próximo paint). Melhora o INP dos botões de card/portal do hub.
+  const irPara = (rota) => startTransition(() => navigate(rota));
+
   useEffect(() => {
     if (toastN === 0) return;
     const id = setTimeout(() => setToastN(0), 2500);
@@ -597,7 +602,7 @@ export default function PedHub() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
               {resultadosBusca.map(m => (
                 <div key={m.rota} style={{ position: "relative" }}>
-                  <ModuloCard modulo={m} onClick={() => navigate(m.rota)} />
+                  <ModuloCard modulo={m} onClick={() => irPara(m.rota)} />
                   <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
                 </div>
               ))}
@@ -626,8 +631,8 @@ export default function PedHub() {
                 <span style={{ fontSize: 11, color: "var(--muted)" }}>{totalPediatria + totalNeonatal}</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
-                <PediatriaGateway count={totalPediatria} onClick={() => navigate("/pediatria-geral")} />
-                <NeonatalGateway count={totalNeonatal} onClick={() => navigate("/neonatal")} />
+                <PediatriaGateway count={totalPediatria} onClick={() => irPara("/pediatria-geral")} />
+                <NeonatalGateway count={totalNeonatal} onClick={() => irPara("/neonatal")} />
               </div>
             </div>
 
@@ -646,7 +651,7 @@ export default function PedHub() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(104px, 1fr))", gap: 10 }}>
                   {favItems.map(m => (
                     <div key={m.rota} style={{ position: "relative" }}>
-                      <QuickCard modulo={m} onClick={() => navigate(m.rota)} />
+                      <QuickCard modulo={m} onClick={() => irPara(m.rota)} />
                       <FavoritoStar rota={m.rota} ativo />
                     </div>
                   ))}

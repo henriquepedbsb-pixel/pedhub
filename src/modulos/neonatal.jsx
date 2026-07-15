@@ -1,6 +1,7 @@
 // src/modulos/neonatal.jsx
 // Hub Neonatal — tela de entrada para os módulos de Neonatologia
 
+import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "../lib/favoritos";
 import FavoritoStar from "../components/FavoritoStar";
@@ -134,6 +135,10 @@ export default function Neonatal() {
   const favRotas = useFavoritos();
   const totalMods = SECOES.reduce((acc, s) => acc + s.mods.length, 0);
 
+  // Navegação como transição: repinta o toque na hora e renderiza o módulo
+  // de destino em prioridade baixa, sem bloquear o paint (melhora o INP).
+  const irPara = (rota) => startTransition(() => navigate(rota));
+
   return (
     <div className="ph-shell" style={{
       fontFamily: "'DM Sans', sans-serif",
@@ -197,7 +202,7 @@ export default function Neonatal() {
             }}>
               {secao.mods.map((m) => (
                 <div key={m.rota} style={{ position: "relative" }}>
-                  <ModuloCard modulo={m} onClick={() => navigate(m.rota)} />
+                  <ModuloCard modulo={m} onClick={() => irPara(m.rota)} />
                   <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
                 </div>
               ))}

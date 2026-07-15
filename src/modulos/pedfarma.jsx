@@ -1,6 +1,6 @@
 // src/modulos/pedfarma.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta calcularDose/DRUGS (funções/dados puros) para testes unitários */
-import { useState } from "react";
+import { useState, useMemo, useDeferredValue, memo } from "react";
 import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
@@ -429,7 +429,10 @@ function JatosSelector({ jatos, cor }) {
   );
 }
 
-function DrugCard({ drug, peso }) {
+// Memoizado (regra de performance): com a lista de 48 fármacos, evitar
+// re-renderizar cards inalterados a cada tecla digitada na busca/peso.
+// Só re-renderiza quando muda o próprio `drug` ou o `peso` de referência.
+const DrugCard = memo(function DrugCard({ drug, peso }) {
   const cor = CAT_CORES[drug.cat] || PRIMARY;
   return (
     <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 8, borderLeft: "3px solid " + cor }}>
@@ -459,20 +462,30 @@ function DrugCard({ drug, peso }) {
       )}
     </div>
   );
-}
+});
 
 export default function Pedfarma() {
   const [busca, setBusca] = useState("");
   const [cat, setCat]     = useState("Todos");
   const [pesoRaw, setPesoRaw] = useState("");
   const [mostrarConversor, setMostrarConversor] = useState(false);
-  const peso = parsePeso(pesoRaw);
 
-  const filtered = DRUGS.filter(d => {
-    const matchCat   = cat === "Todos" || d.cat === cat;
-    const matchBusca = d.nome.toLowerCase().includes(busca.toLowerCase()) || d.id.toLowerCase().includes(busca.toLowerCase());
-    return matchCat && matchBusca;
-  });
+  // O input reflete o valor digitado imediatamente (peso/AvisoSanidade abaixo),
+  // mas a lista pesada (48 cards, cada um recalculando dose) usa o valor DIFERIDO:
+  // o React pinta a tecla primeiro e re-renderiza os cards em prioridade baixa,
+  // derrubando o INP dos campos de busca e de peso.
+  const peso = parsePeso(pesoRaw);
+  const buscaDiferida = useDeferredValue(busca);
+  const pesoDiferido  = useDeferredValue(peso);
+
+  const filtered = useMemo(() => {
+    const q = buscaDiferida.toLowerCase();
+    return DRUGS.filter(d => {
+      const matchCat   = cat === "Todos" || d.cat === cat;
+      const matchBusca = d.nome.toLowerCase().includes(q) || d.id.toLowerCase().includes(q);
+      return matchCat && matchBusca;
+    });
+  }, [buscaDiferida, cat]);
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
@@ -534,7 +547,7 @@ export default function Pedfarma() {
 
       <div style={{ padding: "0 16px 8px" }}>
         <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 8px" }}>{filtered.length} medicamento{filtered.length !== 1 ? "s" : ""}</p>
-        {filtered.map(d => <DrugCard key={d.id} drug={d} peso={peso} />)}
+        {filtered.map(d => <DrugCard key={d.id} drug={d} peso={pesoDiferido} />)}
         {filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "40px 16px", color: "var(--muted)" }}>
             <Pill size={36} color="var(--border)" style={{ display: "block", margin: "0 auto 8px" }} />
