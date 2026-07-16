@@ -73,6 +73,7 @@ const SECOES = [
       { rota: "/idade-gestacional", label: "Idade Gestacional",  desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB" },
       { rota: "/percentis",         label: "Percentis",          desc: "OMS · Intergrowth · Fenton",          Icon: Scale,         cor: "#3B82F6" },
       { rota: "/neonatologia-3",  label: "Icterícia Neonatal", desc: "Fototerapia AAP 2022 · Causas",      Icon: Stethoscope, cor: "#D97706" },
+      { rota: "/colestase-neonatal", label: "Colestase Neonatal", desc: "Bilirrubina direta · atresia · exames · tratamento", Icon: Droplets, cor: "#CA8A04" },
       { rota: "/dor-neonatal",    label: "Dor Neonatal",       desc: "NIPS · PIPP-R · N-PASS · CRIES",     Icon: Activity,    cor: "#EF4444" },
       { rota: "/cuidados-pele-rn",label: "Pele do RN",         desc: "SBP GPA 140 · Higiene · Emolientes", Icon: Leaf,        cor: "#0891B2" },
       { rota: "/dilucao-bic",     label: "Diluição e BIC",     desc: "Vasoativas · Sedoanalgesia · PGE1",  Icon: Activity,    cor: "#F97316" },

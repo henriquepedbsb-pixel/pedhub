@@ -49,6 +49,7 @@ const CuidadosPeleRn   = lazy(() => import("./modulos/cuidados-pele-rn"));
 const Neonatologia1    = lazy(() => import("./modulos/neonatologia-1"));
 const Neonatologia2    = lazy(() => import("./modulos/neonatologia-2"));
 const Neonatologia3    = lazy(() => import("./modulos/neonatologia-3"));
+const ColestaseNeonatal = lazy(() => import("./modulos/colestase-neonatal"));
 const Neonatologia4    = lazy(() => import("./modulos/neonatologia-4"));
 const Neonatologia5    = lazy(() => import("./modulos/neonatologia-5"));
 const Neonatologia6    = lazy(() => import("./modulos/neonatologia-6"));
@@ -114,6 +115,7 @@ const MODULO_MAP = {
   "/neonatologia-1":    { label: "Neonatologia I",            cor: "#0E7490", voltar: "/neonatal" },
   "/neonatologia-2":    { label: "Neonatologia II",           cor: "#0D9488", voltar: "/neonatal" },
   "/neonatologia-3":    { label: "Neonatologia III",          cor: "#D97706", voltar: "/neonatal" },
+  "/colestase-neonatal": { label: "Colestase Neonatal",        cor: "#CA8A04", voltar: "/neonatal" },
   "/neonatologia-4":    { label: "Neonatologia IV",           cor: "#7C3AED", voltar: "/neonatal" },
   "/neonatologia-5":    { label: "Neonatologia V",            cor: "#6366F1", voltar: "/neonatal" },
   "/neonatologia-6":    { label: "Neonatologia VI",           cor: "#0284C7", voltar: "/neonatal" },
@@ -296,6 +298,7 @@ export default function App() {
           <Route path="/neonatologia-1"    element={<Neonatologia1 />} />
           <Route path="/neonatologia-2"    element={<Neonatologia2 />} />
           <Route path="/neonatologia-3"    element={<Neonatologia3 />} />
+          <Route path="/colestase-neonatal" element={<ColestaseNeonatal />} />
           <Route path="/neonatologia-4"    element={<Neonatologia4 />} />
           <Route path="/neonatologia-5"    element={<Neonatologia5 />} />
           <Route path="/neonatologia-6"    element={<Neonatologia6 />} />
