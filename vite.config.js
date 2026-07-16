@@ -2,6 +2,40 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Content-Security-Policy — injetada APENAS no build de produção. Em dev o
+// Vite injeta scripts inline de HMR/React Refresh que uma CSP estrita
+// bloquearia; por isso o plugin roda só com `apply: 'build'`.
+//
+// 'sha256-…' libera exatamente o script inline de tema do index.html (evita
+// flash claro/escuro). Ao EDITAR aquele script, recalcule o hash:
+//   node -e 'r=require;h=r("crypto").createHash("sha256");h.update(r("fs").readFileSync("dist/index.html","utf8").match(/<script>([\s\S]*?)<\/script>/)[1]);console.log("sha256-"+h.digest("base64"))'
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'sha256-q7ubeEkq1fHdAwV1sUWDsW4Yr4RcYmYcYC/AEaNYANM=' https://static.cloudflareinsights.com",
+  "style-src 'self' 'unsafe-inline'",   // <style> do hub + style="" no HTML estático dos módulos
+  "img-src 'self' data:",
+  "font-src 'self'",                     // fontes DM self-hospedadas
+  "connect-src 'self' https://cloudflareinsights.com",  // beacon do Cloudflare Analytics
+  "manifest-src 'self'",
+  "worker-src 'self'",                   // service worker do PWA
+  "object-src 'none'",
+  "base-uri 'self'",
+].join('; ')
+
+function cspPlugin() {
+  return {
+    name: 'pedhub-csp',
+    apply: 'build',
+    transformIndexHtml() {
+      return [{
+        tag: 'meta',
+        attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP },
+        injectTo: 'head-prepend',
+      }]
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base: '/pedhub/',
@@ -27,9 +61,11 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    cspPlugin(),
     VitePWA({
       registerType: 'autoUpdate',      // atualiza sozinho: ao abrir, se houver versão nova, aplica e recarrega
-      injectRegister: 'auto',
+      injectRegister: 'script',        // registro do SW como arquivo externo (same-origin) → compatível com CSP estrita
+
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
         id: '/pedhub/',

@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
+import { sanitizarEstatico } from "../lib/html-estatico";
 import {
   Scale, Calendar, Droplets, Pill,
   Printer, AlertTriangle, CheckCircle,
@@ -261,7 +262,7 @@ function printById(id) {
     '.print-hide { display: none !important; }' +
     '@media print { body { padding: 10mm; } button { display: none !important; } }' +
     '</style>' +
-    '</head><body>' + el.innerHTML + '</body></html>'
+    '</head><body>' + sanitizarEstatico(el.innerHTML) + '</body></html>'
   );
   w.document.close();
   w.focus();

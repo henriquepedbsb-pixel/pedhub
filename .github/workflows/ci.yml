@@ -22,6 +22,12 @@ jobs:
 
       - run: npm ci
 
+      # Auditoria de segurança das dependências. Não bloqueia o PR
+      # (continue-on-error) — apenas expõe vulnerabilidades altas/críticas
+      # na aba Actions; o Dependabot é quem abre os PRs de correção.
+      - run: npm audit --audit-level=high
+        continue-on-error: true
+
       - run: npm test          # cálculos verificados
 
       - run: npm run build     # confirma que compila (sem deploy)
