@@ -733,7 +733,7 @@ export default function PedHub() {
           <strong style={{ color: "var(--text-2)" }}>PedHub · PedSuite</strong><br />
           Apoio à decisão clínica — não substitui julgamento médico<br />
           Dr. Henrique Flávio G. Gomes · CRM-DF 14.611<br />
-          © 2025–2026 · Todos os direitos reservados
+          © 2026 · Todos os direitos reservados
         </p>
       </div>
     </div>

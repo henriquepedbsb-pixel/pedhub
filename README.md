@@ -51,4 +51,4 @@ Obra proprietária — **todos os direitos reservados**. Reprodução, cópia,
 distribuição ou obras derivadas dependem de autorização prévia e por escrito
 do autor. Veja [`LICENSE`](./LICENSE).
 
-© 2025–2026 Dr. Henrique Flávio G. Gomes.
+© 2026 Dr. Henrique Flávio G. Gomes.
