@@ -176,7 +176,13 @@ const casaBusca = (m, termos) => {
 };
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
-const EM_BREVE = [];
+/* Eixo Pediatria Geral. Entram no grid "Em breve" e na busca (por label+desc). */
+const EM_BREVE = [
+  { label: "Anafilaxia",            desc: "Adrenalina IM · reação alérgica grave · choque · observação", Icon: Syringe },
+  { label: "Cetoacidose Diabética", desc: "CAD · insulina · fluidos · potássio · cetose · edema cerebral", Icon: Droplets },
+  { label: "Asma / Crise",          desc: "Salbutamol · corticoide · gravidade · sibilância · oxigênio", Icon: Wind },
+  { label: "Conversão de Opioides", desc: "Morfina · fentanil · metadona · equipotência · rodízio", Icon: Pill },
+];
 
 /* ─── Estilos de interação (hover/toque/entrada) — injetados uma vez ───────── */
 /* Usa custom properties (--sh / --sh-hover) para que o :hover do CSS possa    */
@@ -726,7 +732,8 @@ export default function PedHub() {
         <p style={{ fontSize: 11, color: "var(--muted)", margin: 0, lineHeight: 1.6 }}>
           <strong style={{ color: "var(--text-2)" }}>PedHub · PedSuite</strong><br />
           Apoio à decisão clínica — não substitui julgamento médico<br />
-          Dr. Henrique Flávio G. Gomes · CRM-DF 14.611
+          Dr. Henrique Flávio G. Gomes · CRM-DF 14.611<br />
+          © 2025–2026 · Todos os direitos reservados
         </p>
       </div>
     </div>

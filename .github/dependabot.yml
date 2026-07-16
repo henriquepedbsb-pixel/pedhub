@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # Dependências do app (npm) — agrupa minor/patch para reduzir ruído de PRs.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      minor-e-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # Versões das GitHub Actions usadas nos workflows.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
