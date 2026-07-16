@@ -12,6 +12,7 @@ import {
   AlertTriangle, Info, TrendingUp, Printer,
   RefreshCw, ChevronDown, ChevronUp,
 } from 'lucide-react';
+import { htmlEstatico } from '../lib/html-estatico';
 
 /* ── Paleta ── */
 const C = {
@@ -1068,7 +1069,7 @@ function GuiaTab() {
           </button>
           {open[i] && (
             <div style={{padding:'12px 14px',fontSize:13,lineHeight:1.65}}
-              dangerouslySetInnerHTML={{__html:item.body}}/>
+              {...htmlEstatico(item.body)}/>
           )}
         </div>
       ))}
@@ -1195,7 +1196,7 @@ function ZoneBox({z,title,subtitle,items}) {
       <div style={{fontSize:12.5,opacity:.9,marginBottom:8,color:s.tx}}>{subtitle}</div>
       <ul style={{paddingLeft:16,fontSize:12.5,lineHeight:1.65,color:s.tx}}>
         {items.map((item,i)=>(
-          <li key={i} style={{marginTop:2}} dangerouslySetInnerHTML={{__html:item}}/>
+          <li key={i} style={{marginTop:2}} {...htmlEstatico(item)}/>
         ))}
       </ul>
     </div>
