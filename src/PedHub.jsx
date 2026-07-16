@@ -39,6 +39,12 @@ import {
   Waves,
   Users,
   ScanEye,
+  TestTube,
+  Gauge,
+  Biohazard,
+  BedDouble,
+  BrainCircuit,
+  ShieldAlert,
 } from "lucide-react";
 
 /* ─── Catálogo completo de módulos ───────────────────────────────────────── */
@@ -175,8 +181,18 @@ const casaBusca = (m, termos) => {
   return termos.every(t => hay.includes(t));
 };
 
-/* ─── Módulos em desenvolvimento (placeholders — sem rota) ───────────────── */
-const EM_BREVE = [];
+/* ─── Módulos em desenvolvimento (placeholders — sem rota) ─────────────────
+   Sem campo `cor`: o BreveCard é neutro por design (cinza dos tokens), para
+   não competir visualmente com os módulos que já estão no ar. A cor própria
+   de cada um é definida quando o módulo for de fato construído.            */
+const EM_BREVE = [
+  { label: "ITU Pediátrica",        desc: "Coleta · UFC por método · imagem · ATB",     Icon: TestTube },
+  { label: "Cetoacidose Diabética", desc: "CAD · debut DM1 · hidratação e insulina",    Icon: Gauge },
+  { label: "Animais Peçonhentos",   desc: "Escorpião · serpentes · aranhas · soro",     Icon: Biohazard },
+  { label: "Enurese Noturna",       desc: "ICCS · mono × não-monossintomática",         Icon: BedDouble },
+  { label: "Convulsão Neonatal",    desc: "Etiologias · tipos de crise · fenobarbital", Icon: BrainCircuit },
+  { label: "Sepse Neonatal",        desc: "Precoce × tardia · fatores de risco · ATB",  Icon: ShieldAlert },
+];
 
 /* ─── Estilos de interação (hover/toque/entrada) — injetados uma vez ───────── */
 /* Usa custom properties (--sh / --sh-hover) para que o :hover do CSS possa    */
@@ -320,8 +336,8 @@ function BreveCard({ modulo, onClick }) {
     <button
       onClick={onClick}
       style={{
-        background: "#FAFAFA",
-        border: "1.5px dashed #D1D5DB",
+        background: "var(--surface)",
+        border: "1.5px dashed var(--border)",
         borderRadius: 14,
         padding: "15px 13px",
         cursor: "pointer",
@@ -334,23 +350,24 @@ function BreveCard({ modulo, onClick }) {
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div style={{
-          width: 40, height: 40, borderRadius: 12, background: "#F3F4F6",
+          width: 40, height: 40, borderRadius: 12, background: "var(--surface-2)",
           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
         }}>
-          <Icon size={20} color="#9CA3AF" />
+          <Icon size={20} color="var(--muted)" />
         </div>
         <span style={{
-          fontSize: 9, fontWeight: 700, color: "#6B7280", background: "#E5E7EB",
+          fontSize: 9, fontWeight: 700, color: "var(--muted)", background: "var(--surface-2)",
+          border: "1px solid var(--border)",
           padding: "3px 7px", borderRadius: 20, letterSpacing: "0.04em", whiteSpace: "nowrap",
         }}>EM BREVE</span>
       </div>
       <div>
         <p style={{
-          fontWeight: 700, fontSize: 16, color: "#6B7280", margin: "0 0 3px",
+          fontWeight: 700, fontSize: 16, color: "var(--text-2)", margin: "0 0 3px",
           lineHeight: 1.3, wordBreak: "break-word", hyphens: "auto",
         }}>{label}</p>
         <p style={{
-          fontSize: 13, color: "#9CA3AF", margin: 0, lineHeight: 1.45, wordBreak: "break-word",
+          fontSize: 13, color: "var(--muted)", margin: 0, lineHeight: 1.45, wordBreak: "break-word",
         }}>{desc}</p>
       </div>
     </button>
