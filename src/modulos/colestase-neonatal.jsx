@@ -326,20 +326,17 @@ function TabTratamento() {
   );
 }
 
-/* ─── Componente principal ────────────────────────────────────────────────── */
-export default function ColestaseNeonatal() {
+/* ─── Conteúdo reutilizável (abas + painéis) ──────────────────────────────────
+   Exportado para ser embutido também no módulo "Gastro e Hepato" da Pediatria,
+   mantendo fonte única de conteúdo (sem duplicar o texto clínico). */
+export function ColestaseConteudo() {
   const [tab, setTab] = useState(0);
   const tabs = ["Diagnóstico", "Exames", "Etiologia", "Tratamento"];
   const icons = [Stethoscope, Microscope, Search, Pill];
   const colors = [PRIMARY, "#0EA5E9", "#7C3AED", "#10B981"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, #92400E 100%)`, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Colestase Neonatal</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Bilirrubina direta · atresia · exames · tratamento</p>
-      </div>
-
+    <>
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;
@@ -353,11 +350,27 @@ export default function ColestaseNeonatal() {
         })}
       </div>
 
-      <div style={{ padding: 16 }}>
+      <div style={{ paddingTop: 16 }}>
         {tab === 0 && <TabDiagnostico />}
         {tab === 1 && <TabExames />}
         {tab === 2 && <TabEtiologia />}
         {tab === 3 && <TabTratamento />}
+      </div>
+    </>
+  );
+}
+
+/* ─── Componente principal ────────────────────────────────────────────────── */
+export default function ColestaseNeonatal() {
+  return (
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
+      <div style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, #92400E 100%)`, padding: "20px 16px 16px", color: "#fff" }}>
+        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Colestase Neonatal</h1>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Bilirrubina direta · atresia · exames · tratamento</p>
+      </div>
+
+      <div style={{ padding: "0 16px" }}>
+        <ColestaseConteudo />
       </div>
 
       <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>

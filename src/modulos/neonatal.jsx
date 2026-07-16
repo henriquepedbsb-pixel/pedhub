@@ -27,6 +27,7 @@ import {
   Waves,
   ScanEye,
   Users,
+  Microscope,
 } from "lucide-react";
 
 const COR_HUB = "#0E7490";
@@ -54,6 +55,7 @@ const SECOES = [
       { rota: "/nec",              label: "Enterocolite Necrosante", desc: "Bell · ATB por peso/IG · cirurgia", Icon: AlertTriangle, cor: "#92400E" },
       { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",   Icon: Pill,           cor: "#0891B2" },
       { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D" },
+      { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1", Icon: Activity,    cor: "#F97316" },
     ],
   },
   {
@@ -64,6 +66,7 @@ const SECOES = [
       { rota: "/neonatologia-5", label: "NPT Neonatal",          desc: "Nutrição Parenteral · Eletrólitos",   Icon: Droplets, cor: "#6366F1" },
       { rota: "/tig-neonatal",   label: "TIG Neonatal",          desc: "Taxa de Infusão de Glicose · UCIN",   Icon: Droplets, cor: "#0891B2" },
       { rota: "/canguru",        label: "Canguru",               desc: "Prescrição e Receituário Neonatal",   Icon: Heart,    cor: "#10B981" },
+      { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D" },
     ],
   },
   {
@@ -72,14 +75,18 @@ const SECOES = [
     mods: [
       { rota: "/idade-gestacional", label: "Idade Gestacional",  desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB" },
       { rota: "/percentis",         label: "Percentis",          desc: "OMS · Intergrowth · Fenton",          Icon: Scale,         cor: "#3B82F6" },
-      { rota: "/neonatologia-3",  label: "Icterícia Neonatal", desc: "Fototerapia AAP 2022 · Causas",      Icon: Stethoscope, cor: "#D97706" },
-      { rota: "/colestase-neonatal", label: "Colestase Neonatal", desc: "Bilirrubina direta · atresia · exames · tratamento", Icon: Droplets, cor: "#CA8A04" },
       { rota: "/dor-neonatal",    label: "Dor Neonatal",       desc: "NIPS · PIPP-R · N-PASS · CRIES",     Icon: Activity,    cor: "#EF4444" },
-      { rota: "/cuidados-pele-rn",label: "Pele do RN",         desc: "SBP GPA 140 · Higiene · Emolientes", Icon: Leaf,        cor: "#0891B2" },
-      { rota: "/dilucao-bic",     label: "Diluição e BIC",     desc: "Vasoativas · Sedoanalgesia · PGE1",  Icon: Activity,    cor: "#F97316" },
-      { rota: "/triagem-neonatal", label: "Triagem Neonatal",  desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6" },
+      { rota: "/neonatologia-3",  label: "Icterícia Neonatal", desc: "Fototerapia AAP 2022 · Causas",      Icon: Stethoscope, cor: "#D97706" },
+    ],
+  },
+  {
+    titulo: "Especialidades",
+    Icon: Microscope,
+    mods: [
+      { rota: "/cuidados-pele-rn", label: "Pele do RN",         desc: "SBP GPA 140 · Higiene · Emolientes", Icon: Leaf,        cor: "#0891B2" },
       { rota: "/rop",             label: "Retinopatia (ROP)",  desc: "Triagem · momento do exame · seguimento", Icon: ScanEye,   cor: "#0369A1" },
-      { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D" },
+      { rota: "/colestase-neonatal", label: "Colestase Neonatal", desc: "Bilirrubina direta · atresia · exames · tratamento", Icon: Droplets, cor: "#CA8A04" },
+      { rota: "/triagem-neonatal", label: "Triagem Neonatal",  desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6" },
     ],
   },
 ];

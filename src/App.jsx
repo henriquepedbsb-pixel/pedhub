@@ -78,7 +78,7 @@ const MODULO_MAP = {
   "/percentis-oms":     { label: "Percentis (OMS)",           cor: "#3B82F6", voltar: "/pediatria-geral" },
   "/urgencias":         { label: "Urgências",                 cor: "#EF4444", voltar: "/pediatria-geral" },
   "/formulas":          { label: "Fórmulas Infantis",         cor: "#10B981", voltar: "/pediatria-geral" },
-  "/gastropediatria":   { label: "Gastropediatria",           cor: "#F59E0B", voltar: "/pediatria-geral" },
+  "/gastropediatria":   { label: "Gastro e Hepato",           cor: "#F59E0B", voltar: "/pediatria-geral" },
   "/pedfarma":          { label: "PedFarma",                  cor: "#8B5CF6", voltar: "/pediatria-geral" },
   "/vacinal":           { label: "Calendário Vacinal",        cor: "#06B6D4", voltar: "/pediatria-geral" },
   "/hidratacao":        { label: "Hidratação",                cor: "#3B82F6", voltar: "/pediatria-geral" },

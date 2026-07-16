@@ -6,6 +6,7 @@ import {
   ChevronUp,
   Info,
 } from "lucide-react";
+import { ColestaseConteudo } from "./colestase-neonatal";
 
 const PRIMARY = "#F59E0B";
 
@@ -278,14 +279,14 @@ function TabConstipacao() {
 /* ─── Componente principal ────────────────────────────────────────────────── */
 export default function Gastropediatria() {
   const [tab, setTab] = useState(0);
-  const tabs = ["DRGE", "APLV", "Constipação"];
-  const colors = ["#3B82F6", "#EF4444", "#10B981"];
+  const tabs = ["DRGE", "APLV", "Constipação", "Colestase"];
+  const colors = ["#3B82F6", "#EF4444", "#10B981", "#CA8A04"];
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
       <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Gastropediatria</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>DRGE · APLV · Constipação Funcional</p>
+        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Gastro e Hepato</h1>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>DRGE · APLV · Constipação · Colestase</p>
       </div>
 
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
@@ -299,17 +300,18 @@ export default function Gastropediatria() {
         })}
       </div>
 
-      <div style={{ padding: 16 }}>
+      <div style={{ padding: tab === 3 ? "0 16px 16px" : 16 }}>
         {tab === 0 && <TabDRGE />}
         {tab === 1 && <TabAPLV />}
         {tab === 2 && <TabConstipacao />}
+        {tab === 3 && <ColestaseConteudo />}
       </div>
 
       <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ display: "flex", gap: 8 }}>
           <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
           <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Baseado em ESPGHAN/NASPGHAN 2018, Roma IV 2016, ESPGHAN 2014 e SBAI/SBP 2022. Não substitui julgamento clínico nem protocolo institucional.
+            <strong>Apoio à decisão clínica.</strong> Baseado em ESPGHAN/NASPGHAN 2018, Roma IV 2016, ESPGHAN 2014, SBAI/SBP 2022 e NASPGHAN/ESPGHAN 2017 (colestase). Não substitui julgamento clínico nem protocolo institucional.
           </p>
         </div>
       </div>
