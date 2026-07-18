@@ -8,6 +8,7 @@ import {
   Eye,
   Heart,
   Info,
+  Baby,
 } from "lucide-react";
 
 const COR = "#14B8A6"; // teal-500 — cor do módulo Triagem Neonatal
@@ -80,7 +81,7 @@ const TESTES = [
 
 export default function TriagemNeonatal() {
   const [aba, setAba] = useState("pezinho");
-  const [abertas, setAbertas] = useState({ a: true, b: false, c: false });
+  const [abertas, setAbertas] = useState({ a: true, b: false, c: false, d: false });
   const toggle = (chave) => setAbertas((prev) => ({ ...prev, [chave]: !prev[chave] }));
 
   return (
@@ -124,9 +125,11 @@ export default function TriagemNeonatal() {
           <>
             <Section title="Quando e como" icon={Footprints} open={abertas.a} onToggle={() => toggle("a")}>
               <ul className="space-y-1.5">
-                <Bullet>Coleta entre o 3º e o 5º dia de vida — nunca antes de 48h de vida (risco de falso negativo, especialmente para hipotireoidismo congênito)</Bullet>
+                <Bullet>Coleta ideal entre o 3º e o 5º dia de vida — nunca antes de 48h de vida (risco de falso negativo, especialmente para hipotireoidismo congênito e fenilcetonúria)</Bullet>
                 <Bullet>Amostra: sangue capilar em papel filtro (calcanhar)</Bullet>
+                <Bullet>Triagem de fenilcetonúria só é válida se o RN estiver em dieta enteral com aporte proteico adequado (leite materno/fórmula) há ≥ 24h — do contrário, anotar "ingesta proteica insuficiente" e recoletar após dieta adequada</Bullet>
               </ul>
+              <AlertaBox tone="amber">Prematuros e RN internados têm particularidades de coleta (mais de uma amostra) — ver aba/seção específica abaixo.</AlertaBox>
             </Section>
             <Section title="Doenças rastreadas" icon={Footprints} open={abertas.b} onToggle={() => toggle("b")}>
               <p className="font-semibold text-gray-800">Programa básico nacional (SUS):</p>
@@ -138,9 +141,53 @@ export default function TriagemNeonatal() {
                 <Bullet>Hiperplasia adrenal congênita</Bullet>
                 <Bullet>Deficiência de biotinidase</Bullet>
               </ul>
-              <p className="text-xs text-gray-500">Programas estaduais/privados podem ampliar o painel (ex: toxoplasmose congênita, galactosemia, entre outros), conforme legislação local.</p>
+              <p className="text-xs text-gray-500">A Lei nº 14.154/2021 prevê a ampliação progressiva do painel nacional. Programas estaduais/distritais podem oferecer painel mais amplo, conforme legislação local.</p>
               <AlertaBox tone="blue">Resultado alterado exige reconvocação e teste confirmatório — a triagem não é diagnóstico definitivo.</AlertaBox>
               <FonteTag>MS</FonteTag><FonteTag>SBP</FonteTag>
+            </Section>
+            <Section title="Painel ampliado do Distrito Federal" icon={Footprints} open={abertas.c} onToggle={() => toggle("c")}>
+              <p className="text-gray-700">
+                O DF oferece o teste do pezinho ampliado a <strong>100% dos nascidos vivos</strong> da rede pública (Lei distrital nº 4.190/2008) e é a única unidade da federação capaz de rastrear até <strong>62 doenças</strong>, com resultados de todo o painel em cerca de 1 semana. Utiliza espectrometria de massas em tandem (MS/MS) associada a outras metodologias.
+              </p>
+              <p className="font-semibold text-gray-800">Grupos de doenças cobertos:</p>
+              <ul className="space-y-1.5">
+                <Bullet>As 6 doenças do painel básico nacional</Bullet>
+                <Bullet>Aminoacidopatias (além da fenilcetonúria)</Bullet>
+                <Bullet>Distúrbios do ciclo da ureia</Bullet>
+                <Bullet>Acidúrias orgânicas</Bullet>
+                <Bullet>Distúrbios da beta-oxidação de ácidos graxos</Bullet>
+                <Bullet>Outras endocrinopatias e hemoglobinopatias</Bullet>
+                <Bullet>Galactosemia</Bullet>
+                <Bullet>Toxoplasmose congênita</Bullet>
+                <Bullet>Doenças lisossomais de depósito</Bullet>
+                <Bullet>Imunodeficiência combinada grave (SCID)</Bullet>
+                <Bullet>Atrofia muscular espinhal (AME)</Bullet>
+              </ul>
+              <AlertaBox tone="blue">Um resultado ampliado alterado (ex.: MS/MS, SCID, AME) deve ser encaminhado ao serviço de referência em triagem neonatal da SES-DF para confirmação diagnóstica e início precoce do tratamento.</AlertaBox>
+              <FonteTag>SES-DF</FonteTag><FonteTag>LACEN-DF</FonteTag>
+            </Section>
+            <Section title="Prematuros e situações especiais" icon={Baby} open={abertas.d} onToggle={() => toggle("d")}>
+              <p className="text-gray-700">
+                No RN pré-termo, a coleta única não é confiável: imaturidade de eixos hormonais, dieta parenteral, transfusões e uso de corticoides/aminas/antibióticos podem <strong>mascarar ou falsear</strong> resultados. Por isso, em geral se coleta <strong>mais de uma amostra</strong> (protocolo seriado).
+              </p>
+              <p className="font-semibold text-gray-800">1ª amostra (RN pré-termo internado em UTI Neo):</p>
+              <ul className="space-y-1.5">
+                <Bullet>Coletar por punção venosa já na admissão, <strong>antes</strong> de iniciar nutrição parenteral, transfusão de hemoderivados, corticoides, aminas vasoativas e antibióticos</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800">Coletas seriadas conforme peso:</p>
+              <ul className="space-y-1.5">
+                <Bullet>RN de <strong>1.000–1.500 g</strong>: 2ª amostra por volta de 2 semanas de vida</Bullet>
+                <Bullet>RN &lt; <strong>1.000 g</strong>: 2ª amostra por volta de 4 semanas de vida</Bullet>
+                <Bullet>Pode haver reconvocação para nova coleta entre a 2ª e a 6ª semana, conforme imaturidade e procedimentos realizados na unidade neonatal</Bullet>
+              </ul>
+              <p className="font-semibold text-gray-800">Interferências que exigem recoleta:</p>
+              <ul className="space-y-1.5">
+                <Bullet><strong>Hipotireoidismo congênito:</strong> repetir a dosagem de TSH semanas depois em RN de muito baixo peso/prematuro — a imaturidade do eixo hipotálamo-hipófise-tireoide pode mascarar o hipotireoidismo primário (elevação tardia do TSH)</Bullet>
+                <Bullet><strong>Transfusão de hemoderivados:</strong> interfere na triagem de hemoglobinopatias e galactosemia — repetir a amostra cerca de 120 dias (3–4 meses) após a transfusão</Bullet>
+                <Bullet><strong>Aporte proteico insuficiente:</strong> triagem de fenilcetonúria só válida com dieta enteral adequada há ≥ 24h; recoletar 24–36h após estabelecer ingesta proteica apropriada</Bullet>
+              </ul>
+              <AlertaBox tone="amber">Registre no cartão/envelope de coleta a condição do RN (prematuridade, peso, uso de NPT, transfusão, corticoide) — essa informação é essencial para a correta interpretação laboratorial.</AlertaBox>
+              <FonteTag>MS</FonteTag><FonteTag>PNTN</FonteTag>
             </Section>
           </>
         )}
