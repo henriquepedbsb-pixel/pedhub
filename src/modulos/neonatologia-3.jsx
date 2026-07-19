@@ -21,11 +21,12 @@ const C = {
   prim: '#D97706',
   fundo:'#eef2f7', card: '#ffffff', borda:'#d0dae8',
   texto:'#1a1a2e', det: "var(--text-2)", muted:'#718096',
-  // Zone colors — clinical, preserve originals
-  z1bg:"var(--tint-green)", z1br:'#28a745', z1tx:'#155724',
-  z2bg:"var(--tint-amber)", z2br:'#ffc107', z2tx:'#856404',
-  z3bg:"var(--tint-amber)", z3br:'#ff9800', z3tx:'#e65100',
-  z4bg:"var(--tint-red)", z4br:'#dc3545', z4tx:'#721c24',
+  // Zone colors — clinical. Texto usa tokens --tx-* que trocam por tema
+  // (tom escuro no claro, tom claro no escuro) p/ manter contraste legível.
+  z1bg:"var(--tint-green)", z1br:'#28a745', z1tx:"var(--tx-green)",
+  z2bg:"var(--tint-amber)", z2br:'#ffc107', z2tx:"var(--tx-amber)",
+  z3bg:"var(--tint-amber)", z3br:'#ff9800', z3tx:"var(--tx-amber)",
+  z4bg:"var(--tint-red)", z4br:'#dc3545', z4tx:"var(--tx-red)",
   z5bg:'#b71c1c', z5br:'#7f0000', z5tx:'#ffffff',
 };
 const R = '10px', RS = '7px';
@@ -1130,9 +1131,9 @@ function Pill({color,children}) {
 
 function ABox({type,children}) {
   const styles = {
-    warn:   {bg:"var(--tint-amber)",tx:'#856404',br:'#ffc107'},
-    danger: {bg:"var(--tint-red)",tx:'#721c24',br:'#dc3545'},
-    info:   {bg:"var(--tint-teal)",tx:'#0c5460',br:'#bee5eb'},
+    warn:   {bg:"var(--tint-amber)",tx:"var(--tx-amber)",br:'#ffc107'},
+    danger: {bg:"var(--tint-red)",tx:"var(--tx-red)",br:'#dc3545'},
+    info:   {bg:"var(--tint-teal)",tx:"var(--tx-teal)",br:'#bee5eb'},
   };
   const s = styles[type] || styles.info;
   return (
