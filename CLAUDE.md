@@ -1,6 +1,6 @@
 # PedHub — Contexto e regras para o Claude Code
 
-Repositório: `henriquepedbsb-pixel/pedhub-app` (privado)
+Repositório: `henriquepedbsb-pixel/pedhub` (privado)
 Responsável médico: Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
 Última atualização deste documento: 23/07/2026
 
@@ -12,16 +12,22 @@ PedHub é uma PWA React de apoio à decisão clínica para pediatras e
 neonatologistas brasileiros: calculadoras, protocolos, farmacologia e curvas
 de crescimento. É o núcleo clínico do ecossistema PedSuite.
 
-Estado atual: **54 módulos ativos** (30 Pediatria Geral + 24 Neonatologia) +
-2 hubs. Fase 1 concluída. Nenhum módulo novo está planejado agora — o
-trabalho atual é de **plataforma, UX e segurança de cálculo**.
+Estado atual: **56 módulos ativos** (31 Pediatria Geral + 25 Neonatologia) +
+6 módulos "EM BREVE" (placeholders, sem rota) + 2 hubs. Fase 1 concluída.
+Nenhum módulo novo está planejado agora — o trabalho atual é de **plataforma,
+UX e segurança de cálculo**.
+
+A contagem exibida na home é derivada do array `MODULOS` em `PedHub.jsx`
+(`MODULOS.length` + filtro por `grupo`). Ao criar/remover módulo, essa
+entrada do catálogo é obrigatória (ver seção 4), senão a home conta errado e
+a busca global não acha o módulo.
 
 ---
 
 ## 2. Stack
 
 - React + Vite (**rolldown**, mais estrito que esbuild) + **HashRouter**
-- Tailwind CSS via estilos inline + **lucide-react 0.383.0** + fonte DM Sans
+- Tailwind CSS via estilos inline + **lucide-react 1.17.0** + fonte DM Sans
 - `vite-plugin-pwa` (offline-first)
 - Deploy: GitHub Actions → GitHub Pages, `base: "/pedhub/"` no `vite.config.js`
 - URLs no formato `/pedhub/#/modulo`
@@ -36,9 +42,11 @@ devDependency, para a tarefa T2.
 
 1. **HashRouter**, nunca BrowserRouter. GitHub Pages não suporta SPA routing.
 2. **Nunca emojis** em produção — usar ícones Lucide. Verificar se o ícone
-   existe na versão **0.383.0** antes de usar (ícones inexistentes quebram o
-   build). Quando o emoji estiver dentro de string de dado (não JSX),
-   substituir por prefixo textual neutro.
+   existe na versão **1.17.0** antes de usar — checar contra a versão REAL
+   instalada, não de memória (`node -e "const L=require('lucide-react'); console.log('Ruler' in L)"`).
+   Ícones inexistentes quebram o build (ex.: `Spider` não existe). Quando o
+   emoji estiver dentro de string de dado (não JSX), substituir por prefixo
+   textual neutro.
 3. **Cores em hex fixo.** Nunca `var(--x)` para lógica visual condicional.
    Abas e chips usam `className` + `!important`, não ternário inline de cor.
 4. **Sub-componentes React sempre definidos FORA do componente principal.**
@@ -183,7 +191,7 @@ depois em `dilucao-bic`, depois em `urgencias`. ~40s por consulta.
 **Critérios de aceite:**
 - [ ] Módulos existentes continuam funcionando com o input próprio deles se o
       contexto estiver vazio (**retrocompatibilidade obrigatória — não
-      quebrar nenhum dos 54**)
+      quebrar nenhum dos 56**)
 - [ ] Aceita `2,5` e `2.5` como peso (regra 5)
 - [ ] Peso 0, negativo, texto e campo vazio não quebram nem produzem `NaN`
       renderizado
@@ -193,7 +201,7 @@ depois em `dilucao-bic`, depois em `urgencias`. ~40s por consulta.
 - [ ] Sem re-render em cascata dos módulos a cada tecla digitada na barra
       (usar estado local no input + commit no contexto no blur/debounce)
 
-**Não fazer nesta tarefa:** ainda não plugar o contexto nos 54 módulos. Só a
+**Não fazer nesta tarefa:** ainda não plugar o contexto nos 56 módulos. Só a
 infraestrutura + a barra. A adoção módulo a módulo é incremental.
 
 ---
@@ -271,7 +279,7 @@ Se uma indicação nova precisar de valor que não existe hoje no `pedfarma.jsx`
   índice de busca ("qual mesmo a dose de ondansetrona?"). O que muda é que os
   outros módulos param de mandar o usuário até lá.
 
-**Migração incremental:** não sair embutindo em 54 módulos. Embutir sob
+**Migração incremental:** não sair embutindo em 56 módulos. Embutir sob
 demanda, começando pelos de maior tráfego real (o Cloudflare Analytics dirá
 quais), **um módulo por commit**.
 
