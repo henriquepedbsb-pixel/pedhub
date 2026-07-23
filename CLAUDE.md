@@ -12,10 +12,30 @@ PedHub é uma PWA React de apoio à decisão clínica para pediatras e
 neonatologistas brasileiros: calculadoras, protocolos, farmacologia e curvas
 de crescimento. É o núcleo clínico do ecossistema PedSuite.
 
-Estado atual: **56 módulos ativos** (31 Pediatria Geral + 25 Neonatologia) +
-6 módulos "EM BREVE" (placeholders, sem rota) + 2 hubs. Fase 1 concluída.
-Nenhum módulo novo está planejado agora — o trabalho atual é de **plataforma,
-UX e segurança de cálculo**.
+Estado atual: **56 módulos ativos no catálogo** (31 Pediatria Geral +
+25 Neonatologia) + 6 módulos "EM BREVE" (placeholders, sem rota) + 2 hubs.
+Fase 1 concluída. Nenhum módulo novo está planejado agora — o trabalho atual
+é de **plataforma, UX e segurança de cálculo**.
+
+**Reconciliação catálogo × arquivos (não é bug, é intencional):**
+- `src/modulos/` contém **57 arquivos `.jsx`** (+ o diretório `__tests__/`).
+- Desses 57: **55 são módulos-spoke** + **2 são os hubs** (`pediatria-geral.jsx`
+  e `neonatal.jsx`).
+- O catálogo `MODULOS` tem **56 entradas**, uma a mais que os 55 arquivos-spoke
+  porque **`percentis.jsx` serve 2 rotas**: `/percentis` (completo) e
+  `/percentis-oms` (com a prop `somenteOMS`). Um arquivo, dois módulos no
+  catálogo. Confira em `App.jsx` (`<Route path="/percentis-oms" element={<Percentis somenteOMS />} />`).
+
+Portanto: 55 arquivos-spoke + 1 rota extra (percentis-oms) = 56 catálogo.
+
+**Os 6 módulos "EM BREVE"** (array `EM_BREVE` em `PedHub.jsx` — placeholders,
+sem rota, aparecem só como "em breve" na home):
+1. ITU Pediátrica — Coleta · UFC por método · imagem · ATB
+2. Cetoacidose Diabética — CAD · debut DM1 · hidratação e insulina
+3. Animais Peçonhentos — Escorpião · serpentes · aranhas · soro
+4. Enurese Noturna — ICCS · mono × não-monossintomática
+5. Convulsão Neonatal — Etiologias · tipos de crise · fenobarbital
+6. Sepse Neonatal — Precoce × tardia · fatores de risco · ATB
 
 A contagem exibida na home é derivada do array `MODULOS` em `PedHub.jsx`
 (`MODULOS.length` + filtro por `grupo`). Ao criar/remover módulo, essa
@@ -33,8 +53,10 @@ a busca global não acha o módulo.
 - URLs no formato `/pedhub/#/modulo`
 
 **Não introduzir dependência nova sem justificar e perguntar antes.**
-Exceção já autorizada: `vitest` (+ `@vitest/coverage-v8` se necessário) como
-devDependency, para a tarefa T2.
+`vitest` (`^4.1.10`) **já está instalado e configurado** (`vitest.config.js`,
+scripts `npm test` / `npm run test:watch`) e o CI já roda `npm test` antes do
+build (`.github/workflows/ci.yml` e `main.yml`) — teste vermelho bloqueia
+deploy. `@vitest/coverage-v8` pode ser adicionado se for medir cobertura.
 
 ---
 
@@ -47,8 +69,17 @@ devDependency, para a tarefa T2.
    Ícones inexistentes quebram o build (ex.: `Spider` não existe). Quando o
    emoji estiver dentro de string de dado (não JSX), substituir por prefixo
    textual neutro.
-3. **Cores em hex fixo.** Nunca `var(--x)` para lógica visual condicional.
-   Abas e chips usam `className` + `!important`, não ternário inline de cor.
+3. **Cores em hex fixo — vale para a COR DE IDENTIDADE DE MÓDULO.** A cor
+   própria de cada módulo (badge, gradiente do card, destaque) e a lógica
+   visual condicional (aba/chip ativo, gravidade, cor de risco) são sempre
+   hex literal — nunca `var(--x)`. Abas e chips usam `className` + `!important`,
+   não ternário inline de cor.
+   **Exceção deliberada — o "chrome" do app usa as variáveis CSS de tema:**
+   fundo de página, superfícies de card, bordas, texto e cabeçalhos consomem
+   os tokens `--bg`, `--surface`, `--surface-2`, `--border`, `--text`,
+   `--text-2`, `--muted`, `--header-bg` para responder ao dark mode (ver
+   "Sistema de tema"). A regra do hex fixo é sobre **identidade e semântica de
+   cor**, não sobre a moldura neutra do app.
 4. **Sub-componentes React sempre definidos FORA do componente principal.**
    Definir dentro causa remount a cada tecla e quebra o foco do teclado
    mobile. (Funções que só retornam objetos de estilo podem ficar dentro.)
@@ -165,10 +196,96 @@ Mais interativo, desde que nunca menos seguro nem menos claro.
 
 ---
 
+## 10. Sistema de tema (claro/escuro)
+
+Dark mode **já implementado**. Não usa Context API nem biblioteca — é a tríade
+**atributo no `<html>` + hook mínimo + variáveis CSS**.
+
+**Mecânica:**
+- O tema vive no atributo `data-theme` de `document.documentElement`
+  (`<html>`): `"dark"` ou `"light"`. Ausência do atributo = seguir
+  `prefers-color-scheme` do sistema.
+- Persistência na chave **`localStorage["pedhub-theme"]`** (preferência do
+  médico, não dado de paciente — `localStorage` é correto aqui).
+- **Script anti-flash no `index.html`** (inline, antes da 1ª pintura): lê
+  `pedhub-theme` e aplica `data-theme` no `<html>` **antes** do React montar,
+  evitando flash de tema errado (FOUC). Não remover nem mover para depois do
+  bundle.
+- Toggle: hook `useTheme()` em `src/PedHub.jsx` (`useState` local, sem
+  provider). Ao alternar, escreve o atributo no `<html>` e grava no
+  `localStorage`.
+
+**Paleta — CSS custom properties em `src/index.css`** (definidas em `:root`
+claro, no bloco `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])`,
+e nos explícitos `:root[data-theme="dark"]` / `:root[data-theme="light"]`):
+
+| Token | Papel |
+|---|---|
+| `--bg` | Fundo geral da página/app |
+| `--surface` | Superfície de card/painel (branco no claro) |
+| `--surface-2` | Superfície secundária/recuada (cinza claro) |
+| `--border` | Cor de borda e divisórias |
+| `--text` | Texto primário |
+| `--text-2` | Texto secundário |
+| `--muted` | Texto terciário/apagado (labels, hints) |
+| `--header-bg` | Fundo translúcido de cabeçalhos/barras fixas (rgba p/ blur) |
+| `--tint-blue` / `-red` / `-green` / `-amber` / `-purple` / `-teal` / `-slate` | Fundos suaves (tints) por cor semântica de bloco |
+| `--tx-red` / `-amber` / `-green` / `-blue` / `-purple` / `-teal` | **Texto** semântico que inverte de tom por tema (tom escuro no claro, tom claro no escuro) para manter legibilidade sobre superfície escura |
+| `color-scheme` | `light`/`dark` nativo (scrollbars, controles do SO) |
+
+Há ainda, no fim do `index.css`, um bloco de **overrides de classes Tailwind**
+(`.bg-white`, `.bg-gray-100`, `.text-gray-800`, `.text-red-700`,
+`.border-gray-200`, etc.) que remapeia utilitários usados pelos módulos para
+esses tokens com `!important` — no claro resolvem para ~os valores originais
+(sem mudança visível), no escuro para os valores escuros. É o que faz os 56
+módulos herdarem o dark mode sem serem tocados um a um.
+
+---
+
+## 11. Padrão de estado global (sem Context API)
+
+O projeto **não usa React Context**. Estado compartilhado entre telas mora em
+módulos `src/lib/*.js` expostos como **external store** via
+`useSyncExternalStore`.
+
+Referência canônica: **`src/lib/favoritos.js`** (chave
+`localStorage["pedhub-favoritos"]`). Padrão a seguir para qualquer estado
+global novo:
+- Cache em memória + `Set` de ouvintes; `salvar()` cria nova referência a cada
+  mudança (dispara re-render) e notifica os ouvintes.
+- Hook reativo (`useFavoritos()`) via `useSyncExternalStore(subscrever, getSnapshot, getSnapshot)`.
+- **Degradação silenciosa:** toda leitura/escrita em `localStorage` dentro de
+  `try/catch` — armazenamento cheio/indisponível não pode quebrar a UI.
+- **Sync entre abas/instâncias do PWA:** ouvir o evento `window "storage"` e
+  atualizar o cache quando a chave própria mudar.
+
+Quando (T1) o `PacienteContext` for criado, ele é a **exceção autorizada** a
+esse padrão — dado de paciente exige `sessionStorage` e um provider React
+próprio (ver T1). Preferência do médico (favoritos, tema, futuros recentes) =
+external store + `localStorage`.
+
+---
+
 # PLANO DE EXECUÇÃO — Níveis 1 e 2
 
 Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
 (Vite real) antes de considerar qualquer tarefa concluída.
+
+**STATUS (atualizado 23/07/2026):**
+- **Dark mode: FEITO** (fora do escopo T1–T8; ver seções 10 e 11).
+- **T1 — não feito.** Não há `src/contexts/` nem `PacienteContext`.
+- **T2 — não feito**, mas a **infra já está pronta**: Vitest instalado e
+  configurado, CI roda `npm test` antes do build, e o padrão de lib testada já
+  está estabelecido em `src/lib/pa-*.js` (`pa-neonatal.js`, `pa-pediatrica.js`,
+  `pa-tratamento.js`) com testes em `src/lib/__tests__/`. Falta o essencial da
+  tarefa: **`src/lib/farmacos.js` e `src/lib/calc/` ainda não existem** —
+  `pedfarma.jsx` ainda carrega o array de fármacos inline.
+- **T3 — não feito.** Não há `src/components/CalcDose.jsx`.
+- **T4 — não feito.** Nenhuma entrada de `MODULOS` tem campo `keywords`; a
+  busca ainda indexa só o nome do módulo.
+- **T5 — PARCIAL.** Favoritos ✓ (`src/lib/favoritos.js`, chave
+  `pedhub-favoritos`). **Recentes ✗** — não há registro de últimos acessados.
+- **T6, T7, T8 — não feitos.**
 
 ---
 
@@ -206,7 +323,7 @@ infraestrutura + a barra. A adoção módulo a módulo é incremental.
 
 ---
 
-## T2 — `src/lib/farmacos.js` + testes Vitest
+## T2 — `src/lib/farmacos.js` + testes Vitest  ·  STATUS: NÃO FEITO (infra Vitest/CI ✓, `pa-*.js` de referência ✓; falta `farmacos.js` + `calc/`)
 
 **Racional:** hoje a correção aritmética das calculadoras depende de revisão
 manual. Erro de dose é dano ao paciente. Além disso, o dado de fármaco
@@ -292,7 +409,7 @@ quais), **um módulo por commit**.
 
 ---
 
-## T4 — Busca global por conteúdo
+## T4 — Busca global por conteúdo  ·  STATUS: NÃO FEITO (nenhum `keywords:` no array `MODULOS`)
 
 **Problema:** o array `MODULOS` só indexa o nome do módulo. Quem digita
 "Rodwell", "Finnegan", "Broselow", "FLACC", "hiponatremia" ou "Capurro" não
@@ -314,7 +431,7 @@ encontra nada.
 
 ---
 
-## T5 — Favoritos + recentes
+## T5 — Favoritos + recentes  ·  STATUS: PARCIAL (favoritos ✓ em `src/lib/favoritos.js` / chave `pedhub-favoritos`; recentes ✗)
 
 - `localStorage` (aqui pode: é preferência do médico, não dado de paciente)
 - Ícone de estrela no card do hub; seção "Seus módulos" no topo do `PedHub.jsx`
@@ -371,7 +488,7 @@ Domínio já é do usuário. Ordem obrigatória:
 
 ---
 
-## 10. Como trabalhar comigo (Claude Code)
+## 12. Como trabalhar comigo (Claude Code)
 
 - Entregar **arquivo completo**, nunca diff parcial, quando o usuário for
   colar manualmente. Dentro do Claude Code, editar direto no repositório.
