@@ -74,6 +74,19 @@ describe('calcularDose — dosagem por DOSE (paracetamol 10–15 mg/kg/dose)', (
   });
 });
 
+describe('calcularDose — teto por kg/dia em dia-mode (valproato 60 mg/kg/dia)', () => {
+  const valp = farmaco('valproato_oral');
+
+  it('dentro da faixa (≤ 60 mg/kg/dia) não excede', () => {
+    expect(calcularDose(valp, 'geral', 20).excedeuTeto).toBe(false);        // máx 60
+    expect(calcularDose(valp, 'geral', 20, 60).excedeuTeto).toBe(false);    // alvo = teto
+  });
+
+  it('alvo acima de 60 mg/kg/dia excede o teto', () => {
+    expect(calcularDose(valp, 'geral', 20, 70).excedeuTeto).toBe(true);
+  });
+});
+
 describe('calcularDose — consistência em TODO o catálogo', () => {
   it('nenhum fármaco quebra e mg/dose ≤ mg/dia', () => {
     for (const d of DRUGS) {

@@ -149,11 +149,11 @@ export function calcularDose(farmaco, indicacao, peso, alvo) {
     susp: farmaco.apresentacoes || [],
     tetoPorPeso: (tetos.porFaixaPeso && tetos.porFaixaPeso.length) ? tetos.porFaixaPeso : null,
   };
+  c.tetoMgKgDia = tetos.porKgDia; // teto por kg/dia — vale nos dois modos
   if (ehDose) {
     c.tetoMg = tetos.porDose;
     c.tetoTipo = tetos.porDose != null ? "dose" : null;
     c.tetoMgDia = tetos.porDia;
-    c.tetoMgKgDia = tetos.porKgDia;
   } else if (tetos.porDose != null) {
     c.tetoMg = tetos.porDose; c.tetoTipo = "dose";
   } else if (tetos.porDia != null) {
@@ -213,6 +213,8 @@ export function calcularDose(farmaco, indicacao, peso, alvo) {
     const faixa = c.tetoPorPeso.find((f) => peso < f.pesoMax) || c.tetoPorPeso[c.tetoPorPeso.length - 1];
     if (faixa && totalDia > faixa.tetoMg) excedeuTeto = true;
   }
+  // teto por kg/dia (ex.: valproato 60 mg/kg/dia) — mg/kg/dia = alvo ou máximo
+  if (c.tetoMgKgDia != null && (alvo != null ? alvo : c.max) > c.tetoMgKgDia) excedeuTeto = true;
   const volumes = (c.susp || []).map((s) => {
     const t = s.tomadas || c.tomadas[0];
     const refMin = (diaAlvo != null ? diaAlvo : diaMin) / t;
