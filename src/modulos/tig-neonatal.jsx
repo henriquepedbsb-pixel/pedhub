@@ -1,7 +1,8 @@
-/* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras de TIG para testes unitários */
+/* eslint-disable react-refresh/only-export-components -- exporta getNa/getK (helpers puros) para testes unitários */
 import { useState, useMemo } from "react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
+import { tigGlicoseGramasDia, tigConcentracao } from "../lib/calc/tig";
 import {
   Scale, Calculator, ClipboardList, BarChart2,
   AlertTriangle, CheckCircle, Info, Activity, ArrowRight,
@@ -50,10 +51,6 @@ export function getK(dia, diurese) {
   if (dia === 1) return diurese ? 0.5 : 0;
   return [0.5, 1, 2][Math.min(dia - 2, 2)];
 }
-
-// Fórmulas puras de TIG (testadas). tig em mg/kg/min, vol em mL/kg/dia, peso em kg.
-export function tigGlicoseGramasDia(tig, peso) { return tig * peso * 1.44; }  // g de glicose/dia
-export function tigConcentracao(tig, vol) { return (tig * 144) / vol; }        // % de glicose (independe do peso)
 
 /* ── Estilo base card ── */
 const CARD = {

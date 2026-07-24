@@ -1,26 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { tigGlicoseGramasDia, tigConcentracao, getNa, getK } from '../tig-neonatal.jsx';
+import { getNa, getK } from '../tig-neonatal.jsx';
 
-describe('TIG — glicose (g/dia)', () => {
-  it('TIG × peso × 1,44', () => {
-    expect(tigGlicoseGramasDia(5, 2)).toBeCloseTo(14.4, 5);   // 5 mg/kg/min, 2 kg
-    expect(tigGlicoseGramasDia(8, 3)).toBeCloseTo(34.56, 5);
-  });
-});
-
-describe('TIG — concentração de glicose (%)', () => {
-  it('TIG × 144 / vol (independe do peso)', () => {
-    expect(tigConcentracao(5, 80)).toBeCloseTo(9, 5);      // 5 mg/kg/min em 80 mL/kg/dia → 9%
-    expect(tigConcentracao(6, 100)).toBeCloseTo(8.64, 5);
-  });
-
-  it('coerência: conc = gg / (vol × peso) × 100', () => {
-    const tig = 7, vol = 90, peso = 2.5;
-    const gg = tigGlicoseGramasDia(tig, peso);
-    const volTotal = vol * peso;
-    expect(tigConcentracao(tig, vol)).toBeCloseTo((gg / volTotal) * 100, 6);
-  });
-});
+// As fórmulas de TIG foram para src/lib/calc/tig.js (T2c) — testes em
+// src/lib/calc/__tests__/tig.test.js. Aqui ficam os helpers de eletrólitos
+// por dia de vida, que seguem próprios do módulo.
 
 describe('Sódio sugerido por dia de vida (getNa)', () => {
   it('0 no D1 conceitualmente é 1-2-3 a partir do D1, teto no D3+', () => {

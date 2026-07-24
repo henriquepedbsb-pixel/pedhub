@@ -4,11 +4,12 @@
  * Ref: NeoFax 2023 · Harriet Lane · SBP
  */
 
-/* eslint-disable react-refresh/only-export-components -- exporta rateA/rateB/DROGAS para testes unitários */
+/* eslint-disable react-refresh/only-export-components -- exporta DROGAS (dados puros) para testes unitários */
 import { useState } from "react";
 import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
+import { rateA, rateB } from "../lib/calc/gotejamento";
 
 const PRIMARY = "#0D9488";
 const C = "#DC2626";
@@ -122,11 +123,7 @@ export const DROGAS = [
 ];
 
 /* ── Fórmulas ───────────────────────────────────────────────────────────── */
-// Rate A (mL/h) — independente do peso
-export const rateA = (d, dose) => (dose * d.dF * d.tC * d.vol) / d.mA_K_n;
-
-// Rate B (mL/h) — depende do peso
-export const rateB = (d, pk, dose) => (dose * d.dF * d.tC * pk) / d.mB_c_n;
+// rateA/rateB (vazão mL/h) vivem em src/lib/calc/gotejamento.js (T2c).
 
 // Quantidade de droga para Modo A (exibição)
 function amountA(d, pk) {
