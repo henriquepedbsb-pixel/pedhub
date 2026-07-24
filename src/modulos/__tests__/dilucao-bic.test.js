@@ -1,25 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { rateA, rateB, DROGAS } from '../dilucao-bic.jsx';
+import { DROGAS } from '../dilucao-bic.jsx';
+import { rateA, rateB } from '../../lib/calc/gotejamento';
 
-describe('rateA — vazão (mL/h) da diluição A, independente do peso', () => {
-  it('fórmula: dose × dF × tC × vol / mA_K_n', () => {
-    const d = { dF: 1, tC: 60, vol: 50, mA_K_n: 300 };
-    expect(rateA(d, 0.1)).toBeCloseTo(1, 6);   // 0,1 → 1 mL/h
-    expect(rateA(d, 0.5)).toBeCloseTo(5, 6);
-  });
+// As fórmulas puras rateA/rateB foram para src/lib/calc/gotejamento.js (T2c) —
+// testes de fórmula em src/lib/calc/__tests__/gotejamento.test.js. Aqui ficam
+// os testes acoplados a DROGAS (consistência clínica e sanidade do catálogo).
 
-  it('linear na dose (dobrar a dose dobra a vazão)', () => {
+describe('rateA/rateB — linearidade sobre uma droga real do catálogo', () => {
+  it('rateA linear na dose', () => {
     const d = DROGAS[0];
     expect(rateA(d, 4)).toBeCloseTo(2 * rateA(d, 2), 6);
   });
-});
-
-describe('rateB — vazão (mL/h) da diluição B, dependente do peso', () => {
-  it('fórmula: dose × dF × tC × peso / mB_c_n', () => {
-    const d = { dF: 1, tC: 60, mB_c_n: 1600 };
-    expect(rateB(d, 3, 5)).toBeCloseTo(0.5625, 6); // 5 mcg/kg/min, 3 kg
-  });
-  it('linear no peso', () => {
+  it('rateB linear no peso', () => {
     const d = DROGAS[0];
     expect(rateB(d, 6, 5)).toBeCloseTo(2 * rateB(d, 3, 5), 6);
   });
