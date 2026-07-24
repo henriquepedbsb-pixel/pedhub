@@ -245,24 +245,24 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "Por indicação (TMP: 8–20 mg/kg/dia)",
+    dose: "Por indicação (SMX: 30–100 mg/kg/dia)",
     freq: "12/12h ou 6/6h",
-    max: "160 mg TMP/dose",
-    obs: "ITU 8–12 mg/kg/dia TMP ÷12h · Pneumocistose 15–20 ÷6h · Evitar < 2 meses",
+    max: "800 mg SMX/dose",
+    obs: "Doses pelo componente sulfametoxazol (SMX). ITU 30–60 mg/kg/dia SMX ÷12h (SBP) · Pneumocistose 75–100 SMX ÷6h (= 15–20 TMP) · Evitar < 2 meses",
     indicacoes: {
-      itu:           { label: "ITU",            dose: [8, 12],  unidade: "mg/kg/dia", tomadas: [2], fonte: "Bula FDA (Bactrim)" },
-      pneumocistose: { label: "Pneumocistose",  dose: [15, 20], unidade: "mg/kg/dia", tomadas: [4], fonte: "Bula FDA (Bactrim)" },
+      itu:           { label: "ITU",            dose: [30, 60],  unidade: "mg/kg/dia", tomadas: [2], fonte: "SBP — ITU na infância (2016)" },
+      pneumocistose: { label: "Pneumocistose",  dose: [75, 100], unidade: "mg/kg/dia", tomadas: [4], fonte: "Bula FDA (Bactrim)" },
     },
     apresentacoes: [
       {
-        label: "TMP 40 mg/5 mL",
-        mgPer5: 40,
+        label: "SMX 200 mg/5 mL",
+        mgPer5: 200,
         tomadas: 2,
         freqLabel: "12/12h"
       }
     ],
     tetos: {
-      porDose: 160,
+      porDose: 800,
       porDia: null,
       porKgDia: null,
       porFaixaPeso: []
