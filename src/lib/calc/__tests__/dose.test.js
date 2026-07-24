@@ -97,6 +97,22 @@ describe('calcularDose — teto por kg/dia em dia-mode (valproato 60 mg/kg/dia)'
   });
 });
 
+describe('calcularDose — teto por faixa de peso', () => {
+  it('ondansetrona (dose): < 40 kg limita a 4 mg/dose', () => {
+    // 0,15 mg/kg × 30 kg = 4,5 mg > 4 mg → excede
+    expect(calcularDose(farmaco('ondansetrona'), 'geral', 30).excedeuTeto).toBe(true);
+    // ≥ 40 kg limita a 8 mg: 0,15 × 50 = 7,5 < 8 → não excede
+    expect(calcularDose(farmaco('ondansetrona'), 'geral', 50).excedeuTeto).toBe(false);
+  });
+
+  it('esomeprazol (dia): ≥ 20 kg limita a 40 mg/dia', () => {
+    // 1 mg/kg/dia × 45 kg = 45 mg > 40 mg → excede
+    expect(calcularDose(farmaco('esomeprazol'), 'geral', 45).excedeuTeto).toBe(true);
+    // 30 kg → 30 mg < 40 → não excede
+    expect(calcularDose(farmaco('esomeprazol'), 'geral', 30).excedeuTeto).toBe(false);
+  });
+});
+
 describe('calcularDose — consistência em TODO o catálogo', () => {
   it('nenhum fármaco quebra e mg/dose ≤ mg/dia', () => {
     for (const d of DRUGS) {
