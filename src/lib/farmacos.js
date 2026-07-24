@@ -1113,12 +1113,13 @@ export const DRUGS = [
     cat: "Antiviral",
     classe: "antiviral",
     via: "VO",
-    dose: "Varicela 20 mg/kg/dose",
-    freq: "4x/dia",
+    dose: "Por indicação (mg/kg/dose)",
+    freq: "varicela 4×/dia · herpes 5×/dia",
     max: "800 mg/dose",
-    obs: "Varicela não complicada: 20 mg/kg/dose 4×/dia, iniciar < 24h do exantema · Herpes (gengivoestomatite): dose em revisão com o médico",
+    obs: "Varicela: 20 mg/kg/dose 4×/dia, iniciar < 24h do exantema · Herpes (gengivoestomatite): 15 mg/kg/dose 5×/dia",
     indicacoes: {
-      varicela: { label: "Varicela", dose: [20, 20], unidade: "mg/kg/dose", tomadasDiaMax: 4, fonte: "Drugs.com / AAP" },
+      varicela: { label: "Varicela",           dose: [20, 20], unidade: "mg/kg/dose", tomadasDiaMax: 4, fonte: "Drugs.com / AAP" },
+      herpes:   { label: "Herpes (gengivoest.)", dose: [15, 15], unidade: "mg/kg/dose", tomadasDiaMax: 5, fonte: "Amir, BMJ 1997" },
     },
     apresentacoes: [],
     tetos: { porDose: 800, porDia: null, porKgDia: null, porFaixaPeso: [] }

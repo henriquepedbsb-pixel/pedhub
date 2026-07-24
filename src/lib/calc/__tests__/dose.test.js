@@ -117,12 +117,14 @@ describe('antifúngico / antiviral por indicação (calculadora nova)', () => {
     // teto 400 mg/dia: criptococo 50 kg → 600 > 400 → excede
     expect(calcularDose(f, 'criptococo', 50).excedeuTeto).toBe(true);
   });
-  it('aciclovir: varicela 20 mg/kg/dose (÷6h), teto 800/dose', () => {
+  it('aciclovir: varicela 20 mg/kg/dose × herpes 15 mg/kg/dose (÷5)', () => {
     const a = farmaco('aciclovir_oral');
     const v = calcularDose(a, 'varicela', 10);
     expect(v.modo).toBe('dose'); expect(v.doseMin).toBe(200); expect(v.doseMax).toBe(200);
     expect(v.excedeuTeto).toBe(false);
     expect(calcularDose(a, 'varicela', 50).excedeuTeto).toBe(true); // 1000 > 800
+    const h = calcularDose(a, 'herpes', 10);
+    expect(h.doseMin).toBe(150); expect(h.doseMax).toBe(150);
   });
 });
 
