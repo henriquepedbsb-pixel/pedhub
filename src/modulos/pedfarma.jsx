@@ -128,8 +128,37 @@ const parseFld = (v) => {
   return isNaN(n) ? null : n;
 };
 
-export function calcularDose(c, peso, alvo) {
-  if (!c || !peso || peso <= 0) return null;
+// Fármaco tem calculadora de dose por peso? (os que não têm — budesonida,
+// salbutamol, etc. — nascem com indicacoes: {} e só exibem texto.)
+const temCalculadora = (d) => !!(d.indicacoes && d.indicacoes.geral);
+
+// Assinatura (T2 etapa 2b): recebe o fármaco + a chave da indicação e resolve
+// dose/apresentações/tetos do modelo fármaco+indicação. A aritmética abaixo é a
+// MESMA da 2a — um adaptador reconstrói o objeto interno `c` a partir da forma
+// nova, preservando o comportamento byte a byte (o teste do pedfarma é a rede).
+export function calcularDose(farmaco, indicacao, peso, alvo) {
+  const ind = farmaco?.indicacoes?.[indicacao];
+  if (!ind || !peso || peso <= 0) return null;
+  const tetos = farmaco.tetos || {};
+  const ehDose = ind.unidade === "mg/kg/dose";
+  const c = {
+    min: ind.dose[0], max: ind.dose[1],
+    unidade: ehDose ? "dose" : "dia",
+    tomadas: ind.tomadas,
+    tomadasDiaMax: ind.tomadasDiaMax,
+    susp: farmaco.apresentacoes || [],
+    tetoPorPeso: (tetos.porFaixaPeso && tetos.porFaixaPeso.length) ? tetos.porFaixaPeso : null,
+  };
+  if (ehDose) {
+    c.tetoMg = tetos.porDose;
+    c.tetoTipo = tetos.porDose != null ? "dose" : null;
+    c.tetoMgDia = tetos.porDia;
+    c.tetoMgKgDia = tetos.porKgDia;
+  } else if (tetos.porDose != null) {
+    c.tetoMg = tetos.porDose; c.tetoTipo = "dose";
+  } else if (tetos.porDia != null) {
+    c.tetoMg = tetos.porDia; c.tetoTipo = "dia";
+  }
 
   // ── Fármacos dosados por DOSE (mg/kg/dose): analgésicos, alguns outros ──
   if (c.unidade === "dose") {
@@ -204,11 +233,14 @@ export function calcularDose(c, peso, alvo) {
 }
 
 // Definido FORA do componente principal (regra 5 — sem remount/perda de foco).
-function CalcDose({ calc, peso, cor }) {
+function CalcDose({ farmaco, indicacao, peso, cor }) {
   const [alvoRaw, setAlvoRaw] = useState("");
+  const ind = farmaco.indicacoes[indicacao];
+  const doseMinKg = ind.dose[0], doseMaxKg = ind.dose[1];
+  const ehDose = ind.unidade === "mg/kg/dose";
   const alvo = parseFld(alvoRaw);
-  const alvoValido = alvo != null && alvo >= calc.min && alvo <= calc.max;
-  const r = calcularDose(calc, peso, alvoValido ? alvo : null);
+  const alvoValido = alvo != null && alvo >= doseMinKg && alvo <= doseMaxKg;
+  const r = calcularDose(farmaco, indicacao, peso, alvoValido ? alvo : null);
   if (!r) return null;
 
   const box = { background: "var(--surface)", borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)" };
@@ -312,13 +344,13 @@ function CalcDose({ calc, peso, cor }) {
         <input
           type="text" inputMode="decimal" value={alvoRaw}
           onChange={(e) => setAlvoRaw(e.target.value)}
-          placeholder={`dose-alvo (${calc.min}–${calc.max} mg/kg)`}
+          placeholder={`dose-alvo (${doseMinKg}–${doseMaxKg} mg/kg)`}
           style={{ flex: 1, padding: "6px 9px", borderRadius: 7, fontSize: 12, border: "1px solid " + (alvoRaw && !alvoValido ? "#DC2626" : "#D1D5DB"), outline: "none", boxSizing: "border-box" }}
         />
-        <span style={{ fontSize: 10, color: "var(--muted)", whiteSpace: "nowrap" }}>{calc.unidade === "dose" ? "mg/kg/dose" : "mg/kg/dia"}</span>
+        <span style={{ fontSize: 10, color: "var(--muted)", whiteSpace: "nowrap" }}>{ehDose ? "mg/kg/dose" : "mg/kg/dia"}</span>
       </div>
       {alvoRaw && !alvoValido && (
-        <p style={{ fontSize: 10, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({calc.min}–{calc.max} mg/kg/{calc.unidade === "dose" ? "dose" : "dia"}).</p>
+        <p style={{ fontSize: 10, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({doseMinKg}–{doseMaxKg} mg/kg/{ehDose ? "dose" : "dia"}).</p>
       )}
 
       {r.excedeuTeto && (
@@ -399,7 +431,7 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
           </div>
         ))}
       </div>
-      {peso && drug.calc && <CalcDose calc={drug.calc} peso={peso} cor={cor} />}
+      {peso && temCalculadora(drug) && <CalcDose farmaco={drug} indicacao="geral" peso={peso} cor={cor} />}
       {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid var(--border)", paddingTop: 6 }}>{drug.obs}</p>
