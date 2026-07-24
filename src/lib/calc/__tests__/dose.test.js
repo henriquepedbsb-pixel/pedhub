@@ -107,6 +107,26 @@ describe('antibióticos por indicação — lote 2 (trava valores clínicos)', (
   });
 });
 
+describe('corticoides por indicação', () => {
+  it('prednisolona: asma 1–2 (÷1) × APLV 1', () => {
+    const p = farmaco('prednisolona');
+    const a = calcularDose(p, 'asma', 10);
+    expect(a.modo).toBe('dia'); expect(a.diaMin).toBe(10); expect(a.diaMax).toBe(20);
+    const ap = calcularDose(p, 'aplv', 10);
+    expect(ap.diaMin).toBe(10); expect(ap.diaMax).toBe(10);
+  });
+  it('dexametasona: crupe dose única 0,15–0,6 × meningite ÷6h', () => {
+    const d = farmaco('dexametasona');
+    const c = calcularDose(d, 'crupe', 10);
+    expect(c.modo).toBe('dose'); expect(c.doseMin).toBe(1.5); expect(c.doseMax).toBe(6);
+    expect(c.excedeuTeto).toBe(false);
+    // teto 10 mg/dose: 20 kg → 0,6×20 = 12 > 10 → excede
+    expect(calcularDose(d, 'crupe', 20).excedeuTeto).toBe(true);
+    const m = calcularDose(d, 'meningite', 10);
+    expect(m.doseMin).toBe(1.5); expect(m.doseMax).toBe(1.5);
+  });
+});
+
 describe('calcularDose — dosagem por DOSE (paracetamol 10–15 mg/kg/dose)', () => {
   const para = farmaco('paracetamol');
 
