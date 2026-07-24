@@ -107,6 +107,25 @@ describe('antibióticos por indicação — lote 2 (trava valores clínicos)', (
   });
 });
 
+describe('antifúngico / antiviral por indicação (calculadora nova)', () => {
+  it('fluconazol: candida 3–6 × criptococo 6–12 (÷1)', () => {
+    const f = farmaco('fluconazol');
+    const c = calcularDose(f, 'candida', 10);
+    expect(c.diaMin).toBe(30); expect(c.diaMax).toBe(60);
+    const k = calcularDose(f, 'criptococo', 10);
+    expect(k.diaMin).toBe(60); expect(k.diaMax).toBe(120);
+    // teto 400 mg/dia: criptococo 50 kg → 600 > 400 → excede
+    expect(calcularDose(f, 'criptococo', 50).excedeuTeto).toBe(true);
+  });
+  it('aciclovir: varicela 20 mg/kg/dose (÷6h), teto 800/dose', () => {
+    const a = farmaco('aciclovir_oral');
+    const v = calcularDose(a, 'varicela', 10);
+    expect(v.modo).toBe('dose'); expect(v.doseMin).toBe(200); expect(v.doseMax).toBe(200);
+    expect(v.excedeuTeto).toBe(false);
+    expect(calcularDose(a, 'varicela', 50).excedeuTeto).toBe(true); // 1000 > 800
+  });
+});
+
 describe('corticoides por indicação', () => {
   it('prednisolona: asma 1–2 (÷1) × APLV 1', () => {
     const p = farmaco('prednisolona');
