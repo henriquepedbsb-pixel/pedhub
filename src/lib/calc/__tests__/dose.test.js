@@ -128,6 +128,25 @@ describe('antifúngico / antiviral por indicação (calculadora nova)', () => {
   });
 });
 
+describe('dose fixa (zinco, vitamina D) — não depende do peso', () => {
+  it('zinco: < 6 m 10 mg/dia · ≥ 6 m 20 mg/dia (sem peso)', () => {
+    const z = farmaco('zinc');
+    const a = calcularDose(z, 'diarreia_maior6m'); // sem peso
+    expect(a.modo).toBe('fixa'); expect(a.fixaMin).toBe(20); expect(a.unidade).toBe('mg/dia');
+    const b = calcularDose(z, 'diarreia_menor6m');
+    expect(b.fixaMin).toBe(10);
+  });
+  it('vit D: profilaxia 400/600 · tratamento SBP por faixa', () => {
+    const v = farmaco('vitamina_d');
+    expect(calcularDose(v, 'profilaxia_0_12m').fixaMin).toBe(400);
+    expect(calcularDose(v, 'profilaxia_12_24m').fixaMin).toBe(600);
+    expect(calcularDose(v, 'trat_menor12m').fixaMin).toBe(2000);
+    const t = calcularDose(v, 'trat_1_12a');
+    expect(t.fixaMin).toBe(3000); expect(t.fixaMax).toBe(6000); expect(t.unidade).toBe('UI/dia');
+    expect(calcularDose(v, 'trat_maior12a').fixaMin).toBe(6000);
+  });
+});
+
 describe('ferro por indicação (RNPT por peso de nascimento)', () => {
   it('tratamento 3–6 · profilaxia termo 1 · RNPT 4/3/2 por faixa', () => {
     const f = farmaco('ferro');
@@ -228,6 +247,8 @@ describe('calcularDose — consistência em TODO o catálogo', () => {
           expect(r.diaMax).toBeGreaterThanOrEqual(r.diaMin);
           // cada dose fracionada nunca supera o total diário
           for (const t of r.porTomada) expect(t.max).toBeLessThanOrEqual(r.diaMax + 0.05);
+        } else if (r.modo === 'fixa') {
+          expect(r.fixaMax).toBeGreaterThanOrEqual(r.fixaMin);
         } else {
           expect(r.doseMax).toBeGreaterThanOrEqual(r.doseMin);
         }
