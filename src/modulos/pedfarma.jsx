@@ -161,6 +161,24 @@ function IndicacaoSelector({ indicacoes, sel, onSel, cor }) {
 function CalcDose({ farmaco, indicacao, peso, cor }) {
   const [alvoRaw, setAlvoRaw] = useState("");
   const ind = farmaco.indicacoes[indicacao];
+  // Dose fixa (zinco, vit D): mostra o valor direto, sem depender do peso.
+  if (ind.doseFixa) {
+    const [fmin, fmax] = ind.doseFixa;
+    const valor = fmin === fmax ? `${fmin}` : `${fmin}–${fmax}`;
+    return (
+      <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
+          <Pill size={13} /> Dose fixa
+        </p>
+        <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 6px" }}>
+          {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
+        </p>
+        <div style={{ background: "var(--surface)", borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)" }}>
+          <p style={{ fontSize: 15, fontWeight: 800, color: cor, margin: 0 }}>{valor} {ind.unidade}</p>
+        </div>
+      </div>
+    );
+  }
   const doseMinKg = ind.dose[0], doseMaxKg = ind.dose[1];
   const ehDose = ind.unidade === "mg/kg/dose";
   const alvo = parseFld(alvoRaw);
@@ -342,6 +360,8 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
   const [indSel, setIndSel] = useState(indicKeys[0] || null);
   // Garante seleção válida (a 1ª indicação = default, "mais comum").
   const indAtiva = indicKeys.includes(indSel) ? indSel : indicKeys[0];
+  // Dose fixa (zinco/vit D) não precisa de peso para exibir.
+  const ehFixaAtiva = !!(drug.indicacoes && indAtiva && drug.indicacoes[indAtiva]?.doseFixa);
   return (
     <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 8, borderLeft: "3px solid " + cor }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
@@ -366,7 +386,7 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
       {temCalculadora(drug) && indicKeys.length > 1 && (
         <IndicacaoSelector indicacoes={drug.indicacoes} sel={indAtiva} onSel={setIndSel} cor={cor} />
       )}
-      {peso && temCalculadora(drug) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} cor={cor} />}
+      {temCalculadora(drug) && (peso || ehFixaAtiva) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} cor={cor} />}
       {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid var(--border)", paddingTop: 6 }}>{drug.obs}</p>

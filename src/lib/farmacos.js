@@ -1143,11 +1143,17 @@ export const DRUGS = [
     cat: "Suplemento",
     classe: "suplemento",
     via: "VO",
-    dose: "400–1.000 UI/dia",
+    dose: "Dose fixa por indicação (UI/dia)",
     freq: "1x/dia",
-    max: "4.000 UI/dia (profilaxia)",
-    obs: "Profilaxia RN: 400 UI/dia. Deficiência: 1.000–3.000 UI/dia. Dosar 25(OH)D se suspeita de deficiência.",
-    indicacoes: {}
+    max: "6.000 UI/dia (tratamento)",
+    obs: "Profilaxia: 0–12 m 400 · 12–24 m 600 UI/dia · Tratamento da hipovitaminose (SBP, colecalciferol) por 12 semanas, depois manutenção 400/600 UI/dia · Dosar 25(OH)D na suspeita",
+    indicacoes: {
+      profilaxia_0_12m:  { label: "Profilaxia 0–12 m",  doseFixa: [400, 400],   unidade: "UI/dia", fonte: "SBP" },
+      profilaxia_12_24m: { label: "Profilaxia 12–24 m", doseFixa: [600, 600],   unidade: "UI/dia", fonte: "SBP" },
+      trat_menor12m:     { label: "Deficiência < 12 m", doseFixa: [2000, 2000], unidade: "UI/dia", fonte: "SBP (Quadro 7)" },
+      trat_1_12a:        { label: "Deficiência 1–12 a", doseFixa: [3000, 6000], unidade: "UI/dia", fonte: "SBP (Quadro 7)" },
+      trat_maior12a:     { label: "Deficiência > 12 a", doseFixa: [6000, 6000], unidade: "UI/dia", fonte: "SBP (Quadro 7)" },
+    }
   },
   {
     id: "ferro",
@@ -1175,11 +1181,14 @@ export const DRUGS = [
     cat: "Suplemento",
     classe: "suplemento",
     via: "VO",
-    dose: "0,5–1 mg/kg/dia (Zn elementar)",
+    dose: "Dose fixa (diarreia aguda)",
     freq: "1x/dia",
     max: "20 mg/dia",
-    obs: "Diarreia aguda (OMS): 10–20 mg/dia × 10–14 dias. Deficiência. Atraso crescimento.",
-    indicacoes: {}
+    obs: "Diarreia aguda (OMS) × 10–14 dias: < 6 m 10 mg/dia · ≥ 6 m 20 mg/dia (Zn elementar)",
+    indicacoes: {
+      diarreia_maior6m: { label: "Diarreia ≥ 6 m", doseFixa: [20, 20], unidade: "mg/dia", fonte: "OMS / SBP" },
+      diarreia_menor6m: { label: "Diarreia < 6 m", doseFixa: [10, 10], unidade: "mg/dia", fonte: "OMS / SBP" },
+    }
   },
   {
     id: "vit_a",

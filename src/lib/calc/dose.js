@@ -13,7 +13,12 @@ export function mlParaGotas(ml) {
 
 export function calcularDose(farmaco, indicacao, peso, alvo) {
   const ind = farmaco?.indicacoes?.[indicacao];
-  if (!ind || !peso || peso <= 0) return null;
+  if (!ind) return null;
+  // Dose fixa (não depende do peso): zinco, vitamina D, etc.
+  if (ind.doseFixa) {
+    return { modo: "fixa", fixaMin: ind.doseFixa[0], fixaMax: ind.doseFixa[1], unidade: ind.unidade };
+  }
+  if (!peso || peso <= 0) return null;
   const tetos = farmaco.tetos || {};
   const ehDose = ind.unidade === "mg/kg/dose";
   const c = {
