@@ -15,17 +15,17 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "40–90 mg/kg/dia",
+    dose: "Por indicação (25–90 mg/kg/dia)",
     freq: "8/8h ou 12/12h",
     max: "3 g/dia",
-    obs: "90 mg/kg/dia para pneumonia/otite de alto risco · Suspensão 250mg/5mL ou 400mg/5mL",
+    obs: "Alta dose (80–90 mg/kg/dia) para otite/sinusite/pneumonia · Suspensão 250mg/5mL ou 400mg/5mL",
     indicacoes: {
-      geral: {
-        dose: [40, 90],
-        unidade: "mg/kg/dia",
-        tomadas: [2, 3],
-        fonte: "Harriet Lane/SBP"
-      }
+      otite_media:      { label: "Otite média",           dose: [80, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP 2013" },
+      sinusite:         { label: "Sinusite",              dose: [80, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP 2013" },
+      pneumonia_alta:   { label: "Pneumonia (alta dose)", dose: [90, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "PIDS/IDSA 2011" },
+      pneumonia_tipica: { label: "Pneumonia (típica)",    dose: [45, 50], unidade: "mg/kg/dia", tomadas: [3],    fonte: "CAP-IT 2021" },
+      faringite:        { label: "Faringite (GAS)",       dose: [50, 50], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP (GAS)" },
+      itu:              { label: "ITU",                   dose: [25, 50], unidade: "mg/kg/dia", tomadas: [3],    fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [
       {
