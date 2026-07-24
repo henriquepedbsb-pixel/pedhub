@@ -1,10 +1,11 @@
 // src/modulos/pedfarma.jsx
-/* eslint-disable react-refresh/only-export-components -- exporta calcularDose/DRUGS (funções/dados puros) para testes unitários */
+/* eslint-disable react-refresh/only-export-components -- reexporta DRUGS (dados puros) para consumidores/testes */
 import { useState, useMemo, useDeferredValue, memo } from "react";
 import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";
+import { calcularDose } from "../lib/calc/dose";
 
 const PRIMARY = "#8B5CF6";
 
@@ -119,9 +120,8 @@ function CorticoideConversor() {
   );
 }
 
-// ─── Cálculo de dose por peso (bloco Antibióticos; demais blocos usam mesmo schema) ───
-// Fórmula pura peso × dose — os valores de dose/kg e teto vêm do próprio DRUGS
-// (Harriet Lane/SBP), sem alteração. parseFld: decimal-BR (regra 9).
+// A lógica de cálculo de dose vive em src/lib/calc/dose.js (T2 etapa 2c).
+// parseFld: decimal-BR para o input de dose-alvo do CalcDose (regra 9).
 const parseFld = (v) => {
   if (v === null || v === undefined || v === "") return null;
   const n = parseFloat(String(v).replace(",", "."));
@@ -131,108 +131,6 @@ const parseFld = (v) => {
 // Fármaco tem calculadora de dose por peso? (os que não têm — budesonida,
 // salbutamol, etc. — nascem com indicacoes: {} e só exibem texto.)
 const temCalculadora = (d) => !!(d.indicacoes && d.indicacoes.geral);
-
-// Assinatura (T2 etapa 2b): recebe o fármaco + a chave da indicação e resolve
-// dose/apresentações/tetos do modelo fármaco+indicação. A aritmética abaixo é a
-// MESMA da 2a — um adaptador reconstrói o objeto interno `c` a partir da forma
-// nova, preservando o comportamento byte a byte (o teste do pedfarma é a rede).
-export function calcularDose(farmaco, indicacao, peso, alvo) {
-  const ind = farmaco?.indicacoes?.[indicacao];
-  if (!ind || !peso || peso <= 0) return null;
-  const tetos = farmaco.tetos || {};
-  const ehDose = ind.unidade === "mg/kg/dose";
-  const c = {
-    min: ind.dose[0], max: ind.dose[1],
-    unidade: ehDose ? "dose" : "dia",
-    tomadas: ind.tomadas,
-    tomadasDiaMax: ind.tomadasDiaMax,
-    susp: farmaco.apresentacoes || [],
-    tetoPorPeso: (tetos.porFaixaPeso && tetos.porFaixaPeso.length) ? tetos.porFaixaPeso : null,
-  };
-  c.tetoMgKgDia = tetos.porKgDia; // teto por kg/dia — vale nos dois modos
-  if (ehDose) {
-    c.tetoMg = tetos.porDose;
-    c.tetoTipo = tetos.porDose != null ? "dose" : null;
-    c.tetoMgDia = tetos.porDia;
-  } else if (tetos.porDose != null) {
-    c.tetoMg = tetos.porDose; c.tetoTipo = "dose";
-  } else if (tetos.porDia != null) {
-    c.tetoMg = tetos.porDia; c.tetoTipo = "dia";
-  }
-
-  // ── Fármacos dosados por DOSE (mg/kg/dose): analgésicos, alguns outros ──
-  if (c.unidade === "dose") {
-    const doseMin = +(c.min * peso).toFixed(1);
-    const doseMax = +(c.max * peso).toFixed(1);
-    const doseAlvo = alvo != null ? +(alvo * peso).toFixed(1) : null;
-    const ref = doseAlvo != null ? doseAlvo : doseMax;
-    // teto absoluto por dose (mg)
-    let excedeuTeto = c.tetoMg != null && c.tetoTipo === "dose" && ref > c.tetoMg;
-    // teto por kg/dia (ex.: paracetamol 75 mg/kg/dia) e teto absoluto/dia (4 g/dia)
-    // usa a frequência máxima (menor intervalo) para estimar o total diário
-    const tomadasDia = c.tomadasDiaMax || 1;
-    const totalDiaKg = (alvo != null ? alvo : c.max) * tomadasDia;
-    const totalDiaMg = ref * tomadasDia;
-    if (c.tetoMgKgDia != null && totalDiaKg > c.tetoMgKgDia) excedeuTeto = true;
-    if (c.tetoMgDia != null && totalDiaMg > c.tetoMgDia) excedeuTeto = true;
-    // teto por faixa de peso (ex.: ondansetrona 4 mg <40 kg / 8 mg ≥40 kg) — limite por dose
-    if (c.tetoPorPeso) {
-      const faixa = c.tetoPorPeso.find((f) => peso < f.pesoMax) || c.tetoPorPeso[c.tetoPorPeso.length - 1];
-      if (faixa && ref > faixa.tetoMg) excedeuTeto = true;
-    }
-    const volumes = (c.susp || []).map((s) => {
-      const mlMin = +(((doseAlvo != null ? doseAlvo : doseMin) / s.mgPerMl)).toFixed(2);
-      const mlMax = +(((doseAlvo != null ? doseAlvo : doseMax) / s.mgPerMl)).toFixed(2);
-      return {
-        label: s.label,
-        freqLabel: s.freqLabel || null,
-        gotas: !!s.gotas,
-        mlMin, mlMax,
-        gtMin: s.gotas ? +(mlMin * 20).toFixed(1) : null,
-        gtMax: s.gotas ? +(mlMax * 20).toFixed(1) : null,
-      };
-    });
-    return { modo: "dose", doseMin, doseMax, doseAlvo, excedeuTeto, volumes };
-  }
-
-  // ── Fármacos dosados por DIA (mg/kg/dia): antibióticos ──
-  const diaMin = +(c.min * peso).toFixed(1);
-  const diaMax = +(c.max * peso).toFixed(1);
-  const diaAlvo = alvo != null ? +(alvo * peso).toFixed(1) : null;
-  const porTomada = c.tomadas.map((t) => ({
-    tomadas: t,
-    min: +(diaMin / t).toFixed(1),
-    max: +(diaMax / t).toFixed(1),
-    alvo: diaAlvo != null ? +(diaAlvo / t).toFixed(1) : null,
-  }));
-  const totalDia = diaAlvo != null ? diaAlvo : diaMax;
-  let excedeuTeto =
-    c.tetoTipo === "dia" ? totalDia > c.tetoMg : porTomada[0].max > c.tetoMg;
-  // teto por faixa de peso (ex.: esomeprazol 20 mg <20 kg / 40 mg ≥20 kg) — limite por dia
-  if (c.tetoPorPeso) {
-    const faixa = c.tetoPorPeso.find((f) => peso < f.pesoMax) || c.tetoPorPeso[c.tetoPorPeso.length - 1];
-    if (faixa && totalDia > faixa.tetoMg) excedeuTeto = true;
-  }
-  // teto por kg/dia (ex.: valproato 60 mg/kg/dia) — mg/kg/dia = alvo ou máximo
-  if (c.tetoMgKgDia != null && (alvo != null ? alvo : c.max) > c.tetoMgKgDia) excedeuTeto = true;
-  const volumes = (c.susp || []).map((s) => {
-    const t = s.tomadas || c.tomadas[0];
-    const refMin = (diaAlvo != null ? diaAlvo : diaMin) / t;
-    const refMax = (diaAlvo != null ? diaAlvo : diaMax) / t;
-    const mlMin = +((refMin / s.mgPer5) * 5).toFixed(1);
-    const mlMax = +((refMax / s.mgPer5) * 5).toFixed(1);
-    return {
-      label: s.label,
-      freqLabel: s.freqLabel || null,
-      tomadas: t,
-      gotas: !!s.gotas,
-      mlMin, mlMax,
-      gtMin: s.gotas ? +(mlMin * 20).toFixed(1) : null,
-      gtMax: s.gotas ? +(mlMax * 20).toFixed(1) : null,
-    };
-  });
-  return { modo: "dia", diaMin, diaMax, diaAlvo, porTomada, excedeuTeto, volumes };
-}
 
 // Definido FORA do componente principal (regra 5 — sem remount/perda de foco).
 function CalcDose({ farmaco, indicacao, peso, cor }) {

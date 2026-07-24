@@ -1,7 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { calcularDose, DRUGS } from '../pedfarma.jsx';
+import { calcularDose, mlParaGotas } from '../dose';
+import { DRUGS } from '../../farmacos';
 
 const farmaco = (id) => DRUGS.find((d) => d.id === id);
+
+describe('mlParaGotas — 1 mL = 20 gotas (1 casa decimal)', () => {
+  it('converte e arredonda', () => {
+    expect(mlParaGotas(0.5)).toBe(10);
+    expect(mlParaGotas(0.75)).toBe(15);
+    expect(mlParaGotas(1)).toBe(20);
+    expect(mlParaGotas(0.13)).toBe(2.6);
+  });
+});
 
 describe('calcularDose — guardas', () => {
   it('retorna null sem fármaco, indicação ou peso inválido', () => {
