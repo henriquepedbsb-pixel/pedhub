@@ -1083,11 +1083,16 @@ export const DRUGS = [
     cat: "Antifúngico",
     classe: "antifungico",
     via: "VO/IV",
-    dose: "3–12 mg/kg/dia",
+    dose: "Por indicação (3–12 mg/kg/dia)",
     freq: "1x/dia",
     max: "400 mg/dia",
-    obs: "Candida oral/esofágica: 3–6 mg/kg/dia. Meningite criptocócica: 12 mg/kg/dia.",
-    indicacoes: {}
+    obs: "Candida: ataque 6, depois 3–6 mg/kg/dia · Criptococo: 6–12 mg/kg/dia (ataque 12) · 1x/dia",
+    indicacoes: {
+      candida:    { label: "Candidíase", dose: [3, 6],  unidade: "mg/kg/dia", tomadas: [1], fonte: "Diflucan (bula) / IDSA" },
+      criptococo: { label: "Criptococo", dose: [6, 12], unidade: "mg/kg/dia", tomadas: [1], fonte: "IDSA" },
+    },
+    apresentacoes: [],
+    tetos: { porDose: null, porDia: 400, porKgDia: null, porFaixaPeso: [] }
   },
   {
     id: "nistatina",
@@ -1108,11 +1113,15 @@ export const DRUGS = [
     cat: "Antiviral",
     classe: "antiviral",
     via: "VO",
-    dose: "20 mg/kg/dose",
-    freq: "5x/dia",
+    dose: "Varicela 20 mg/kg/dose",
+    freq: "4x/dia",
     max: "800 mg/dose",
-    obs: "Varicela não complicada (> 12 a ou risco): iniciar < 24h do exantema. Herpes simples: 15 mg/kg/dia.",
-    indicacoes: {}
+    obs: "Varicela não complicada: 20 mg/kg/dose 4×/dia, iniciar < 24h do exantema · Herpes (gengivoestomatite): dose em revisão com o médico",
+    indicacoes: {
+      varicela: { label: "Varicela", dose: [20, 20], unidade: "mg/kg/dose", tomadasDiaMax: 4, fonte: "Drugs.com / AAP" },
+    },
+    apresentacoes: [],
+    tetos: { porDose: 800, porDia: null, porKgDia: null, porFaixaPeso: [] }
   },
   {
     id: "oseltamivir",
