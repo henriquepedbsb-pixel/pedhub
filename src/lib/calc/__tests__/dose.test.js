@@ -96,6 +96,15 @@ describe('antibióticos por indicação — lote 2 (trava valores clínicos)', (
     expect(p.diaMin).toBe(10); expect(p.diaMax).toBe(20);
     expect(p.porTomada[0].tomadas).toBe(1);
   });
+  it('TMP-SMX: ITU 8–12 (÷12h) × pneumocistose 15–20 (÷6h)', () => {
+    const t = farmaco('tmpsmt');
+    const itu = calcularDose(t, 'itu', 10);
+    expect(itu.diaMin).toBe(80); expect(itu.diaMax).toBe(120);
+    expect(itu.porTomada[0].tomadas).toBe(2);
+    const pcp = calcularDose(t, 'pneumocistose', 10);
+    expect(pcp.diaMin).toBe(150); expect(pcp.diaMax).toBe(200);
+    expect(pcp.porTomada[0].tomadas).toBe(4);
+  });
 });
 
 describe('calcularDose — dosagem por DOSE (paracetamol 10–15 mg/kg/dose)', () => {

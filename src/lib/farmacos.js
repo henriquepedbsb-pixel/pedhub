@@ -245,17 +245,13 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "8–12 mg/kg/dia (TMP)",
-    freq: "12/12h",
+    dose: "Por indicação (TMP: 8–20 mg/kg/dia)",
+    freq: "12/12h ou 6/6h",
     max: "160 mg TMP/dose",
-    obs: "ITU · Pneumocistose: 15–20 mg/kg/dia TMP · Evitar < 2 meses",
+    obs: "ITU 8–12 mg/kg/dia TMP ÷12h · Pneumocistose 15–20 ÷6h · Evitar < 2 meses",
     indicacoes: {
-      geral: {
-        dose: [8, 12],
-        unidade: "mg/kg/dia",
-        tomadas: [2],
-        fonte: "Harriet Lane/SBP"
-      }
+      itu:           { label: "ITU",            dose: [8, 12],  unidade: "mg/kg/dia", tomadas: [2], fonte: "Bula FDA (Bactrim)" },
+      pneumocistose: { label: "Pneumocistose",  dose: [15, 20], unidade: "mg/kg/dia", tomadas: [4], fonte: "Bula FDA (Bactrim)" },
     },
     apresentacoes: [
       {
