@@ -1,5 +1,40 @@
 import { describe, it, expect } from 'vitest';
-import { classify, percFromBand3, percFromBand5, getPretermPercs, zFromBand } from '../percentis.jsx';
+import { classify, classifyOMS, percFromBand3, percFromBand5, percFromBand7, getPretermPercs, zFromBand } from '../percentis';
+
+describe('classifyOMS — faixa de centil OMS', () => {
+  it('mapeia percentil para a faixa/rótulo', () => {
+    expect(classifyOMS(2).label).toBe('< P3');
+    expect(classifyOMS(5).label).toBe('P3–10');
+    expect(classifyOMS(20).label).toBe('P10–25');
+    expect(classifyOMS(40).label).toBe('P25–50');
+    expect(classifyOMS(60).label).toBe('P50–75');
+    expect(classifyOMS(80).label).toBe('P75–90');
+    expect(classifyOMS(93).label).toBe('P90–97');
+    expect(classifyOMS(99).label).toBe('> P97');
+  });
+  it('null → null', () => {
+    expect(classifyOMS(null)).toBeNull();
+  });
+});
+
+describe('percFromBand7 — banda [P3,P5,P10,P50,P90,P95,P97]', () => {
+  const band = [1000, 1200, 1500, 2500, 3500, 3800, 4000];
+  it('mapeia para 1 / 5 / 8 / 30 / 70 / 92 / 95 / 99', () => {
+    expect(percFromBand7(900, band)).toBe(1);
+    expect(percFromBand7(1100, band)).toBe(5);
+    expect(percFromBand7(1300, band)).toBe(8);
+    expect(percFromBand7(2000, band)).toBe(30);
+    expect(percFromBand7(3000, band)).toBe(70);
+    expect(percFromBand7(3600, band)).toBe(92);
+    expect(percFromBand7(3900, band)).toBe(95);
+    expect(percFromBand7(4200, band)).toBe(99);
+  });
+  it('guardas: banda ausente, vazio ou não-número → null', () => {
+    expect(percFromBand7(2000, null)).toBeNull();
+    expect(percFromBand7('', band)).toBeNull();
+    expect(percFromBand7('abc', band)).toBeNull();
+  });
+});
 
 describe('classify — PIG / AIG / GIG (adequação à idade gestacional)', () => {
   it('PIG < P10, GIG > P90, AIG entre', () => {
