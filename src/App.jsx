@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import PedHub from "./PedHub"; // importação direta — não lazy
 import ReloadPrompt from "./ReloadPrompt";
 import ErrorBoundary from "./components/ErrorBoundary";
+import BarraPaciente, { BARRA_PACIENTE_H } from "./components/BarraPaciente";
 
 /* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
@@ -149,7 +150,7 @@ function Header() {
 
   return (
     <div style={{
-      position: "sticky", top: 0, zIndex: 100,
+      position: "sticky", top: BARRA_PACIENTE_H, zIndex: 100,
       background: "var(--header-bg)",
       backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
       borderBottom: "1px solid var(--border)",
@@ -248,6 +249,7 @@ export default function App() {
   const location = useLocation();
   return (
     <>
+      <BarraPaciente />
       <Header />
       <ErrorBoundary rotaKey={location.pathname}>
       <Suspense fallback={<Loading />}>
