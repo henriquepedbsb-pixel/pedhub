@@ -512,17 +512,13 @@ export const DRUGS = [
     cat: "Corticoide",
     classe: "corticoide",
     via: "VO",
-    dose: "1–2 mg/kg/dia",
-    freq: "1x/dia",
+    dose: "Por indicação (1–2 mg/kg/dia)",
+    freq: "1x/dia (matinal)",
     max: "40–60 mg/dia",
-    obs: "Asma: 1–2 mg/kg/dia 3–5 dias · APLV: 1 mg/kg/dia · Dose única matinal",
+    obs: "Dose única matinal · Asma 3–5 dias · APLV conforme protocolo",
     indicacoes: {
-      geral: {
-        dose: [1, 2],
-        unidade: "mg/kg/dia",
-        tomadas: [1],
-        fonte: "Harriet Lane/SBP"
-      }
+      asma: { label: "Asma", dose: [1, 2], unidade: "mg/kg/dia", tomadas: [1], fonte: "GINA / SBP" },
+      aplv: { label: "APLV", dose: [1, 1], unidade: "mg/kg/dia", tomadas: [1], fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [],
     tetos: {
@@ -538,22 +534,18 @@ export const DRUGS = [
     cat: "Corticoide",
     classe: "corticoide",
     via: "VO/IM/IV",
-    dose: "0,15–0,6 mg/kg/dia",
-    freq: "1x/dia",
-    max: "10 mg/dia",
-    obs: "Crupe: 0,15–0,6 mg/kg dose única · Meningite bacteriana: 0,15 mg/kg 6/6h × 4 dias",
+    dose: "Por indicação (0,15–0,6 mg/kg/dose)",
+    freq: "dose única ou 6/6h",
+    max: "10 mg/dose",
+    obs: "Crupe 0,15–0,6 mg/kg dose única (AAP) · Meningite bacteriana 0,15 mg/kg 6/6h × 2–4 dias",
     indicacoes: {
-      geral: {
-        dose: [0.15, 0.6],
-        unidade: "mg/kg/dia",
-        tomadas: [1],
-        fonte: "Harriet Lane/SBP"
-      }
+      crupe:     { label: "Crupe (dose única)", dose: [0.15, 0.6],  unidade: "mg/kg/dose", tomadasDiaMax: 1, fonte: "AAP" },
+      meningite: { label: "Meningite",          dose: [0.15, 0.15], unidade: "mg/kg/dose", tomadasDiaMax: 4, fonte: "AAP/IDSA" },
     },
     apresentacoes: [],
     tetos: {
-      porDose: null,
-      porDia: 10,
+      porDose: 10,
+      porDia: null,
       porKgDia: null,
       porFaixaPeso: []
     }
