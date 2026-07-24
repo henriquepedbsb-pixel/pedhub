@@ -54,17 +54,17 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "40–90 mg/kg/dia (fração amox)",
+    dose: "Por indicação (fração amox, 25–90 mg/kg/dia)",
     freq: "8/8h ou 12/12h",
     max: "3 g/dia",
-    obs: "Dose pela fração amoxicilina (igual à amoxicilina). 250 mg/5 mL: 8/8h · 400 mg/5 mL: 12/12h · Alta dose (90 mg/kg/dia) preferir formulação 400 (ES) pela menor carga de clavulanato",
+    obs: "Dose pela fração amoxicilina (iguais à amoxicilina) · Alta dose preferir formulação 400 (ES), menor carga de clavulanato · 250 mg/5 mL 8/8h · 400 mg/5 mL 12/12h",
     indicacoes: {
-      geral: {
-        dose: [40, 90],
-        unidade: "mg/kg/dia",
-        tomadas: [2, 3],
-        fonte: "Harriet Lane/SBP"
-      }
+      otite_media:      { label: "Otite média",           dose: [80, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP 2013" },
+      sinusite:         { label: "Sinusite",              dose: [80, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP 2013" },
+      pneumonia_alta:   { label: "Pneumonia (alta dose)", dose: [90, 90], unidade: "mg/kg/dia", tomadas: [2],    fonte: "PIDS/IDSA 2011" },
+      pneumonia_tipica: { label: "Pneumonia (típica)",    dose: [45, 50], unidade: "mg/kg/dia", tomadas: [3],    fonte: "CAP-IT 2021" },
+      faringite:        { label: "Faringite (GAS)",       dose: [50, 50], unidade: "mg/kg/dia", tomadas: [2],    fonte: "AAP (GAS)" },
+      itu:              { label: "ITU",                   dose: [25, 50], unidade: "mg/kg/dia", tomadas: [3],    fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [
       {
@@ -874,11 +874,16 @@ export const DRUGS = [
     cat: "Gastrointestinal",
     classe: "gastrointestinal",
     via: "VO",
-    dose: "0,4–1,5 g/kg/dia",
+    dose: "Por indicação (0,4–1,5 g/kg/dia)",
     freq: "1–2x/dia",
     max: "Ajuste clínico",
-    obs: "Constipação: manutenção 0,4–0,8 g/kg/dia · Desimpactação: 1–1,5 g/kg/dia × 3–6 dias",
-    indicacoes: {}
+    obs: "Manutenção 0,4–0,8 g/kg/dia · Desimpactação 1–1,5 g/kg/dia × 3–6 dias (valores exibidos em g)",
+    indicacoes: {
+      manutencao:    { label: "Manutenção",    dose: [400, 800],   unidade: "mg/kg/dia", tomadas: [1, 2], fonte: "NASPGHAN/ESPGHAN" },
+      desimpactacao: { label: "Desimpactação", dose: [1000, 1500], unidade: "mg/kg/dia", tomadas: [1],    fonte: "NASPGHAN/ESPGHAN" },
+    },
+    apresentacoes: [],
+    tetos: { porDose: null, porDia: null, porKgDia: null, porFaixaPeso: [] }
   },
   {
     id: "lactulose",

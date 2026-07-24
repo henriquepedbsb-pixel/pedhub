@@ -128,6 +128,24 @@ describe('antifúngico / antiviral por indicação (calculadora nova)', () => {
   });
 });
 
+describe('amoxi-clav e PEG por indicação', () => {
+  it('amoxi-clav espelha amoxicilina (otite 80–90, pneumonia típica 45–50)', () => {
+    const a = farmaco('amoxiclav');
+    const o = calcularDose(a, 'otite_media', 10);
+    expect(o.diaMin).toBe(800); expect(o.diaMax).toBe(900);
+    const p = calcularDose(a, 'pneumonia_tipica', 10);
+    expect(p.diaMin).toBe(450); expect(p.diaMax).toBe(500);
+    expect(p.porTomada[0].tomadas).toBe(3);
+  });
+  it('PEG: manutenção 0,4–0,8 × desimpactação 1–1,5 g/kg/dia (em mg/kg)', () => {
+    const g = farmaco('peg4000');
+    const m = calcularDose(g, 'manutencao', 10);
+    expect(m.diaMin).toBe(4000); expect(m.diaMax).toBe(8000); // 4–8 g
+    const d = calcularDose(g, 'desimpactacao', 10);
+    expect(d.diaMin).toBe(10000); expect(d.diaMax).toBe(15000); // 10–15 g
+  });
+});
+
 describe('dose fixa (zinco, vitamina D) — não depende do peso', () => {
   it('zinco: < 6 m 10 mg/dia · ≥ 6 m 20 mg/dia (sem peso)', () => {
     const z = farmaco('zinc');
