@@ -130,7 +130,32 @@ const parseFld = (v) => {
 
 // Fármaco tem calculadora de dose por peso? (os que não têm — budesonida,
 // salbutamol, etc. — nascem com indicacoes: {} e só exibem texto.)
-const temCalculadora = (d) => !!(d.indicacoes && d.indicacoes.geral);
+const temCalculadora = (d) => !!(d.indicacoes && Object.keys(d.indicacoes).length > 0);
+
+// Seletor de indicação (chips) — só aparece quando o fármaco tem > 1 indicação.
+// Fora do componente principal (regra 4 — sem remount/perda de foco).
+function IndicacaoSelector({ indicacoes, sel, onSel, cor }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+      {Object.keys(indicacoes).map((k) => {
+        const ativo = k === sel;
+        return (
+          <button
+            key={k} type="button" onClick={() => onSel(k)}
+            style={{
+              padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, cursor: "pointer",
+              border: "1px solid " + (ativo ? cor : "var(--border)"),
+              background: ativo ? cor : "var(--surface)",
+              color: ativo ? "#fff" : "var(--muted)",
+            }}
+          >
+            {indicacoes[k].label || k}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 // Definido FORA do componente principal (regra 5 — sem remount/perda de foco).
 function CalcDose({ farmaco, indicacao, peso, cor }) {
@@ -148,8 +173,11 @@ function CalcDose({ farmaco, indicacao, peso, cor }) {
 
   return (
     <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 5 }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
         <Pill size={13} /> Dose calculada para {peso} kg
+      </p>
+      <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 8px" }}>
+        {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
       </p>
 
       {r.modo === "dose" ? (
@@ -310,6 +338,10 @@ function JatosSelector({ jatos, cor }) {
 // Só re-renderiza quando muda o próprio `drug` ou o `peso` de referência.
 const DrugCard = memo(function DrugCard({ drug, peso }) {
   const cor = CAT_CORES[drug.cat] || PRIMARY;
+  const indicKeys = drug.indicacoes ? Object.keys(drug.indicacoes) : [];
+  const [indSel, setIndSel] = useState(indicKeys[0] || null);
+  // Garante seleção válida (a 1ª indicação = default, "mais comum").
+  const indAtiva = indicKeys.includes(indSel) ? indSel : indicKeys[0];
   return (
     <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 8, borderLeft: "3px solid " + cor }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
@@ -331,7 +363,10 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
           </div>
         ))}
       </div>
-      {peso && temCalculadora(drug) && <CalcDose farmaco={drug} indicacao="geral" peso={peso} cor={cor} />}
+      {temCalculadora(drug) && indicKeys.length > 1 && (
+        <IndicacaoSelector indicacoes={drug.indicacoes} sel={indAtiva} onSel={setIndSel} cor={cor} />
+      )}
+      {peso && temCalculadora(drug) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} cor={cor} />}
       {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid var(--border)", paddingTop: 6 }}>{drug.obs}</p>

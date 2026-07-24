@@ -23,38 +23,52 @@ describe('calcularDose — guardas', () => {
   });
 });
 
-describe('calcularDose — dosagem por DIA (amoxicilina 40–90 mg/kg/dia)', () => {
+describe('calcularDose — amoxicilina por indicação (2b)', () => {
   const amox = farmaco('amoxicilina');
 
-  it('criança de 10 kg: mg/dia e fracionamento por tomada', () => {
-    const r = calcularDose(amox, 'geral', 10);
+  it('otite_media (80–90 ÷2): 10 kg → 800–900 mg/dia, 400–450 mg/dose', () => {
+    const r = calcularDose(amox, 'otite_media', 10);
     expect(r.modo).toBe('dia');
-    expect(r.diaMin).toBe(400);
+    expect(r.diaMin).toBe(800);
     expect(r.diaMax).toBe(900);
     expect(r.excedeuTeto).toBe(false);
-    // 2 tomadas → 200–450 mg/dose ; 3 tomadas → 133,3–300 mg/dose
-    expect(r.porTomada).toEqual([
-      { tomadas: 2, min: 200, max: 450, alvo: null },
-      { tomadas: 3, min: 133.3, max: 300, alvo: null },
-    ]);
+    expect(r.porTomada).toEqual([{ tomadas: 2, min: 400, max: 450, alvo: null }]);
   });
 
-  it('volume da suspensão 250 mg/5 mL (3 tomadas): 2,7–6 mL/dose', () => {
-    const r = calcularDose(amox, 'geral', 10);
-    const susp250 = r.volumes.find((v) => v.label === '250 mg/5 mL');
-    expect(susp250.mlMin).toBe(2.7);
-    expect(susp250.mlMax).toBe(6);
-    expect(susp250.tomadas).toBe(3);
+  it('pneumonia típica (45–50 ÷3) × alta dose (90 ÷2)', () => {
+    const tip = calcularDose(amox, 'pneumonia_tipica', 10);
+    expect(tip.diaMin).toBe(450);
+    expect(tip.diaMax).toBe(500);
+    expect(tip.porTomada[0].tomadas).toBe(3);
+    const alta = calcularDose(amox, 'pneumonia_alta', 10);
+    expect(alta.diaMin).toBe(900);
+    expect(alta.diaMax).toBe(900);
+    expect(alta.porTomada[0].tomadas).toBe(2);
   });
 
-  it('teto diário: 40 kg → 3600 mg/dia excede 3 g/dia', () => {
-    expect(calcularDose(amox, 'geral', 40).excedeuTeto).toBe(true);
+  it('faringite (50) e ITU (25–50) existem com as doses certas', () => {
+    expect(calcularDose(amox, 'faringite', 10).diaMax).toBe(500);
+    const itu = calcularDose(amox, 'itu', 10);
+    expect(itu.diaMin).toBe(250);
+    expect(itu.diaMax).toBe(500);
   });
 
-  it('dose-alvo escolhida propaga para mg e mL', () => {
-    const r = calcularDose(amox, 'geral', 10, 50); // 50 mg/kg/dia
-    expect(r.diaAlvo).toBe(500);
-    expect(r.porTomada[0].alvo).toBe(250); // 500/2
+  it('teto do fármaco (3 g/dia): otite em 40 kg → 3600 mg/dia excede', () => {
+    expect(calcularDose(amox, 'otite_media', 40).excedeuTeto).toBe(true);
+  });
+
+  it('volume da suspensão 400 mg/5 mL (÷2) na otite: 5–5,6 mL/dose', () => {
+    const r = calcularDose(amox, 'otite_media', 10);
+    const susp400 = r.volumes.find((v) => v.label === '400 mg/5 mL');
+    expect(susp400.mlMin).toBe(5);
+    expect(susp400.mlMax).toBe(5.6);
+    expect(susp400.tomadas).toBe(2);
+  });
+
+  it('dose-alvo propaga (otite, alvo 85 mg/kg/dia)', () => {
+    const r = calcularDose(amox, 'otite_media', 10, 85);
+    expect(r.diaAlvo).toBe(850);
+    expect(r.porTomada[0].alvo).toBe(425); // 850/2
   });
 });
 
@@ -114,17 +128,19 @@ describe('calcularDose — teto por faixa de peso', () => {
 });
 
 describe('calcularDose — consistência em TODO o catálogo', () => {
-  it('nenhum fármaco quebra e mg/dose ≤ mg/dia', () => {
+  it('nenhuma indicação quebra e mg/dose ≤ mg/dia', () => {
     for (const d of DRUGS) {
-      if (!d.indicacoes || !d.indicacoes.geral) continue;
-      const r = calcularDose(d, 'geral', 12);
-      expect(r, `${d.id} retornou null`).not.toBeNull();
-      if (r.modo === 'dia') {
-        expect(r.diaMax).toBeGreaterThanOrEqual(r.diaMin);
-        // cada dose fracionada nunca supera o total diário
-        for (const t of r.porTomada) expect(t.max).toBeLessThanOrEqual(r.diaMax + 0.05);
-      } else {
-        expect(r.doseMax).toBeGreaterThanOrEqual(r.doseMin);
+      const keys = d.indicacoes ? Object.keys(d.indicacoes) : [];
+      for (const k of keys) {
+        const r = calcularDose(d, k, 12);
+        expect(r, `${d.id}/${k} retornou null`).not.toBeNull();
+        if (r.modo === 'dia') {
+          expect(r.diaMax).toBeGreaterThanOrEqual(r.diaMin);
+          // cada dose fracionada nunca supera o total diário
+          for (const t of r.porTomada) expect(t.max).toBeLessThanOrEqual(r.diaMax + 0.05);
+        } else {
+          expect(r.doseMax).toBeGreaterThanOrEqual(r.doseMin);
+        }
       }
     }
   });
