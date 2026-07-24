@@ -72,6 +72,41 @@ describe('calcularDose — amoxicilina por indicação (2b)', () => {
   });
 });
 
+describe('antibióticos por indicação — lote 2 (trava valores clínicos)', () => {
+  it('ceftriaxona: padrão 50–75 × meningite 100 (÷1)', () => {
+    const cef = farmaco('ceftriaxona');
+    const p = calcularDose(cef, 'padrao', 10);
+    expect(p.diaMin).toBe(500); expect(p.diaMax).toBe(750);
+    const m = calcularDose(cef, 'meningite', 10);
+    expect(m.diaMin).toBe(1000); expect(m.diaMax).toBe(1000);
+  });
+  it('cefalexina: pele 25–50 × grave 50–100 × ITU × faringite', () => {
+    const cx = farmaco('cefalexina');
+    expect(calcularDose(cx, 'pele_partes_moles', 10).diaMax).toBe(500);
+    expect(calcularDose(cx, 'infeccao_grave', 10).diaMax).toBe(1000);
+    expect(calcularDose(cx, 'itu', 10).diaMin).toBe(250);
+    expect(calcularDose(cx, 'faringite', 10).porTomada[0].tomadas).toBe(2);
+  });
+  it('nitrofurantoína: tratamento 5–7 (÷4) × profilaxia 1–2 (÷1)', () => {
+    const nf = farmaco('nitrofurantoina');
+    const t = calcularDose(nf, 'itu_tratamento', 10);
+    expect(t.diaMin).toBe(50); expect(t.diaMax).toBe(70);
+    expect(t.porTomada[0].tomadas).toBe(4);
+    const p = calcularDose(nf, 'profilaxia', 10);
+    expect(p.diaMin).toBe(10); expect(p.diaMax).toBe(20);
+    expect(p.porTomada[0].tomadas).toBe(1);
+  });
+  it('TMP-SMX: ITU 8–12 (÷12h) × pneumocistose 15–20 (÷6h)', () => {
+    const t = farmaco('tmpsmt');
+    const itu = calcularDose(t, 'itu', 10);
+    expect(itu.diaMin).toBe(80); expect(itu.diaMax).toBe(120);
+    expect(itu.porTomada[0].tomadas).toBe(2);
+    const pcp = calcularDose(t, 'pneumocistose', 10);
+    expect(pcp.diaMin).toBe(150); expect(pcp.diaMax).toBe(200);
+    expect(pcp.porTomada[0].tomadas).toBe(4);
+  });
+});
+
 describe('calcularDose — dosagem por DOSE (paracetamol 10–15 mg/kg/dose)', () => {
   const para = farmaco('paracetamol');
 

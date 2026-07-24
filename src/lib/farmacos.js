@@ -159,17 +159,15 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "25–100 mg/kg/dia",
+    dose: "Por indicação (25–100 mg/kg/dia)",
     freq: "6/6h ou 8/8h",
     max: "4 g/dia",
-    obs: "1ª geração · Infecções cutâneas, ITU não complicada",
+    obs: "1ª geração · Infecções cutâneas, ITU não complicada · Faringite GAS 10 dias",
     indicacoes: {
-      geral: {
-        dose: [25, 100],
-        unidade: "mg/kg/dia",
-        tomadas: [3, 4],
-        fonte: "Harriet Lane/SBP"
-      }
+      pele_partes_moles: { label: "Pele/partes moles", dose: [25, 50],  unidade: "mg/kg/dia", tomadas: [3, 4], fonte: "Harriet Lane/SBP" },
+      infeccao_grave:    { label: "Grave/osteoartic.", dose: [50, 100], unidade: "mg/kg/dia", tomadas: [3, 4], fonte: "Harriet Lane/SBP" },
+      itu:               { label: "ITU",               dose: [25, 50],  unidade: "mg/kg/dia", tomadas: [4],    fonte: "Harriet Lane/SBP" },
+      faringite:         { label: "Faringite (GAS)",   dose: [25, 50],  unidade: "mg/kg/dia", tomadas: [2],    fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [
       {
@@ -192,17 +190,13 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "IV/IM",
-    dose: "50–100 mg/kg/dia",
+    dose: "Por indicação (50–100 mg/kg/dia)",
     freq: "1x/dia",
     max: "4 g/dia",
-    obs: "100 mg/kg para meningite · Diluir em 100 mL SF · Infundir em 30–60 min",
+    obs: "Meningite 100 mg/kg/dia · Diluir em 100 mL SF · Infundir em 30–60 min",
     indicacoes: {
-      geral: {
-        dose: [50, 100],
-        unidade: "mg/kg/dia",
-        tomadas: [1],
-        fonte: "Harriet Lane/SBP"
-      }
+      padrao:    { label: "Padrão (sepse/pielo)", dose: [50, 75],   unidade: "mg/kg/dia", tomadas: [1], fonte: "Harriet Lane/SBP" },
+      meningite: { label: "Meningite",            dose: [100, 100], unidade: "mg/kg/dia", tomadas: [1], fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [],
     tetos: {
@@ -251,17 +245,13 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "8–12 mg/kg/dia (TMP)",
-    freq: "12/12h",
+    dose: "Por indicação (TMP: 8–20 mg/kg/dia)",
+    freq: "12/12h ou 6/6h",
     max: "160 mg TMP/dose",
-    obs: "ITU · Pneumocistose: 15–20 mg/kg/dia TMP · Evitar < 2 meses",
+    obs: "ITU 8–12 mg/kg/dia TMP ÷12h · Pneumocistose 15–20 ÷6h · Evitar < 2 meses",
     indicacoes: {
-      geral: {
-        dose: [8, 12],
-        unidade: "mg/kg/dia",
-        tomadas: [2],
-        fonte: "Harriet Lane/SBP"
-      }
+      itu:           { label: "ITU",            dose: [8, 12],  unidade: "mg/kg/dia", tomadas: [2], fonte: "Bula FDA (Bactrim)" },
+      pneumocistose: { label: "Pneumocistose",  dose: [15, 20], unidade: "mg/kg/dia", tomadas: [4], fonte: "Bula FDA (Bactrim)" },
     },
     apresentacoes: [
       {
@@ -383,17 +373,13 @@ export const DRUGS = [
     cat: "Antibiótico",
     classe: "antibiotico",
     via: "VO",
-    dose: "5–7 mg/kg/dia",
+    dose: "Por indicação (1–7 mg/kg/dia)",
     freq: "6/6h",
     max: "400 mg/dia",
-    obs: "ITU baixa · NÃO usar < 3 meses · Profilaxia: 1–2 mg/kg/dia",
+    obs: "ITU baixa · NÃO usar < 3 meses · Não cobre pielonefrite",
     indicacoes: {
-      geral: {
-        dose: [5, 7],
-        unidade: "mg/kg/dia",
-        tomadas: [4],
-        fonte: "Harriet Lane/SBP"
-      }
+      itu_tratamento: { label: "ITU (tratamento)", dose: [5, 7], unidade: "mg/kg/dia", tomadas: [4], fonte: "Harriet Lane/SBP" },
+      profilaxia:     { label: "Profilaxia",       dose: [1, 2], unidade: "mg/kg/dia", tomadas: [1], fonte: "Harriet Lane/SBP" },
     },
     apresentacoes: [
       {
