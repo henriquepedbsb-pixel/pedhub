@@ -128,6 +128,20 @@ describe('antifúngico / antiviral por indicação (calculadora nova)', () => {
   });
 });
 
+describe('ferro por indicação (RNPT por peso de nascimento)', () => {
+  it('tratamento 3–6 · profilaxia termo 1 · RNPT 4/3/2 por faixa', () => {
+    const f = farmaco('ferro');
+    const t = calcularDose(f, 'tratamento', 10);
+    expect(t.diaMin).toBe(30); expect(t.diaMax).toBe(60);
+    expect(calcularDose(f, 'profilaxia_termo', 10).diaMax).toBe(10);
+    expect(calcularDose(f, 'profilaxia_rnpt_menor1000', 2).diaMax).toBe(8); // 4×2
+    expect(calcularDose(f, 'profilaxia_rnpt_1000_1500', 2).diaMax).toBe(6); // 3×2
+    expect(calcularDose(f, 'profilaxia_rnpt_1500_2500', 2).diaMax).toBe(4); // 2×2
+    // teto 60 mg/dia: tratamento 20 kg → 120 > 60 → excede
+    expect(calcularDose(f, 'tratamento', 20).excedeuTeto).toBe(true);
+  });
+});
+
 describe('corticoides por indicação', () => {
   it('prednisolona: asma 1–2 (÷1) × APLV 1', () => {
     const p = farmaco('prednisolona');

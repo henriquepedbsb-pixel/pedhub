@@ -1155,11 +1155,19 @@ export const DRUGS = [
     cat: "Suplemento",
     classe: "suplemento",
     via: "VO",
-    dose: "3–6 mg/kg/dia (Fe elementar)",
+    dose: "Por indicação (Fe elementar, mg/kg/dia)",
     freq: "1–2x/dia",
     max: "60 mg/dia Fe elementar",
-    obs: "Tratamento anemia: 3–6 mg/kg/dia. Profilaxia RNPT: 2 mg/kg/dia a partir de 1 mês. Jejum para melhor absorção.",
-    indicacoes: {}
+    obs: "Tratamento anemia 3–6 mg/kg/dia · Profilaxia RN termo 1 mg/kg/dia · Profilaxia RNPT por peso de nascimento (a partir de 1 mês) · Jejum p/ melhor absorção",
+    indicacoes: {
+      tratamento:               { label: "Tratamento (anemia)",     dose: [3, 6], unidade: "mg/kg/dia", tomadas: [1, 2], fonte: "SBP / AAP" },
+      profilaxia_termo:         { label: "Profilaxia RN termo",     dose: [1, 1], unidade: "mg/kg/dia", tomadas: [1],    fonte: "SBP" },
+      profilaxia_rnpt_menor1000:{ label: "Profilaxia RNPT <1000g",  dose: [4, 4], unidade: "mg/kg/dia", tomadas: [1],    fonte: "SBP" },
+      profilaxia_rnpt_1000_1500:{ label: "Profilaxia RNPT 1000–1500g", dose: [3, 3], unidade: "mg/kg/dia", tomadas: [1], fonte: "SBP" },
+      profilaxia_rnpt_1500_2500:{ label: "Profilaxia RNPT 1500–2500g", dose: [2, 2], unidade: "mg/kg/dia", tomadas: [1], fonte: "SBP" },
+    },
+    apresentacoes: [],
+    tetos: { porDose: null, porDia: 60, porKgDia: null, porFaixaPeso: [] }
   },
   {
     id: "zinc",
