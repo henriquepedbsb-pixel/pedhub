@@ -118,7 +118,7 @@ const MODULOS = [
    para a busca encontrar "o que eu preciso" e não só "o nome do módulo". */
 const SEARCH_TAGS = {
   "/percentis-oms": "peso altura estatura perimetro cefalico crescimento imc z-escore curva",
-  "/urgencias": "adrenalina epinefrina pals rcp parada anafilaxia asma crise convulsiva estado de mal choque cetoacidose cad salbutamol emergencia reanimacao",
+  "/urgencias": "adrenalina epinefrina pals rcp parada anafilaxia asma crise convulsiva estado de mal choque cetoacidose cad salbutamol emergencia reanimacao broselow fita comprimento dose peso emergencia",
   "/formulas": "leite formula infantil hidrolisado aminoacido soja aplv alergia proteina leite vaca desmame nan aptamil",
   "/gastropediatria": "refluxo drge constipacao obstipacao alergia proteina leite vaca aplv omeprazol regurgitacao hepato hepatologia figado colestase colestase neonatal bilirrubina direta conjugada atresia vias biliares kasai ictericia colestatica ursodesoxicolico",
   "/pedfarma": "amoxicilina paracetamol dipirona ibuprofeno azitromicina cefalexina antibiotico corticoide prednisolona dexametasona omeprazol ondansetrona dose bula prescricao medicamento remedio",
@@ -181,6 +181,20 @@ const normalizarBusca = (s) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "")
 const casaBusca = (m, termos) => {
   const hay = normalizarBusca(`${m.label} ${m.desc} ${SEARCH_TAGS[m.rota] || ""}`);
   return termos.every(t => hay.includes(t));
+};
+
+/* Palavra-chave que explicou o resultado: se o módulo casou por uma tag (e não
+   pelo nome/descrição visível), devolve essa tag para exibir "achado por X".
+   Devolve null quando o match já é óbvio pelo título/descrição. */
+const keywordDoMatch = (m, termos) => {
+  const visivel = normalizarBusca(`${m.label} ${m.desc}`);
+  if (termos.every(t => visivel.includes(t))) return null;
+  const tags = normalizarBusca(SEARCH_TAGS[m.rota] || "").split(/\s+/).filter(Boolean);
+  for (const t of termos) {
+    const tag = tags.find(k => k.includes(t));
+    if (tag) return tag;
+  }
+  return null;
 };
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ─────────────────
@@ -621,12 +635,20 @@ export default function PedHub() {
               <span style={{ fontSize: 11, color: "var(--muted)" }}>{resultadosBusca.length + resultadosBreve.length}</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
-              {resultadosBusca.map(m => (
-                <div key={m.rota} style={{ position: "relative" }}>
-                  <ModuloCard modulo={m} onClick={() => irPara(m.rota)} />
-                  <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
-                </div>
-              ))}
+              {resultadosBusca.map(m => {
+                const kw = keywordDoMatch(m, termos);
+                return (
+                  <div key={m.rota} style={{ position: "relative" }}>
+                    <ModuloCard modulo={m} onClick={() => irPara(m.rota)} />
+                    <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
+                    {kw && (
+                      <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 2px 0", lineHeight: 1.3 }}>
+                        achado por “{kw}”
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
               {resultadosBreve.map(m => (
                 <BreveCard key={m.label} modulo={m} onClick={dispararToast} />
               ))}
