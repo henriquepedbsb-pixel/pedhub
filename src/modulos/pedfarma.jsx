@@ -1,6 +1,7 @@
 // src/modulos/pedfarma.jsx
 /* eslint-disable react-refresh/only-export-components -- reexporta DRUGS (dados puros) para consumidores/testes */
 import { useState, useMemo, useDeferredValue, memo } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
@@ -331,14 +332,11 @@ export default function Pedfarma() {
         )}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Doses baseadas em Harriet Lane Handbook (22ª ed.) e NeoFax 2023; posologia inalatória do salbutamol (jatos por gravidade da crise) conforme GINA e SBP. Confirmar com peso atual, função renal/hepática e protocolo institucional. Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Harriet Lane Handbook (22ª ed.) · NeoFax 2023 · salbutamol inalatório conforme GINA e SBP"
+        nota="Confirmar com peso atual, função renal/hepática e protocolo institucional."
+      />
     </div>
   );
 }

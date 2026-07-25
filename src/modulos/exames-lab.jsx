@@ -1,6 +1,7 @@
 // src/modulos/exames-lab.jsx
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Microscope, Info, AlertTriangle, AlertCircle } from "lucide-react";
 
 const CS = '#0EA5E9';
@@ -568,9 +569,11 @@ export default function ExamesLab() {
         </div>
       )}
 
-      <div style={{ margin: '0 12px 12px', padding: '12px 14px', background: "var(--tint-slate)", borderRadius: 10, fontSize: 11, color: "var(--muted)", lineHeight: 1.6 }}>
-        <strong>Apoio à decisão clínica.</strong> Valores de referência variam entre laboratórios — confirmar com os intervalos do laudo do serviço. Não substitui julgamento médico nem protocolo institucional. Fontes: Harriet Lane 22ª ed. · Nelson 21ª ed. · ESPGHAN 2014/2016/2020 · SBP 2022 · AAP.
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Harriet Lane 22ª ed. · Nelson 21ª ed. · ESPGHAN 2014/2016/2020 · SBP 2022 · AAP"
+        nota="Valores de referência variam entre laboratórios — confirmar com os intervalos do laudo do serviço."
+      />
     </div>
   );
 }

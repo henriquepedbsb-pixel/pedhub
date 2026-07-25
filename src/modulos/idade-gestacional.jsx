@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta helpers de data e calcularIdadesPMA para testes unitários */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { CalendarClock, Info, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#2563EB";
@@ -351,15 +352,11 @@ export default function IdadeGestacional() {
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Cálculo baseado na definição de idade gestacional pós-menstrual e idade corrigida (SBP / AAP — Engle WA, Pediatrics 2004; reafirmado 2024). Confira a idade gestacional ao nascer com o método de datação mais confiável disponível. Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP / AAP — Engle WA, Pediatrics 2004 (reafirmado 2024)"
+        nota="Confira a idade gestacional ao nascer com o método de datação mais confiável disponível."
+      />
     </div>
   );
 }

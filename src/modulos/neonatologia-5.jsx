@@ -5,6 +5,7 @@
  */
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
@@ -479,16 +480,11 @@ export default function Neonatologia5() {
       <div style={{ padding: 16 }}>
         <TabNPT />
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023.
-            Eletrólitos sugeridos automaticamente — ajustar conforme labs e condição clínica.
-            Não substitui prescrição médica individualizada.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023"
+        nota="Eletrólitos sugeridos automaticamente — ajustar conforme labs e condição clínica. Não substitui prescrição médica individualizada."
+      />
     </div>
   );
 }

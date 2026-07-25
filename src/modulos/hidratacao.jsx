@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta holliday/parsePeso (funções puras) para testes unitários */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Droplets, Info, AlertTriangle, CheckCircle } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
@@ -384,14 +385,11 @@ export default function Hidratacao() {
         {tab === 2 && <TabPlanoB   peso={peso} />}
         {tab === 3 && <TabPlanoC   peso={peso} />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Baseado em OMS 2005 e SBP 2022. Confirmar com estado clínico do paciente, eletrólitos e diurese. Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="OMS 2005 · SBP 2022"
+        nota="Confirmar com estado clínico do paciente, eletrólitos e diurese."
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@
  */
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
 import {
@@ -331,16 +332,11 @@ export default function DexametasonaDbp() {
         {tab===1 && <TabHMIB />}
       </div>
 
-      <div style={{ margin:"8px 16px 40px", background:"var(--bg)", borderRadius:10, padding:"12px 14px", border:"1px solid var(--border)" }}>
-        <div style={{ display:"flex", gap:8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink:0, marginTop:1 }} />
-          <p style={{ fontSize:11, color:"var(--muted)", lineHeight:1.5, margin:0 }}>
-            <strong>Apoio à decisão clínica.</strong> DART: Doyle LW et al. Pediatrics 2006;117:75-83.
-            HMIB: Protocolo Institucional. Uso de corticosteroide pós-natal deve ser discutido em equipe e com a família.
-            Não substitui julgamento médico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="DART: Doyle LW et al. Pediatrics 2006;117:75-83 · HMIB: Protocolo Institucional"
+        nota="Uso de corticosteroide pós-natal deve ser discutido em equipe e com a família."
+      />
     </div>
   );
 }

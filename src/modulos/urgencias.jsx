@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import {
@@ -1266,17 +1267,11 @@ export default function Urgencias() {
       )}
 
       {/* ── Disclaimer ── */}
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Doses baseadas em WAO 2020, GINA 2024,
-            ILAE 2015, SBP, AHA PALS 2020, Surviving Sepsis Campaign 2020 e ISPAD 2022.
-            Confirme com peso atual, função renal e protocolo institucional.
-            Não substitui julgamento clínico nem protocolo local.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="WAO 2020 · GINA 2024 · ILAE 2015 · SBP · AHA PALS 2020 · Surviving Sepsis Campaign 2020 · ISPAD 2022"
+        nota="Confirme com peso atual, função renal e protocolo institucional."
+      />
     </div>
   );
 }

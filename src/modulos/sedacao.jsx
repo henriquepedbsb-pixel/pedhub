@@ -1,6 +1,7 @@
 // src/modulos/sedacao.jsx
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Syringe, AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
 
 const CI = '#6366F1';
@@ -312,9 +313,11 @@ export default function Sedacao() {
         </div>
       )}
 
-      <div style={{ margin: '0 12px 12px', padding: '12px 14px', background: "var(--tint-slate)", borderRadius: 10, fontSize: 11, color: "var(--muted)", lineHeight: 1.6 }}>
-        <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional. Sedação deve ser realizada por profissional treinado com estrutura adequada de monitorização e suporte ventilatório. Fontes: Cote CJ et al., Pediatrics 2019 (AAP Sedation Guidelines) · ASA Physical Status Classification 2020 · SBP.
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Cote CJ et al., Pediatrics 2019 (AAP Sedation Guidelines) · ASA Physical Status Classification 2020 · SBP"
+        nota="Sedação deve ser realizada por profissional treinado com estrutura adequada de monitorização e suporte ventilatório."
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // src/modulos/dermato.jsx
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import {
   Info,
   AlertTriangle,
@@ -452,14 +453,11 @@ export default function Dermato() {
         ))}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Baseado em SBD (Sociedade Brasileira de Dermatologia), AAD 2023 e SBP. Não substitui avaliação dermatológica especializada.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBD (Sociedade Brasileira de Dermatologia) · AAD 2023 · SBP"
+        nota="Não substitui avaliação dermatológica especializada."
+      />
     </div>
   );
 }

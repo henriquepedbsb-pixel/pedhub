@@ -510,10 +510,13 @@ export default function DorNeonatal() {
         </>}
 
         {/* ── Disclaimer padrão ────────────────────────────────────────── */}
-        {/* TODO(T7): sem fonte citada no arquivo — confirmar com o médico as
-            referências das escalas (NIPS, PIPP-R, N-PASS, CRIES) antes de
-            preencher `fonte`. Por ora, só data + disclaimer (não inventar). */}
-        <RodapeModulo revisao="07/2026" />
+        {/* Fontes = referências primárias das escalas implementadas (autores,
+            sem ano para não arriscar data). Confirmar/complementar com o médico
+            se quiser as citações completas. */}
+        <RodapeModulo
+          revisao="07/2026"
+          fonte="Escalas validadas: NIPS (Lawrence et al.) · PIPP-R (Stevens et al.) · N-PASS (Hummel et al.) · CRIES (Krechel & Bildner)"
+        />
 
 
       </div>

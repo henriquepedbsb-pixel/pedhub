@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta scores puros (Apgar/Silverman) para testes */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info } from "lucide-react";
 
 const PRIMARY = "#0891B2";
@@ -355,14 +356,11 @@ export default function Neonatologia4() {
         {tab === 1 && <TabCapurro />}
         {tab === 2 && <TabSilverman />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Apgar 1953 · Capurro H et al., J Pediatr 1978 · Silverman-Andersen 1956. Scores clínicos de suporte — não substituem monitorização contínua e julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Apgar 1953 · Capurro H et al., J Pediatr 1978 · Silverman-Andersen 1956"
+        nota="Scores clínicos de suporte — não substituem monitorização contínua."
+      />
     </div>
   );
 }

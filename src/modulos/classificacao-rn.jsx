@@ -11,6 +11,7 @@
  */
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Ruler, Info, AlertTriangle } from "lucide-react";
 import {
   IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW,
@@ -374,16 +375,11 @@ export default function ClassificacaoRN() {
         </div>
       )}
 
-      {/* Disclaimer */}
-      <div style={{ marginTop: 24, padding: 12, background: "var(--surface-2)", borderRadius: 10, borderLeft: "3px solid #9CA3AF" }}>
-        <p style={{ margin: 0, fontSize: 11, color: "var(--muted)", lineHeight: 1.5 }}>
-          <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
-          Classificação de IG segundo faixas SBP; peso ao nascer segundo OMS/SBP; AIG/PIG/GIG derivado das
-          curvas Intergrowth-21st (Villar J et al. Lancet 2014) e Fenton 2013 (Fenton TR &amp; Kim JH. BMC Pediatrics 2013).
-          Simetria do PIG é uma orientação geral (peso x perímetro cefálico) — a etiologia da restrição de
-          crescimento deve sempre ser investigada pelo médico assistente.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="IG: faixas SBP · peso ao nascer: OMS/SBP · AIG/PIG/GIG: Intergrowth-21st (Villar J et al. Lancet 2014) e Fenton 2013 (Fenton TR & Kim JH. BMC Pediatrics 2013)"
+        nota="Simetria do PIG é orientação geral (peso × perímetro cefálico); a etiologia da restrição de crescimento deve sempre ser investigada pelo médico assistente."
+      />
     </div>
   );
 }

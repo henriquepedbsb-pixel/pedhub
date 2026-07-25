@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras (bolus/infusão/gel) para testes unitários */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, CheckCircle, Droplets } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
@@ -320,16 +321,11 @@ export default function Neonatologia2() {
         {tab === 1 && <TabGelDextrose />}
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Hipoglicemia: AAP/PAS 2011 e SBP.
-            Gel de dextrose: Harris et al. Lancet 2013 · Weston et al. Cochrane 2021.
-            Não substitui prescrição médica individualizada.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Hipoglicemia: AAP/PAS 2011 e SBP · Gel de dextrose: Harris et al. Lancet 2013 · Weston et al. Cochrane 2021"
+        nota="Não substitui prescrição médica individualizada."
+      />
     </div>
   );
 }

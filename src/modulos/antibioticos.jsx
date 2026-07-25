@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Stethoscope, AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
 
 const CP = '#0D9488';
@@ -441,10 +442,11 @@ export default function Antibioticos() {
         </div>
       </div>
 
-      {/* DISCLAIMER */}
-      <div style={{ margin: '0 12px 12px', padding: '12px 14px', background: "var(--tint-slate)", borderRadius: 10, fontSize: 11, color: "var(--muted)", lineHeight: 1.6 }}>
-        <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional. Adequar ao perfil de resistência local e ao antibiograma quando disponível. Fontes: SBP 2018 (Pneumonia PAC) · AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS).
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP 2018 (Pneumonia PAC) · AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS)"
+        nota="Adequar ao perfil de resistência local e ao antibiograma quando disponível."
+      />
     </div>
   );
 }
