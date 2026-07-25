@@ -5,7 +5,7 @@ import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriang
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";
-import { calcularDose } from "../lib/calc/dose";
+import CalcDose, { CAT_CORES } from "../components/CalcDose";
 
 const PRIMARY = "#8B5CF6";
 
@@ -23,7 +23,7 @@ function parseDose(s) {
   return !isNaN(v) && v > 0 ? v : null;
 }
 
-const CAT_CORES = { "Antibiótico":"#10B981","Analgésico":"#EF4444","Corticoide":"#F97316","Respiratório":"#2563EB","Antihistamínico":"#F59E0B","Gastrointestinal":"#D97706","Neurológico":"#7C3AED","Antifúngico":"#059669","Antiviral":"#0891B2","Suplemento":"#10B981","Antídoto":"#DC2626" };
+// CAT_CORES vem de components/CalcDose.jsx (fonte única da cor por categoria).
 
 // Categorias do filtro derivadas dos próprios dados — garante que toda categoria
 // com medicamentos tenha um chip (nenhuma droga fica inacessível pelo filtro).
@@ -120,13 +120,8 @@ function CorticoideConversor() {
   );
 }
 
-// A lógica de cálculo de dose vive em src/lib/calc/dose.js (T2 etapa 2c).
-// parseFld: decimal-BR para o input de dose-alvo do CalcDose (regra 9).
-const parseFld = (v) => {
-  if (v === null || v === undefined || v === "") return null;
-  const n = parseFloat(String(v).replace(",", "."));
-  return isNaN(n) ? null : n;
-};
+// O cálculo e a UI de dose vivem em src/lib/calc/dose.js e
+// src/components/CalcDose.jsx (T2c/T3).
 
 // Fármaco tem calculadora de dose por peso? (os que não têm — budesonida,
 // salbutamol, etc. — nascem com indicacoes: {} e só exibem texto.)
@@ -153,157 +148,6 @@ function IndicacaoSelector({ indicacoes, sel, onSel, cor }) {
           </button>
         );
       })}
-    </div>
-  );
-}
-
-// Definido FORA do componente principal (regra 5 — sem remount/perda de foco).
-function CalcDose({ farmaco, indicacao, peso, cor }) {
-  const [alvoRaw, setAlvoRaw] = useState("");
-  const ind = farmaco.indicacoes[indicacao];
-  // Dose fixa (zinco, vit D): mostra o valor direto, sem depender do peso.
-  if (ind.doseFixa) {
-    const [fmin, fmax] = ind.doseFixa;
-    const valor = fmin === fmax ? `${fmin}` : `${fmin}–${fmax}`;
-    return (
-      <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
-          <Pill size={13} /> Dose fixa
-        </p>
-        <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 6px" }}>
-          {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
-        </p>
-        <div style={{ background: "var(--surface)", borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)" }}>
-          <p style={{ fontSize: 15, fontWeight: 800, color: cor, margin: 0 }}>{valor} {ind.unidade}</p>
-        </div>
-      </div>
-    );
-  }
-  const doseMinKg = ind.dose[0], doseMaxKg = ind.dose[1];
-  const ehDose = ind.unidade === "mg/kg/dose";
-  const alvo = parseFld(alvoRaw);
-  const alvoValido = alvo != null && alvo >= doseMinKg && alvo <= doseMaxKg;
-  const r = calcularDose(farmaco, indicacao, peso, alvoValido ? alvo : null);
-  if (!r) return null;
-
-  const box = { background: "var(--surface)", borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)" };
-  const fmt = (mg) => (mg >= 1000 ? `${(mg / 1000).toFixed(mg % 1000 === 0 ? 0 : 2)} g` : `${mg} mg`);
-
-  return (
-    <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
-        <Pill size={13} /> Dose calculada para {peso} kg
-      </p>
-      <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 8px" }}>
-        {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
-      </p>
-
-      {r.modo === "dose" ? (
-        <>
-          <div style={{ ...box, marginBottom: 6 }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Por dose (faixa)</p>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>
-              {fmt(r.doseMin)} – {fmt(r.doseMax)}/dose
-              {r.doseAlvo != null && <span style={{ color: cor }}> · alvo {fmt(r.doseAlvo)}/dose</span>}
-            </p>
-          </div>
-          {r.volumes.length > 0 && (
-            <div style={{ marginBottom: 6 }}>
-              {r.volumes.map((v) => (
-                <div key={v.label} style={{ ...box, marginBottom: 4 }}>
-                  <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Volume · {v.label}</p>
-                  {v.gotas ? (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
-                      {r.doseAlvo != null
-                        ? `${v.gtMin} gotas`
-                        : `${v.gtMin} – ${v.gtMax} gotas`}
-                      <span style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)" }}>
-                        {" "}({r.doseAlvo != null ? `${v.mlMin} mL` : `${v.mlMin} – ${v.mlMax} mL`})
-                      </span>
-                    </p>
-                  ) : (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
-                      {r.doseAlvo != null ? `${v.mlMin} mL/dose` : `${v.mlMin} – ${v.mlMax} mL/dose`}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-          {r.volumes.some((v) => v.gotas) && (
-            <p style={{ fontSize: 9, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
-              Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
-            </p>
-          )}
-        </>
-      ) : (
-        <>
-          <div style={{ ...box, marginBottom: 6 }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Total por dia (faixa)</p>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>
-              {fmt(r.diaMin)} – {fmt(r.diaMax)}/dia
-              {r.diaAlvo != null && <span style={{ color: cor }}> · alvo {fmt(r.diaAlvo)}/dia</span>}
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: r.porTomada.length > 1 ? "1fr 1fr" : "1fr", gap: 6, marginBottom: 6 }}>
-            {r.porTomada.map((pt) => (
-              <div key={pt.tomadas} style={box}>
-                <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>{pt.tomadas === 1 ? "Dose única" : `${pt.tomadas}x/dia (${24 / pt.tomadas}/${24 / pt.tomadas}h)`}</p>
-                <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", margin: 0 }}>
-                  {pt.alvo != null ? `${fmt(pt.alvo)}/tomada` : `${fmt(pt.min)} – ${fmt(pt.max)}/tomada`}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {r.volumes.length > 0 && (
-            <div style={{ marginBottom: 6 }}>
-              {r.volumes.map((v) => (
-                <div key={v.label} style={{ ...box, marginBottom: 4 }}>
-                  <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Volume · {v.label}{v.freqLabel ? ` · ${v.freqLabel}` : ""}</p>
-                  {v.gotas ? (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
-                      {r.diaAlvo != null ? `${v.gtMin} gotas` : `${v.gtMin} – ${v.gtMax} gotas`}
-                      <span style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)" }}>
-                        {" "}({r.diaAlvo != null ? `${v.mlMin} mL` : `${v.mlMin} – ${v.mlMax} mL`})
-                      </span>
-                    </p>
-                  ) : (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: cor, margin: 0 }}>
-                      {r.diaAlvo != null ? `${v.mlMin} mL/tomada` : `${v.mlMin} – ${v.mlMax} mL/tomada`}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-          {r.volumes.some((v) => v.gotas) && (
-            <p style={{ fontSize: 9, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
-              Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
-            </p>
-          )}
-        </>
-      )}
-
-      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: r.excedeuTeto ? 6 : 0 }}>
-        <input
-          type="text" inputMode="decimal" value={alvoRaw}
-          onChange={(e) => setAlvoRaw(e.target.value)}
-          placeholder={`dose-alvo (${doseMinKg}–${doseMaxKg} mg/kg)`}
-          style={{ flex: 1, padding: "6px 9px", borderRadius: 7, fontSize: 12, border: "1px solid " + (alvoRaw && !alvoValido ? "#DC2626" : "#D1D5DB"), outline: "none", boxSizing: "border-box" }}
-        />
-        <span style={{ fontSize: 10, color: "var(--muted)", whiteSpace: "nowrap" }}>{ehDose ? "mg/kg/dose" : "mg/kg/dia"}</span>
-      </div>
-      {alvoRaw && !alvoValido && (
-        <p style={{ fontSize: 10, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({doseMinKg}–{doseMaxKg} mg/kg/{ehDose ? "dose" : "dia"}).</p>
-      )}
-
-      {r.excedeuTeto && (
-        <p style={{ fontSize: 11, color: "#DC2626", fontWeight: 700, margin: 0, display: "flex", alignItems: "center", gap: 4 }}>
-          <AlertTriangle size={12} style={{ flexShrink: 0 }} /> Excede o máximo recomendado — revisar dose.
-        </p>
-      )}
     </div>
   );
 }
@@ -386,7 +230,7 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
       {temCalculadora(drug) && indicKeys.length > 1 && (
         <IndicacaoSelector indicacoes={drug.indicacoes} sel={indAtiva} onSel={setIndSel} cor={cor} />
       )}
-      {temCalculadora(drug) && (peso || ehFixaAtiva) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} cor={cor} />}
+      {temCalculadora(drug) && (peso || ehFixaAtiva) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} pesoInput={false} cor={cor} />}
       {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
         <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid var(--border)", paddingTop: 6 }}>{drug.obs}</p>
