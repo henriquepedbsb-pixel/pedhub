@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -625,12 +626,10 @@ export default function Ventilacao() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
-          Referências: PALICC 2023 · Harriet Lane 22ª ed. · ARDSnet (adaptado pediátrico) · SSC 2026 · UpToDate Pediatric MV 2024.<br />
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="PALICC 2023 · Harriet Lane 22ª ed. · ARDSnet (adaptado pediátrico) · SSC 2026 · UpToDate Pediatric MV 2024"
+      />
     </div>
   );
 }
