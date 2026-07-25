@@ -1,6 +1,7 @@
 // src/modulos/dermato.jsx
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import CalcDose from "../components/CalcDose";
 import {
   Info,
   AlertTriangle,
@@ -106,9 +107,10 @@ const DERMATOSES = [
       ],
       porGrupo: {
         loc:  ["Mupirocina 2% ou ácido fusídico tópico, 3× ao dia, 5–7 dias"],
-        diss: ["Cefalexina 25–50 mg/kg/dia VO 7 dias (dose no PedFarma)"],
+        diss: ["Cefalexina 25–50 mg/kg/dia VO 7 dias"],
       },
     },
+    calcPorGrupo: { diss: [{ farmaco: "cefalexina", indicacao: "pele_partes_moles" }] },
     alarme: ["Glomerulonefrite pós-estreptocócica (impetigo por S. pyogenes)", "Celulite regional", "Bacteremia"],
   },
   { id:"escabiose",nome:"Escabiose (Sarna)",           cor:"#8B5CF6",
@@ -263,6 +265,9 @@ function BlocoTratamento({ d, grupo, onGrupo }) {
           </div>
         ))}
       </div>
+      {(d.calcPorGrupo?.[sel] || []).map((c) => (
+        <CalcDose key={c.farmaco + c.indicacao} farmaco={c.farmaco} indicacao={c.indicacao} cor={d.cor} />
+      ))}
     </>
   );
 }
