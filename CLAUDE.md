@@ -271,18 +271,25 @@ external store + `localStorage`.
 Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
 (Vite real) antes de considerar qualquer tarefa concluída.
 
-**STATUS (atualizado 23/07/2026):**
+**STATUS (atualizado 25/07/2026):**
 - **Dark mode: FEITO** (fora do escopo T1–T8; ver seções 10 e 11).
-- **T1 — não feito.** Não há `src/contexts/` nem `PacienteContext`.
-- **T2 — não feito**, mas a **infra já está pronta**: Vitest instalado e
-  configurado, CI roda `npm test` antes do build, e o padrão de lib testada já
-  está estabelecido em `src/lib/pa-*.js` (`pa-neonatal.js`, `pa-pediatrica.js`,
-  `pa-tratamento.js`) com testes em `src/lib/__tests__/`. Falta o essencial da
-  tarefa: **`src/lib/farmacos.js` e `src/lib/calc/` ainda não existem** —
-  `pedfarma.jsx` ainda carrega o array de fármacos inline.
-- **T3 — não feito.** Não há `src/components/CalcDose.jsx`.
-- **T4 — não feito.** Nenhuma entrada de `MODULOS` tem campo `keywords`; a
-  busca ainda indexa só o nome do módulo.
+- **T1 — FEITO** (external store, sem Context API). `src/lib/paciente.js`
+  (`sessionStorage`, chave `pedhub-paciente`, espelha `favoritos.js`) +
+  `src/components/BarraPaciente.jsx` (barra fina fixa colapsável no `App.jsx`).
+  Adoção módulo a módulo segue incremental — a infra + a barra estão prontas.
+- **T2 — FEITO.** `src/lib/farmacos.js` (catálogo fármaco+indicação, cada dose
+  com `fonte`) + `src/lib/calc/` (`dose.js`, `tig.js`, `gotejamento.js`,
+  `percentis.js`) com testes Vitest e `@vitest/coverage-v8`. `pedfarma.jsx`
+  importa da lib. CI roda `npm test` antes do build.
+- **T3 — FEITO (núcleo) · migração incremental em curso.**
+  `src/components/CalcDose.jsx` pronto e reutilizável (consome `farmacos.js` +
+  `paciente.js`). **Migração 1 feita:** `febre-sem-foco.jsx` (antitérmicos
+  paracetamol + ibuprofeno). **Backlog T3 (fazer em momento oportuno):** embutir
+  `<CalcDose>` nos demais módulos de maior tráfego, **um módulo por commit**,
+  priorizando pelo Cloudflare Analytics. Não sair embutindo em massa.
+- **T4 — FEITO.** Busca global por conteúdo via `SEARCH_TAGS` em `PedHub.jsx`
+  (acento/case-insensível, match por substring), exibindo "achado por X" quando
+  o resultado veio de uma keyword e não do nome/descrição visível.
 - **T5 — PARCIAL.** Favoritos ✓ (`src/lib/favoritos.js`, chave
   `pedhub-favoritos`). **Recentes ✗** — não há registro de últimos acessados.
 - **T6, T7, T8 — não feitos.**
@@ -383,9 +390,14 @@ Se uma indicação nova precisar de valor que não existe hoje no `pedfarma.jsx`
 
 ---
 
-## T3 — Componente `<CalcDose />`
+## T3 — Componente `<CalcDose />`  ·  STATUS: FEITO (núcleo ✓ · migração incremental em curso)
 
 **Objetivo:** eliminar o "vá até o pedfarma" sem duplicar valor nenhum.
+
+**Feito:** `src/components/CalcDose.jsx` (consome `farmacos.js` + `paciente.js`).
+Migração 1: `febre-sem-foco.jsx` (paracetamol + ibuprofeno).
+**Backlog (momento oportuno):** embutir nos demais módulos de maior tráfego,
+**um por commit**, priorizando pelo Cloudflare Analytics.
 
 - `src/components/CalcDose.jsx` — consome `src/lib/farmacos.js` e o
   `PacienteContext`. Assinatura: `<CalcDose farmaco="amoxicilina" indicacao="otite_media" />`
@@ -409,19 +421,22 @@ quais), **um módulo por commit**.
 
 ---
 
-## T4 — Busca global por conteúdo  ·  STATUS: NÃO FEITO (nenhum `keywords:` no array `MODULOS`)
+## T4 — Busca global por conteúdo  ·  STATUS: FEITO (via `SEARCH_TAGS` em `PedHub.jsx`, com "achado por X")
 
 **Problema:** o array `MODULOS` só indexa o nome do módulo. Quem digita
 "Rodwell", "Finnegan", "Broselow", "FLACC", "hiponatremia" ou "Capurro" não
 encontra nada.
 
-- Adicionar campo `keywords: []` a cada entrada do array `MODULOS` em
-  `PedHub.jsx` — 10 a 20 termos clínicos por módulo (escalas, scores,
-  patologias, sinônimos, siglas).
-- Busca deve ser **acento-insensível** e case-insensível
-  (`normalize("NFD").replace(/[̀-ͯ]/g, "")`).
-- Sem lib nova de fuzzy search. Match por substring já resolve.
-- Exibir qual keyword deu match, para o usuário entender o resultado.
+**Como ficou (decisão de implementação):** em vez de um campo `keywords: []`
+por entrada do array `MODULOS`, os termos clínicos moram num mapa
+**`SEARCH_TAGS`** em `PedHub.jsx` (chave = rota do módulo → string de termos).
+Efeito idêntico ao pedido — 10 a 20 termos clínicos por módulo (escalas,
+scores, patologias, sinônimos, siglas) — sem inchar cada entrada do catálogo.
+- Busca **acento-insensível** e case-insensível (`normalizarBusca` →
+  `normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase()`).
+- Sem lib nova de fuzzy search. Match por substring (`casaBusca`).
+- `keywordDoMatch` exibe "achado por X" quando o resultado veio de uma tag
+  (não do nome/descrição visível), para o usuário entender o resultado.
 
 **Critérios de aceite:**
 - [ ] "rodwell" → sepse · "broselow" → urgencias · "flacc" → dor ·
