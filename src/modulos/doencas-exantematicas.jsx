@@ -1,5 +1,6 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import CalcDose from "../components/CalcDose";
 import {
   Thermometer,
   ChevronDown,
@@ -360,7 +361,8 @@ export default function DoencasExantematicas() {
                 <Bullet>Febre reumática se não tratada adequadamente</Bullet>
                 <Bullet>Glomerulonefrite pós-estreptocócica</Bullet>
               </ul>
-              <AlertaBox tone="blue">Tratamento com penicilina ou amoxicilina — dose no PedFarma.</AlertaBox>
+              <AlertaBox tone="blue">Tratamento com penicilina ou amoxicilina (GAS).</AlertaBox>
+              <CalcDose farmaco="amoxicilina" indicacao="faringite" cor="#EF4444" />
               <FonteTag>SBP</FonteTag>
             </Section>
           </>
