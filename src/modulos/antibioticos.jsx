@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import CalcDose from "../components/CalcDose";
 import { Stethoscope, AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
 
 const CP = '#0D9488';
@@ -276,6 +277,58 @@ const DADOS = {
   },
 };
 
+/* Agentes ORAIS de 1ª linha/alternativa desta síndrome+faixa que existem no
+   catálogo (farmacos.js), mapeados à indicação que ESPELHA a recomendação do
+   próprio módulo. Só VO — esquemas IV/hospitalares seguem no Pedfarma.
+   Chave: [sindrome][faixaIdx]. Ausência = sem agente VO no catálogo p/ a faixa
+   (ex.: meningite e faixas < 2 meses são IV → aponta o Pedfarma). */
+const CALC_VO = {
+  pneumonia: {
+    1: [ // 2 meses – 5 anos: amoxicilina alta dose (ambulatorial) + azitro (atípica)
+      { farmaco: "amoxicilina", indicacao: "pneumonia_alta" },
+      { farmaco: "azitromicina", indicacao: "geral" },
+    ],
+    2: [ // > 5 anos: amoxicilina típica + macrolídeos (atípica)
+      { farmaco: "amoxicilina", indicacao: "pneumonia_tipica" },
+      { farmaco: "azitromicina", indicacao: "geral" },
+      { farmaco: "claritromicina", indicacao: "geral" },
+    ],
+  },
+  itu: {
+    2: [ // > 2 anos (cistite baixa VO); cefixima da pielonefrite não está no catálogo
+      { farmaco: "tmpsmt", indicacao: "itu" },
+      { farmaco: "nitrofurantoina", indicacao: "itu_tratamento" },
+      { farmaco: "cefalexina", indicacao: "itu" },
+      { farmaco: "amoxiclav", indicacao: "itu" },
+    ],
+  },
+  celulite: {
+    0: [ // leve ambulatorial: cefalexina (não-MRSA) + clindamicina (MRSA)
+      { farmaco: "cefalexina", indicacao: "pele_partes_moles" },
+      { farmaco: "clindamicina", indicacao: "geral" },
+    ],
+  },
+  oma: {
+    0: [ { farmaco: "amoxicilina", indicacao: "otite_media" }, { farmaco: "amoxiclav", indicacao: "otite_media" } ],
+    1: [
+      { farmaco: "amoxicilina", indicacao: "otite_media" },
+      { farmaco: "cefuroxima", indicacao: "geral" },
+      { farmaco: "azitromicina", indicacao: "geral" },
+      { farmaco: "claritromicina", indicacao: "geral" },
+    ],
+    2: [ { farmaco: "amoxicilina", indicacao: "otite_media" }, { farmaco: "amoxiclav", indicacao: "otite_media" } ],
+  },
+  faringe: {
+    0: [
+      { farmaco: "amoxicilina", indicacao: "faringite" },
+      { farmaco: "cefalexina", indicacao: "faringite" },
+      { farmaco: "azitromicina", indicacao: "geral" },
+      { farmaco: "claritromicina", indicacao: "geral" },
+    ],
+  },
+  // meningite: sem entrada — todos IV.
+};
+
 function interpretarInternacao(v) {
   if (v === 'sim') return { bg: "var(--tint-red)", border: '#FECACA', cor: "var(--tx-red)", label: 'INTERNAÇÃO', badgeBg: "var(--tint-red)", badgeCor: "var(--tx-red)" };
   if (v === 'condicional') return { bg: "var(--tint-amber)", border: '#FDE68A', cor: "var(--tx-amber)", label: 'AVALIAR', badgeBg: "var(--tint-amber)", badgeCor: "var(--tx-amber)" };
@@ -289,6 +342,7 @@ export default function Antibioticos() {
 
   const ds = DADOS[sindrome];
   const df = ds.grupos[faixaIdx];
+  const calcsVO = (CALC_VO[sindrome] || {})[faixaIdx] || [];
 
   const handleSindrome = (id) => { setSindrome(id); setFaixaIdx(0); };
   const inter = interpretarInternacao(df.internacao);
@@ -432,14 +486,30 @@ export default function Antibioticos() {
           </div>
         )}
 
-        {/* Cross-ref Pedfarma */}
-        <div style={{ background: "var(--tint-purple)", border: '1.5px solid #DDD6FE', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', gap: 10, alignItems: 'center' }}>
-          <Pill size={20} color="#8B5CF6" style={{ flexShrink: 0 }} />
-          <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-purple)" }}>Doses individuais por peso</div>
-            <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>Calcule doses por kg no módulo <strong>Pedfarma</strong>.</div>
+        {/* Calcular dose por peso (VO) — agentes orais desta faixa, inline.
+            Esquemas IV/hospitalares seguem no Pedfarma. */}
+        {calcsVO.length > 0 ? (
+          <div style={{ background: "var(--surface)", border: '1px solid var(--border)', borderRadius: 12, padding: 14, marginBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <Pill size={16} color={CP} />
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase', letterSpacing: '0.05em' }}>Calcular dose por peso — VO</div>
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>
+              Agentes orais desta faixa. Demais opções (IV/hospitalar) no Pedfarma.
+            </div>
+            {calcsVO.map((c) => (
+              <CalcDose key={c.farmaco + c.indicacao} farmaco={c.farmaco} indicacao={c.indicacao} cor={CP} />
+            ))}
           </div>
-        </div>
+        ) : (
+          <div style={{ background: "var(--tint-purple)", border: '1.5px solid #DDD6FE', borderRadius: 12, padding: 14, marginBottom: 10, display: 'flex', gap: 10, alignItems: 'center' }}>
+            <Pill size={20} color="#8B5CF6" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-purple)" }}>Doses individuais por peso</div>
+              <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>Esquema com agentes IV/hospitalares — calcule as doses no módulo <strong>Pedfarma</strong>.</div>
+            </div>
+          </div>
+        )}
       </div>
 
       <RodapeModulo
