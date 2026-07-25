@@ -299,15 +299,20 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   (feedback visual). Botão "copiar conduta" embutido em `CalcDose` (cobre
   `pedfarma` + `febre-sem-foco`), `isr`, `hidratacao`, `tig-neonatal`, `canguru`
   (texto plano, sem nome do paciente) e `dilucao-bic` (padronizado). Testes Vitest.
-- **T7 — FEITO (todos os 30 módulos que tinham disclaimer solto).**
+- **T7 — FEITO (todos os módulos-spoke; 2 hubs excluídos por serem portais).**
   `src/components/RodapeModulo.jsx` (`Revisado em MM/AAAA · Fontes: X` +
   disclaimer padrão obrigatório `DISCLAIMER_PADRAO`, chrome neutro; prop
-  opcional `nota` p/ avisos como CIATOX/Pedfarma). Data **07/2026** (decisão do
-  usuário — não inventada) e fontes **derivadas das citações já presentes em
-  cada arquivo** (não inventadas). Nenhum módulo mantém o disclaimer literal —
-  todos passam pelo componente. **Exceção:** `dor-neonatal` (`DorNeonatal.jsx`)
-  não citava fonte no arquivo → ficou só com data + disclaimer e um TODO para o
-  médico confirmar as referências das escalas (NIPS/PIPP-R/N-PASS/CRIES).
+  opcional `nota` p/ avisos clínicos — CIATOX, "consultar Pedfarma", limites de
+  concentração etc.). Data **07/2026** (decisão do usuário — não inventada) e
+  fontes **derivadas das citações já presentes em cada arquivo** (não
+  inventadas). Convertidos em 4 lotes: os 30 com disclaimer no formato exato +
+  os 25 com disclaimer em formato variante (fonte→`fonte`, aviso clínico
+  inline→`nota`, nada descartado). Só `neonatal.jsx`/`pediatria-geral.jsx`
+  (hubs) mantêm o rodapé curto próprio, e `dexametasona-dbp` preserva a string
+  de export "Ref: PedHub · Apoio à decisão…" (texto de cópia, não o rodapé
+  visual). **Pendências de conteúdo (não de engenharia):** `dor-neonatal` usa
+  referências das escalas por autor sem ano (confirmar); as fontes dos módulos
+  variantes são sínteses das citações internas (revisão clínica bem-vinda).
 - **T8 — não feito.**
 
 ---

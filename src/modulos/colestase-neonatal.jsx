@@ -3,6 +3,7 @@
 // Base: NASPGHAN/ESPGHAN 2017 · SBP · Diretrizes de Atresia de Vias Biliares
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import {
   AlertTriangle,
   CheckCircle,
@@ -373,14 +374,10 @@ export default function ColestaseNeonatal() {
         <ColestaseConteudo />
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Baseado nas diretrizes NASPGHAN/ESPGHAN 2017 de colestase neonatal e recomendações da SBP. Não substitui julgamento clínico nem protocolo institucional.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="NASPGHAN/ESPGHAN 2017 (colestase neonatal) · SBP"
+      />
     </div>
   );
 }

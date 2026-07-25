@@ -36,6 +36,7 @@
 //   Fenton 2013: Fenton TR & Kim JH. BMC Pediatrics 2013;13:59.
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Scale, Info } from "lucide-react";
 import {
   getPretermPercs, classify, classifyOMS,
@@ -792,17 +793,11 @@ export default function Percentis({ somenteOMS = false }) {
         />
       )}
 
-      {/* Disclaimer */}
-      <div style={{ marginTop:"24px", padding:"12px", background:"var(--surface-2)", borderRadius:"10px",
-        borderLeft:"3px solid #9CA3AF" }}>
-        <p style={{ margin:0, fontSize:"11px", color:"var(--muted)", lineHeight:"1.5" }}>
-          <strong>Apoio à decisão clínica.</strong> Não substitui julgamento médico nem protocolo institucional.
-          Valores derivados das publicações originais (OMS 2006, Intergrowth-21st 2014,
-          Intergrowth-21st Postnatal 2015, Fenton 2013). Nas curvas de prematuro o z-score é
-          interpolado/extrapolado a partir dos centis publicados (P3–P97) e pode ultrapassar
-          ±2 DP nos extremos.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="OMS 2006 · Intergrowth-21st 2014 · Intergrowth-21st Postnatal 2015 · Fenton 2013"
+        nota="Nas curvas de prematuro o z-score é interpolado/extrapolado a partir dos centis publicados (P3–P97) e pode ultrapassar ±2 DP nos extremos."
+      />
     </div>
   );
 }

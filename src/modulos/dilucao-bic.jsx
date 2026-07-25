@@ -6,6 +6,7 @@
 
 /* eslint-disable react-refresh/only-export-components -- exporta DROGAS (dados puros) para testes unitários */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
@@ -363,15 +364,11 @@ export default function DilucaoBic() {
       <div style={{ padding: 16 }}>
         <TabBIC />
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> NeoFax 2023 · Harriet Lane · SBP.
-            Verificar protocolo institucional. Não substitui prescrição médica individualizada.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="NeoFax 2023 · Harriet Lane · SBP"
+        nota="Verificar protocolo institucional. Não substitui prescrição médica individualizada."
+      />
     </div>
   );
 }

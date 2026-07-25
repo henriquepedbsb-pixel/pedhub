@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta getNa/getK (helpers puros) para testes unitários */
 import { useState, useMemo } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
@@ -672,17 +673,11 @@ export default function TigNeonatal() {
 
       </div>
 
-      {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> SBP · AAP · ESPGHAN/ESPEN 2018 · NeoFax 2023.
-            NaCl 20% = 3,4 mEq/mL · KCl 10% = 1,34 mEq/mL · conc. periférica máx: 12,5%.
-            Não substitui julgamento clínico nem protocolo institucional.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP · AAP · ESPGHAN/ESPEN 2018 · NeoFax 2023"
+        nota="NaCl 20% = 3,4 mEq/mL · KCl 10% = 1,34 mEq/mL · concentração periférica máx. 12,5%."
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, ChevronRight, CheckCircle } from "lucide-react";
 import CalcDose from "../components/CalcDose";
 
@@ -189,14 +190,10 @@ export default function FebreSemFoco() {
         <CalcDose farmaco="ibuprofeno" indicacao="geral" cor={PRIMARY} />
       </div>
 
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Baseado em AAP Clinical Practice Guideline 2021 (Pantell), Critérios de Rochester, PECARN (Kuppermann 2019) e SBP. Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="AAP Clinical Practice Guideline 2021 (Pantell) · Critérios de Rochester · PECARN (Kuppermann 2019) · SBP"
+      />
     </div>
   );
 }

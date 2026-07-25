@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta as funções de interpretação de score para testes unitários */
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, CheckCircle } from "lucide-react";
 
 const PRIMARY = "#F97316";
@@ -336,14 +337,10 @@ export default function Scores() {
         {tab === 2 && <TabPEWS />}
         {tab === 3 && <TabFinnegan />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Gorelick 1997/SBP 2022 · Westley 1978/SBP 2017 · PEWS Monaghan 2005 · Finnegan modificada/AAP 2020. Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Gorelick 1997/SBP 2022 · Westley 1978/SBP 2017 · PEWS Monaghan 2005 · Finnegan modificada/AAP 2020"
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, ChevronDown, ChevronUp, CheckCircle } from "lucide-react";
 
 const PRIMARY = "#0891B2";
@@ -286,14 +287,10 @@ export default function CuidadosPeleRn() {
         {tab === 2 && <TabEspecificos />}
         {tab === 3 && <TabPrematuro />}
       </div>
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> SBP GPA nº 140 (março/2024) · AWHONN 2018 · Chalmers et al. (BEEP, Lancet 2020) · Skjerven et al. (PreventADALL, Lancet 2020) · Lowe et al. (STOP-AD, J Allergy Clin Immunol 2022). Não substitui julgamento clínico.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP GPA nº 140 (março/2024) · AWHONN 2018 · Chalmers et al. (BEEP, Lancet 2020) · Skjerven et al. (PreventADALL, Lancet 2020) · Lowe et al. (STOP-AD, J Allergy Clin Immunol 2022)"
+      />
     </div>
   );
 }

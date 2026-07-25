@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Calendar, CheckCircle, Info, AlertTriangle, Clock, Syringe } from "lucide-react";
 
 const PRIMARY = "#06B6D4";
@@ -621,15 +622,11 @@ export default function Vacinal() {
         </div>
       )}
 
-      {/* Disclaimer */}
-      <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Info size={15} color="var(--muted)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>
-            <strong>Apoio à decisão clínica.</strong> Calendário e regras de atraso baseados em SBIm 2025/2026, NT 77/2025 DPNI e Guia Técnico PNI jun/2026. Esquemas de catch-up devem ser confirmados no Manual de Normas e Procedimentos para Vacinação (MS) e adequados ao CRIE em imunodeprimidos. Não substitui avaliação clínica individual.
-          </p>
-        </div>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBIm 2025/2026 · NT 77/2025 DPNI · Guia Técnico PNI jun/2026"
+        nota="Catch-up: confirmar no Manual de Normas e Procedimentos para Vacinação (MS) e adequar ao CRIE em imunodeprimidos."
+      />
     </div>
   );
 }
