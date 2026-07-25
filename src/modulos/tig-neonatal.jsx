@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components -- exporta getNa/getK (helpers puros) para testes unitários */
 import { useState, useMemo } from "react";
 import AvisoSanidade from "../components/AvisoSanidade";
+import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
+import { montarTextoConduta } from "../lib/exportarTexto";
 import { tigGlicoseGramasDia, tigConcentracao } from "../lib/calc/tig";
 import {
   Scale, Calculator, ClipboardList, BarChart2,
@@ -264,6 +266,35 @@ export default function TigNeonatal() {
       vol_nacl, vol_kcl, dia,
     };
   }, [peso, tig, vol, dia, diurese, naManual, kManual, caManual]);
+
+  // Conduta em texto plano (só peso/TIG/dia + prescrição; sem paciente).
+  const montarTextoTig = () => {
+    if (!calc || calc.error) return "";
+    const glicose = calc.sgItems.map((i) => `${i.label}: ${i.vol.toFixed(1)} mL`);
+    const elet = [
+      `NaCl 20%: ${calc.vol_nacl.toFixed(1)} mL (${calc.na_meq.toFixed(1)} mEq Na · ${calc.na_dose} mEq/kg/dia)`,
+      calc.k_dose > 0
+        ? `KCl 10%: ${calc.vol_kcl.toFixed(1)} mL (${calc.k_meq.toFixed(2)} mEq K · ${calc.k_dose} mEq/kg/dia)`
+        : "KCl 10%: suspenso — sem diurese no 1.º dia",
+      `Gluconato Ca 10%: ${calc.ca_ml.toFixed(1)} mL (${(calc.ca_ml * CA_MEQ_ML).toFixed(1)} mEq Ca · ${calc.ca_rate} mL/kg/dia)`,
+    ];
+    return montarTextoConduta({
+      titulo: "Hidratação venosa neonatal (TIG)",
+      contexto: [
+        { rotulo: "Peso", valor: `${peso} kg` },
+        { rotulo: "TIG", valor: `${tig} mg/kg/min` },
+        { rotulo: "Dia de vida", valor: `${calc.dia}` },
+      ],
+      blocos: [
+        { titulo: "Solução glicosada", itens: glicose },
+        { titulo: "Eletrólitos", itens: elet },
+        { titulo: "Volume total", itens: [
+          `${calc.vol_total.toFixed(1)} mL/dia · ${calc.mlh.toFixed(1)} mL/h`,
+          `Glicose ${calc.gg.toFixed(1)} g/dia · conc. final ${(calc.conc_alvo * 100).toFixed(1)}%`,
+        ] },
+      ],
+    });
+  };
 
   /* Hero */
   const heroGrad = !calc || calc.conc <= 12.5
@@ -542,6 +573,9 @@ export default function TigNeonatal() {
                       Concentração acima de 50%: não atingível com SG 50%. Reduza a TIG ou aumente o volume.
                     </div>
                   )}
+                  <div style={{ marginTop: 12 }}>
+                    <BotaoCopiar montar={montarTextoTig} cor={AZ_E} rotulo="Copiar prescrição" />
+                  </div>
                 </div>
               </div>
             )}

@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { Droplets, Info, AlertTriangle, CheckCircle } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
+import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
+import { montarTextoConduta } from "../lib/exportarTexto";
 
 const PRIMARY = "#3B82F6";
 
@@ -106,6 +108,30 @@ function TabHolliday({ peso }) {
     : peso <= 20 ? "1.000 + " + (peso - 10) * 50 + " mL"
     : "1.500 + " + (peso - 20) * 20 + " mL";
 
+  const montarTexto = () => montarTextoConduta({
+    titulo: "Hidratação de manutenção — Holliday-Segar",
+    contexto: [
+      { rotulo: "Peso", valor: `${peso} kg` },
+      { rotulo: "Solução", valor: tipoSol === "iso" ? "isotônica" : "hipotônica" },
+    ],
+    blocos: [
+      { titulo: "Volume", itens: [
+        `Volume diário: ${vol} mL/dia`,
+        `Volume horário: ${volHora} mL/h`,
+      ] },
+      { titulo: "Eletrólitos de manutenção", itens: [
+        `Sódio (Na) — ${naPerKg} mEq/kg/dia: ${naMeq} mEq/dia (NaCl 20% ${naclMl} mL)`,
+        `Potássio (K) — ${kPerKg} mEq/kg/dia: ${kMeq} mEq/dia (KCl 10% ${kclMl} mL)`,
+      ] },
+      { titulo: `Prescrição — ${nSoros} ${nSoros > 1 ? "soros" : "soro"} de ${mlPorSoro} mL`, itens: [
+        `Cada soro (${mlPorSoro} mL): SG 5% ${sgPorSoro} mL + NaCl 20% ${naclPorSoro} mL + KCl 10% ${kclPorSoro} mL`,
+        `Correr cada soro em ${horasPorSoro} h (${volHora} mL/h)`,
+        nSoros > 1 ? `Repetir ${nSoros}× em 24h (${nSoros} × ${mlPorSoro} mL = ${vol} mL)` : null,
+        "KCl apenas após confirmar diurese. Limite periférico 40 mEq/L.",
+      ] },
+    ],
+  });
+
   return (
     <div>
       <InfoBox color={PRIMARY}>
@@ -207,6 +233,10 @@ function TabHolliday({ peso }) {
           text="* KCl apenas após confirmar diurese. Limite periférico: 40 mEq/L. Máx: 0,5 mEq/kg/h em acesso central com monitorização."
           color="#D97706"
         />
+
+        <div style={{ marginTop: 12 }}>
+          <BotaoCopiar montar={montarTexto} cor={corTipo} rotulo="Copiar prescrição" />
+        </div>
 
         {/* Notas clínicas */}
         <div style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)" }}>

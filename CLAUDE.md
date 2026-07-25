@@ -290,9 +290,16 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
 - **T4 — FEITO.** Busca global por conteúdo via `SEARCH_TAGS` em `PedHub.jsx`
   (acento/case-insensível, match por substring), exibindo "achado por X" quando
   o resultado veio de uma keyword e não do nome/descrição visível.
-- **T5 — PARCIAL.** Favoritos ✓ (`src/lib/favoritos.js`, chave
-  `pedhub-favoritos`). **Recentes ✗** — não há registro de últimos acessados.
-- **T6, T7, T8 — não feitos.**
+- **T5 — ENCERRADA.** Favoritos ✓ (`src/lib/favoritos.js`, chave
+  `pedhub-favoritos`). **Recentes descartado por decisão do usuário
+  (25/07/2026)** — não será implementado; a estrela de favoritos cobre a
+  necessidade de acesso rápido.
+- **T6 — FEITO.** `src/lib/exportarTexto.js` (`montarTextoConduta` + `copiarTexto`
+  com fallback + `RODAPE_EXPORT` obrigatório) e `src/components/BotaoCopiar.jsx`
+  (feedback visual). Botão "copiar conduta" embutido em `CalcDose` (cobre
+  `pedfarma` + `febre-sem-foco`), `isr`, `hidratacao`, `tig-neonatal`, `canguru`
+  (texto plano, sem nome do paciente) e `dilucao-bic` (padronizado). Testes Vitest.
+- **T7, T8 — não feitos.**
 
 ---
 
@@ -446,7 +453,7 @@ scores, patologias, sinônimos, siglas) — sem inchar cada entrada do catálogo
 
 ---
 
-## T5 — Favoritos + recentes  ·  STATUS: PARCIAL (favoritos ✓ em `src/lib/favoritos.js` / chave `pedhub-favoritos`; recentes ✗)
+## T5 — Favoritos + recentes  ·  STATUS: ENCERRADA (favoritos ✓; recentes descartado por decisão do usuário em 25/07/2026)
 
 - `localStorage` (aqui pode: é preferência do médico, não dado de paciente)
 - Ícone de estrela no card do hub; seção "Seus módulos" no topo do `PedHub.jsx`
@@ -461,7 +468,17 @@ scores, patologias, sinônimos, siglas) — sem inchar cada entrada do catálogo
 
 ---
 
-## T6 — Copiar resultado como texto
+## T6 — Copiar resultado como texto  ·  STATUS: FEITO
+
+**Como ficou:** `src/lib/exportarTexto.js` expõe `montarTextoConduta({titulo,
+contexto, blocos})` (formata texto plano, descarta campos vazios/`NaN`, encerra
+sempre com `RODAPE_EXPORT`) e `copiarTexto()` (`navigator.clipboard` com fallback
+`textarea`+`execCommand`, degrada em silêncio). `src/components/BotaoCopiar.jsx`
+é o botão reutilizável com feedback (Copy→Check ~2s). Embutido via `CalcDose`
+(cobre `pedfarma` + `febre-sem-foco`) e diretamente em `isr`, `hidratacao`,
+`tig-neonatal`, `canguru` e `dilucao-bic` (este já tinha cópia — padronizado
+para o rodapé obrigatório + fallback). O texto do `canguru` **não inclui o nome
+do RN** (privacidade). Cada módulo passa sua cor de identidade ao botão.
 
 - Botão "copiar" nas calculadoras que geram conduta: `pedfarma`, `isr`,
   `dilucao-bic`, `hidratacao`, `canguru`, `tig-neonatal`

@@ -18,6 +18,20 @@ import { Pill, AlertTriangle } from "lucide-react";
 import { DRUGS } from "../lib/farmacos";
 import { calcularDose } from "../lib/calc/dose";
 import { usePaciente, parsePesoKg } from "../lib/paciente";
+import BotaoCopiar from "./BotaoCopiar";
+import { montarTextoConduta } from "../lib/exportarTexto";
+
+// Descreve um volume calculado como linha de texto (para copiar a conduta).
+// `unico` = há dose-alvo definida (mostra valor único em vez de faixa).
+const fmtVolTexto = (v, unico, sufixo) => {
+  if (v.gotas) {
+    const g = unico ? `${v.gtMin} gotas` : `${v.gtMin} – ${v.gtMax} gotas`;
+    const ml = unico ? `${v.mlMin} mL` : `${v.mlMin} – ${v.mlMax} mL`;
+    return `${v.label}: ${g} (${ml})`;
+  }
+  const ml = unico ? `${v.mlMin} mL${sufixo}` : `${v.mlMin} – ${v.mlMax} mL${sufixo}`;
+  return `${v.label}${v.freqLabel ? " · " + v.freqLabel : ""}: ${ml}`;
+};
 
 // Cor por categoria (compartilhada com pedfarma.jsx).
 export const CAT_CORES = {
@@ -61,9 +75,17 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
         <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 6px" }}>
           {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
         </p>
-        <div style={box}>
+        <div style={{ ...box, marginBottom: 8 }}>
           <p style={{ fontSize: 15, fontWeight: 800, color: corFinal, margin: 0 }}>{valor} {ind.unidade}</p>
         </div>
+        <BotaoCopiar
+          cor={corFinal}
+          rotulo="Copiar dose"
+          texto={montarTextoConduta({
+            titulo: `${drug.nome}${ind.label ? " — " + ind.label : ""}`,
+            blocos: [{ itens: [`Dose fixa: ${valor} ${ind.unidade}`, `Fonte: ${ind.fonte}`] }],
+          })}
+        />
       </div>
     );
   }
@@ -81,6 +103,35 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
 
   const fmt = (mg) => (mg >= 1000 ? `${(mg / 1000).toFixed(mg % 1000 === 0 ? 0 : 2)} g` : `${mg} mg`);
   const inpStyle = { flex: 1, padding: "6px 9px", borderRadius: 7, fontSize: 12, border: "1px solid #D1D5DB", outline: "none", boxSizing: "border-box" };
+
+  // Monta a conduta em texto plano para copiar (só peso + dose; sem paciente).
+  const montarTexto = () => {
+    if (!peso || !r) return "";
+    const itens = [];
+    if (r.modo === "dose") {
+      let s = `Por dose: ${fmt(r.doseMin)} – ${fmt(r.doseMax)}/dose`;
+      if (r.doseAlvo != null) s += ` (alvo ${fmt(r.doseAlvo)}/dose)`;
+      itens.push(s);
+      r.volumes.forEach((v) => itens.push(fmtVolTexto(v, r.doseAlvo != null, "/dose")));
+    } else {
+      let s = `Total/dia: ${fmt(r.diaMin)} – ${fmt(r.diaMax)}/dia`;
+      if (r.diaAlvo != null) s += ` (alvo ${fmt(r.diaAlvo)}/dia)`;
+      itens.push(s);
+      r.porTomada.forEach((pt) => {
+        const lbl = pt.tomadas === 1 ? "Dose única" : `${pt.tomadas}x/dia (${24 / pt.tomadas}/${24 / pt.tomadas}h)`;
+        const val = pt.alvo != null ? `${fmt(pt.alvo)}/tomada` : `${fmt(pt.min)} – ${fmt(pt.max)}/tomada`;
+        itens.push(`${lbl}: ${val}`);
+      });
+      r.volumes.forEach((v) => itens.push(fmtVolTexto(v, r.diaAlvo != null, "/tomada")));
+    }
+    if (r.excedeuTeto) itens.push("! Excede o máximo recomendado — revisar dose.");
+    itens.push(`Fonte: ${ind.fonte}`);
+    return montarTextoConduta({
+      titulo: `${drug.nome}${ind.label ? " — " + ind.label : ""}`,
+      contexto: [{ rotulo: "Peso", valor: `${peso} kg` }],
+      blocos: [{ itens }],
+    });
+  };
 
   return (
     <div style={wrap}>
@@ -209,6 +260,9 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
               <AlertTriangle size={12} style={{ flexShrink: 0 }} /> Excede o máximo recomendado — revisar dose.
             </p>
           )}
+          <div style={{ marginTop: 8 }}>
+            <BotaoCopiar montar={montarTexto} cor={corFinal} rotulo="Copiar dose" />
+          </div>
         </>
       )}
     </div>

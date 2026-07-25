@@ -10,6 +10,7 @@ import { Info, AlertTriangle, Copy, CheckCircle } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
 import { rateA, rateB } from "../lib/calc/gotejamento";
+import { copiarTexto, RODAPE_EXPORT } from "../lib/exportarTexto";
 
 const PRIMARY = "#0D9488";
 const C = "#DC2626";
@@ -205,16 +206,14 @@ function TabBIC() {
       `Acesso: ${d.acesso}`,
       d.alertas.length ? "! " + d.alertas.join("  ! ") : "",
       "",
-      "Ref: NeoFax 2023 · Harriet Lane · PedHub",
+      "Ref: NeoFax 2023 · Harriet Lane",
+      RODAPE_EXPORT,
     ].filter(l => l !== undefined).join("\n");
   }
 
   async function copiar() {
-    try {
-      await navigator.clipboard.writeText(gerarTxt());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+    const ok = await copiarTexto(gerarTxt());
+    if (ok) { setCopied(true); setTimeout(() => setCopied(false), 2500); }
   }
 
   const GRUPOS = ["Vasoativa", "Sedoanalgesia", "Metabólico"];
