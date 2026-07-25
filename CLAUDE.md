@@ -283,10 +283,14 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   importa da lib. CI roda `npm test` antes do build.
 - **T3 — FEITO (núcleo) · migração incremental em curso.**
   `src/components/CalcDose.jsx` pronto e reutilizável (consome `farmacos.js` +
-  `paciente.js`). **Migração 1 feita:** `febre-sem-foco.jsx` (antitérmicos
-  paracetamol + ibuprofeno). **Backlog T3 (fazer em momento oportuno):** embutir
-  `<CalcDose>` nos demais módulos de maior tráfego, **um módulo por commit**,
-  priorizando pelo Cloudflare Analytics. Não sair embutindo em massa.
+  `paciente.js`). **Migrações feitas:** (1) `febre-sem-foco.jsx` (antitérmicos
+  paracetamol + ibuprofeno); (2) `dor.jsx` (Degrau 1 da escada: paracetamol +
+  dipirona + ibuprofeno). **Backlog T3 (fazer em momento oportuno):** embutir
+  `<CalcDose>` nos demais módulos de maior tráfego, **um módulo por commit**
+  (próximos priorizados: `antibioticos`, `gastropediatria`). Não sair embutindo
+  em massa. **Nota de divergência resolvida (25/07/2026):** dipirona no `dor`
+  estava 15–25 mg/kg/dose vs catálogo 10–15 — usuário confirmou o catálogo
+  (Harriet Lane/SBP); texto do `dor` alinhado para 10–15.
 - **T4 — FEITO.** Busca global por conteúdo via `SEARCH_TAGS` em `PedHub.jsx`
   (acento/case-insensível, match por substring), exibindo "achado por X" quando
   o resultado veio de uma keyword e não do nome/descrição visível.
