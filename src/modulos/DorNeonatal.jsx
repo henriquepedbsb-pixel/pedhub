@@ -510,12 +510,11 @@ export default function DorNeonatal() {
         </>}
 
         {/* ── Disclaimer padrão ────────────────────────────────────────── */}
-        {/* Fontes = referências primárias das escalas implementadas (autores,
-            sem ano para não arriscar data). Confirmar/complementar com o médico
-            se quiser as citações completas. */}
+        {/* Fontes = referências primárias das 4 escalas implementadas
+            (verificadas: PubMed/periódico de origem). */}
         <RodapeModulo
           revisao="07/2026"
-          fonte="Escalas validadas: NIPS (Lawrence et al.) · PIPP-R (Stevens et al.) · N-PASS (Hummel et al.) · CRIES (Krechel & Bildner)"
+          fonte="NIPS: Lawrence J et al. Neonatal Netw 1993;12(6):59-66 · PIPP-R: Stevens BJ et al. Clin J Pain 2014;30(3):238-243 · N-PASS: Hummel P et al. J Perinatol 2008;28(1):55-60 · CRIES: Krechel SW, Bildner J. Paediatr Anaesth 1995;5(1):53-61"
         />
 
 
