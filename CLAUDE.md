@@ -299,13 +299,15 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   (feedback visual). Botão "copiar conduta" embutido em `CalcDose` (cobre
   `pedfarma` + `febre-sem-foco`), `isr`, `hidratacao`, `tig-neonatal`, `canguru`
   (texto plano, sem nome do paciente) e `dilucao-bic` (padronizado). Testes Vitest.
-- **T7 — EM CURSO (infra ✓ · lote 1 aplicado).** `src/components/RodapeModulo.jsx`
-  (`Revisado em MM/AAAA · Fontes: X` + disclaimer padrão obrigatório, chrome
-  neutro). Data de revisão **07/2026** (decisão do usuário — não inventada) e
-  **citação completa preservada** por módulo. Lote 1 aplicado a `bronquiolite`,
-  `eletrolitos`, `sepse`, `nec`, `hipotermia`. **Backlog:** demais módulos por
-  lotes pequenos; os que usam disclaimer em classes Tailwind (sem fonte inline)
-  precisam da fonte confirmada antes.
+- **T7 — EM CURSO (infra ✓ · lotes 1–2 aplicados, 9 módulos).**
+  `src/components/RodapeModulo.jsx` (`Revisado em MM/AAAA · Fontes: X` +
+  disclaimer padrão obrigatório, chrome neutro). Data de revisão **07/2026**
+  (decisão do usuário — não inventada) e **citação completa preservada** por
+  módulo. Aplicado: `bronquiolite`, `eletrolitos`, `sepse`, `nec`, `hipotermia`
+  (lote 1) + `analgesia-sedacao`, `isr`, `surfactante`, `ventilacao` (lote 2 —
+  todos com fonte já inline). **Backlog:** ~21 módulos com disclaimer **sem
+  fonte inline** (classes Tailwind ou estilo com ícone) — precisam da fonte
+  principal confirmada pelo usuário antes da troca.
 - **T8 — não feito.**
 
 ---
@@ -499,7 +501,7 @@ do RN** (privacidade). Cada módulo passa sua cor de identidade ao botão.
 
 ---
 
-## T7 — Rodapé padronizado de revisão  ·  STATUS: EM CURSO (infra ✓ · lote 1: bronquiolite, eletrolitos, sepse, nec, hipotermia)
+## T7 — Rodapé padronizado de revisão  ·  STATUS: EM CURSO (infra ✓ · lotes 1–2: bronquiolite, eletrolitos, sepse, nec, hipotermia, analgesia-sedacao, isr, surfactante, ventilacao)
 
 **Como está ficando:** `src/components/RodapeModulo.jsx` renderiza
 `Revisado em MM/AAAA · Fontes: <citação>` + o disclaimer padrão (constante
