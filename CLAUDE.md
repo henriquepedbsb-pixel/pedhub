@@ -299,7 +299,14 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   (feedback visual). Botão "copiar conduta" embutido em `CalcDose` (cobre
   `pedfarma` + `febre-sem-foco`), `isr`, `hidratacao`, `tig-neonatal`, `canguru`
   (texto plano, sem nome do paciente) e `dilucao-bic` (padronizado). Testes Vitest.
-- **T7, T8 — não feitos.**
+- **T7 — EM CURSO (infra ✓ · lote 1 aplicado).** `src/components/RodapeModulo.jsx`
+  (`Revisado em MM/AAAA · Fontes: X` + disclaimer padrão obrigatório, chrome
+  neutro). Data de revisão **07/2026** (decisão do usuário — não inventada) e
+  **citação completa preservada** por módulo. Lote 1 aplicado a `bronquiolite`,
+  `eletrolitos`, `sepse`, `nec`, `hipotermia`. **Backlog:** demais módulos por
+  lotes pequenos; os que usam disclaimer em classes Tailwind (sem fonte inline)
+  precisam da fonte confirmada antes.
+- **T8 — não feito.**
 
 ---
 
@@ -492,7 +499,14 @@ do RN** (privacidade). Cada módulo passa sua cor de identidade ao botão.
 
 ---
 
-## T7 — Rodapé padronizado de revisão
+## T7 — Rodapé padronizado de revisão  ·  STATUS: EM CURSO (infra ✓ · lote 1: bronquiolite, eletrolitos, sepse, nec, hipotermia)
+
+**Como está ficando:** `src/components/RodapeModulo.jsx` renderiza
+`Revisado em MM/AAAA · Fontes: <citação>` + o disclaimer padrão (constante
+`DISCLAIMER_PADRAO`, fonte única). Data **07/2026** (decisão do usuário — nunca
+inventar) e **citação completa** de cada módulo preservada (por isso o rótulo é
+"Fontes:", não "Fonte principal:"). Aplicação incremental por lotes pequenos.
+
 
 - Componente `src/components/RodapeModulo.jsx`:
   `Revisado em MM/AAAA · Fonte principal: X` + o disclaimer padrão

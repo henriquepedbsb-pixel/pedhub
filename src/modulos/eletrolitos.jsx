@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -692,12 +693,10 @@ export default function Eletrolitos() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
-          Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403.<br />
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403"
+      />
     </div>
   );
 }

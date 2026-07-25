@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import { ClipboardCheck, Calculator, Thermometer, TrendingUp, ChevronDown, ChevronUp, Clock, CheckCircle2, Brain, Ban, ClipboardList, Snowflake, BarChart3, Zap, AlertTriangle, Microscope, Check, X, RotateCcw } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 
 const parseNum = (val) => {
@@ -546,12 +547,10 @@ export default function Hipotermia() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
-          Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005.<br />
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
+      />
     </div>
   );
 }
