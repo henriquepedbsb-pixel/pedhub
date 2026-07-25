@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp, Info } from 'lucide-react';
 import RodapeModulo from "../components/RodapeModulo";
+import CalcDose from "../components/CalcDose";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -123,7 +124,7 @@ const ESCADA = [
     cor: '#22C55E',
     corFundo: "var(--tint-green)",
     drogas: [
-      'Dipirona 15–25 mg/kg/dose VO/IV 6/6h (máx 1 g/dose) · ≥ 3 meses',
+      'Dipirona 10–15 mg/kg/dose VO/IV 6/6h (máx 1 g/dose) · ≥ 3 meses',
       'Paracetamol 10–15 mg/kg/dose VO 4/4–6/6h (máx 75 mg/kg/dia ou 4 g/dia)',
       'Ibuprofeno 5–10 mg/kg/dose VO 6/6–8/8h (máx 40 mg/kg/dia) · ≥ 3 meses',
     ],
@@ -643,6 +644,17 @@ export default function Dor() {
                       ))}
                     </ul>
                   </div>
+
+                  {d.degrau === 1 && (
+                    <div style={{ marginTop: '8px' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: d.cor, margin: '0 0 2px' }}>
+                        Calcular dose por peso
+                      </p>
+                      <CalcDose farmaco="paracetamol" indicacao="geral" cor={d.cor} />
+                      <CalcDose farmaco="dipirona" indicacao="geral" cor={d.cor} />
+                      <CalcDose farmaco="ibuprofeno" indicacao="geral" cor={d.cor} />
+                    </div>
+                  )}
 
                   {d.alerta && (
                     <div style={{
