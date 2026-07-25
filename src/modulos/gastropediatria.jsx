@@ -1,5 +1,6 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import CalcDose from "../components/CalcDose";
 import {
   AlertTriangle,
   CheckCircle,
@@ -117,6 +118,8 @@ function TabDRGE() {
           "Duração mínima: 4–8 semanas antes de reavaliar",
           "IBP não aprovado rotineiramente < 1 ano — usar com parcimônia",
         ]} />
+        <CalcDose farmaco="omeprazol" indicacao="geral" cor={C} />
+        <CalcDose farmaco="esomeprazol" indicacao="geral" cor={C} />
       </Accordion>
       <Accordion title="Alginato (Gaviscon) — adjuvante" color={C}>
         <ItemList color={C} items={[
@@ -171,6 +174,7 @@ function TabAPLV() {
         "NÃO usar adrenalina como 1ª linha (diferente da anafilaxia clássica)",
         "Prescrever plano de emergência domiciliar com ondansetrona",
       ]} />
+      <CalcDose farmaco="ondansetrona" indicacao="geral" cor="#7C3AED" />
 
       <SectionTitle text="Proctocolite Alérgica em AME" color={C} />
       <ItemList color={C} items={[
@@ -252,6 +256,7 @@ function TabConstipacao() {
           "Supositório de glicerina: lactentes (único método seguro no 1º ano)",
           "Enema com SF morno: 6 mL/kg por dose (máx 135 mL) se necessário",
         ]} />
+        <CalcDose farmaco="peg4000" indicacao="desimpactacao" cor="#D97706" />
       </Accordion>
       <Accordion title="Manutenção (long-term)" color={C}>
         <ItemList color={C} items={[
@@ -261,6 +266,7 @@ function TabConstipacao() {
           "Bisacodil (> 2 anos, uso curto): 5–10 mg/dia",
           "Duração mínima: 6 meses após normalização",
         ]} />
+        <CalcDose farmaco="peg4000" indicacao="manutencao" cor={C} />
       </Accordion>
       <Accordion title="Medidas comportamentais e dietéticas" color={C}>
         <ItemList color={C} items={[
