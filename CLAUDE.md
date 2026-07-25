@@ -299,15 +299,15 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   (feedback visual). Botão "copiar conduta" embutido em `CalcDose` (cobre
   `pedfarma` + `febre-sem-foco`), `isr`, `hidratacao`, `tig-neonatal`, `canguru`
   (texto plano, sem nome do paciente) e `dilucao-bic` (padronizado). Testes Vitest.
-- **T7 — EM CURSO (infra ✓ · lotes 1–2 aplicados, 9 módulos).**
+- **T7 — FEITO (todos os 30 módulos que tinham disclaimer solto).**
   `src/components/RodapeModulo.jsx` (`Revisado em MM/AAAA · Fontes: X` +
-  disclaimer padrão obrigatório, chrome neutro). Data de revisão **07/2026**
-  (decisão do usuário — não inventada) e **citação completa preservada** por
-  módulo. Aplicado: `bronquiolite`, `eletrolitos`, `sepse`, `nec`, `hipotermia`
-  (lote 1) + `analgesia-sedacao`, `isr`, `surfactante`, `ventilacao` (lote 2 —
-  todos com fonte já inline). **Backlog:** ~21 módulos com disclaimer **sem
-  fonte inline** (classes Tailwind ou estilo com ícone) — precisam da fonte
-  principal confirmada pelo usuário antes da troca.
+  disclaimer padrão obrigatório `DISCLAIMER_PADRAO`, chrome neutro; prop
+  opcional `nota` p/ avisos como CIATOX/Pedfarma). Data **07/2026** (decisão do
+  usuário — não inventada) e fontes **derivadas das citações já presentes em
+  cada arquivo** (não inventadas). Nenhum módulo mantém o disclaimer literal —
+  todos passam pelo componente. **Exceção:** `dor-neonatal` (`DorNeonatal.jsx`)
+  não citava fonte no arquivo → ficou só com data + disclaimer e um TODO para o
+  médico confirmar as referências das escalas (NIPS/PIPP-R/N-PASS/CRIES).
 - **T8 — não feito.**
 
 ---
@@ -501,13 +501,18 @@ do RN** (privacidade). Cada módulo passa sua cor de identidade ao botão.
 
 ---
 
-## T7 — Rodapé padronizado de revisão  ·  STATUS: EM CURSO (infra ✓ · lotes 1–2: bronquiolite, eletrolitos, sepse, nec, hipotermia, analgesia-sedacao, isr, surfactante, ventilacao)
+## T7 — Rodapé padronizado de revisão  ·  STATUS: FEITO (30 módulos convertidos; `dor-neonatal` só com data — fonte a confirmar)
 
-**Como está ficando:** `src/components/RodapeModulo.jsx` renderiza
+**Como ficou:** `src/components/RodapeModulo.jsx` renderiza
 `Revisado em MM/AAAA · Fontes: <citação>` + o disclaimer padrão (constante
-`DISCLAIMER_PADRAO`, fonte única). Data **07/2026** (decisão do usuário — nunca
-inventar) e **citação completa** de cada módulo preservada (por isso o rótulo é
-"Fontes:", não "Fonte principal:"). Aplicação incremental por lotes pequenos.
+`DISCLAIMER_PADRAO`, fonte única) + prop opcional `nota` (avisos como CIATOX,
+"consultar Pedfarma"). Data **07/2026** (decisão do usuário — nunca inventar).
+As fontes foram **derivadas das citações já presentes no corpo de cada módulo**
+(FonteTag/Ref/comentários) — nada inventado. Rótulo "Fontes:" (não "Fonte
+principal:") porque preserva a citação completa. Todos os 30 módulos que tinham
+o disclaimer solto foram convertidos; `dor-neonatal` não tinha fonte no arquivo
+e ficou só com data + disclaimer (TODO no código para o médico confirmar as
+referências das escalas).
 
 
 - Componente `src/components/RodapeModulo.jsx`:

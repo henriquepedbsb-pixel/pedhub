@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import {
   AlertTriangle,
   ChevronDown,
@@ -1212,13 +1213,10 @@ export default function CardiologiaPediatricaBasica() {
         {aba === "neonatal" && <AbaNeonatal />}
       </div>
 
-      {/* Disclaimer padrão do módulo */}
-      <div className="px-4 pt-4">
-        <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
-          institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP 2019 (Nefrologia) · AAP 2017 (Flynn et al.) · Dionne et al. (Pediatr Nephrol 2012) · 7ª Diretriz Brasileira de HAS"
+      />
     </div>
   );
 }

@@ -21,7 +21,7 @@
 export const DISCLAIMER_PADRAO =
   "Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.";
 
-export default function RodapeModulo({ revisao, fonte, marginTop = 20 }) {
+export default function RodapeModulo({ revisao, fonte, nota, marginTop = 20 }) {
   const rastreio = [
     revisao ? `Revisado em ${revisao}` : null,
     fonte ? `Fontes: ${fonte}` : null,
@@ -40,6 +40,11 @@ export default function RodapeModulo({ revisao, fonte, marginTop = 20 }) {
         )}
         {DISCLAIMER_PADRAO}
       </p>
+      {nota && (
+        <p style={{ margin: "6px 0 0", fontSize: 10, color: "var(--muted)", textAlign: "center", lineHeight: 1.5 }}>
+          {nota}
+        </p>
+      )}
     </div>
   );
 }

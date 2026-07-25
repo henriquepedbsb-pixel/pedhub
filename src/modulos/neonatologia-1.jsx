@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import {
   Heart, Wind, AlertTriangle, CheckCircle,
@@ -437,12 +438,10 @@ export default function App() {
       </div>
 
       {/* Disclaimer */}
-      <div style={{ margin: "16px 12px 24px", background: "var(--tint-amber)", border: "1px solid #FED7AA", borderRadius: 10, padding: "10px 14px" }}>
-        <p style={{ margin: 0, fontSize: 11, color: "var(--tx-amber)", textAlign: "center", lineHeight: 1.5 }}>
-          ⚕️ Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.<br />
-          <strong>Fonte:</strong> SBP/PRN-SBP 2026 · Guinsburg & Almeida · NeoFax 2023
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP/PRN-SBP 2026 · Guinsburg & Almeida · NeoFax 2023"
+      />
     </div>
   );
 }

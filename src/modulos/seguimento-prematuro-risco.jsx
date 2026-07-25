@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import {
   AlertTriangle,
   ChevronDown,
@@ -358,16 +359,10 @@ export default function SeguimentoPrematuroRisco() {
       </div>
 
       {/* Disclaimer padrão do módulo */}
-      <div className="px-4 pt-4">
-        <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
-          institucional.
-        </p>
-        <p className="text-[10px] text-gray-400 text-center leading-relaxed mt-2">
-          Referência: Sociedade Brasileira de Pediatria. Departamento Científico de Neonatologia. Manual de
-          seguimento do recém-nascido de alto risco. 2. ed. São Paulo: SBP, 2024.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="SBP. Departamento Científico de Neonatologia. Manual de seguimento do recém-nascido de alto risco. 2. ed. São Paulo: SBP, 2024"
+      />
     </div>
   );
 }
