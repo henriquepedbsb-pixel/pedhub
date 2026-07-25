@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -868,12 +869,10 @@ export default function Sepse() {
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: '20px', backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px' }}>
-        <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", textAlign: 'center', lineHeight: '1.6' }}>
-          Weiss SL et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med / Pediatr Crit Care Med (2026). Rodwell JD et al. J Pediatr 1988;112:761-767.<br />
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Weiss SL et al. Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children 2026. Intensive Care Med / Pediatr Crit Care Med (2026). Rodwell JD et al. J Pediatr 1988;112:761-767"
+      />
     </div>
   );
 }
