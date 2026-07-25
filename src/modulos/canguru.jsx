@@ -6,7 +6,9 @@
 
 import { useState } from 'react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoG } from "../lib/sanity";
+import { montarTextoConduta } from "../lib/exportarTexto";
 import {
   Scale, Calendar, Droplets, Pill,
   Printer, AlertTriangle, CheckCircle,
@@ -718,6 +720,68 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
   const znFinal      = znDoseAtiva ? finalDose(znManual, res.znVol) : 0;
   const fmtFerro = n => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
+  // Conduta em texto plano para copiar. Espelha os mesmos campos de `res` do
+  // render (fonte única — sem novo cálculo) e, por privacidade (T6), NÃO
+  // inclui o nome/identificador do RN — só parâmetros clínicos e a conduta.
+  const montarTexto = () => {
+    const linhaFerro = () =>
+      (!res.ferroAtivo && res.preT)
+        ? `Ferro (${res.ferroProd.sal}): iniciar no 30.º dia de vida (faltam ${res.ferroDiasRest} dia${res.ferroDiasRest !== 1 ? 's' : ''})`
+        : `${ferroLabel}: ${fmtFerro(ferroFinal)} gotas VO 1×/dia (${res.ferroDose.toFixed(2)} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${res.ferroProd.mgGota} mg Fe)`;
+    const linhaFos = () => {
+      if (!res.fosIndicado) return "Fosfato tricálcico 12,9%: não indicado (IG ≥ 32s e PN ≥ 1500 g)";
+      if (res.fosSuspenso) return "Fosfato tricálcico 12,9%: suspenso (IGPM ≥ 40 sem)";
+      if (res.pSuficDieta) return "Fosfato tricálcico 12,9%: não necessário — dieta supre ≥ 75 mg P/kg/dia";
+      return `Fosfato tricálcico 12,9% (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia): ${res.pVol.toFixed(2)} mL/dia VO — 4 tomadas de ${res.pTom.toFixed(2)} mL a cada 6h`;
+    };
+    const linhaZn = () => {
+      if (!res.znIndicado) return "Zinco: não indicado (IG ≥ 37 sem)";
+      if (res.znSuspenso) return "Zinco: suspenso — idade corrigida ≥ 6 meses";
+      if (!res.znAtivo) return `Zinco: iniciar com IGPM ≥ 36 sem (faltam ${res.znSemRest} sem)`;
+      if (res.znVol < 0.05) return `Zinco: não necessário — dieta supre alvo (${res.znRate} mg/kg/dia)`;
+      return `${znLabel}: ${znFinal.toFixed(2)} mL/dia VO 1×/dia (${res.znRate} mg/kg/dia · ${res.znProd.sal})`;
+    };
+    const linhaVitD = () =>
+      res.vitDNec <= 0
+        ? `Vitamina D: não necessário — dieta (${res.vitDDieta.toFixed(0)} UI) + polivit (${res.polivitVD.toFixed(0)} UI) = alvo ${res.vitDAlvo} UI`
+        : `Vitamina D (colecalciferol): ${res.vitDG200} gotas VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
+
+    const dieta = [
+      `Volume total: ${res.volTotal.toFixed(1)} mL/dia`,
+      `Por tomada: ${res.volTom.toFixed(1)} mL · ${res.tom}× ao dia`,
+      `Calorias: ${res.kcalKg.toFixed(1)} kcal/kg/dia`,
+      `Proteína: ${res.protKg.toFixed(2)} g/kg/dia`,
+      `Fósforo: ${(res.dP / res.pk).toFixed(1)} mg/kg/dia`,
+      `Zinco: ${(res.dZn / res.pk).toFixed(2)} mg/kg/dia`,
+    ];
+    if (res.tipoDieta === 'lm_fm85') dieta.push(`FM85: ${res.sach} sachês/dia (1 sachê/25 mL LM)`);
+    if (res.tipoDieta === 'formula') dieta.push(`Fórmula: ${res.formulaNome}`);
+
+    return montarTextoConduta({
+      titulo: "Prescrição UCIN Canguru",
+      contexto: [
+        { rotulo: "IG nasc.", valor: `${res.ig}s${res.igd > 0 ? `+${res.igd}d` : ''}` },
+        { rotulo: "PN", valor: `${(res.pnk * 1000).toFixed(0)} g` },
+        { rotulo: "Peso atual", valor: `${(res.pk * 1000).toFixed(0)} g` },
+        { rotulo: "Dias de vida", valor: `${res.dias}` },
+        { rotulo: "IGPM", valor: `${res.igCorrSem}s${res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''}` },
+      ],
+      blocos: [
+        { titulo: "Dieta enteral", itens: dieta },
+        { titulo: "Suplementação", itens: [
+          linhaFerro(), linhaFos(), linhaZn(),
+          `Polivitamínico (${res.polivitProd.nome}): 6 gotas VO 12/12h (${res.polivitVD.toFixed(0)} UI Vit.D/dia)`,
+          linhaVitD(),
+          "Vitamina A: sem indicação de rotina em RNPT (ESPGHAN/SBP)",
+        ] },
+        { titulo: "Não farmacológico", itens: [
+          "Seguimento com Fonoaudiologia e Fisioterapia",
+          "Posição Canguru — tão logo clinicamente estável",
+        ] },
+      ],
+    });
+  };
+
   return (
     <>
       {/* ── área imprimível (sem o botão) ── */}
@@ -941,8 +1005,11 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
           </div>
         </Card>
       </div>
-      {/* ── botão fora da área imprimível ── */}
+      {/* ── botões fora da área imprimível ── */}
       <PrintBtn targetId="ph-print-presc" />
+      <div style={{ marginTop: 6 }}>
+        <BotaoCopiar montar={montarTexto} cor={COR.prim} rotulo="Copiar prescrição (texto)" />
+      </div>
     </>
   );
 }

@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react';
 import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
+import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
+import { montarTextoConduta } from "../lib/exportarTexto";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -150,6 +152,33 @@ export default function ISR() {
   }, [p, id, contexto, usarRocur]);
 
   const toggle = (key) => setAberto(aberto === key ? null : key);
+
+  // Sequência da prescrição (ordem de administração) — fonte única, usada
+  // tanto no render quanto no "copiar conduta".
+  const montarLinhasRx = () => {
+    if (!drugs) return [];
+    const linhas = [];
+    linhas.push({ t: '1. Pré-medicação (T − 3 min)', d: `Atropina — ${drugs.atropDose} mg (${drugs.atropVol} mL) IV${id < 1 || !usarRocur ? ' — obrigatória' : ' (se bradicardia prevista)'}` });
+    if (drugs.fenMcg > 0) linhas.push({ t: '', d: `Fentanil — ${drugs.fenMcg} mcg (${drugs.fenVol} mL) IV lento 30–60 s` });
+    if (contexto === 'hic') linhas.push({ t: '', d: `Lidocaína — ${drugs.lidoDose} mg (${drugs.lidoVol} mL) IV` });
+    linhas.push({ t: '2. Indução (T − 0)', d: `${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} — ${drugs.indDose} mg (${drugs.indVol} mL) IV em bólus` });
+    linhas.push({ t: '3. Bloqueio neuromuscular (logo após)', d: `${drugs.bnmNome} — ${drugs.bnmDose} mg (${drugs.bnmVol} mL) IV em bólus rápido` });
+    if (usarRocur) linhas.push({ t: '4. Resgate (se CICO)', d: `Sugammadex — ${drugs.sugDose} mg (${drugs.sugVol} mL) IV rápido — preparado ANTES` });
+    if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${drugs.tubo.tamanho} mm (com cuff) · fixar em ${drugs.tubo.profCole} cm · ${drugs.lamina.tipo}` });
+    return linhas;
+  };
+
+  const montarTextoRx = () => {
+    if (!drugs) return "";
+    const itens = montarLinhasRx().map((l) => l.d);
+    itens.push(`Flush de ${drugs.flush} mL de SF 0,9% após cada droga IV em bólus.`);
+    itens.push("Doses e diluições conforme Harriet Lane 22ª ed.");
+    return montarTextoConduta({
+      titulo: `Sequência rápida de intubação — ${drugs.ctx.label}`,
+      contexto: [{ rotulo: 'Peso', valor: `${p} kg` }],
+      blocos: [{ titulo: 'Ordem de administração', itens }],
+    });
+  };
 
   // ─── Estilos reutilizáveis ────────────────────────────────────────────────
   const tabBtn = (id) => ({
@@ -487,14 +516,7 @@ export default function ISR() {
                   Peso {p} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {drugs.flush} mL de SF 0,9% após cada uma.
                 </p>
                 {(() => {
-                  const linhas = [];
-                  linhas.push({ t: '1. Pré-medicação (T − 3 min)', d: `Atropina — ${drugs.atropDose} mg (${drugs.atropVol} mL) IV${id < 1 || !usarRocur ? ' — obrigatória' : ' (se bradicardia prevista)'}` });
-                  if (drugs.fenMcg > 0) linhas.push({ t: '', d: `Fentanil — ${drugs.fenMcg} mcg (${drugs.fenVol} mL) IV lento 30–60 s` });
-                  if (contexto === 'hic') linhas.push({ t: '', d: `Lidocaína — ${drugs.lidoDose} mg (${drugs.lidoVol} mL) IV` });
-                  linhas.push({ t: '2. Indução (T − 0)', d: `${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} — ${drugs.indDose} mg (${drugs.indVol} mL) IV em bólus` });
-                  linhas.push({ t: '3. Bloqueio neuromuscular (logo após)', d: `${drugs.bnmNome} — ${drugs.bnmDose} mg (${drugs.bnmVol} mL) IV em bólus rápido` });
-                  if (usarRocur) linhas.push({ t: '4. Resgate (se CICO)', d: `Sugammadex — ${drugs.sugDose} mg (${drugs.sugVol} mL) IV rápido — preparado ANTES` });
-                  if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${drugs.tubo.tamanho} mm (com cuff) · fixar em ${drugs.tubo.profCole} cm · ${drugs.lamina.tipo}` });
+                  const linhas = montarLinhasRx();
                   return linhas.map((l, i) => (
                     <div key={i} style={{ marginBottom: '6px' }}>
                       {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.03em' }}>{l.t}</p>}
@@ -508,6 +530,9 @@ export default function ISR() {
                 <p style={{ margin: '8px 0 0 0', fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>
                   Confirmar posição do tubo por capnografia + ausculta + RX. Doses e diluições conforme Harriet Lane 22ª ed.
                 </p>
+                <div style={{ marginTop: 10 }}>
+                  <BotaoCopiar montar={montarTextoRx} cor={C} />
+                </div>
               </div>
             </div>
           ) : (
