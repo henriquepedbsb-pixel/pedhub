@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Info, AlertTriangle, ChevronRight, CheckCircle } from "lucide-react";
+import CalcDose from "../components/CalcDose";
 
 const PRIMARY = "#EF4444";
 
@@ -176,6 +177,16 @@ export default function FebreSemFoco() {
             <AlertBox text="PECARN não exclui IBG com 100% de certeza — decisão final é clínica. Aplicar em 29–60 dias." color="#7C3AED" />
           </div>
         )}
+      </div>
+
+      {/* Manejo antitérmico — dose por peso via <CalcDose> (T3). Peso vem do
+          paciente do topo (T1) com override local. */}
+      <div style={{ margin: "0 16px 12px" }}>
+        <p style={{ fontSize: 13, fontWeight: 700, color: PRIMARY, margin: "0 0 4px" }}>
+          Manejo antitérmico — dose por peso
+        </p>
+        <CalcDose farmaco="paracetamol" indicacao="geral" cor={PRIMARY} />
+        <CalcDose farmaco="ibuprofeno" indicacao="geral" cor={PRIMARY} />
       </div>
 
       <div style={{ margin: "8px 16px 40px", background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
