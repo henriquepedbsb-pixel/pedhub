@@ -3,6 +3,7 @@
 // Convenções PedHub: inline styles, C object, maxWidth 480, Lucide icons, sem CSS vars
 
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
@@ -509,13 +510,11 @@ export default function DorNeonatal() {
         </>}
 
         {/* ── Disclaimer padrão ────────────────────────────────────────── */}
-        <div style={{
-          marginTop:20, padding:"10px 14px",
-          background:C.card, borderRadius:10, border:`1px solid ${C.border}`,
-          fontSize:11, color:C.muted, textAlign:"center", lineHeight:1.5,
-        }}>
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </div>
+        {/* TODO(T7): sem fonte citada no arquivo — confirmar com o médico as
+            referências das escalas (NIPS, PIPP-R, N-PASS, CRIES) antes de
+            preencher `fonte`. Por ora, só data + disclaimer (não inventar). */}
+        <RodapeModulo revisao="07/2026" />
+
 
       </div>
     </div>

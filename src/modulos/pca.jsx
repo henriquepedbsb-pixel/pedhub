@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import {
@@ -252,13 +253,10 @@ export default function Pca() {
         </Section>
       </div>
 
-      {/* Disclaimer padrão do módulo */}
-      <div className="px-4 pt-4">
-        <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
-          institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="AAP · NeoFax 2023 · Harriet Lane 22ª ed."
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 
 const BG  = "#0284C7";
@@ -622,12 +623,10 @@ export default function App() {
       </div>
 
       {/* DISCLAIMER */}
-      <div className="mx-4 mt-2 mb-4 bg-gray-100 rounded-2xl p-3">
-        <p style={{ fontSize: 11 }} className="text-gray-400 text-center leading-relaxed">
-          Fonte: Almeida MFB, Guinsburg R; PRN-SBP. Diretrizes SBP 2026. doi:10.25060/PRN-SBP-2026-1 ·
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="Almeida MFB, Guinsburg R; PRN-SBP. Diretrizes SBP 2026 (doi:10.25060/PRN-SBP-2026-1)"
+      />
     </div>
   );
 }

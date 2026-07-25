@@ -7,6 +7,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
+import RodapeModulo from "../components/RodapeModulo";
 import {
   Calculator, ClipboardList, BookOpen, Activity,
   AlertTriangle, Info, TrendingUp, Printer,
@@ -490,14 +491,10 @@ export default function IctericiaNeonatal() {
       {tab === 'tables' && renderTabelas()}
       {tab === 'guide'  && <GuiaTab />}
 
-      <div style={{
-        textAlign:'center', fontSize:11, color:C.muted,
-        padding:'14px 16px', background:"var(--tint-slate)", lineHeight:1.7,
-      }}>
-        <p style={{margin:0}}>AAP 2022: Kemper AR et al. <em>Pediatrics</em> 2022;150(3):e2022058859</p>
-        <p style={{margin:0}}>SBP 2021: Depto. Científico de Neonatologia. Manual de Orientação nº 10, set/2021</p>
-        <p style={{margin:0,fontWeight:700}}>Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.</p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="AAP 2022 (Kemper AR et al. Pediatrics 2022;150(3):e2022058859) · SBP 2021 (Depto. Científico de Neonatologia. Manual de Orientação nº 10, set/2021)"
+      />
     </div>
   );
 

@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta helpers/dados compartilhados com outros módulos; Fast Refresh não se aplica a este módulo de rota lazy. */
 import { useState } from 'react';
 import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp, Info } from 'lucide-react';
+import RodapeModulo from "../components/RodapeModulo";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -742,16 +743,11 @@ export default function Dor() {
       )}
 
       {/* ── Disclaimer ─────────────────────────────────────────────────────── */}
-      <div style={{
-        backgroundColor: "var(--surface-2)", borderRadius: '10px', padding: '12px',
-        marginTop: '20px', display: 'flex', gap: '8px', alignItems: 'flex-start',
-      }}>
-        <AlertCircle size={14} style={{ color: "var(--muted)", flexShrink: 0, marginTop: '1px' }} />
-        <p style={{ fontSize: '11px', color: "var(--muted)", margin: 0, lineHeight: '1.5' }}>
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-          Doses resumidas — consultar módulo Pedfarma para posologia completa.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="AAP 2022 · SBP 2020 · WHO Analgesic Ladder (adapt. pediátrica) · SBCP 2021 · FLACC (Merkel et al. 1997) · Wong-Baker 1988"
+        nota="Doses resumidas — consultar módulo Pedfarma para posologia completa."
+      />
 
     </div>
   );

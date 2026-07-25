@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
+import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoG } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
 import {
@@ -327,15 +328,10 @@ export default function Canguru() {
       {tab === 0 && <TabPrescricao />}
       {tab === 1 && <TabReceituario />}
 
-      <footer style={{
-        textAlign: 'center', padding: '20px 16px 8px',
-        fontSize: 11, color: COR.muted, lineHeight: 1.9,
-      }}>
-        <p style={{ margin: 0 }}>
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo institucional.
-        </p>
-        <p style={{ margin: 0 }}>Ref: ESPGHAN/ESPEN 2018 · NeoFax 2023 · SBP</p>
-      </footer>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="ESPGHAN/ESPEN 2018 · NeoFax 2023 · SBP"
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RodapeModulo from "../components/RodapeModulo";
 import {
   Footprints,
   ChevronDown,
@@ -259,12 +260,10 @@ export default function TriagemNeonatal() {
         )}
       </div>
 
-      <div className="px-4 pt-4">
-        <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-          Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
-          institucional.
-        </p>
-      </div>
+      <RodapeModulo
+        revisao="07/2026"
+        fonte="MS/PNTN · SBP · SBOrl · SBCC · Protocolo Martinelli"
+      />
     </div>
   );
 }
