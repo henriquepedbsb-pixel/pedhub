@@ -1233,4 +1233,48 @@ export const DRUGS = [
     obs: "Intoxicação por opioides. IN: 0,1 mg/kg (máx 4 mg). Duração curta — monitorar reaparição de depressão.",
     indicacoes: {}
   },
+  {
+    id: "nac",
+    nome: "N-acetilcisteína (NAC)",
+    cat: "Antídoto",
+    classe: "antidoto",
+    via: "VO/IV",
+    dose: "VO 140 + 70/4h · IV 150 → 50 → 100 mg/kg",
+    freq: "esquema faseado",
+    max: "—",
+    obs: "Antídoto do paracetamol. Nível sérico a partir de 4h pós-ingestão (nomograma de Rumack-Matthew). Iniciar idealmente em 8–10h; benefício reduzido, mas presente, após 12–16h. VO clássico: 17 doses / 72h; casos simples ~20h.",
+    fonte: "SBP — DC Toxicologia (Intox. Aguda por Medicamentos)",
+    // esquema faseado (não é dose única → não usa calcularDose/CalcDose).
+    // Fatores por kg em mg; o módulo Intoxicações calcula peso × fator.
+    esquema: {
+      unidade: "mg",
+      fases: [
+        { via: "VO", nome: "Ataque",          min: 140, max: 140, detalhe: "dose inicial" },
+        { via: "VO", nome: "Manutenção",      min: 70,  max: 70,  detalhe: "a cada 4 h" },
+        { via: "IV", nome: "Ataque",          min: 150, max: 150, detalhe: "em 40–60 min" },
+        { via: "IV", nome: "1ª manutenção",   min: 50,  max: 50,  detalhe: "em 4 h" },
+        { via: "IV", nome: "2ª manutenção",   min: 100, max: 100, detalhe: "em 16 h" },
+      ],
+    },
+    indicacoes: {}
+  },
+  {
+    id: "bicarbonato_sodio",
+    nome: "Bicarbonato de sódio",
+    cat: "Antídoto",
+    classe: "antidoto",
+    via: "IV",
+    dose: "1–2 mEq/kg/dose (bolus)",
+    freq: "bolus, repetir conforme QRS/pH",
+    max: "—",
+    obs: "Cardiotoxicidade por bloqueio de canal de sódio (ex.: antidepressivo tricíclico) com alargamento do QRS ao ECG. Alvo: normalização do QRS. Bolus EV.",
+    fonte: "SBP — DC Toxicologia (Intox. Aguda por Medicamentos)",
+    esquema: {
+      unidade: "mEq",
+      fases: [
+        { via: "IV", nome: "Bolus", min: 1, max: 2, detalhe: "alvo: normalizar o QRS; repetir conforme ECG/pH" },
+      ],
+    },
+    indicacoes: {}
+  },
 ];

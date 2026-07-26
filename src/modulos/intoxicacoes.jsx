@@ -1,5 +1,9 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BotaoCopiar from "../components/BotaoCopiar";
+import { DRUGS } from "../lib/farmacos";
+import { usePaciente, parsePesoKg } from "../lib/paciente";
+import { montarTextoConduta } from "../lib/exportarTexto";
 import {
   AlertTriangle,
   ChevronDown,
@@ -77,6 +81,97 @@ function FonteTag({ children }) {
     <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
+  );
+}
+
+// Formata um valor calculado respeitando a unidade do esquema (mg → g quando
+// ≥ 1000; mEq permanece mEq). 1 casa decimal, sem NaN vazando.
+function fmtValor(v, unidade) {
+  if (!Number.isFinite(v)) return "—";
+  if (unidade === "mg" && v >= 1000) return `${+(v / 1000).toFixed(2)} g`;
+  return `${+v.toFixed(1)} ${unidade}`;
+}
+
+// Texto de uma fase: valor único (min === max) ou faixa (min–max).
+function fmtFase(fase, peso, unidade) {
+  if (peso == null) return null;
+  const vMin = peso * fase.min;
+  const vMax = peso * fase.max;
+  return fase.min === fase.max
+    ? fmtValor(vMin, unidade)
+    : `${fmtValor(vMin, unidade)} – ${fmtValor(vMax, unidade)}`;
+}
+
+// Calculadora de antídoto por peso — esquema faseado (NAC) ou bolus único
+// (bicarbonato). Lê os fatores de src/lib/farmacos.js (fonte única, zero
+// duplicação de valor) e o peso do paciente do store global (T1), com input
+// local de override. Sub-componente definido FORA do principal (regra 4).
+function CalcAntidoto({ id }) {
+  const paciente = usePaciente();
+  const [pesoRaw, setPesoRaw] = useState("");
+  const drug = DRUGS.find((d) => d.id === id);
+  if (!drug || !drug.esquema) return null;
+
+  const pesoStore = parsePesoKg(paciente.peso);
+  const pesoLocal = parsePesoKg(pesoRaw);
+  const peso = pesoLocal != null ? pesoLocal : pesoStore;
+  const uni = drug.esquema.unidade;
+  const fases = drug.esquema.fases;
+  const vias = [...new Set(fases.map((f) => f.via))];
+
+  const montarTexto = () => {
+    if (peso == null) return "";
+    const itens = fases.map(
+      (f) => `${f.via} · ${f.nome}: ${fmtFase(f, peso, uni)} (${f.detalhe})`
+    );
+    itens.push(`Fonte: ${drug.fonte}`);
+    return montarTextoConduta({
+      titulo: drug.nome,
+      contexto: [{ rotulo: "Peso", valor: `${peso} kg` }],
+      blocos: [{ itens }],
+    });
+  };
+
+  return (
+    <div className="rounded-xl border p-3 mt-1" style={{ background: COR + "0D", borderColor: COR + "33" }}>
+      <p className="flex items-center gap-1.5 text-xs font-bold" style={{ color: COR }}>
+        <Pill size={13} /> {drug.nome}{peso != null ? ` · ${peso} kg` : ""}
+      </p>
+      <p className="text-[10px] text-gray-500 mb-2">Fonte: {drug.fonte}</p>
+
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="text"
+          inputMode="decimal"
+          value={pesoRaw}
+          onChange={(e) => setPesoRaw(e.target.value)}
+          placeholder={pesoStore != null ? `${pesoStore} kg (paciente)` : "peso (kg)"}
+          className="flex-1 rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs outline-none"
+        />
+        <span className="text-[10px] text-gray-500">kg</span>
+      </div>
+
+      {peso == null ? (
+        <p className="text-[11px] text-gray-500">Informe o peso para calcular a dose.</p>
+      ) : (
+        <div className="space-y-2">
+          {vias.map((via) => (
+            <div key={via}>
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-1">Via {via}</p>
+              <div className="space-y-1">
+                {fases.filter((f) => f.via === via).map((f) => (
+                  <div key={f.via + f.nome} className="rounded-lg bg-white border border-gray-200 px-2.5 py-1.5">
+                    <p className="text-[10px] text-gray-500">{f.nome} · {f.detalhe}</p>
+                    <p className="text-[13px] font-bold" style={{ color: COR }}>{fmtFase(f, peso, uni)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <BotaoCopiar montar={montarTexto} cor={COR} rotulo="Copiar dose" />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -220,7 +315,8 @@ export default function Intoxicacoes() {
                 <Bullet>Fase 2 (24–72h): dor em hipocôndrio direito, elevação de transaminases</Bullet>
                 <Bullet>Fase 3 (72–96h): pico de hepatotoxicidade, pode evoluir para insuficiência hepática fulminante</Bullet>
               </ul>
-              <AlertaBox tone="blue">Nomograma de Rumack-Matthew: dosar paracetamol sérico a partir de 4h pós-ingestão (dose única aguda) para decidir necessidade de N-acetilcisteína. Dose e esquema de NAC: ver PedFarma.</AlertaBox>
+              <AlertaBox tone="blue">Nomograma de Rumack-Matthew: dosar paracetamol sérico a partir de 4h pós-ingestão (dose única aguda) para decidir necessidade de N-acetilcisteína.</AlertaBox>
+              <CalcAntidoto id="nac" />
             </Section>
 
             <Section title="Ferro" icon={Pill} open={abertas.quadro} onToggle={() => toggle("quadro")}>
@@ -240,7 +336,8 @@ export default function Intoxicacoes() {
                 <Bullet>Alargamento de QRS e prolongamento de QTc no ECG — monitorização cardíaca obrigatória</Bullet>
                 <Bullet>Convulsões e arritmias ventriculares são as principais causas de óbito</Bullet>
               </ul>
-              <AlertaBox tone="red">QRS &gt; 100ms é preditor de convulsão e arritmia — bicarbonato de sódio IV é o antídoto de escolha (alcalinização sérica). Dose: ver PedFarma.</AlertaBox>
+              <AlertaBox tone="red">QRS &gt; 100ms é preditor de convulsão e arritmia — bicarbonato de sódio IV é o antídoto de escolha (alcalinização sérica).</AlertaBox>
+              <CalcAntidoto id="bicarbonato_sodio" />
             </Section>
 
             <Section title="Benzodiazepínicos" icon={Pill} open={abertas.naofazer} onToggle={() => toggle("naofazer")}>
