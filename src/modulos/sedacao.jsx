@@ -109,7 +109,7 @@ export default function Sedacao() {
         <div style={{ padding: '12px' }}>
           <div style={{ background: CL, border: `1px solid ${CB}`, borderRadius: 10, padding: 12, marginBottom: 12, display: 'flex', gap: 8 }}>
             <Info size={16} color={CI} style={{ flexShrink: 0, marginTop: 1 }} />
-            <div style={{ fontSize: 12, color: CT, lineHeight: 1.6 }}>Guia de <strong>escolha empírica</strong> por procedimento. Doses por peso → <strong>Pedfarma</strong>.</div>
+            <div style={{ fontSize: 12, color: CT, lineHeight: 1.6 }}>Guia de <strong>escolha empírica</strong> por procedimento. Doses por peso → <strong>Analgesia e Sedação</strong>.</div>
           </div>
           {PROCEDIMENTOS.map((p, i) => (
             <div key={i} style={{ background: "var(--surface)", borderRadius: 12, padding: 14, border: '1px solid var(--border)', marginBottom: 10 }}>
@@ -134,7 +134,7 @@ export default function Sedacao() {
         <div style={{ padding: '12px' }}>
           <div style={{ background: CL, border: `1px solid ${CB}`, borderRadius: 10, padding: 12, marginBottom: 12, display: 'flex', gap: 8 }}>
             <Info size={16} color={CI} style={{ flexShrink: 0, marginTop: 1 }} />
-            <div style={{ fontSize: 12, color: CT, lineHeight: 1.6 }}>Perfil clínico de cada fármaco. <strong>Toque para expandir. Doses → Pedfarma.</strong></div>
+            <div style={{ fontSize: 12, color: CT, lineHeight: 1.6 }}>Perfil clínico de cada fármaco. <strong>Toque para expandir. Doses → Analgesia e Sedação.</strong></div>
           </div>
           {FARMACOS.map((f) => {
             const aberto = expandido === f.id;
@@ -307,7 +307,7 @@ export default function Sedacao() {
             <Pill size={20} color="#8B5CF6" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--tx-purple)" }}>Doses por peso</div>
-              <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>Flumazenil e Naloxona → calcule doses no módulo <strong>Pedfarma</strong>.</div>
+              <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>Naloxona → dose de referência no <strong>Pedfarma</strong>. Flumazenil → conforme bula/protocolo institucional.</div>
             </div>
           </div>
         </div>

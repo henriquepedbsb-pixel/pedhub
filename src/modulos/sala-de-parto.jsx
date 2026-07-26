@@ -220,7 +220,7 @@ export default function SalaDeParto() {
           <AlertaBox tone="blue">
             <span className="flex items-start gap-1">
               <Info size={13} className="mt-0.5 shrink-0" />
-              Doses de drogas de reanimação (adrenalina, expansores de volume) não estão neste módulo — ver PedFarma. O fluxo completo de decisão da reanimação está em Neonatologia I (RNPT &lt;34s) e Neonatologia VI (RN ≥34s).
+              Doses de drogas de reanimação (adrenalina, expansores de volume) não estão neste módulo — a calculadora de dose por peso e o fluxo completo da reanimação estão em Reanimação RNPT &lt;34s e Reanimação RN ≥34s.
             </span>
           </AlertaBox>
         </div>
