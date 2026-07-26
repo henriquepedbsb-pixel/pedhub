@@ -85,21 +85,45 @@ function FonteTag({ children }) {
 }
 
 // Formata um valor calculado respeitando a unidade do esquema (mg → g quando
-// ≥ 1000; mEq permanece mEq). 1 casa decimal, sem NaN vazando.
+// ≥ 1000; mEq permanece mEq). Precisão adaptativa: doses pequenas (< 1) exigem
+// 2 casas (ex.: 0,15 mg no flumazenil) — 1 casa arredondaria para 0,1. Sem NaN.
 function fmtValor(v, unidade) {
   if (!Number.isFinite(v)) return "—";
   if (unidade === "mg" && v >= 1000) return `${+(v / 1000).toFixed(2)} g`;
-  return `${+v.toFixed(1)} ${unidade}`;
+  const casas = Math.abs(v) < 1 ? 2 : 1;
+  return `${+v.toFixed(casas)} ${unidade}`;
 }
 
-// Texto de uma fase: valor único (min === max) ou faixa (min–max).
+// Texto de uma fase: dose fixa (independe do peso), valor único (min === max)
+// ou faixa (min–max). Aplica teto por dose (ex.: flumazenil 0,2 mg/dose),
+// sinalizando quando o cálculo é limitado pelo teto.
 function fmtFase(fase, peso, unidade) {
+  if (fase.fixo != null) return `${fmtValor(fase.fixo, unidade)} (dose fixa)`;
   if (peso == null) return null;
-  const vMin = peso * fase.min;
-  const vMax = peso * fase.max;
+  let vMin = peso * fase.min;
+  let vMax = peso * fase.max;
+  if (fase.tetoDoseMg != null) {
+    const limitado = vMax > fase.tetoDoseMg;
+    vMin = Math.min(vMin, fase.tetoDoseMg);
+    vMax = Math.min(vMax, fase.tetoDoseMg);
+    const base =
+      fase.min === fase.max
+        ? fmtValor(vMax, unidade)
+        : `${fmtValor(vMin, unidade)} – ${fmtValor(vMax, unidade)}`;
+    return limitado ? `${base} (máx ${fmtValor(fase.tetoDoseMg, unidade)}/dose)` : base;
+  }
   return fase.min === fase.max
     ? fmtValor(vMin, unidade)
     : `${fmtValor(vMin, unidade)} – ${fmtValor(vMax, unidade)}`;
+}
+
+// Uma fase é aplicável ao peso digitado quando cai na sua faixa de peso
+// (pesoMinKg exclusivo, pesoMaxKg inclusivo). Sem peso, mostra todas.
+function faseAplicavel(fase, peso) {
+  if (peso == null) return true;
+  if (fase.pesoMaxKg != null && peso > fase.pesoMaxKg) return false;
+  if (fase.pesoMinKg != null && peso <= fase.pesoMinKg) return false;
+  return true;
 }
 
 // Calculadora de antídoto por peso — esquema faseado (NAC) ou bolus único
@@ -116,18 +140,21 @@ function CalcAntidoto({ id }) {
   const pesoLocal = parsePesoKg(pesoRaw);
   const peso = pesoLocal != null ? pesoLocal : pesoStore;
   const uni = drug.esquema.unidade;
-  const fases = drug.esquema.fases;
+  // Só as fases aplicáveis ao peso digitado (gating por faixa de peso).
+  const fases = drug.esquema.fases.filter((f) => faseAplicavel(f, peso));
   const vias = [...new Set(fases.map((f) => f.via))];
 
   const tetoDia = drug.esquema.tetoDia; // { porKg, unidade } opcional
   const tetoDiaVal = tetoDia && peso != null ? fmtValor(peso * tetoDia.porKg, uni) : null;
+  const tetoTotal = drug.esquema.tetoTotal; // { valor, unidade, detalhe } opcional
 
   const montarTexto = () => {
     if (peso == null) return "";
     const itens = fases.map(
-      (f) => `${f.via} · ${f.nome}: ${fmtFase(f, peso, uni)} (${f.detalhe})`
+      (f) => `${f.via} · ${f.nome}: ${fmtFase(f, peso, uni)} (${f.detalhe})${f.fonte ? " — " + f.fonte : ""}`
     );
     if (tetoDiaVal) itens.push(`Teto: ${tetoDiaVal}/dia (${tetoDia.porKg} ${tetoDia.unidade})`);
+    if (tetoTotal) itens.push(`Teto total: ${tetoTotal.valor} ${tetoTotal.unidade} (${tetoTotal.detalhe})`);
     itens.push(`Fonte: ${drug.fonte}`);
     return montarTextoConduta({
       titulo: drug.nome,
@@ -167,6 +194,7 @@ function CalcAntidoto({ id }) {
                   <div key={f.via + f.nome} className="rounded-lg bg-white border border-gray-200 px-2.5 py-1.5">
                     <p className="text-[10px] text-gray-500">{f.nome} · {f.detalhe}</p>
                     <p className="text-[13px] font-bold" style={{ color: COR }}>{fmtFase(f, peso, uni)}</p>
+                    {f.fonte && <p className="text-[9px] text-gray-400 mt-0.5">Fonte: {f.fonte}</p>}
                   </div>
                 ))}
               </div>
@@ -177,6 +205,9 @@ function CalcAntidoto({ id }) {
               <p className="text-[10px] text-gray-500">Teto · {tetoDia.porKg} {tetoDia.unidade}</p>
               <p className="text-[13px] font-bold" style={{ color: COR }}>{tetoDiaVal}/dia</p>
             </div>
+          )}
+          {tetoTotal && (
+            <p className="text-[10px] text-gray-500">Teto total: <strong>{tetoTotal.valor} {tetoTotal.unidade}</strong> · {tetoTotal.detalhe}</p>
           )}
           <BotaoCopiar montar={montarTexto} cor={COR} rotulo="Copiar dose" />
         </div>
@@ -204,6 +235,7 @@ export default function Intoxicacoes() {
     quadro: false,
     conduta: false,
     naofazer: false,
+    opioides: false,
   });
 
   const toggle = (chave) => setAbertas((prev) => ({ ...prev, [chave]: !prev[chave] }));
@@ -357,6 +389,18 @@ export default function Intoxicacoes() {
                 <Bullet>Depressão respiratória é rara isoladamente, mas potencializada em coingestão com outros depressores de SNC</Bullet>
               </ul>
               <AlertaBox tone="amber">Flumazenil (antagonista) tem uso restrito — pode precipitar convulsão em coingestão com tricíclicos ou em usuário crônico de benzodiazepínico. Reservar para casos selecionados, sob orientação especializada.</AlertaBox>
+              <CalcAntidoto id="flumazenil" />
+            </Section>
+
+            <Section title="Opioides" icon={Pill} open={abertas.opioides} onToggle={() => toggle("opioides")}>
+              <p>Codeína, tramadol, metadona e morfina — ingestão acidental ou erro de dose. A tríade clássica orienta o reconhecimento à beira-leito.</p>
+              <ul className="space-y-1.5">
+                <Bullet>Miose puntiforme (pupilas puntiformes)</Bullet>
+                <Bullet>Depressão respiratória (bradipneia/apneia) — principal causa de óbito</Bullet>
+                <Bullet>Rebaixamento do nível de consciência, do sono à coma</Bullet>
+              </ul>
+              <AlertaBox tone="red">Naloxona reverte, mas tem duração de ação curta — monitorar a reaparição da depressão respiratória após a dose e repetir conforme necessário.</AlertaBox>
+              <CalcAntidoto id="naloxona" />
             </Section>
           </>
         )}

@@ -1223,14 +1223,46 @@ export const DRUGS = [
   // ─── Antídoto ───
   {
     id: "naloxona",
-    nome: "Naloxona",
+    nome: "Naloxona (Narcan)",
     cat: "Antídoto",
     classe: "antidoto",
-    via: "IV/IM/IN",
-    dose: "0,01 mg/kg/dose",
-    freq: "Repetir 2–3 min",
-    max: "0,1 mg/kg",
-    obs: "Intoxicação por opioides. IN: 0,1 mg/kg (máx 4 mg). Duração curta — monitorar reaparição de depressão.",
+    via: "EV/IM/SC (EV preferível)",
+    dose: "Reversão: 0,1 mg/kg (≤ 20 kg) ou 2 mg (> 20 kg) · Titulação: 0,01 mg/kg",
+    freq: "repetir a cada 2–3 min",
+    max: "10 mg (total)",
+    obs: "Intoxicação por opioides. Bolus: diluir 0,4 mg (1 mL) em 9 mL de SF. Infusão EV: cada ampola em 100 mL de SF ou SG 5%. Duração curta — monitorar reaparição de depressão respiratória. Sem resposta após 10 mg total: considerar outra causa.",
+    fonte: "HSL/UpToDate (reversão) · Harriet Lane (titulação)",
+    // Reversão completa ramifica por peso (0,1 mg/kg até 20 kg; 2 mg fixo acima)
+    // — daí pesoMaxKg/pesoMinKg + fixo. Titulação (depressão respiratória) usa
+    // dose baixa para não precipitar abstinência. Fontes distintas por fase.
+    esquema: {
+      unidade: "mg",
+      fases: [
+        { via: "EV/IM/SC", nome: "Reversão completa (≤ 20 kg)", min: 0.1, max: 0.1, pesoMaxKg: 20, detalhe: "0,1 mg/kg/dose · repetir a cada 2–3 min", fonte: "HSL/UpToDate" },
+        { via: "EV/IM/SC", nome: "Reversão completa (> 20 kg)", fixo: 2, pesoMinKg: 20, detalhe: "2 mg/dose · repetir a cada 2–3 min", fonte: "HSL/UpToDate" },
+        { via: "EV/IM/SC", nome: "Titulação (depressão respiratória)", min: 0.01, max: 0.01, detalhe: "0,01 mg/kg/dose · titular para evitar abstinência", fonte: "Harriet Lane" },
+      ],
+      tetoTotal: { valor: 10, unidade: "mg", detalhe: "sem resposta após 10 mg total → considerar outra causa" },
+    },
+    indicacoes: {}
+  },
+  {
+    id: "flumazenil",
+    nome: "Flumazenil (Lanexat)",
+    cat: "Antídoto",
+    classe: "antidoto",
+    via: "EV",
+    dose: "Pediatria (> 1 a): 0,01 mg/kg/dose (máx 0,2 mg)",
+    freq: "repetir a cada 60 s",
+    max: "0,2 mg/dose",
+    obs: "Reversão de sedação por benzodiazepínico. Lanexat 0,1 mg/mL, ampola 5 mL. USO RESTRITO na intoxicação: pode precipitar convulsão em coingestão com tricíclicos ou em usuário crônico de BZD. EV em 15 s. Adulto (superdosagem): 0,3 mg inicial, doses adicionais até desperto ou total de 2 mg; se a sonolência retorna, infusão 0,1–0,4 mg/hora.",
+    fonte: "HSL — Guia Farmacêutico / UpToDate (Greller) · Bula Lanexat",
+    esquema: {
+      unidade: "mg",
+      fases: [
+        { via: "EV", nome: "Pediatria (> 1 ano)", min: 0.01, max: 0.01, tetoDoseMg: 0.2, detalhe: "0,01 mg/kg em 15 s · repetir a cada 60 s" },
+      ],
+    },
     indicacoes: {}
   },
   {
