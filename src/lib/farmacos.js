@@ -1277,4 +1277,24 @@ export const DRUGS = [
     },
     indicacoes: {}
   },
+  {
+    id: "desferroxamina",
+    nome: "Desferroxamina (Desferal)",
+    cat: "Antídoto",
+    classe: "antidoto",
+    via: "IV",
+    dose: "15 mg/kg/hora (intoxicação aguda por ferro)",
+    freq: "infusão EV contínua",
+    max: "80 mg/kg/dia",
+    obs: "Quelante do ferro na intoxicação aguda. Desferal 500 mg injetável. Rx de abdome pode mostrar comprimidos radiopacos; ferremia em 4–6h orienta a quelação.",
+    fonte: "HSL — Guia Farmacêutico (Intoxicações e Antídotos)",
+    esquema: {
+      unidade: "mg",
+      fases: [
+        { via: "IV", nome: "Infusão contínua", min: 15, max: 15, detalhe: "15 mg/kg/hora, EV" },
+      ],
+      tetoDia: { porKg: 80, unidade: "mg/kg/dia" },
+    },
+    indicacoes: {}
+  },
 ];

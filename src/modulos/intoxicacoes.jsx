@@ -119,11 +119,15 @@ function CalcAntidoto({ id }) {
   const fases = drug.esquema.fases;
   const vias = [...new Set(fases.map((f) => f.via))];
 
+  const tetoDia = drug.esquema.tetoDia; // { porKg, unidade } opcional
+  const tetoDiaVal = tetoDia && peso != null ? fmtValor(peso * tetoDia.porKg, uni) : null;
+
   const montarTexto = () => {
     if (peso == null) return "";
     const itens = fases.map(
       (f) => `${f.via} · ${f.nome}: ${fmtFase(f, peso, uni)} (${f.detalhe})`
     );
+    if (tetoDiaVal) itens.push(`Teto: ${tetoDiaVal}/dia (${tetoDia.porKg} ${tetoDia.unidade})`);
     itens.push(`Fonte: ${drug.fonte}`);
     return montarTextoConduta({
       titulo: drug.nome,
@@ -168,6 +172,12 @@ function CalcAntidoto({ id }) {
               </div>
             </div>
           ))}
+          {tetoDiaVal && (
+            <div className="rounded-lg bg-white border border-gray-200 px-2.5 py-1.5">
+              <p className="text-[10px] text-gray-500">Teto · {tetoDia.porKg} {tetoDia.unidade}</p>
+              <p className="text-[13px] font-bold" style={{ color: COR }}>{tetoDiaVal}/dia</p>
+            </div>
+          )}
           <BotaoCopiar montar={montarTexto} cor={COR} rotulo="Copiar dose" />
         </div>
       )}
@@ -327,7 +337,8 @@ export default function Intoxicacoes() {
                 <Bullet>Estágio 3 (12–48h): choque, acidose metabólica, coagulopatia, insuficiência hepática</Bullet>
                 <Bullet>Estágio 4 (2–5 dias): obstrução por estenose pilórica cicatricial (tardio)</Bullet>
               </ul>
-              <AlertaBox tone="red">Rx de abdome pode mostrar comprimidos radiopacos. Ferremia sérica em 4–6h orienta necessidade de quelação (deferoxamina) — ver PedFarma.</AlertaBox>
+              <AlertaBox tone="red">Rx de abdome pode mostrar comprimidos radiopacos. Ferremia sérica em 4–6h orienta necessidade de quelação (desferroxamina).</AlertaBox>
+              <CalcAntidoto id="desferroxamina" />
             </Section>
 
             <Section title="Antidepressivos tricíclicos" icon={Stethoscope} open={abertas.conduta} onToggle={() => toggle("conduta")}>
