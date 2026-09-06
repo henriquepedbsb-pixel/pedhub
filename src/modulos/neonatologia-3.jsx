@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components -- exporta interpolate (limiares de bilirrubina) para testes */
+/* eslint-disable react-refresh/only-export-components -- exporta interpolate (limiares de bilirrubina) e avaliarNascimento (cálculo de idade a partir do nascimento) para testes */
 /**
  * neonatologia-3.jsx — PedHub
  * Icterícia Neonatal · Calculadora AAP 2022 / SBP 2021
@@ -8,6 +8,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import RodapeModulo from "../components/RodapeModulo";
+import { usePaciente, setPaciente } from "../lib/paciente";
 import {
   Calculator, ClipboardList, BookOpen, Activity,
   AlertTriangle, Info, TrendingUp, Printer,
@@ -119,6 +120,35 @@ function getSBPRow(igW, eRows) {
     if (igW >= r.low && igW <= r.high) return r;
   }
   return eRows[eRows.length - 1];
+}
+
+/* ── Idade de vida a partir do nascimento (PacienteContext) ──
+   Regra clínica: só calcula automaticamente quando DATA e HORA de
+   nascimento estão preenchidas e válidas. Data sem hora fica de fora
+   de propósito — nas primeiras 24–96h de vida (quando o protocolo AAP
+   é mais sensível a diferenças de horas) assumir hora "00:00" geraria
+   uma falsa precisão que pode empurrar o resultado para a zona errada. */
+export function avaliarNascimento(dataStr, horaStr, agoraMs = Date.now()) {
+  const d = String(dataStr || '').trim();
+  const h = String(horaStr || '').trim();
+  if (!d) return { status: 'sem-data', horas: null };
+  const m = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return { status: 'data-invalida', horas: null };
+  if (!h) return { status: 'sem-hora', horas: null };
+  const hm = h.match(/^(\d{1,2}):(\d{2})$/);
+  if (!hm) return { status: 'hora-invalida', horas: null };
+
+  const dia = parseInt(m[1], 10), mes = parseInt(m[2], 10), ano = parseInt(m[3], 10);
+  const hh = parseInt(hm[1], 10), min = parseInt(hm[2], 10);
+  if (mes < 1 || mes > 12 || dia < 1 || dia > 31 || hh > 23 || min > 59) {
+    return { status: 'data-invalida', horas: null };
+  }
+  const nascimento = new Date(ano, mes - 1, dia, hh, min, 0, 0);
+  if (isNaN(nascimento.getTime())) return { status: 'data-invalida', horas: null };
+
+  const diffMs = agoraMs - nascimento.getTime();
+  if (diffMs < 0) return { status: 'futuro', horas: null };
+  return { status: 'ok', horas: diffMs / 3600000 };
 }
 
 /* ── Guia clínico (12 itens) ── */
@@ -297,6 +327,9 @@ const parseFld = v => parseFloat(String(v).replace(',', '.'));
 export default function IctericiaNeonatal() {
   const [tab, setTab] = useState('calc');
 
+  /* ── Paciente global (data/hora de nascimento) ── */
+  const paciente = usePaciente();
+
   /* ── Inputs da calculadora ── */
   const [igSel,       setIgSel]       = useState('');
   const [ageVal,      setAgeVal]      = useState('');
@@ -339,6 +372,52 @@ export default function IctericiaNeonatal() {
       setRSBP({s_pn1000:false,s_apgar:false,s_pao2:false,s_ph:false,s_temp:false,s_alb:false,s_sepse:false,s_hemol:false,s_instab:false});
     }
   }, [igSel]);
+
+  /* ── Auto-cálculo da idade de vida a partir do nascimento ──
+     Só sobrescreve "Idade de vida" se ela estiver vazia OU se ainda for
+     igual ao último valor calculado automaticamente — assim, se o médico
+     digitar um valor manual (ex.: simulação), o app não sobrescreve mais
+     até ele pedir explicitamente para recalcular. */
+  const lastAutoRef = useRef('');
+
+  function aplicarIdadeAutomatica() {
+    const { status, horas } = avaliarNascimento(paciente.dataNascimento, paciente.horaNascimento);
+    if (status !== 'ok' || horas === null) return false;
+    let val, unit;
+    if (horas < 48) { val = horas.toFixed(1); unit = 'h'; }
+    else { val = (horas / 24).toFixed(2); unit = 'd'; }
+    lastAutoRef.current = val;
+    setAgeVal(val);
+    setAgeUnit(unit);
+    return true;
+  }
+
+  // Recalcula ao montar o módulo (abrir) e sempre que a data/hora de
+  // nascimento do paciente mudar.
+  useEffect(() => {
+    if (ageVal !== '' && ageVal !== lastAutoRef.current) return;
+    aplicarIdadeAutomatica();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paciente.dataNascimento, paciente.horaNascimento]);
+
+  // Recalcula ao a aba/janela voltar a ter foco (usuário deixou o app aberto
+  // e voltou depois de um tempo).
+  useEffect(() => {
+    function aoFocar() {
+      if (ageVal !== '' && ageVal !== lastAutoRef.current) return;
+      aplicarIdadeAutomatica();
+    }
+    window.addEventListener('focus', aoFocar);
+    return () => window.removeEventListener('focus', aoFocar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paciente.dataNascimento, paciente.horaNascimento, ageVal]);
+
+  function recalcularAgora() {
+    aplicarIdadeAutomatica();
+  }
+
+  const nascInfo = avaliarNascimento(paciente.dataNascimento, paciente.horaNascimento);
+  const idadeFoiAutoCalculada = nascInfo.status === 'ok' && ageVal !== '' && ageVal === lastAutoRef.current;
 
   /* ── Valores derivados ── */
   const ig = igSel ? parseInt(igSel) : null;
@@ -507,6 +586,43 @@ export default function IctericiaNeonatal() {
         {/* Inputs */}
         <Card>
           <CardTitle>Dados do paciente</CardTitle>
+
+          {/* Nascimento — alimenta o auto-cálculo da idade de vida */}
+          <div style={{borderBottom:`1px dashed ${C.borda}`,paddingBottom:10,marginBottom:10}}>
+            <p style={{fontSize:11.5,color:C.muted,fontStyle:'italic',marginBottom:8}}>
+              Nascimento (opcional — calcula a idade de vida automaticamente):
+            </p>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+              <Fld label="Data de nascimento">
+                <input type="text" placeholder="dd/mm/aaaa"
+                  value={paciente.dataNascimento || ''}
+                  onChange={e => setPaciente({ dataNascimento: e.target.value })}
+                  style={inpStyle}/>
+              </Fld>
+              <Fld label="Hora de nascimento">
+                <input type="time"
+                  value={paciente.horaNascimento || ''}
+                  onChange={e => setPaciente({ horaNascimento: e.target.value })}
+                  style={inpStyle}/>
+              </Fld>
+            </div>
+            {nascInfo.status === 'sem-hora' && (
+              <p style={{fontSize:10.5,color:'#b45309',marginTop:6}}>
+                Falta a hora de nascimento para calcular a idade de vida automaticamente.
+              </p>
+            )}
+            {(nascInfo.status === 'data-invalida' || nascInfo.status === 'hora-invalida') && (
+              <p style={{fontSize:10.5,color:'#b91c1c',marginTop:6}}>
+                Data ou hora de nascimento em formato inválido.
+              </p>
+            )}
+            {nascInfo.status === 'futuro' && (
+              <p style={{fontSize:10.5,color:'#b91c1c',marginTop:6}}>
+                Data/hora de nascimento no futuro — verifique.
+              </p>
+            )}
+          </div>
+
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
             <Fld label="Idade gestacional ao nascer">
               <select value={igSel} onChange={e=>setIgSel(e.target.value)} style={selStyle}>
@@ -524,7 +640,7 @@ export default function IctericiaNeonatal() {
                 value={bili} onChange={e=>setBili(e.target.value)} style={inpStyle} />
             </Fld>
           </div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
             <Fld label="Idade de vida">
               <div style={{display:'flex',gap:6}}>
                 <input type="number" step="0.5" placeholder="Ex: 36"
@@ -544,6 +660,22 @@ export default function IctericiaNeonatal() {
               </select>
             </Fld>
           </div>
+          {idadeFoiAutoCalculada && (
+            <p style={{fontSize:10.5,color:'#0d6e6e',fontWeight:600,marginBottom:8}}>
+              ✓ Calculado automaticamente a partir do nascimento
+            </p>
+          )}
+          {nascInfo.status === 'ok' && !idadeFoiAutoCalculada && (
+            <p style={{fontSize:10.5,color:C.muted,marginBottom:8}}>
+              Idade editada manualmente —{' '}
+              <button type="button" onClick={recalcularAgora} style={{
+                background:'none',border:'none',color:C.aap,textDecoration:'underline',
+                cursor:'pointer',fontSize:10.5,padding:0,
+              }}>
+                recalcular a partir do nascimento
+              </button>
+            </p>
+          )}
           {/* Campos opcionais */}
           <div style={{borderTop:`1px dashed ${C.borda}`,paddingTop:10,marginTop:6}}>
             <p style={{fontSize:11.5,color:C.muted,fontStyle:'italic',marginBottom:8}}>Campos opcionais:</p>
@@ -1215,4 +1347,3 @@ const tdStyle = {
   padding:'6px 10px', border:`1px solid ${C.borda}`,
   textAlign:'center', fontSize:13,
 };
-
