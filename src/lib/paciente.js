@@ -20,7 +20,12 @@ export const VAZIO = Object.freeze({
   idadeUnidade: "meses", // "meses" | "dias"
   igSemanas: "",       // string
   igDias: "",          // string
-  dataNascimento: "",  // string opcional (dd/mm/aaaa) — não deriva nada, só guarda
+  dataNascimento: "",  // string opcional (dd/mm/aaaa) — não deriva nada sozinha
+  horaNascimento: "",  // string opcional (HH:mm) — junto com dataNascimento,
+                        // permite que módulos específicos (ex: neonatologia-3,
+                        // icterícia) calculem idade em horas quando necessário.
+                        // A lib em si não deriva nada disso automaticamente —
+                        // cada módulo decide se/como usar.
 });
 
 // Constantes clínicas REUSADAS de src/modulos/idade-gestacional.jsx (fonte da
@@ -85,7 +90,8 @@ export function pacienteVazio(e) {
     preenchido(e.idadeValor) ||
     preenchido(e.igSemanas) ||
     preenchido(e.igDias) ||
-    preenchido(e.dataNascimento)
+    preenchido(e.dataNascimento) ||
+    preenchido(e.horaNascimento)
   );
 }
 
