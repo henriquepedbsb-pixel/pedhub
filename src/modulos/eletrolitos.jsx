@@ -1,6 +1,7 @@
-/* eslint-disable react-refresh/only-export-components -- exporta correções puras (K/Ca/Mg) para testes unitários */
+// src/modulos/eletrolitos.jsx
+/* eslint-disable react-refresh/only-export-components -- exporta correções puras (K/Ca/Mg/Schwartz) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Lightbulb, CheckCircle2, AlertTriangle, Gauge } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
@@ -10,6 +11,9 @@ const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
   return isNaN(n) ? 0 : n;
 };
+
+// Formata número com vírgula decimal (padrão brasileiro)
+const fmtBR = (n) => String(n).replace('.', ',');
 
 // Fator de distribuição da água corporal total
 const getFator = (idadeAnos) => {
@@ -67,11 +71,51 @@ export function corrigirMagnesio(p, mg) {
   return { mg, dose25, dose50, vol25, vol50 };
 }
 
+// ─── TFG estimada — Schwartz (pura, exportada para testes) ──────────────────
+// 2009 (beira do leito): TFG = 0,413 × altura (cm) / creatinina (mg/dL)
+//   Schwartz GJ et al. J Am Soc Nephrol 2009;20:629-637 (coorte CKiD, 1–16 anos)
+// Original (k por idade): TFG = k × altura (cm) / creatinina (mg/dL)
+//   k 0,33 RN pré-termo · 0,45 RN a termo/lactente <1 ano · 0,55 criança e
+//   menina adolescente · 0,70 menino adolescente
+//   Schwartz GJ, Brion LP, Spitzer A. Pediatr Clin North Am 1987;34:571-590
+export const SCHWARTZ_K = { rnpt: 0.33, lact: 0.45, crianca: 0.55, menino: 0.70 };
+export const SCHWARTZ_K_2009 = 0.413;
+
+export function calcularSchwartz(versao, alturaCm, cr, grupo) {
+  if (!(alturaCm > 0 && cr > 0)) return null;
+  const k = versao === '2009' ? SCHWARTZ_K_2009 : SCHWARTZ_K[grupo];
+  if (!k) return null;
+  const tfg = parseFloat(((k * alturaCm) / cr).toFixed(1));
+  return { k, tfg };
+}
+
+// Categorias de TFG (KDIGO 2012) — aplicáveis a partir de 2 anos de idade
+const KDIGO = [
+  { g: 'G1',  faixa: '≥ 90',  min: 90,        desc: 'Normal ou elevada' },
+  { g: 'G2',  faixa: '60–89', min: 60,        desc: 'Levemente reduzida' },
+  { g: 'G3a', faixa: '45–59', min: 45,        desc: 'Leve a moderadamente reduzida' },
+  { g: 'G3b', faixa: '30–44', min: 30,        desc: 'Moderada a gravemente reduzida' },
+  { g: 'G4',  faixa: '15–29', min: 15,        desc: 'Gravemente reduzida' },
+  { g: 'G5',  faixa: '< 15',  min: -Infinity, desc: 'Falência renal' },
+];
+export function estagioKDIGO(tfg) {
+  if (!(tfg >= 0)) return null;
+  return KDIGO.find(r => tfg >= r.min) || null;
+}
+
+const GRUPOS_K = [
+  { id: 'rnpt',    label: 'RN pré-termo',                  k: '0,33' },
+  { id: 'lact',    label: 'RN a termo / lactente < 1 ano', k: '0,45' },
+  { id: 'crianca', label: 'Criança / menina adolescente',  k: '0,55' },
+  { id: 'menino',  label: 'Menino adolescente',            k: '0,70' },
+];
+
 const TABS = [
-  { id: 'na', label: 'Sódio',     icon: Droplets },
-  { id: 'k',  label: 'Potássio',  icon: Zap },
-  { id: 'ca', label: 'Cálcio',    icon: Pill },
-  { id: 'mg', label: 'Magnésio',  icon: Activity },
+  { id: 'na',  label: 'Sódio',     icon: Droplets },
+  { id: 'k',   label: 'Potássio',  icon: Zap },
+  { id: 'ca',  label: 'Cálcio',    icon: Pill },
+  { id: 'mg',  label: 'Magnésio',  icon: Activity },
+  { id: 'tfg', label: 'TFG',       icon: Gauge },
 ];
 
 // ─── Componente ──────────────────────────────────────────────────────────────
@@ -117,6 +161,26 @@ function Field({ label, val, set, ph, unit }) {
   );
 }
 
+// Chip selecionável — estado ativo via className + !important (decisão fixa nº 2)
+function Chip({ ativo, onClick, children }) {
+  return (
+    <button type="button" className={`eletro-chip${ativo ? ' is-on' : ''}`} onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
+// Caixa de alerta para a aba TFG
+function AlertaTFG({ children }) {
+  return (
+    <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #D97706', marginTop: '8px' }}>
+      <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.6 }}>
+        <AlertTriangle size={12} style={{ verticalAlign: '-1px', marginRight: 4, color: '#D97706' }} />{children}
+      </p>
+    </div>
+  );
+}
+
 export default function Eletrolitos() {
   const [tab,    setTab]    = useState('na');
   const [peso,   setPeso]   = useState('');
@@ -127,6 +191,10 @@ export default function Eletrolitos() {
   const [mgVal,  setMgVal]  = useState('');
   const [glicoseVal, setGlicoseVal] = useState('');
   const [ureiaVal,   setUreiaVal]   = useState('');
+  const [alturaVal,  setAlturaVal]  = useState('');
+  const [crVal,      setCrVal]      = useState('');
+  const [schVersao,  setSchVersao]  = useState(null); // null = automático pela idade
+  const [schGrupo,   setSchGrupo]   = useState(null); // null = automático pela idade
   const [aberto, setAberto] = useState(null);
 
   const p   = parseNum(peso);
@@ -137,6 +205,8 @@ export default function Eletrolitos() {
   const mg  = parseNum(mgVal);
   const glic   = parseNum(glicoseVal);
   const ureiaN = parseNum(ureiaVal);
+  const alt    = parseNum(alturaVal);
+  const cr     = parseNum(crVal);
   const fat = getFator(id);
 
   const calcs = useMemo(() => {
@@ -190,6 +260,15 @@ export default function Eletrolitos() {
     return { naC, kC, caC, mgC, correcao };
   }, [p, na, k, ca, mg, fat, glic, ureiaN]);
 
+  // ── TFG (Schwartz) — versão e faixa de k: automáticas pela idade, editáveis ─
+  const menorQue1 = id > 0 && id < 1;
+  const versaoEf  = schVersao || (menorQue1 ? 'original' : '2009');
+  const grupoEf   = schGrupo  || (menorQue1 ? 'lact' : 'crianca');
+  const sch       = calcularSchwartz(versaoEf, alt, cr, grupoEf);
+  const estagio   = sch && id >= 2 ? estagioKDIGO(sch.tfg) : null;
+  const avisoAltura = alt > 0 && (alt < 25 || alt > 200) ? 'Altura fora do intervalo esperado (25–200 cm) — confira o valor e a unidade.' : null;
+  const avisoCr     = cr > 0 && (cr < 0.1 || cr > 15) ? 'Creatinina fora do intervalo esperado (0,1–15 mg/dL) — confira se está em mg/dL.' : null;
+
   const toggle = (key) => setAberto(aberto === key ? null : key);
 
   // ─── Estilos ─────────────────────────────────────────────────────────────
@@ -214,6 +293,11 @@ export default function Eletrolitos() {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
+
+      <style>{`
+        .eletro-chip { padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #D1D5DB; background-color: var(--surface-2); color: var(--text-2); text-align: left; font-family: inherit; }
+        .eletro-chip.is-on { background-color: #7C3AED !important; color: #FFFFFF !important; border-color: #7C3AED !important; }
+      `}</style>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C} 0%, #5B21B6 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
@@ -692,10 +776,142 @@ export default function Eletrolitos() {
         </div>
       )}
 
+      {/* ════════════════ TAB: TFG (SCHWARTZ) ════════════════ */}
+      {tab === 'tfg' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+
+          {/* Calculadora */}
+          <div style={card({ border: `1px solid ${CBR}` })}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />TFG estimada · Equação de Schwartz</p>
+
+            <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VERSÃO DA FÓRMULA</p>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+              <Chip ativo={versaoEf === '2009'} onClick={() => setSchVersao('2009')}>Beira do leito 2009</Chip>
+              <Chip ativo={versaoEf === 'original'} onClick={() => setSchVersao('original')}>Original (k por idade)</Chip>
+            </div>
+
+            {versaoEf === 'original' && (
+              <div style={{ marginBottom: '10px' }}>
+                <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>FAIXA DO PACIENTE (define o k)</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                  {GRUPOS_K.map(g => (
+                    <Chip key={g.id} ativo={grupoEf === g.id} onClick={() => setSchGrupo(g.id)}>
+                      {g.label} · k {g.k}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: "var(--muted)" }}>
+              {schVersao === null && schGrupo === null
+                ? (menorQue1
+                    ? 'Versão original sugerida pela idade informada (< 1 ano). Faixa pré-selecionada: RN a termo/lactente — escolha RN pré-termo se aplicável.'
+                    : 'Versão 2009 (padrão, validada de 1 a 16 anos). Informe a idade acima para a sugestão automática em < 1 ano.')
+                : 'Seleção manual ativa.'}
+              {(schVersao !== null || schGrupo !== null) && (
+                <button type="button" onClick={() => { setSchVersao(null); setSchGrupo(null); }}
+                  style={{ marginLeft: '6px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: C, fontSize: '10px', fontWeight: '700', textDecoration: 'underline', fontFamily: 'inherit' }}>
+                  Voltar ao automático
+                </button>
+              )}
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <Field label="ALTURA / COMPRIMENTO" val={alturaVal} set={setAlturaVal} ph="110" unit="cm" />
+              <Field label="CREATININA SÉRICA" val={crVal} set={setCrVal} ph="0,6" unit="mg/dL" />
+            </div>
+            <AvisoSanidade msg={avisoAltura} />
+            <AvisoSanidade msg={avisoCr} />
+
+            {/* Avisos de faixa etária */}
+            {versaoEf === '2009' && menorQue1 && (
+              <AlertaTFG>Fórmula de 2009 validada de 1 a 16 anos — fora da faixa etária para menores de 1 ano. Use a versão original (k por idade).</AlertaTFG>
+            )}
+            {versaoEf === '2009' && id > 16 && (
+              <AlertaTFG>Acima de 16 anos está fora da coorte de validação da fórmula de 2009 — interpretar com cautela.</AlertaTFG>
+            )}
+            {versaoEf === 'original' && id >= 1 && (grupoEf === 'rnpt' || grupoEf === 'lact') && (
+              <AlertaTFG>O k de RN/lactente (0,33 ou 0,45) aplica-se a menores de 1 ano — a idade informada é ≥ 1 ano.</AlertaTFG>
+            )}
+            {versaoEf === 'original' && menorQue1 && (grupoEf === 'crianca' || grupoEf === 'menino') && (
+              <AlertaTFG>O k de 0,55 ou 0,70 não se aplica a lactentes — a idade informada é {'<'} 1 ano.</AlertaTFG>
+            )}
+            {versaoEf === 'original' && id >= 1 && (
+              <AlertaTFG>Para ≥ 1 ano a versão 2009 é a preferida: foi derivada com creatinina padronizada (IDMS). O k original foi derivado com método de Jaffe e tende a superestimar a TFG com os métodos atuais.</AlertaTFG>
+            )}
+
+            {/* Resultado */}
+            {sch ? (
+              <div style={{ marginTop: '12px' }}>
+                <ResultBox
+                  label="TFG ESTIMADA"
+                  valor={sch.tfg.toFixed(1).replace('.', ',')}
+                  unit="mL/min/1,73 m²"
+                  sub={`${fmtBR(sch.k)} × ${fmtBR(alt)} ÷ ${fmtBR(cr)}`}
+                />
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)", textAlign: 'center' }}>
+                  {versaoEf === '2009' ? 'Schwartz beira do leito 2009 · k = 0,413' : `Schwartz original · k = ${fmtBR(sch.k)}`}
+                </p>
+              </div>
+            ) : (
+              <p style={{ margin: '12px 0 0 0', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>Informe altura e creatinina para calcular</p>
+            )}
+          </div>
+
+          {/* Categorias KDIGO */}
+          <div style={card()}>
+            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Categorias de TFG · KDIGO (≥ 2 anos)</p>
+            {KDIGO.map(row => {
+              const on = estagio && estagio.g === row.g;
+              return (
+                <div key={row.g} style={{
+                  display: 'flex', gap: '10px', alignItems: 'center', padding: '7px 10px', borderRadius: '6px', marginBottom: '4px',
+                  backgroundColor: on ? '#EDE9FE' : "var(--surface-2)",
+                  border: on ? `1.5px solid ${C}` : '1.5px solid transparent',
+                }}>
+                  <span style={{ fontSize: '12px', fontWeight: '800', color: on ? C : "var(--text-2)", width: '36px', flexShrink: 0 }}>{row.g}</span>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: on ? '#4C1D95' : "var(--text-2)", width: '56px', flexShrink: 0 }}>{row.faixa}</span>
+                  <span style={{ fontSize: '11px', color: on ? '#4C1D95' : "var(--muted)" }}>{row.desc}</span>
+                </div>
+              );
+            })}
+            <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+              {sch && id < 2
+                ? 'Destaque da categoria só a partir de 2 anos (informe a idade acima): em menores de 2 anos a TFG ainda está em maturação e as categorias KDIGO não se aplicam.'
+                : 'mL/min/1,73 m². A categoria exige alteração persistente por ≥ 3 meses; um único valor não classifica doença renal crônica.'}
+            </p>
+          </div>
+
+          {/* Limitações */}
+          <div style={card()}>
+            <button style={accordBtn()} onClick={() => toggle('tfg-lim')}>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Lightbulb size={15} style={{verticalAlign:'-2px', marginRight:6}} />Limitações da estimativa</p>
+              {aberto === 'tfg-lim' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
+            </button>
+            {aberto === 'tfg-lim' && (
+              <div style={{ marginTop: '10px', backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
+                {[
+                  'Pressupõe creatinina em estado estável — não vale na lesão renal aguda (creatinina em mudança).',
+                  'RN: nos primeiros dias a creatinina reflete a função renal materna; a TFG é fisiologicamente baixa e amadurece de forma progressiva, mais lentamente no pré-termo.',
+                  'Massa muscular reduzida (desnutrição, doenças neuromusculares) → creatinina baixa → superestima a TFG; massa muscular aumentada tende ao oposto.',
+                  'A equação de 2009 foi derivada em crianças com doença renal crônica (TFG 15–75 mL/min/1,73 m²); é menos precisa fora dessa faixa.',
+                  'Estimativa não substitui a medida da TFG quando a decisão clínica exige precisão. Não use o valor isolado para ajustar doses de fármacos — seguir bula, protocolo institucional e, se necessário, discutir com a nefrologia pediátrica.',
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '6px', alignItems: 'flex-start', lineHeight: 1.6 }}>
+                    <span style={{ color: C, flexShrink: 0, fontWeight: '700' }}>{i + 1}.</span>{s}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Disclaimer */}
       <RodapeModulo
-        revisao="07/2026"
-        fonte="Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403"
+        revisao="10/2026"
+        fonte="Harriet Lane Handbook 22ª ed. · Nelson Textbook of Pediatrics 21ª ed. · UpToDate Pediatric Electrolytes 2024. Katz MA. N Engl J Med 1973;289:843-844. Hillier TA et al. Am J Med 1999;106:399-403. Schwartz GJ et al. J Am Soc Nephrol 2009;20:629-637. Schwartz GJ, Brion LP, Spitzer A. Pediatr Clin North Am 1987;34:571-590. KDIGO CKD Guideline 2012 (Kidney Int Suppl 2013;3:1-150)"
       />
     </div>
   );
