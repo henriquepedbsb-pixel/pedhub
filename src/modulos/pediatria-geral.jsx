@@ -84,7 +84,7 @@ const SECOES = [
     titulo: "Especialidades Pediátricas",
     Icon: FlaskConical,
     mods: [
-      { rota: "/gastropediatria", label: "Gastro",     desc: "DRGE · APLV · Constipação",         Icon: Activity,     cor: "#F59E0B" },
+      { rota: "/gastropediatria", label: "Gastro e Hepato", desc: "DRGE · APLV · Constipação · Colestase", Icon: Activity,     cor: "#F59E0B" },
       { rota: "/formulas",        label: "Fórmulas",   desc: "Nestlé × Danone · Escada APLV",     Icon: FlaskConical, cor: "#10B981" },
       { rota: "/hidratacao",      label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", Icon: Droplets,     cor: "#3B82F6" },
       { rota: "/dermato",         label: "Dermato",    desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield,   cor: "#EC4899" },
