@@ -6,6 +6,7 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#3B82F6";
 
@@ -48,7 +49,7 @@ function ResultCard({ label, value, unit, color, note }) {
   return (
     <div style={{ background: color + "10", border: "1px solid " + color + "30", borderRadius: 10, padding: "12px 14px", marginBottom: 8 }}>
       <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 4px" }}>{label}</p>
-      <p style={{ fontWeight: 800, fontSize: 22, color, margin: 0 }}>{value} <span style={{ fontSize: 14, fontWeight: 500 }}>{unit}</span></p>
+      <p style={{ fontWeight: 800, fontSize: 22, color, margin: 0 }}>{fmtBR(value)} <span style={{ fontSize: 14, fontWeight: 500 }}>{unit}</span></p>
       {note && <p style={{ fontSize: 11, color: "var(--muted)", margin: "4px 0 0" }}>{note}</p>}
     </div>
   );
@@ -105,29 +106,30 @@ function TabHolliday({ peso }) {
   const horasPorSoro = parseFloat((mlPorSoro / volHora).toFixed(1));
 
   const corTipo  = tipoSol === "iso" ? PRIMARY : "#8B5CF6";
-  const notaVol  = peso <= 10 ? peso + " kg × 100 mL"
-    : peso <= 20 ? "1.000 + " + (peso - 10) * 50 + " mL"
-    : "1.500 + " + (peso - 20) * 20 + " mL";
+  // Só exibição: decomposição do volume; arredonda a 1 casa para não vazar resíduo de ponto flutuante.
+  const notaVol  = peso <= 10 ? fmtBR(peso) + " kg × 100 mL"
+    : peso <= 20 ? "1.000 + " + fmtBR(parseFloat(((peso - 10) * 50).toFixed(1))) + " mL"
+    : "1.500 + " + fmtBR(parseFloat(((peso - 20) * 20).toFixed(1))) + " mL";
 
   const montarTexto = () => montarTextoConduta({
     titulo: "Hidratação de manutenção — Holliday-Segar",
     contexto: [
-      { rotulo: "Peso", valor: `${peso} kg` },
+      { rotulo: "Peso", valor: `${fmtBR(peso)} kg` },
       { rotulo: "Solução", valor: tipoSol === "iso" ? "isotônica" : "hipotônica" },
     ],
     blocos: [
       { titulo: "Volume", itens: [
-        `Volume diário: ${vol} mL/dia`,
-        `Volume horário: ${volHora} mL/h`,
+        `Volume diário: ${fmtBR(vol)} mL/dia`,
+        `Volume horário: ${fmtBR(volHora)} mL/h`,
       ] },
       { titulo: "Eletrólitos de manutenção", itens: [
-        `Sódio (Na) — ${naPerKg} mEq/kg/dia: ${naMeq} mEq/dia (NaCl 20% ${naclMl} mL)`,
-        `Potássio (K) — ${kPerKg} mEq/kg/dia: ${kMeq} mEq/dia (KCl 10% ${kclMl} mL)`,
+        `Sódio (Na) — ${fmtBR(naPerKg)} mEq/kg/dia: ${fmtBR(naMeq)} mEq/dia (NaCl 20% ${fmtBR(naclMl)} mL)`,
+        `Potássio (K) — ${fmtBR(kPerKg)} mEq/kg/dia: ${fmtBR(kMeq)} mEq/dia (KCl 10% ${fmtBR(kclMl)} mL)`,
       ] },
-      { titulo: `Prescrição — ${nSoros} ${nSoros > 1 ? "soros" : "soro"} de ${mlPorSoro} mL`, itens: [
-        `Cada soro (${mlPorSoro} mL): SG 5% ${sgPorSoro} mL + NaCl 20% ${naclPorSoro} mL + KCl 10% ${kclPorSoro} mL`,
-        `Correr cada soro em ${horasPorSoro} h (${volHora} mL/h)`,
-        nSoros > 1 ? `Repetir ${nSoros}× em 24h (${nSoros} × ${mlPorSoro} mL = ${vol} mL)` : null,
+      { titulo: `Prescrição — ${nSoros} ${nSoros > 1 ? "soros" : "soro"} de ${fmtBR(mlPorSoro)} mL`, itens: [
+        `Cada soro (${fmtBR(mlPorSoro)} mL): SG 5% ${fmtBR(sgPorSoro)} mL + NaCl 20% ${fmtBR(naclPorSoro)} mL + KCl 10% ${fmtBR(kclPorSoro)} mL`,
+        `Correr cada soro em ${fmtBR(horasPorSoro)} h (${fmtBR(volHora)} mL/h)`,
+        nSoros > 1 ? `Repetir ${nSoros}× em 24h (${nSoros} × ${fmtBR(mlPorSoro)} mL = ${fmtBR(vol)} mL)` : null,
         "KCl apenas após confirmar diurese. Limite periférico 40 mEq/L.",
       ] },
     ],
@@ -177,13 +179,13 @@ function TabHolliday({ peso }) {
             label={"Sódio (Na)  —  " + naPerKg + " mEq/kg/dia"}
             value={naMeq} unit="mEq/dia"
             color={corTipo}
-            note={"NaCl 20%: " + naclMl + " mL"}
+            note={"NaCl 20%: " + fmtBR(naclMl) + " mL"}
           />
           <ResultCard
             label={"Potássio (K)  —  " + kPerKg + " mEq/kg/dia"}
             value={kMeq} unit="mEq/dia"
             color="#10B981"
-            note={"KCl 10%: " + kclMl + " mL"}
+            note={"KCl 10%: " + fmtBR(kclMl) + " mL"}
           />
         </div>
 
@@ -193,19 +195,19 @@ function TabHolliday({ peso }) {
           borderRadius: 10, padding: "12px 14px", marginBottom: 10,
         }}>
           <p style={{ fontWeight: 700, fontSize: 12, color: corTipo, margin: "0 0 4px", letterSpacing: "0.04em" }}>
-            PRESCRIÇÃO — {nSoros} {nSoros > 1 ? "soros" : "soro"} de {mlPorSoro} mL
+            PRESCRIÇÃO — {nSoros} {nSoros > 1 ? "soros" : "soro"} de {fmtBR(mlPorSoro)} mL
           </p>
           <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 10px" }}>
-            Total {vol} mL em 24h ({volHora} mL/h) · frasco de SG 5% 500 mL fracionado
+            Total {fmtBR(vol)} mL em 24h ({fmtBR(volHora)} mL/h) · frasco de SG 5% 500 mL fracionado
           </p>
 
           <p style={{ fontWeight: 700, fontSize: 11, color: "var(--text-2)", margin: "0 0 6px", letterSpacing: "0.03em" }}>
-            CADA SORO ({mlPorSoro} mL):
+            CADA SORO ({fmtBR(mlPorSoro)} mL):
           </p>
           {[
-            { label: "SG 5%", value: sgPorSoro + " mL" },
-            { label: "NaCl 20%", value: naclPorSoro + " mL" },
-            { label: "KCl 10% *", value: kclPorSoro + " mL" },
+            { label: "SG 5%", value: fmtBR(sgPorSoro) + " mL" },
+            { label: "NaCl 20%", value: fmtBR(naclPorSoro) + " mL" },
+            { label: "KCl 10% *", value: fmtBR(kclPorSoro) + " mL" },
           ].map((row, i) => (
             <div key={i} style={{
               display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -221,11 +223,11 @@ function TabHolliday({ peso }) {
             padding: "7px 0 0", borderTop: "1.5px solid " + corTipo + "40", marginTop: 4,
           }}>
             <span style={{ fontSize: 12, color: "var(--text-2)", fontWeight: 700 }}>Correr cada soro em</span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: corTipo }}>{horasPorSoro} h ({volHora} mL/h)</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: corTipo }}>{fmtBR(horasPorSoro)} h ({fmtBR(volHora)} mL/h)</span>
           </div>
           {nSoros > 1 && (
             <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", fontWeight: 600 }}>
-              Repetir {nSoros}× em 24h ({nSoros} × {mlPorSoro} mL = {vol} mL)
+              Repetir {nSoros}× em 24h ({nSoros} × {fmtBR(mlPorSoro)} mL = {fmtBR(vol)} mL)
             </p>
           )}
         </div>
@@ -283,7 +285,7 @@ function TabPlanoA({ peso }) {
       {peso && (
         <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
           <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-2)", margin: "0 0 6px" }}>Volume de manutenção (referência)</p>
-          <p style={{ fontSize: 14, color: PRIMARY }}>Holliday-Segar: <strong>{holliday(peso).vol} mL/dia</strong> · {holliday(peso).volHora} mL/h</p>
+          <p style={{ fontSize: 14, color: PRIMARY }}>Holliday-Segar: <strong>{fmtBR(holliday(peso).vol)} mL/dia</strong> · {fmtBR(holliday(peso).volHora)} mL/h</p>
         </div>
       )}
       <div style={{ marginTop: 14 }}>
@@ -302,7 +304,7 @@ function TabPlanoB({ peso }) {
       <AlertBox text="Contraindicações para Plano B: nível de consciência alterado, íleo paralítico, vômito incontrolável, perda > 10% ou choque → ir para Plano C." color="#D97706" />
       <div style={{ background: "var(--tint-amber)", borderRadius: 10, padding: "12px 14px", border: "1px solid #FDE68A", marginBottom: 14 }}>
         <p style={{ fontWeight: 700, color: "var(--tx-amber)", fontSize: 13, margin: "0 0 8px" }}>Fase de Reidratação (4 horas)</p>
-        <ItemList color="#F59E0B" items={["SRO: 75 mL/kg em 4 horas (OMS) ou 50–100 mL/kg (SBP)", peso ? "Para " + peso + " kg: " + sroPeso + " mL de SRO em 4 horas" : "Volume: 75 mL/kg em 4 horas", "Oferecer em pequenos volumes frequentes (colher, seringa)", "Reavaliar a cada 1 hora"]} />
+        <ItemList color="#F59E0B" items={["SRO: 75 mL/kg em 4 horas (OMS) ou 50–100 mL/kg (SBP)", peso ? "Para " + fmtBR(peso) + " kg: " + sroPeso + " mL de SRO em 4 horas" : "Volume: 75 mL/kg em 4 horas", "Oferecer em pequenos volumes frequentes (colher, seringa)", "Reavaliar a cada 1 hora"]} />
       </div>
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 8px" }}>Reposição de perdas durante o plano</p>
@@ -325,8 +327,8 @@ function TabPlanoC({ peso }) {
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)", marginBottom: 14 }}>
         <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 8px" }}>Fase de Manutenção (após estabilização)</p>
         <ItemList color="#EF4444" items={[
-          peso ? "Holliday-Segar: " + holliday(peso).vol + " mL/24h (" + holliday(peso).volHora + " mL/h)" : "Holliday-Segar + déficit estimado",
-          "Repor déficit (10% peso) em 24–48h: " + (peso ? (peso * 100).toFixed(0) + " mL (10% de " + peso + " kg)" : "10% do peso em gramas = mL"),
+          peso ? "Holliday-Segar: " + fmtBR(holliday(peso).vol) + " mL/24h (" + fmtBR(holliday(peso).volHora) + " mL/h)" : "Holliday-Segar + déficit estimado",
+          "Repor déficit (10% peso) em 24–48h: " + (peso ? (peso * 100).toFixed(0) + " mL (10% de " + fmtBR(peso) + " kg)" : "10% do peso em gramas = mL"),
           "Solução: SF 0,9% ou SG5% 0,9% (conforme glicemia e Na+)",
           "Adicionar KCl 10% após diurese presente: 3–5 mEq/kg/dia",
           "Transição para SRO assim que tolerado (Plano B)",
@@ -361,7 +363,7 @@ export default function Hidratacao() {
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
-        {peso && <p style={{ fontSize: 12, fontWeight: 700, color: PRIMARY, margin: "4px 0 0" }}>{peso} kg · Holliday: {holliday(peso).vol} mL/dia ({holliday(peso).volHora} mL/h)</p>}
+        {peso && <p style={{ fontSize: 12, fontWeight: 700, color: PRIMARY, margin: "4px 0 0" }}>{fmtBR(peso)} kg · Holliday: {fmtBR(holliday(peso).vol)} mL/dia ({fmtBR(holliday(peso).volHora)} mL/h)</p>}
       </div>
       <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {

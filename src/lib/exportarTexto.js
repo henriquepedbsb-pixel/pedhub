@@ -8,6 +8,8 @@
    de paciente no texto — só peso, idade e a conduta calculada. Quem chama
    monta `contexto`/`blocos`; esta lib só formata e nunca acrescenta campos. */
 
+import { fmtBR } from "./numero.js";
+
 export const RODAPE_EXPORT =
   "Calculado em PedHub — apoio à decisão. Conferir antes de prescrever.";
 
@@ -22,7 +24,8 @@ function preenchido(v) {
 
 function fmtCampo(rotulo, valor) {
   const r = rotulo != null ? String(rotulo).trim() : "";
-  const v = String(valor).trim();
+  // Número vindo direto do cálculo sai com vírgula decimal (padrão brasileiro).
+  const v = (typeof valor === "number" ? fmtBR(valor) : String(valor)).trim();
   return r ? `${r}: ${v}` : v;
 }
 

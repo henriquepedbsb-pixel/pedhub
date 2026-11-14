@@ -24,6 +24,7 @@ import {
   ChevronRight,
   RotateCcw,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const COR = "#6366F1"; // indigo-500 — cor do módulo TORCHS
 
@@ -88,7 +89,7 @@ function DoseCard({ nome, calc, unidade, obs }) {
       <p className="font-semibold text-gray-800 text-sm">{nome}</p>
       <p className="text-sm" style={{ color: COR }}>
         {calc !== null && calc !== undefined && !Number.isNaN(calc)
-          ? `≈ ${calc} ${unidade}`
+          ? `≈ ${fmtBR(calc)} ${unidade}`
           : "Informe o peso do RN acima"}
       </p>
       {obs && <p className="text-xs text-gray-500 mt-1">{obs}</p>}

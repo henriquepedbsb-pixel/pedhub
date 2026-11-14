@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcSurfactante) para testes unitários */
 import { useState, useMemo } from 'react';
 import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -21,6 +23,32 @@ const TABS = [
   { id: 'posdose',    label: 'Pós-dose',   icon: Activity },
 ];
 
+// ─── Motor de cálculo (puro — exportado para testes) · p = peso em kg ────────
+export function calcSurfactante(p) {
+  if (p <= 0) return null;
+  // ── Curosurf (poractant alfa) 100 mg/mL ──────────────────────────────
+  const cuDose1mg  = Math.round(200 * p);         // 200 mg/kg
+  const cuVol1     = parseFloat((2 * p).toFixed(2));  // 2 mL/kg
+  const cuDose2mg  = Math.round(100 * p);         // 100 mg/kg
+  const cuVol2     = parseFloat((1 * p).toFixed(2));  // 1 mL/kg
+  // Número de ampolas de 3 mL (300 mg) necessárias
+  const cuAmp3_1   = Math.ceil(cuVol1 / 3);
+  const cuAmp3_2   = Math.ceil(cuVol2 / 3);
+  // Número de ampolas de 1,5 mL (150 mg)
+  const cuAmp15_1  = Math.ceil(cuVol1 / 1.5);
+
+  // ── Survanta (beractant) 25 mg/mL ────────────────────────────────────
+  const svDoseMg  = Math.round(100 * p);          // 100 mg/kg
+  const svVol     = parseFloat((4 * p).toFixed(2));   // 4 mL/kg
+  const svAmp8    = Math.ceil(svVol / 8);         // ampola 8 mL (200 mg)
+
+  // ── Atropina (LISA/INSURE) 20 mcg/kg ─────────────────────────────────
+  const atropMg  = parseFloat((0.02 * p).toFixed(3));
+  const atropVol = parseFloat((atropMg / 0.25).toFixed(2)); // 0,25 mg/mL
+
+  return { cuDose1mg, cuVol1, cuDose2mg, cuVol2, cuAmp3_1, cuAmp3_2, cuAmp15_1, svDoseMg, svVol, svAmp8, atropMg, atropVol };
+}
+
 // ─── Componente ───────────────────────────────────────────────────────────────
 export default function Surfactante() {
   const [tab,     setTab]    = useState('indicacoes');
@@ -32,30 +60,7 @@ export default function Surfactante() {
 
   const p = parseNum(peso);
 
-  const calcs = useMemo(() => {
-    if (p <= 0) return null;
-    // ── Curosurf (poractant alfa) 100 mg/mL ──────────────────────────────
-    const cuDose1mg  = Math.round(200 * p);         // 200 mg/kg
-    const cuVol1     = parseFloat((2 * p).toFixed(2));  // 2 mL/kg
-    const cuDose2mg  = Math.round(100 * p);         // 100 mg/kg
-    const cuVol2     = parseFloat((1 * p).toFixed(2));  // 1 mL/kg
-    // Número de ampolas de 3 mL (300 mg) necessárias
-    const cuAmp3_1   = Math.ceil(cuVol1 / 3);
-    const cuAmp3_2   = Math.ceil(cuVol2 / 3);
-    // Número de ampolas de 1,5 mL (150 mg)
-    const cuAmp15_1  = Math.ceil(cuVol1 / 1.5);
-
-    // ── Survanta (beractant) 25 mg/mL ────────────────────────────────────
-    const svDoseMg  = Math.round(100 * p);          // 100 mg/kg
-    const svVol     = parseFloat((4 * p).toFixed(2));   // 4 mL/kg
-    const svAmp8    = Math.ceil(svVol / 8);         // ampola 8 mL (200 mg)
-
-    // ── Atropina (LISA/INSURE) 20 mcg/kg ─────────────────────────────────
-    const atropMg  = parseFloat((0.02 * p).toFixed(3));
-    const atropVol = parseFloat((atropMg / 0.25).toFixed(2)); // 0,25 mg/mL
-
-    return { cuDose1mg, cuVol1, cuDose2mg, cuVol2, cuAmp3_1, cuAmp3_2, cuAmp15_1, svDoseMg, svVol, svAmp8, atropMg, atropVol };
-  }, [p]);
+  const calcs = useMemo(() => calcSurfactante(p), [p]);
 
   const toggle = (k) => setAberto(aberto === k ? null : k);
 
@@ -217,10 +222,10 @@ export default function Surfactante() {
           {/* Peso */}
           <div style={card()}>
             <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
-            <input type="number" inputMode="decimal" step="0.01" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 1,250"
+            <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 1,250"
               style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '20px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
               <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
-            {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${p} kg`}</p>}
+            {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${fmtBR(p)} kg`}</p>}
           </div>
 
           {/* Selector surfactante */}
@@ -257,14 +262,14 @@ export default function Surfactante() {
                       <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
                         <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DOSE</p>
                         <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>
-                          {dosaC === 'primeira' ? calcs.cuDose1mg : calcs.cuDose2mg}
+                          {fmtBR(dosaC === 'primeira' ? calcs.cuDose1mg : calcs.cuDose2mg)}
                         </p>
                         <p style={{ margin: 0, fontSize: '11px', color: C }}>mg</p>
                       </div>
                       <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #BFDBFE' }}>
                         <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VOLUME</p>
                         <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>
-                          {dosaC === 'primeira' ? calcs.cuVol1 : calcs.cuVol2}
+                          {fmtBR(dosaC === 'primeira' ? calcs.cuVol1 : calcs.cuVol2)}
                         </p>
                         <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}>mL de 100 mg/mL</p>
                       </div>
@@ -273,10 +278,10 @@ export default function Surfactante() {
                       {dosaC === 'primeira' ? (
                         <>
                           <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
-                            Ampola de <strong>3 mL</strong>: usar <strong>{calcs.cuVol1} mL</strong> de <strong>{calcs.cuAmp3_1} ampola(s)</strong>
+                            Ampola de <strong>3 mL</strong>: usar <strong>{fmtBR(calcs.cuVol1)} mL</strong> de <strong>{fmtBR(calcs.cuAmp3_1)} ampola(s)</strong>
                           </p>
                           <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                            Ampola de <strong>1,5 mL</strong>: {calcs.cuAmp15_1} ampola(s) necessária(s)
+                            Ampola de <strong>1,5 mL</strong>: {fmtBR(calcs.cuAmp15_1)} ampola(s) necessária(s)
                           </p>
                         </>
                       ) : (
@@ -301,9 +306,9 @@ export default function Surfactante() {
                       </div>
                       {[[0.6,1.2,0.6],[0.7,1.4,0.7],[0.8,1.6,0.8],[0.9,1.8,0.9],[1.0,2.0,1.0],[1.2,2.4,1.2],[1.5,3.0,1.5],[2.0,4.0,2.0]].map(([w,d1,d2], i) => (
                         <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: Math.abs(p - w) < 0.05 ? CLT : (i % 2 === 0 ? "var(--surface-2)" : "var(--surface)"), borderTop: '1px solid var(--border)', padding: '7px 10px' }}>
-                          <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: Math.abs(p - w) < 0.05 ? '800' : '400' }}>{w} kg</span>
-                          <span style={{ fontSize: '12px', color: C, fontWeight: '700' }}>{d1} mL</span>
-                          <span style={{ fontSize: '12px', color: '#D97706', fontWeight: '600' }}>{d2} mL</span>
+                          <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: Math.abs(p - w) < 0.05 ? '800' : '400' }}>{fmtBR(w)} kg</span>
+                          <span style={{ fontSize: '12px', color: C, fontWeight: '700' }}>{fmtBR(d1)} mL</span>
+                          <span style={{ fontSize: '12px', color: '#D97706', fontWeight: '600' }}>{fmtBR(d2)} mL</span>
                         </div>
                       ))}
                     </div>
@@ -317,18 +322,18 @@ export default function Surfactante() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                     <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DOSE</p>
-                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{calcs.svDoseMg}</p>
+                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{fmtBR(calcs.svDoseMg)}</p>
                       <p style={{ margin: 0, fontSize: '11px', color: '#D97706' }}>mg</p>
                     </div>
                     <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VOLUME</p>
-                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calcs.svVol}</p>
+                      <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(calcs.svVol)}</p>
                       <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-blue)" }}>mL de 25 mg/mL</p>
                     </div>
                   </div>
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                     <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
-                      Ampola de <strong>8 mL</strong> (200 mg): {calcs.svAmp8} ampola(s) · dividir em 4 alíquotas (posições: sup, lat D, lat E, sup) · pode repetir q6h (máx 4 doses/48h)
+                      Ampola de <strong>8 mL</strong> (200 mg): {fmtBR(calcs.svAmp8)} ampola(s) · dividir em 4 alíquotas (posições: sup, lat D, lat E, sup) · pode repetir q6h (máx 4 doses/48h)
                     </p>
                   </div>
                 </div>
@@ -340,11 +345,11 @@ export default function Surfactante() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DOSE (20 mcg/kg)</p>
-                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: C, lineHeight: 1 }}>{calcs.atropMg} mg</p>
+                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(calcs.atropMg)} mg</p>
                   </div>
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VOLUME (0,25 mg/mL)</p>
-                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: "var(--text-2)", lineHeight: 1 }}>{calcs.atropVol} mL</p>
+                    <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: "var(--text-2)", lineHeight: 1 }}>{fmtBR(calcs.atropVol)} mL</p>
                   </div>
                 </div>
                 <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Atropina 0,25 mg/mL · dar IV 2-3 min antes do procedimento · previne bradicardia reflexa</p>

@@ -20,6 +20,7 @@ import {
   calcIdadeCorrigida,
   pacienteVazio,
 } from "../lib/paciente";
+import { fmtBR } from "../lib/numero";
 
 // Altura da faixa colapsada — o Header (App.jsx) usa isto como offset sticky.
 export const BARRA_PACIENTE_H = 40;
@@ -61,7 +62,7 @@ function fmtSemDiasCurto(dias) {
 function montarResumo(p) {
   const partes = [];
   const kg = parsePesoKg(p.peso);
-  if (kg) partes.push(`${kg} kg`);
+  if (kg) partes.push(`${fmtBR(kg)} kg`);
   if (String(p.idadeValor).trim()) partes.push(`${p.idadeValor} ${p.idadeUnidade}`);
   if (String(p.igSemanas).trim()) {
     const d = String(p.igDias).trim();

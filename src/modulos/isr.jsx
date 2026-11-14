@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcularISR, calcTubo, calcLamina) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
@@ -5,6 +6,7 @@ import BotaoCopiar from "../components/BotaoCopiar";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -13,7 +15,7 @@ const parseNum = (val) => {
 };
 
 // Tubo com cuff — fórmula de Motoyama/AAP (idade/4 + 3.5)
-const calcTubo = (idadeAnos) => {
+export const calcTubo = (idadeAnos) => {
   if (idadeAnos <= 0) return null;
   let tamanho;
   if (idadeAnos < 0.5)    tamanho = 3.0;
@@ -27,7 +29,7 @@ const calcTubo = (idadeAnos) => {
   return { tamanho, profCole };
 };
 
-const calcLamina = (idadeAnos) => {
+export const calcLamina = (idadeAnos) => {
   if (idadeAnos <= 0)    return { tipo: '—', detalhe: 'Insira a idade' };
   if (idadeAnos < 0.5)  return { tipo: 'Reta Miller 0', detalhe: 'RN / lactente pequeno' };
   if (idadeAnos < 2)    return { tipo: 'Reta Miller 1', detalhe: 'Lactente' };
@@ -43,6 +45,71 @@ const CONTEXTOS = [
   { id: 'bronco', label: 'Broncoespasmo', inducaoId: 'cetamina', doseInd: 2.0, fenDose: 1, cor: '#D97706' },
 ];
 
+// ─── Motor de cálculo das drogas da ISR (puro — exportado para testes) ───────
+// p = peso (kg) · id = idade (anos) · contexto = id de CONTEXTOS · usarRocur = rocurônio no lugar de succinilcolina
+export function calcularISR({ p, id, contexto, usarRocur }) {
+  if (p <= 0) return null;
+  const ctx = CONTEXTOS.find(c => c.id === contexto);
+
+  // Atropina: 0.02 mg/kg IV · mín 0.1 mg · máx 0.5 mg · conc 0.25 mg/mL
+  const atropDose = parseFloat(Math.min(Math.max(0.02 * p, 0.1), 0.5).toFixed(2));
+  const atropVol  = parseFloat((atropDose / 0.25).toFixed(2));
+
+  // Fentanil pré-medicação: fenDose mcg/kg · conc 50 mcg/mL
+  const fenMcg = parseFloat((ctx.fenDose * p).toFixed(0));
+  const fenVol = parseFloat((fenMcg / 50).toFixed(2));
+
+  // Lidocaína HIC: 1.5 mg/kg IV · conc 20 mg/mL (lidocaína 2%)
+  const lidoDose = parseFloat((1.5 * p).toFixed(1));
+  const lidoVol  = parseFloat((lidoDose / 20).toFixed(2));
+
+  // Indução
+  let indDose, indVol, indAmpola;
+  if (ctx.inducaoId === 'cetamina') {
+    indDose   = parseFloat((ctx.doseInd * p).toFixed(1));
+    indVol    = parseFloat((indDose / 50).toFixed(2)); // 50 mg/mL
+    indAmpola = 'Cetamina 500 mg/10 mL (50 mg/mL)';
+  } else {
+    indDose   = parseFloat((ctx.doseInd * p).toFixed(1));
+    indVol    = parseFloat((indDose / 10).toFixed(2)); // 10 mg/mL
+    indAmpola = 'Propofol 200 mg/20 mL (10 mg/mL)';
+  }
+
+  // BNM
+  let bnmDoseKg, bnmDose, bnmVol, bnmNome, bnmAmpola;
+  if (!usarRocur) {
+    bnmDoseKg = id <= 0.5 ? 2 : 1.5; // ≤6 meses: 2 mg/kg; demais: 1.5 mg/kg
+    bnmDose   = parseFloat((bnmDoseKg * p).toFixed(1));
+    bnmVol    = parseFloat((bnmDose / 50).toFixed(2)); // 50 mg/mL
+    bnmNome   = 'Succinilcolina';
+    bnmAmpola = 'Quelicin 500 mg/10 mL (50 mg/mL)';
+  } else {
+    bnmDoseKg = 1.2;
+    bnmDose   = parseFloat((1.2 * p).toFixed(1));
+    bnmVol    = parseFloat((bnmDose / 10).toFixed(2)); // 10 mg/mL
+    bnmNome   = 'Rocurônio';
+    bnmAmpola = 'Esmeron/Rocurônio 50 mg/5 mL (10 mg/mL)';
+  }
+
+  // Sugammadex (reverter rocurônio ISR): 16 mg/kg · conc 100 mg/mL
+  const sugDose = parseFloat((16 * p).toFixed(0));
+  const sugVol  = parseFloat((sugDose / 100).toFixed(1));
+
+  // Via aérea
+  const tubo   = id > 0 ? calcTubo(id) : null;
+  const lamina = id > 0 ? calcLamina(id) : null;
+
+  // Flush de arraste (SF 0,9%) pós-cada droga em bólus — por porte
+  const flush = p < 10 ? 3 : p < 30 ? 5 : 10;
+
+  return {
+    ctx, atropDose, atropVol, fenMcg, fenVol, lidoDose, lidoVol,
+    indDose, indVol, indAmpola,
+    bnmDoseKg, bnmDose, bnmVol, bnmNome, bnmAmpola,
+    sugDose, sugVol, tubo, lamina, flush,
+  };
+}
+
 // ─── DoseCard — componente de exibição de dose ───────────────────────────────
 function DoseCard({ label, dose, unit, vol, ampola, cor, obs, admin }) {
   return (
@@ -50,8 +117,8 @@ function DoseCard({ label, dose, unit, vol, ampola, cor, obs, admin }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
         <span style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", flex: 1, marginRight: '8px' }}>{label}</span>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <p style={{ margin: 0, fontSize: '20px', fontWeight: '800', color: cor || '#1F2937', lineHeight: 1 }}>{dose} {unit}</p>
-          <p style={{ margin: '1px 0 0 0', fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{vol} mL</p>
+          <p style={{ margin: 0, fontSize: '20px', fontWeight: '800', color: cor || '#1F2937', lineHeight: 1 }}>{fmtBR(dose)} {unit}</p>
+          <p style={{ margin: '1px 0 0 0', fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{fmtBR(vol)} mL</p>
         </div>
       </div>
       <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)" }}>{ampola}</p>
@@ -89,68 +156,7 @@ export default function ISR() {
   const p  = parseNum(peso);
   const id = parseNum(idade);
 
-  const drugs = useMemo(() => {
-    if (p <= 0) return null;
-    const ctx = CONTEXTOS.find(c => c.id === contexto);
-
-    // Atropina: 0.02 mg/kg IV · mín 0.1 mg · máx 0.5 mg · conc 0.25 mg/mL
-    const atropDose = parseFloat(Math.min(Math.max(0.02 * p, 0.1), 0.5).toFixed(2));
-    const atropVol  = parseFloat((atropDose / 0.25).toFixed(2));
-
-    // Fentanil pré-medicação: fenDose mcg/kg · conc 50 mcg/mL
-    const fenMcg = parseFloat((ctx.fenDose * p).toFixed(0));
-    const fenVol = parseFloat((fenMcg / 50).toFixed(2));
-
-    // Lidocaína HIC: 1.5 mg/kg IV · conc 20 mg/mL (lidocaína 2%)
-    const lidoDose = parseFloat((1.5 * p).toFixed(1));
-    const lidoVol  = parseFloat((lidoDose / 20).toFixed(2));
-
-    // Indução
-    let indDose, indVol, indAmpola;
-    if (ctx.inducaoId === 'cetamina') {
-      indDose   = parseFloat((ctx.doseInd * p).toFixed(1));
-      indVol    = parseFloat((indDose / 50).toFixed(2)); // 50 mg/mL
-      indAmpola = 'Cetamina 500 mg/10 mL (50 mg/mL)';
-    } else {
-      indDose   = parseFloat((ctx.doseInd * p).toFixed(1));
-      indVol    = parseFloat((indDose / 10).toFixed(2)); // 10 mg/mL
-      indAmpola = 'Propofol 200 mg/20 mL (10 mg/mL)';
-    }
-
-    // BNM
-    let bnmDoseKg, bnmDose, bnmVol, bnmNome, bnmAmpola;
-    if (!usarRocur) {
-      bnmDoseKg = id <= 0.5 ? 2 : 1.5; // ≤6 meses: 2 mg/kg; demais: 1.5 mg/kg
-      bnmDose   = parseFloat((bnmDoseKg * p).toFixed(1));
-      bnmVol    = parseFloat((bnmDose / 50).toFixed(2)); // 50 mg/mL
-      bnmNome   = 'Succinilcolina';
-      bnmAmpola = 'Quelicin 500 mg/10 mL (50 mg/mL)';
-    } else {
-      bnmDoseKg = 1.2;
-      bnmDose   = parseFloat((1.2 * p).toFixed(1));
-      bnmVol    = parseFloat((bnmDose / 10).toFixed(2)); // 10 mg/mL
-      bnmNome   = 'Rocurônio';
-      bnmAmpola = 'Esmeron/Rocurônio 50 mg/5 mL (10 mg/mL)';
-    }
-
-    // Sugammadex (reverter rocurônio ISR): 16 mg/kg · conc 100 mg/mL
-    const sugDose = parseFloat((16 * p).toFixed(0));
-    const sugVol  = parseFloat((sugDose / 100).toFixed(1));
-
-    // Via aérea
-    const tubo   = id > 0 ? calcTubo(id) : null;
-    const lamina = id > 0 ? calcLamina(id) : null;
-
-    // Flush de arraste (SF 0,9%) pós-cada droga em bólus — por porte
-    const flush = p < 10 ? 3 : p < 30 ? 5 : 10;
-
-    return {
-      ctx, atropDose, atropVol, fenMcg, fenVol, lidoDose, lidoVol,
-      indDose, indVol, indAmpola,
-      bnmDoseKg, bnmDose, bnmVol, bnmNome, bnmAmpola,
-      sugDose, sugVol, tubo, lamina, flush,
-    };
-  }, [p, id, contexto, usarRocur]);
+  const drugs = useMemo(() => calcularISR({ p, id, contexto, usarRocur }), [p, id, contexto, usarRocur]);
 
   const toggle = (key) => setAberto(aberto === key ? null : key);
 
@@ -159,13 +165,13 @@ export default function ISR() {
   const montarLinhasRx = () => {
     if (!drugs) return [];
     const linhas = [];
-    linhas.push({ t: '1. Pré-medicação (T − 3 min)', d: `Atropina — ${drugs.atropDose} mg (${drugs.atropVol} mL) IV${id < 1 || !usarRocur ? ' — obrigatória' : ' (se bradicardia prevista)'}` });
-    if (drugs.fenMcg > 0) linhas.push({ t: '', d: `Fentanil — ${drugs.fenMcg} mcg (${drugs.fenVol} mL) IV lento 30–60 s` });
-    if (contexto === 'hic') linhas.push({ t: '', d: `Lidocaína — ${drugs.lidoDose} mg (${drugs.lidoVol} mL) IV` });
-    linhas.push({ t: '2. Indução (T − 0)', d: `${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} — ${drugs.indDose} mg (${drugs.indVol} mL) IV em bólus` });
-    linhas.push({ t: '3. Bloqueio neuromuscular (logo após)', d: `${drugs.bnmNome} — ${drugs.bnmDose} mg (${drugs.bnmVol} mL) IV em bólus rápido` });
-    if (usarRocur) linhas.push({ t: '4. Resgate (se CICO)', d: `Sugammadex — ${drugs.sugDose} mg (${drugs.sugVol} mL) IV rápido — preparado ANTES` });
-    if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${drugs.tubo.tamanho} mm (com cuff) · fixar em ${drugs.tubo.profCole} cm · ${drugs.lamina.tipo}` });
+    linhas.push({ t: '1. Pré-medicação (T − 3 min)', d: `Atropina — ${fmtBR(drugs.atropDose)} mg (${fmtBR(drugs.atropVol)} mL) IV${id < 1 || !usarRocur ? ' — obrigatória' : ' (se bradicardia prevista)'}` });
+    if (drugs.fenMcg > 0) linhas.push({ t: '', d: `Fentanil — ${fmtBR(drugs.fenMcg)} mcg (${fmtBR(drugs.fenVol)} mL) IV lento 30–60 s` });
+    if (contexto === 'hic') linhas.push({ t: '', d: `Lidocaína — ${fmtBR(drugs.lidoDose)} mg (${fmtBR(drugs.lidoVol)} mL) IV` });
+    linhas.push({ t: '2. Indução (T − 0)', d: `${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} — ${fmtBR(drugs.indDose)} mg (${fmtBR(drugs.indVol)} mL) IV em bólus` });
+    linhas.push({ t: '3. Bloqueio neuromuscular (logo após)', d: `${drugs.bnmNome} — ${fmtBR(drugs.bnmDose)} mg (${fmtBR(drugs.bnmVol)} mL) IV em bólus rápido` });
+    if (usarRocur) linhas.push({ t: '4. Resgate (se CICO)', d: `Sugammadex — ${fmtBR(drugs.sugDose)} mg (${fmtBR(drugs.sugVol)} mL) IV rápido — preparado ANTES` });
+    if (id > 0 && drugs.tubo) linhas.push({ t: 'Via aérea', d: `Tubo ${fmtBR(drugs.tubo.tamanho)} mm (com cuff) · fixar em ${fmtBR(drugs.tubo.profCole)} cm · ${drugs.lamina.tipo}` });
     return linhas;
   };
 
@@ -176,7 +182,7 @@ export default function ISR() {
     itens.push("Doses e diluições conforme Harriet Lane 22ª ed.");
     return montarTextoConduta({
       titulo: `Sequência rápida de intubação — ${drugs.ctx.label}`,
-      contexto: [{ rotulo: 'Peso', valor: `${p} kg` }],
+      contexto: [{ rotulo: 'Peso', valor: `${fmtBR(p)} kg` }],
       blocos: [{ titulo: 'Ordem de administração', itens }],
     });
   };
@@ -287,7 +293,7 @@ export default function ISR() {
                     <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se contraindicada → usar rocurônio 1.2 mg/kg (aba Calcular)</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se contraindicada → usar rocurônio 1,2 mg/kg (aba Calcular)</p>
               </div>
               <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
                 <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#D97706' }}>Propofol — usar com cautela se:</p>
@@ -299,7 +305,7 @@ export default function ISR() {
                     <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se PA borderline → cetamina 1.5 mg/kg é mais segura</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se PA borderline → cetamina 1,5 mg/kg é mais segura</p>
               </div>
             </div>
           </div>
@@ -316,7 +322,7 @@ export default function ISR() {
                   <strong>S</strong>uctioning · <strong>O</strong>xygen · <strong>T</strong>ubo · <strong>A</strong>irway device · <strong>N</strong>urse/equipe · <strong>E</strong>quipment
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
-                  {['Tubo IOT (tamanho ±0.5)', 'Condutor/estilete', 'Laringoscópio + lâmina', 'Aspirador funcionando', 'BVM + O₂ 15 L/min', 'Monitor: ECG, SpO₂, PA', 'Acesso venoso pérvio', 'Fita/fixador para tubo', 'CO₂ colorimétrico', 'Seringa 5 mL p/ cuff', 'Drogas preparadas e id.', 'Capnografia se disponível'].map((item, i) => (
+                  {['Tubo IOT (tamanho ±0,5)', 'Condutor/estilete', 'Laringoscópio + lâmina', 'Aspirador funcionando', 'BVM + O₂ 15 L/min', 'Monitor: ECG, SpO₂, PA', 'Acesso venoso pérvio', 'Fita/fixador para tubo', 'CO₂ colorimétrico', 'Seringa 5 mL p/ cuff', 'Drogas preparadas e id.', 'Capnografia se disponível'].map((item, i) => (
                     <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", alignItems: 'center', padding: '4px 0' }}>
                       <span style={{ width: '14px', height: '14px', borderRadius: '3px', border: '1.5px solid var(--border)', flexShrink: 0 }} />
                       {item}
@@ -339,13 +345,13 @@ export default function ISR() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
-                <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
+                <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
-                <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 2,5"
+                <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 2,5"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
                 <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>0,5 = 6 meses · 0,08 ≈ 1 mês</p>
               </div>
@@ -427,7 +433,7 @@ export default function ISR() {
               <div style={card({ border: `1px solid ${CBR}` })}>
                 <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>INDUÇÃO (T − 0)</p>
                 <DoseCard
-                  label={`${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} ${drugs.ctx.doseInd} mg/kg IV`}
+                  label={`${drugs.ctx.inducaoId === 'cetamina' ? 'Cetamina' : 'Propofol'} ${fmtBR(drugs.ctx.doseInd)} mg/kg IV`}
                   dose={drugs.indDose} unit="mg"
                   vol={drugs.indVol}
                   ampola={drugs.indAmpola}
@@ -447,7 +453,7 @@ export default function ISR() {
               <div style={card({ border: usarRocur ? '1px solid #DDD6FE' : `1px solid ${CBR}` })}>
                 <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>BLOQUEIO NEUROMUSCULAR (logo após indução)</p>
                 <DoseCard
-                  label={`${drugs.bnmNome} ${drugs.bnmDoseKg} mg/kg IV`}
+                  label={`${drugs.bnmNome} ${fmtBR(drugs.bnmDoseKg)} mg/kg IV`}
                   dose={drugs.bnmDose} unit="mg"
                   vol={drugs.bnmVol}
                   ampola={drugs.bnmAmpola}
@@ -480,12 +486,12 @@ export default function ISR() {
                   <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VIA AÉREA</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                     <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{drugs.tubo.tamanho}</p>
+                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(drugs.tubo.tamanho)}</p>
                       <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mm DI (com cuff)</p>
-                      <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>ter {drugs.tubo.tamanho - 0.5} e {drugs.tubo.tamanho + 0.5} disponíveis</p>
+                      <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>ter {fmtBR(drugs.tubo.tamanho - 0.5)} e {fmtBR(drugs.tubo.tamanho + 0.5)} disponíveis</p>
                     </div>
                     <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{drugs.tubo.profCole}</p>
+                      <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(drugs.tubo.profCole)}</p>
                       <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cm na comissura</p>
                       <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>fórmula DI × 3</p>
                     </div>
@@ -514,7 +520,7 @@ export default function ISR() {
                   <ListChecks size={15} style={{ marginRight: 6 }} />Prescrição pronta — ordem de administração
                 </p>
                 <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: "var(--muted)" }}>
-                  Peso {p} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {drugs.flush} mL de SF 0,9% após cada uma.
+                  Peso {fmtBR(p)} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {fmtBR(drugs.flush)} mL de SF 0,9% após cada uma.
                 </p>
                 {(() => {
                   const linhas = montarLinhasRx();
@@ -609,7 +615,7 @@ export default function ISR() {
               itens: [
                 'Iniciar sedoanalgesia: midazolam 0,05-0,1 mg/kg/h + fentanil 1-2 mcg/kg/h IV',
                 'VM protetora: VC 6-8 mL/kg, FR por faixa etária, PEEP 5 cmH₂O',
-                'FiO₂ 1.0 inicialmente → reduzir para SpO₂ 95-99%',
+                'FiO₂ 1,0 inicialmente → reduzir para SpO₂ 95-99%',
                 'Fixar tubo e imobilizar cabeça (extubação acidental = emergência)',
                 'Documentar: tamanho, profundidade, drogas, tentativas, intercorrências',
               ],
@@ -669,7 +675,7 @@ export default function ISR() {
                 { plano: 'A', titulo: 'ISR padrão + otimização', cor: '#10B981', desc: 'Laringoscopia direta ou videolaringoscopia · Otimizar posição, lâmina, BURP · Máx. 2 tentativas antes de mudar de plano' },
                 { plano: 'B', titulo: 'Dispositivo supraglótico', cor: '#3B82F6', desc: 'Máscara laríngea (LMA) ou i-gel · Oxigenação de resgate enquanto resolve via aérea definitiva · Pode ser usado para guiar fibroscopia' },
                 { plano: 'C', titulo: 'Via aérea instrumental', cor: '#7C3AED', desc: 'Videolaringoscópio (GlideScope/C-MAC) · Fibroscopia flexível (se operador treinado) · Intubação nasal às cegas (≥ 8 anos, respiração espontânea)' },
-                { plano: 'D', titulo: 'Via aérea cirúrgica — CICO', cor: '#DC2626', desc: '>12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6.0) · <12 anos: punção cricotireoidea (cateter 14G) + jet ventilation · ÚLTIMO RECURSO — não pode intubar + não consegue oxigenar' },
+                { plano: 'D', titulo: 'Via aérea cirúrgica — CICO', cor: '#DC2626', desc: '>12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6,0) · <12 anos: punção cricotireoidea (cateter 14G) + jet ventilation · ÚLTIMO RECURSO — não pode intubar + não consegue oxigenar' },
               ].map((pl, i) => (
                 <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px', backgroundColor: "var(--bg)", borderRadius: '8px', borderLeft: `3px solid ${pl.cor}` }}>
                   <span style={{ backgroundColor: pl.cor, color: '#FFF', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '800', flexShrink: 0 }}>{pl.plano}</span>
@@ -687,7 +693,7 @@ export default function ISR() {
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}><AlertTriangle size={15} style={{ marginRight: 6 }} />CICO — Não consigo intubar, não consigo oxigenar</p>
             {[
               'Chamar ajuda imediatamente — cirurgião, ORL',
-              'Criança > 12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6.0 sem cuff)',
+              'Criança > 12 anos: cricotireoidotomia cirúrgica (bisturi-dedo-tubo 6,0 sem cuff)',
               'Criança < 12 anos: punção cricotireoidea cateter 14G + jet ventilation (I:E 1:4)',
               'Rocurônio em uso: Sugammadex 16 mg/kg IV — revertê-lo permite respiração espontânea',
               'Enquanto aguarda: BVM alta pressão, LMA, todos os esforços para oxigenar',

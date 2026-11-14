@@ -3,6 +3,7 @@
 // zonas de status (Normal < P95 · Hipertensão P95–P99 · Grave ≥ P99) e o ponto
 // do paciente. Identidade das curvas por rótulo + posição + estilo de linha.
 import { DIONNE, DIONNE_SEMANAS } from "../lib/pa-neonatal.js";
+import { fmtBR } from "../lib/numero";
 
 const C_P50 = "#6B7280";
 const C_P95 = "#EA580C";
@@ -110,7 +111,7 @@ export default function GraficoPercentilNeonatal({
             <line x1={px} y1={topY} x2={px} y2={baseY} stroke={corPaciente} strokeWidth="0.5" strokeDasharray="2 2" opacity="0.5" />
             <circle cx={px} cy={py} r="4.5" fill={corPaciente} stroke="#fff" strokeWidth="2" />
             <text x={px} y={py - 7} fontSize="8.5" fontWeight="800" fill={corPaciente} textAnchor="middle">
-              {valorPaciente}
+              {fmtBR(valorPaciente)}
             </text>
           </g>
         )}

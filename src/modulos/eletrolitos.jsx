@@ -5,6 +5,7 @@ import { Droplets, Zap, Pill, Activity, ChevronDown, ChevronUp, Calculator, Ligh
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -12,8 +13,7 @@ const parseNum = (val) => {
   return isNaN(n) ? 0 : n;
 };
 
-// Formata número com vírgula decimal (padrão brasileiro)
-const fmtBR = (n) => String(n).replace('.', ',');
+// Vírgula decimal (padrão brasileiro): fmtBR vem de src/lib/numero.js
 
 // Fator de distribuição da água corporal total
 const getFator = (idadeAnos) => {
@@ -135,7 +135,7 @@ function ResultBox({ label, valor, unit, sub, cor }) {
   return (
     <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
       <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>{label}</p>
-      <p style={{ margin: '4px 0 0 0', fontSize: '24px', fontWeight: '800', color: corFinal, lineHeight: 1 }}>{valor}</p>
+      <p style={{ margin: '4px 0 0 0', fontSize: '24px', fontWeight: '800', color: corFinal, lineHeight: 1 }}>{fmtBR(valor)}</p>
       <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{unit}</p>
       {sub && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: corFinal, fontWeight: '600' }}>{sub}</p>}
     </div>
@@ -312,15 +312,15 @@ export default function Eletrolitos() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
         <div style={card({ padding: '10px' })}>
           <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
-          <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
+          <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
         </div>
         <div style={card({ padding: '10px' })}>
           <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
-          <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 3"
+          <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 3"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-          <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: "var(--muted)" }}>Fator: {fat} (água corporal)</p>
+          <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: "var(--muted)" }}>Fator: {fmtBR(fat)} (água corporal)</p>
         </div>
       </div>
 
@@ -365,11 +365,11 @@ export default function Eletrolitos() {
                   <>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                       <ResultBox label="SINTOMÁTICO (agudo)" valor={calcs.naC?.bolus} unit="mL de NaCl 3%" sub="2-3 mL/kg em 30 min" />
-                      <ResultBox label={`CORREÇÃO +${calcs.naC?.dNaMax24h} mEq/L`} valor={calcs.naC?.vol24h} unit="mL de NaCl 3%" sub="em 24h (máx 10 mEq/L/dia)" cor="#D97706" />
+                      <ResultBox label={`CORREÇÃO +${fmtBR(calcs.naC?.dNaMax24h)} mEq/L`} valor={calcs.naC?.vol24h} unit="mL de NaCl 3%" sub="em 24h (máx 10 mEq/L/dia)" cor="#D97706" />
                     </div>
                     <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                       <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
-                        <strong>Solução:</strong> NaCl 3% = 0,513 mEq/mL · Fórmula: ΔNa × {p} kg × {fat} / 0,513<br />
+                        <strong>Solução:</strong> NaCl 3% = 0,513 mEq/mL · Fórmula: ΔNa × {fmtBR(p)} kg × {fmtBR(fat)} / 0,513<br />
                         <strong>Preparo</strong> (se não houver 3% pronto): 15 mL de NaCl 20% + 85 mL de AD = 100 mL de NaCl 3%<br />
                         <strong>Via:</strong> bolus sintomático pode ser periférico · infusão contínua → acesso central preferível<br />
                         <strong>Velocidade:</strong> bolus 2–3 mL/kg em 10–20 min · repetir até cessar a convulsão ou elevar 4–6 mEq/L<br />
@@ -398,7 +398,7 @@ export default function Eletrolitos() {
                     </div>
                     <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                       <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
-                        Fórmula do déficit: {fat} × {p} kg × (Na atual/140 − 1) × 1000<br />
+                        Fórmula do déficit: {fmtBR(fat)} × {fmtBR(p)} kg × (Na atual/140 − 1) × 1000<br />
                         <strong>Diluente:</strong> SG 5% (água livre) ou NaCl 0,45% · repor o déficit em 48–72 h<br />
                         <strong>Via:</strong> periférico<br />
                         <strong>Velocidade:</strong> reduzir Na ≤ 0,5 mEq/L/h (≤ 10–12 mEq/L/24 h) · Na sérico a cada 2–4 h<br />
@@ -528,15 +528,15 @@ export default function Eletrolitos() {
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#D97706' }}>Hipocalemia — KCl 10% IV</p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
-                  <ResultBox label="DOSE 0,3 mEq/kg" valor={calcs.kC.vol03} unit="mL KCl 10%" sub={`= ${calcs.kC.dose03} mEq`} />
-                  <ResultBox label="DOSE 0,5 mEq/kg" valor={calcs.kC.vol05} unit="mL KCl 10%" sub={`= ${calcs.kC.dose05} mEq`} cor="#D97706" />
+                  <ResultBox label="DOSE 0,3 mEq/kg" valor={calcs.kC.vol03} unit="mL KCl 10%" sub={`= ${fmtBR(calcs.kC.dose03)} mEq`} />
+                  <ResultBox label="DOSE 0,5 mEq/kg" valor={calcs.kC.vol05} unit="mL KCl 10%" sub={`= ${fmtBR(calcs.kC.dose05)} mEq`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
                     <strong>Diluente:</strong> diluir SEMPRE em SF 0,9% — nunca em soro glicosado (glicose → insulina → shift intracelular → piora a hipocalemia)<br />
                     KCl 10% = 1,341 mEq/mL<br />
                     <strong>Concentração máxima:</strong> 40 mEq/L periférico · 80 mEq/L central (com monitor)<br />
-                    <strong>Para a dose de 0,5 mEq/kg ({calcs.kC.dose05} mEq):</strong> diluir em ≥ {calcs.kC.sfPerif} mL de SF (periférico) ou ≥ {calcs.kC.sfCentral} mL (central)<br />
+                    <strong>Para a dose de 0,5 mEq/kg ({fmtBR(calcs.kC.dose05)} mEq):</strong> diluir em ≥ {fmtBR(calcs.kC.sfPerif)} mL de SF (periférico) ou ≥ {fmtBR(calcs.kC.sfCentral)} mL (central)<br />
                     <strong>Velocidade:</strong> 0,3–0,5 mEq/kg/h · máx 1 mEq/kg/h apenas em UTI, com monitor cardíaco e acesso central<br />
                     <strong>Via:</strong> periférico se ≤ 40 mEq/L · central se concentração maior<br />
                     <span style={{ color: '#D97706', fontWeight: '700' }}><AlertTriangle size={12} style={{verticalAlign:'-1px', marginRight:3}} />Hipocalemia refratária → descartar hipomagnesemia primeiro!</span>
@@ -556,7 +556,7 @@ export default function Eletrolitos() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                   <ResultBox label="Gluconato Ca 10%" valor={calcs.kC.volCa} unit="mL IV" sub="1 mL/kg em 5-10 min" />
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>= {calcs.kC.mgCa} mg</p>
+                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>= {fmtBR(calcs.kC.mgCa)} mg</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Máx 20 mL (2g)</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Efeito: 1-3 min · Duração: 30-60 min</p>
                   </div>
@@ -565,8 +565,8 @@ export default function Eletrolitos() {
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginBottom: '8px' }}>
                   <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>Glicose + Insulina Regular</p>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
-                    Glicose 50%: <strong>{calcs.kC.glicose * 2} mL</strong> → diluir p/ 25% antes de infundir<br />
-                    Insulina regular: <strong>{calcs.kC.insulina} U</strong> IV (0,1 U/kg) · Monitorar glicemia!
+                    Glicose 50%: <strong>{fmtBR(calcs.kC.glicose * 2)} mL</strong> → diluir p/ 25% antes de infundir<br />
+                    Insulina regular: <strong>{fmtBR(calcs.kC.insulina)} U</strong> IV (0,1 U/kg) · Monitorar glicemia!
                   </p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
                     <strong>Salbutamol:</strong> {p < 25 ? '2,5' : '5'} mg nebulizado — shift K+ intracelular
@@ -589,7 +589,7 @@ export default function Eletrolitos() {
 
             {k > 0 && k >= 3.5 && k < 5.5 && (
               <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />K+ {k} mEq/L — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />K+ {fmtBR(k)} mEq/L — dentro do normal</p>
               </div>
             )}
           </div>
@@ -654,8 +654,8 @@ export default function Eletrolitos() {
             {ca > 0 && ca < 8.5 && p > 0 && calcs.caC ? (
               <div style={{ marginTop: '12px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
-                  <ResultBox label="100 mg/kg (1 mL/kg)" valor={calcs.caC.vol1} unit="mL IV" sub={`${calcs.caC.mg1} mg total`} />
-                  <ResultBox label="200 mg/kg (2 mL/kg)" valor={calcs.caC.vol2} unit="mL IV" sub={`${calcs.caC.mg2} mg total — máx 20 mL`} cor="#D97706" />
+                  <ResultBox label="100 mg/kg (1 mL/kg)" valor={calcs.caC.vol1} unit="mL IV" sub={`${fmtBR(calcs.caC.mg1)} mg total`} />
+                  <ResultBox label="200 mg/kg (2 mL/kg)" valor={calcs.caC.vol2} unit="mL IV" sub={`${fmtBR(calcs.caC.mg2)} mg total — máx 20 mL`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
@@ -671,7 +671,7 @@ export default function Eletrolitos() {
               <p style={{ marginTop: '8px', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : ca >= 8.5 && ca > 0 ? (
               <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Ca {ca} mg/dL — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Ca {fmtBR(ca)} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>
@@ -728,8 +728,8 @@ export default function Eletrolitos() {
             {mg > 0 && mg < 1.5 && p > 0 && calcs.mgC ? (
               <div style={{ marginTop: '12px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
-                  <ResultBox label="25 mg/kg MgSO₄" valor={calcs.mgC.vol25} unit="mL de 50%" sub={`= ${calcs.mgC.dose25} mg MgSO₄`} />
-                  <ResultBox label="50 mg/kg MgSO₄" valor={calcs.mgC.vol50} unit="mL de 50%" sub={`= ${calcs.mgC.dose50} mg — máx 2g`} cor="#D97706" />
+                  <ResultBox label="25 mg/kg MgSO₄" valor={calcs.mgC.vol25} unit="mL de 50%" sub={`= ${fmtBR(calcs.mgC.dose25)} mg MgSO₄`} />
+                  <ResultBox label="50 mg/kg MgSO₄" valor={calcs.mgC.vol50} unit="mL de 50%" sub={`= ${fmtBR(calcs.mgC.dose50)} mg — máx 2g`} cor="#D97706" />
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)", lineHeight: 1.7 }}>
@@ -746,7 +746,7 @@ export default function Eletrolitos() {
               <p style={{ marginTop: '8px', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>Insira o peso acima para calcular</p>
             ) : mg >= 1.5 && mg > 0 ? (
               <div style={{ marginTop: '10px', backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Mg {mg} mg/dL — dentro do normal</p>
+                <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-green)", fontWeight: '700' }}><CheckCircle2 size={13} style={{verticalAlign:'-2px', marginRight:4}} />Mg {fmtBR(mg)} mg/dL — dentro do normal</p>
               </div>
             ) : null}
           </div>

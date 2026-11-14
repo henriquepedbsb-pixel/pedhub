@@ -42,6 +42,7 @@ import {
   getPretermPercs, classify, classifyOMS,
   percFromBand3, percFromBand5, percFromBand7, zFromBand,
 } from "../lib/calc/percentis";
+import { fmtBR } from "../lib/numero";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TABELAS LMS — OMS (WHO Child Growth Standards 2006)
@@ -483,15 +484,15 @@ function CardOMS({ label, data }) {
       <div style={{ marginTop:"8px", display:"flex", gap:"16px", flexWrap:"wrap" }}>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{val}</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{fmtBR(val)}</div>
         </div>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color: parseFloat(z) < -2 || parseFloat(z) > 2 ? cl.color : "var(--text)" }}>{z}</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color: parseFloat(z) < -2 || parseFloat(z) > 2 ? cl.color : "var(--text)" }}>{fmtBR(z)}</div>
         </div>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>P{perc?.toFixed(1)}</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>P{fmtBR(perc?.toFixed(1))}</div>
         </div>
       </div>
       <PercBar perc={perc} color={cl.color} />
@@ -503,10 +504,10 @@ function CardPT({ label, data }) {
   if (!data) return null;
   const { perc, z, cl, val, band } = data;
   const bandTxt = band?.length === 7
-    ? `P3:${band[0]} · P10:${band[2]} · P50:${band[3]} · P90:${band[4]} · P97:${band[6]}`
+    ? `P3:${fmtBR(band[0])} · P10:${fmtBR(band[2])} · P50:${fmtBR(band[3])} · P90:${fmtBR(band[4])} · P97:${fmtBR(band[6])}`
     : band?.length === 5
-    ? `P3:${band[0]} · P10:${band[1]} · P50:${band[2]} · P90:${band[3]} · P97:${band[4]}`
-    : band ? `P10:${band[0]} · P50:${band[1]} · P90:${band[2]}` : "";
+    ? `P3:${fmtBR(band[0])} · P10:${fmtBR(band[1])} · P50:${fmtBR(band[2])} · P90:${fmtBR(band[3])} · P97:${fmtBR(band[4])}`
+    : band ? `P10:${fmtBR(band[0])} · P50:${fmtBR(band[1])} · P90:${fmtBR(band[2])}` : "";
   return (
     <div style={{ borderRadius:"10px", border:`1.5px solid ${cl.color}`, background:cl.bg, padding:"12px", marginBottom:"8px" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -519,17 +520,17 @@ function CardPT({ label, data }) {
       <div style={{ marginTop:"8px", display:"flex", gap:"16px", flexWrap:"wrap" }}>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Valor</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{val}</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:"var(--text)" }}>{fmtBR(val)}</div>
         </div>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Z-score</div>
           <div style={{ fontSize:"15px", fontWeight:"700", color: z && (parseFloat(z) < -1.28 || parseFloat(z) > 1.28) ? cl.color : "var(--text)" }}>
-            {z ? `~${z}` : '—'}
+            {z ? `~${fmtBR(z)}` : '—'}
           </div>
         </div>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:"11px", color:"var(--muted)", fontWeight:"600", textTransform:"uppercase", letterSpacing:"0.04em" }}>Percentil</div>
-          <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>≈P{perc}</div>
+          <div style={{ fontSize:"15px", fontWeight:"700", color:cl.color }}>≈P{fmtBR(perc)}</div>
         </div>
       </div>
       <div style={{ marginTop:"4px", fontSize:"11px", color:"var(--muted)" }}>{bandTxt}</div>

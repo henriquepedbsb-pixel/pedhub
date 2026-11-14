@@ -10,6 +10,7 @@ import {
   Scale, Calculator, ClipboardList, BarChart2,
   AlertTriangle, CheckCircle, Info, Activity, ArrowRight,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 /* ── Tokens de cor (hex fixo — sem variáveis CSS) ── */
 const AZ_E    = "#0d3b6e";
@@ -120,7 +121,7 @@ function RxLine({ name, vol, unit, detail, isABD }) {
       </span>
       <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
         <span style={{ fontFamily: "monospace", fontSize: 15, fontWeight: 700, color: isABD ? DETALHE : AZ_E }}>
-          {vol}
+          {fmtBR(vol)}
         </span>
         {unit   && <span style={{ fontSize: 11.5, fontWeight: 600, color: DETALHE }}>{unit}</span>}
         {detail && <span style={{ fontSize: 11,   color: MUTED }}>{detail}</span>}
@@ -148,7 +149,7 @@ function DoseEdit({ value, onChange, onReset, suggested, unit, decimals = 1, zer
         <IW>
           <input
             type="text" inputMode="decimal"
-            value={value !== "" ? value : suggested.toFixed(decimals)}
+            value={value !== "" ? value : fmtBR(suggested.toFixed(decimals))}
             onChange={e => onChange(e.target.value)}
             style={{ width: 60, padding: "7px 9px", border: "none", outline: "none", fontSize: 13, fontWeight: 700, color: TEXTO, background: "transparent" }}
           />
@@ -159,7 +160,7 @@ function DoseEdit({ value, onChange, onReset, suggested, unit, decimals = 1, zer
           onClick={onReset}
           style={{ border: "none", background: "transparent", color: AZ_M, fontSize: 11, fontWeight: 600, cursor: "pointer", padding: "4px 2px" }}
         >
-          sugerido: {suggested.toFixed(decimals)}
+          sugerido: {fmtBR(suggested.toFixed(decimals))}
         </button>
       </div>
       {edited && (
@@ -271,27 +272,27 @@ export default function TigNeonatal() {
   // Conduta em texto plano (só peso/TIG/dia + prescrição; sem paciente).
   const montarTextoTig = () => {
     if (!calc || calc.error) return "";
-    const glicose = calc.sgItems.map((i) => `${i.label}: ${i.vol.toFixed(1)} mL`);
+    const glicose = calc.sgItems.map((i) => `${i.label}: ${fmtBR(i.vol.toFixed(1))} mL`);
     const elet = [
-      `NaCl 20%: ${calc.vol_nacl.toFixed(1)} mL (${calc.na_meq.toFixed(1)} mEq Na · ${calc.na_dose} mEq/kg/dia)`,
+      `NaCl 20%: ${fmtBR(calc.vol_nacl.toFixed(1))} mL (${fmtBR(calc.na_meq.toFixed(1))} mEq Na · ${fmtBR(calc.na_dose)} mEq/kg/dia)`,
       calc.k_dose > 0
-        ? `KCl 10%: ${calc.vol_kcl.toFixed(1)} mL (${calc.k_meq.toFixed(2)} mEq K · ${calc.k_dose} mEq/kg/dia)`
+        ? `KCl 10%: ${fmtBR(calc.vol_kcl.toFixed(1))} mL (${fmtBR(calc.k_meq.toFixed(2))} mEq K · ${fmtBR(calc.k_dose)} mEq/kg/dia)`
         : "KCl 10%: suspenso — sem diurese no 1.º dia",
-      `Gluconato Ca 10%: ${calc.ca_ml.toFixed(1)} mL (${(calc.ca_ml * CA_MEQ_ML).toFixed(1)} mEq Ca · ${calc.ca_rate} mL/kg/dia)`,
+      `Gluconato Ca 10%: ${fmtBR(calc.ca_ml.toFixed(1))} mL (${fmtBR((calc.ca_ml * CA_MEQ_ML).toFixed(1))} mEq Ca · ${fmtBR(calc.ca_rate)} mL/kg/dia)`,
     ];
     return montarTextoConduta({
       titulo: "Hidratação venosa neonatal (TIG)",
       contexto: [
-        { rotulo: "Peso", valor: `${peso} kg` },
-        { rotulo: "TIG", valor: `${tig} mg/kg/min` },
-        { rotulo: "Dia de vida", valor: `${calc.dia}` },
+        { rotulo: "Peso", valor: `${fmtBR(peso)} kg` },
+        { rotulo: "TIG", valor: `${fmtBR(tig)} mg/kg/min` },
+        { rotulo: "Dia de vida", valor: `${fmtBR(calc.dia)}` },
       ],
       blocos: [
         { titulo: "Solução glicosada", itens: glicose },
         { titulo: "Eletrólitos", itens: elet },
         { titulo: "Volume total", itens: [
-          `${calc.vol_total.toFixed(1)} mL/dia · ${calc.mlh.toFixed(1)} mL/h`,
-          `Glicose ${calc.gg.toFixed(1)} g/dia · conc. final ${(calc.conc_alvo * 100).toFixed(1)}%`,
+          `${fmtBR(calc.vol_total.toFixed(1))} mL/dia · ${fmtBR(calc.mlh.toFixed(1))} mL/h`,
+          `Glicose ${fmtBR(calc.gg.toFixed(1))} g/dia · conc. final ${fmtBR((calc.conc_alvo * 100).toFixed(1))}%`,
         ] },
       ],
     });
@@ -340,7 +341,7 @@ export default function TigNeonatal() {
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: TEXTO, marginBottom: 6 }}>Peso atual</label>
             <IW>
               <input
-                type="text" inputMode="decimal" placeholder="0.000"
+                type="text" inputMode="decimal" placeholder="0,000"
                 value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
                 style={{ flex: 1, minWidth: 0, padding: "13px 12px", border: "none", outline: "none", fontSize: 16, fontWeight: 500, color: TEXTO, background: "transparent" }}
               />
@@ -389,7 +390,7 @@ export default function TigNeonatal() {
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, color: TEXTO, marginBottom: 6 }}>TIG alvo</label>
             <IW>
               <input
-                type="text" inputMode="decimal" placeholder="0.0"
+                type="text" inputMode="decimal" placeholder="0,0"
                 value={tigRaw} onChange={e => setTigRaw(e.target.value)}
                 style={{ flex: 1, minWidth: 0, padding: "13px 12px", border: "none", outline: "none", fontSize: 16, fontWeight: 500, color: TEXTO, background: "transparent" }}
               />
@@ -426,7 +427,7 @@ export default function TigNeonatal() {
               </div>
               <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4 }}>
                 <span style={{ fontSize: 64, fontWeight: 800, color: "#fff", lineHeight: 1, letterSpacing: -2 }}>
-                  {calc.conc.toFixed(1)}
+                  {fmtBR(calc.conc.toFixed(1))}
                 </span>
                 <span style={{ fontSize: 18, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>%</span>
               </div>
@@ -443,7 +444,7 @@ export default function TigNeonatal() {
               ].map(({ label, val, unit }) => (
                 <div key={label} style={{ background: "var(--surface)", border: "1px solid " + BORDA, borderRadius: 13, padding: 14, textAlign: "center", boxShadow: "0 1px 3px rgba(13,59,110,0.07)" }}>
                   <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: 6 }}>{label}</div>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: AZ_E, lineHeight: 1, letterSpacing: -1 }}>{val}</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: AZ_E, lineHeight: 1, letterSpacing: -1 }}>{fmtBR(val)}</div>
                   <div style={{ fontSize: 11.5, fontWeight: 600, color: DETALHE, marginTop: 4 }}>{unit}</div>
                 </div>
               ))}
@@ -464,7 +465,7 @@ export default function TigNeonatal() {
                   "Emergência: diluir para ≤ 12,5% até acesso central disponível",
                 ] : [
                   `Aumentar o volume para ≥ ${Math.ceil(tig * 144 / 12.5)} mL/kg/dia mantendo a TIG`,
-                  `Ou reduzir a TIG para ≤ ${(vol * 12.5 / 144).toFixed(1)} mg/kg/min com este volume`,
+                  `Ou reduzir a TIG para ≤ ${fmtBR((vol * 12.5 / 144).toFixed(1))} mg/kg/min com este volume`,
                   "Ou utilizar acesso central (sem limite de concentração)",
                 ]).map((text, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < 2 ? 7 : 0, fontSize: 12.5, color: calc.conc > 25 ? "#7f1d1d" : "#78350f", lineHeight: 1.5 }}>
@@ -509,7 +510,7 @@ export default function TigNeonatal() {
                     <RxLine
                       name="NaCl 20%"
                       vol={calc.vol_nacl.toFixed(1)} unit="mL"
-                      detail={`${calc.na_meq.toFixed(1)} mEq Na · ${calc.na_dose} mEq/kg/dia`}
+                      detail={`${fmtBR(calc.na_meq.toFixed(1))} mEq Na · ${fmtBR(calc.na_dose)} mEq/kg/dia`}
                     />
                     <DoseEdit
                       value={naManual} onChange={setNaManual} onReset={() => setNaManual("")}
@@ -517,7 +518,7 @@ export default function TigNeonatal() {
                     />
 
                     {calc.k_dose > 0
-                      ? <RxLine name="KCl 10%" vol={calc.vol_kcl.toFixed(1)} unit="mL" detail={`${calc.k_meq.toFixed(2)} mEq K · ${calc.k_dose} mEq/kg/dia`} />
+                      ? <RxLine name="KCl 10%" vol={calc.vol_kcl.toFixed(1)} unit="mL" detail={`${fmtBR(calc.k_meq.toFixed(2))} mEq K · ${fmtBR(calc.k_dose)} mEq/kg/dia`} />
                       : <RxLine name="KCl 10%" vol="—" detail="Suspenso — sem diurese no 1.º dia" />
                     }
                     <DoseEdit
@@ -528,7 +529,7 @@ export default function TigNeonatal() {
                     <RxLine
                       name="Gluconato Ca 10%"
                       vol={calc.ca_ml.toFixed(1)} unit="mL"
-                      detail={`${(calc.ca_ml * CA_MEQ_ML).toFixed(1)} mEq Ca · ${calc.ca_rate} mL/kg/dia`}
+                      detail={`${fmtBR((calc.ca_ml * CA_MEQ_ML).toFixed(1))} mEq Ca · ${fmtBR(calc.ca_rate)} mL/kg/dia`}
                     />
                     <DoseEdit
                       value={caManual} onChange={setCaManual} onReset={() => setCaManual("")}
@@ -540,13 +541,13 @@ export default function TigNeonatal() {
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: AZ_L, borderRadius: 9, padding: "10px 12px", marginTop: 8 }}>
                     <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: AZ_E }}>Volume total</span>
                     <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: AZ_E }}>
-                      {calc.vol_total.toFixed(1)} mL/dia · {calc.mlh.toFixed(1)} mL/h
+                      {fmtBR(calc.vol_total.toFixed(1))} mL/dia · {fmtBR(calc.mlh.toFixed(1))} mL/h
                     </span>
                   </div>
 
                   {/* Nota */}
                   <p style={{ fontSize: 10.5, color: MUTED, fontStyle: "italic", marginTop: 9, lineHeight: 1.55 }}>
-                    Glicose: {calc.gg.toFixed(1)} g/dia · Conc. final: {(calc.conc_alvo * 100).toFixed(1)}%
+                    Glicose: {fmtBR(calc.gg.toFixed(1))} g/dia · Conc. final: {fmtBR((calc.conc_alvo * 100).toFixed(1))}%
                   </p>
 
                   {/* Alertas */}
@@ -565,7 +566,7 @@ export default function TigNeonatal() {
                   {calc.k_dose > 0 && calc.dia === 1 && diurese && (
                     <div style={{ background: OK_L, borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "var(--tx-green)", fontWeight: 500, marginTop: 6, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 6 }}>
                       <CheckCircle size={12} color={OK} style={{ flexShrink: 0, marginTop: 1 }} />
-                      K iniciado ({calc.k_dose} mEq/kg/dia) — diurese presente
+                      K iniciado ({fmtBR(calc.k_dose)} mEq/kg/dia) — diurese presente
                     </div>
                   )}
                   {calc.sgItems.length > 0 && calc.sgItems[calc.sgItems.length - 1].overload && (

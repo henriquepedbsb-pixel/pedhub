@@ -4,6 +4,7 @@ import { ClipboardCheck, Calculator, Thermometer, TrendingUp, ChevronDown, Chevr
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -388,7 +389,7 @@ export default function Hipotermia() {
               <div style={{ marginTop: '10px' }}>
                 <div style={{ marginBottom: '10px' }}>
                   <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
-                  <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 3,2"
+                  <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 3,2"
                     style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
                   <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
                 </div>
@@ -397,13 +398,13 @@ export default function Hipotermia() {
                   {p > 0 && fenoCalc ? (
                     <>
                       <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Ataque:</strong> {fenoCalc.loading} mg IV em 15-20 min (20 mg/kg)
+                        <strong>Ataque:</strong> {fmtBR(fenoCalc.loading)} mg IV em 15-20 min (20 mg/kg)
                       </p>
                       <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Se persistir:</strong> +{fenoCalc.adicional} mg IV (10 mg/kg) · máx total 40 mg/kg
+                        <strong>Se persistir:</strong> +{fmtBR(fenoCalc.adicional)} mg IV (10 mg/kg) · máx total 40 mg/kg
                       </p>
                       <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Manutenção (após 24h):</strong> {fenoCalc.manutencao} mg/dia IV ou VO (4 mg/kg/dia)
+                        <strong>Manutenção (após 24h):</strong> {fmtBR(fenoCalc.manutencao)} mg/dia IV ou VO (4 mg/kg/dia)
                       </p>
                     </>
                   ) : (
@@ -447,7 +448,7 @@ export default function Hipotermia() {
 
             <div style={{ marginBottom: '10px' }}>
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>TEMPERATURA ATUAL (°C)</label>
-              <input type="number" inputMode="decimal" step="0.1" value={tempAtual} onChange={e => setTempAtual(e.target.value)} placeholder="33,5"
+              <input type="text" inputMode="decimal" value={tempAtual} onChange={e => setTempAtual(limparDecimal(e.target.value))} placeholder="33,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${parseNum(tempAtual) > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
             </div>
 
@@ -457,7 +458,7 @@ export default function Hipotermia() {
                 {['0.2', '0.3', '0.4', '0.5'].map(v => (
                   <button key={v} onClick={() => setTaxaReq(v)}
                     style={{ flex: 1, padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', backgroundColor: taxaReq === v ? C : "var(--surface-2)", color: taxaReq === v ? '#FFF' : "var(--text-2)" }}>
-                    {v}°/h
+                    {fmtBR(v)}°/h
                   </button>
                 ))}
               </div>
@@ -468,18 +469,18 @@ export default function Hipotermia() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DELTA TEMP</p>
-                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{reqCalc.deltaT}°C</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: C }}>{parseNum(tempAtual)}°C → 37,0°C</p>
+                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(reqCalc.deltaT)}°C</p>
+                    <p style={{ margin: 0, fontSize: '10px', color: C }}>{fmtBR(parseNum(tempAtual))}°C → 37,0°C</p>
                   </div>
                   <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>TEMPO ESTIMADO</p>
-                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{reqCalc.horas}h</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: '#6EE7B7' }}>a {taxaReq}°C/hora</p>
+                    <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(reqCalc.horas)}h</p>
+                    <p style={{ margin: 0, fontSize: '10px', color: '#6EE7B7' }}>a {fmtBR(taxaReq)}°C/hora</p>
                   </div>
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
-                    Meta: alcançar <strong>37,0°C</strong> em aproximadamente <strong>{reqCalc.horas} horas</strong> · verificar temperatura a cada 30-60 min durante o reaquecimento · monitorar ECG e EEG continuamente
+                    Meta: alcançar <strong>37,0°C</strong> em aproximadamente <strong>{fmtBR(reqCalc.horas)} horas</strong> · verificar temperatura a cada 30-60 min durante o reaquecimento · monitorar ECG e EEG continuamente
                   </p>
                 </div>
               </>

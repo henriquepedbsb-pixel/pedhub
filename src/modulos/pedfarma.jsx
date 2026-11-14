@@ -7,6 +7,7 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";
 import CalcDose, { CAT_CORES } from "../components/CalcDose";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#8B5CF6";
 
@@ -104,7 +105,7 @@ function CorticoideConversor() {
                   </p>
                   <p style={{ fontSize: 10, color: "var(--muted)", margin: "1px 0 0" }}>{c.duracao} · Mineralocorticoide: {c.mineralocorticoide}</p>
                 </div>
-                <p style={{ fontSize: 16, fontWeight: 800, color: isOrigem ? PRIMARY : "var(--text-2)", margin: 0 }}>{equivDose} mg</p>
+                <p style={{ fontSize: 16, fontWeight: 800, color: isOrigem ? PRIMARY : "var(--text-2)", margin: 0 }}>{fmtBR(equivDose)} mg</p>
               </div>
             );
           })}
@@ -275,7 +276,7 @@ export default function Pedfarma() {
         <input type="text" inputMode="decimal" placeholder="Ex: 20,0"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
-        {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {peso} kg — use a dose como referência para calcular</p>}
+        {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {fmtBR(peso)} kg — use a dose como referência para calcular</p>}
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
       </div>
 

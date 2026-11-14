@@ -42,6 +42,7 @@ import {
   DOSE_CALC,
   calcularDose,
 } from "../lib/pa-tratamento.js";
+import { fmtBR } from "../lib/numero";
 
 const COR = "#BE123C"; // rose-700 — cor do módulo Cardiologia Pediátrica Básica
 
@@ -290,7 +291,7 @@ function AbaHipertensao() {
           </div>
           {colunaCm != null && (
             <p className="text-[11px] text-gray-400 mt-1">
-              Estatura {cmN} cm → coluna {PERC_ESTATURA[colunaCm]} (mais próxima na tabela).
+              Estatura {fmtBR(cmN)} cm → coluna {PERC_ESTATURA[colunaCm]} (mais próxima na tabela).
             </p>
           )}
         </div>
@@ -330,7 +331,7 @@ function AbaHipertensao() {
                   Sistólica
                 </div>
                 <div className="text-sm font-bold text-gray-800">
-                  {pasN != null ? `${pasN} mmHg` : "—"}
+                  {pasN != null ? `${fmtBR(pasN)} mmHg` : "—"}
                 </div>
                 <div className="text-xs font-semibold" style={{ color: info.cor }}>
                   {resultado.faixaS || "—"}
@@ -341,7 +342,7 @@ function AbaHipertensao() {
                   Diastólica
                 </div>
                 <div className="text-sm font-bold text-gray-800">
-                  {padN != null ? `${padN} mmHg` : "—"}
+                  {padN != null ? `${fmtBR(padN)} mmHg` : "—"}
                 </div>
                 <div className="text-xs font-semibold" style={{ color: info.cor }}>
                   {resultado.faixaD || "—"}
@@ -716,12 +717,12 @@ function AbaTratamento() {
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
                 <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose inicial</div>
-                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.inicial} mg/dia</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{fmtBR(dose.inicial)} mg/dia</div>
                 <div className="text-[11px] text-gray-500">{medSel.inicialTxt}</div>
               </div>
               <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
                 <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose máxima</div>
-                <div className="text-base font-extrabold" style={{ color: COR }}>{dose.maxima} mg/dia</div>
+                <div className="text-base font-extrabold" style={{ color: COR }}>{fmtBR(dose.maxima)} mg/dia</div>
                 <div className="text-[11px] text-gray-500">{medSel.maximaTxt}</div>
               </div>
             </div>
@@ -1024,7 +1025,7 @@ function AbaNeonatal() {
               ].map((c) => (
                 <div key={c.k} className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
                   <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{c.label}</div>
-                  <div className="text-sm font-bold text-gray-800">{c.val != null ? c.val : "—"}</div>
+                  <div className="text-sm font-bold text-gray-800">{fmtBR(c.val != null ? c.val : "—")}</div>
                   <div className="text-[11px] font-semibold" style={{ color: info.cor }}>{resultado.faixas[c.k] || "—"}</div>
                 </div>
               ))}

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcNPT, sugerirEletro) para testes unitários */
 /**
  * neonatologia-5.jsx — PedHub
  * NPT Neonatal — Nutrição Parenteral Total
@@ -9,6 +10,7 @@ import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0D9488";
 const C = "#6366F1";
@@ -41,23 +43,24 @@ function calcDias(dnStr) {
 /* ── Utilidades ─────────────────────────────────────────────────────────── */
 const pN  = s => { const v = parseFloat(String(s).replace(",",".")); return isNaN(v)||v<0 ? 0 : v; };
 const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !isNaN(v)&&v>0&&v<=10000 ? v : null; };
-const f1  = n => (Math.round(n * 10)   / 10).toFixed(1);
-const f2  = n => (Math.round(n * 100) / 100).toFixed(2);
+// Só exibição — saída com vírgula decimal (padrão brasileiro).
+const f1  = n => (Math.round(n * 10)   / 10).toFixed(1).replace(".", ",");
+const f2  = n => (Math.round(n * 100) / 100).toFixed(2).replace(".", ",");
 
 /* ── Sugestão de eletrólitos por dia de vida (ESPGHAN/ESPEN 2018) ────────── */
-function sugerirEletro(dias) {
+export function sugerirEletro(dias) {
   if (dias === null) return null;
   return {
     na:  dias <= 2 ? "0"   : "2",
     k:   dias <= 2 ? "0"   : "1",
-    ca:  "1.5",
+    ca:  "1,5",
     p:   "45",
-    mg:  "0.2",
+    mg:  "0,2",
   };
 }
 
 /* ── Motor de cálculo ───────────────────────────────────────────────────── */
-function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
+export function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
                    doseNa, doseK, doseCa, doseP, doseMg }) {
   const pesoGv = pPesoG(pesoG);
   if (!pesoGv) return null;
@@ -207,20 +210,20 @@ function ResultNPT({ r }) {
   return (
     <div>
       {r.periAlert && <Alerta color="#DC2626" text={`SG ${f1(r.concGluco)}% — concentração > 12,5%: ACESSO CENTRAL obrigatório.`} />}
-      {r.highTIG   && <Alerta color="#D97706" text={`TIG ${r.dTIG} mg/kg/min acima de 12 — monitorar glicemia e verificar acesso central.`} />}
+      {r.highTIG   && <Alerta color="#D97706" text={`TIG ${fmtBR(r.dTIG)} mg/kg/min acima de 12 — monitorar glicemia e verificar acesso central.`} />}
       {r.lowKcal   && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia abaixo de 50 — aporte insuficiente.`} />}
       {r.highKcal  && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia acima de 130 — risco de hiperalimentação.`} />}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
         {[
           ["kcal/kg/dia",  f1(r.kcalKgD),       `NPC: ${f1(r.kcalNPC)} kcal/kg`],
-          ["Aminoácidos",  r.dAA + " g/kg/d",   `${f1(r.kcalAA / r.pk)} kcal/kg`],
-          ["TIG",          r.dTIG + " mg/kg/min",`${f1(r.gGlucose)} g glicose/dia`],
-          ["Lipídeos",     r.dLip + " g/kg/d",  `${f1(r.kcalLip / r.pk)} kcal/kg`],
+          ["Aminoácidos",  fmtBR(r.dAA) + " g/kg/d",   `${f1(r.kcalAA / r.pk)} kcal/kg`],
+          ["TIG",          fmtBR(r.dTIG) + " mg/kg/min",`${f1(r.gGlucose)} g glicose/dia`],
+          ["Lipídeos",     fmtBR(r.dLip) + " g/kg/d",  `${f1(r.kcalLip / r.pk)} kcal/kg`],
         ].map(([label, val, sub]) => (
           <div key={label} style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)" }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>{label}</div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: C }}>{val}</div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C }}>{fmtBR(val)}</div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{sub}</div>
           </div>
         ))}
@@ -263,7 +266,7 @@ function ResultNPT({ r }) {
           <span style={{ fontSize: 11, color: "#D97706", fontWeight: 700 }}>{f1(r.volLip)} mL · {f2(r.rateLip)} mL/h</span>
         </div>
         <div style={{ padding: "8px 14px", fontSize: 12, color: "var(--text-2)" }}>
-          {r.dLip} g/kg/dia · {f1(r.kcalLip / r.pk)} kcal/kg/dia · correr em 24h via Y ou acesso separado
+          {fmtBR(r.dLip)} g/kg/dia · {f1(r.kcalLip / r.pk)} kcal/kg/dia · correr em 24h via Y ou acesso separado
         </div>
       </div>
 
@@ -306,14 +309,14 @@ function TabNPT() {
   const [dataNasc, setDataNasc] = useState("");
   const [acesso,   setAcesso]   = useState("central");
   const [volKgD,   setVolKgD]   = useState("80");
-  const [doseAA,   setDoseAA]   = useState("2.5");
+  const [doseAA,   setDoseAA]   = useState("2,5");
   const [tig,      setTig]      = useState("5");
-  const [doseLip,  setDoseLip]  = useState("1.5");
+  const [doseLip,  setDoseLip]  = useState("1,5");
   const [doseNa,   setDoseNa]   = useState("0");
   const [doseK,    setDoseK]    = useState("0");
-  const [doseCa,   setDoseCa]   = useState("1.5");
+  const [doseCa,   setDoseCa]   = useState("1,5");
   const [doseP,    setDoseP]    = useState("45");
-  const [doseMg,   setDoseMg]   = useState("0.2");
+  const [doseMg,   setDoseMg]   = useState("0,2");
   const [resultado, setResultado] = useState(null);
   const [erro, setErro]           = useState("");
 
@@ -337,10 +340,10 @@ function TabNPT() {
 
   /* Perfis rápidos */
   const PERFIS = [
-    { label: "< 1000 g",  aa: "3.5", tig: "5", lip: "1.5", vol: "80"  },
-    { label: "1–1,5 kg",  aa: "3.0", tig: "5", lip: "2.0", vol: "90"  },
-    { label: "1,5–2,5 kg",aa: "2.5", tig: "5", lip: "2.0", vol: "100" },
-    { label: "RNT",        aa: "2.0", tig: "5", lip: "2.0", vol: "80"  },
+    { label: "< 1000 g",  aa: "3,5", tig: "5", lip: "1,5", vol: "80"  },
+    { label: "1–1,5 kg",  aa: "3,0", tig: "5", lip: "2,0", vol: "90"  },
+    { label: "1,5–2,5 kg",aa: "2,5", tig: "5", lip: "2,0", vol: "100" },
+    { label: "RNT",        aa: "2,0", tig: "5", lip: "2,0", vol: "80"  },
   ];
 
   function aplicarPerfil(p) {
@@ -357,8 +360,8 @@ function TabNPT() {
 
   function limpar() {
     setPesoG(""); setDataNasc(""); setAcesso("central"); setVolKgD("80");
-    setDoseAA("2.5"); setTig("5"); setDoseLip("1.5");
-    setDoseNa("0"); setDoseK("0"); setDoseCa("1.5"); setDoseP("45"); setDoseMg("0.2");
+    setDoseAA("2,5"); setTig("5"); setDoseLip("1,5");
+    setDoseNa("0"); setDoseK("0"); setDoseCa("1,5"); setDoseP("45"); setDoseMg("0,2");
     setResultado(null); setErro("");
   }
 

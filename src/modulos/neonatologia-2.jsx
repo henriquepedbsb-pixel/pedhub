@@ -4,6 +4,7 @@ import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, CheckCircle, Droplets } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0D9488";
 
@@ -84,7 +85,7 @@ function TabHipoglicemia() {
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(',', '.')))} />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
-            Bolus D10%: {bolus} mL IV · TIG 4–8 mg/kg/min → {infD10_4}–{infD10_8} mL/h
+            Bolus D10%: {fmtBR(bolus)} mL IV · TIG 4–8 mg/kg/min → {fmtBR(infD10_4)}–{fmtBR(infD10_8)} mL/h
           </p>
         )}
       </div>
@@ -109,10 +110,10 @@ function TabHipoglicemia() {
           faixa: "Glicemia < 25 mg/dL (qualquer sintoma)",
           cor: "#DC2626",
           texto: [
-            peso ? "Bolus D10%: " + bolus + " mL IV (2 mL/kg) em 5–10 min" : "Bolus D10%: 2 mL/kg IV em 5–10 min",
+            peso ? "Bolus D10%: " + fmtBR(bolus) + " mL IV (2 mL/kg) em 5–10 min" : "Bolus D10%: 2 mL/kg IV em 5–10 min",
             "Repetir se < 25 após 15 min",
             peso
-              ? "Manutenção: TIG 6–8 mg/kg/min → D10% " + infD10_6 + "–" + infD10_8 + " mL/h"
+              ? "Manutenção: TIG 6–8 mg/kg/min → D10% " + fmtBR(infD10_6) + "–" + fmtBR(infD10_8) + " mL/h"
               : "Manutenção: TIG 6–8 mg/kg/min em D10%",
             "Reconferir glicemia capilar em 30 min",
           ],
@@ -195,7 +196,7 @@ function TabGelDextrose() {
         />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
-            Gel 40%: {gVol} mL via oral (mucosa) · {gMg} mg dextrose
+            Gel 40%: {fmtBR(gVol)} mL via oral (mucosa) · {gMg} mg dextrose
           </p>
         )}
       </div>

@@ -12,6 +12,7 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
 import { rateA, rateB } from "../lib/calc/gotejamento";
 import { copiarTexto, RODAPE_EXPORT } from "../lib/exportarTexto";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0D9488";
 const C = "#DC2626";
@@ -19,7 +20,8 @@ const C = "#DC2626";
 /* ── Utilidades ─────────────────────────────────────────────────────────── */
 const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !isNaN(v)&&v>0&&v<=10000?v:null; };
 const pN     = s => { const v = parseFloat(String(s).replace(",",".")); return isNaN(v)||v<0?0:v; };
-const f2     = n => (Math.round(n*100)/100).toFixed(2);
+// Só exibição — saída com vírgula decimal (padrão brasileiro).
+const f2     = n => (Math.round(n*100)/100).toFixed(2).replace(".", ",");
 
 /* ── Drogas ──────────────────────────────────────────────────────────────
    mA_K_n   : drug/kg in normalised units  (mcg for mcg-drugs, same for mg×1000)
@@ -130,9 +132,9 @@ export const DROGAS = [
 // Quantidade de droga para Modo A (exibição)
 function amountA(d, pk) {
   const n = d.mA_K_n * pk;
-  if (d.id === "insulina") return `${(n/1000).toFixed(2)} UI`;
-  if (d.dF === 1000) return `${(n/1000).toFixed(2)} mg`;
-  return n >= 1000 ? `${(n/1000).toFixed(2)} mg` : `${n.toFixed(0)} mcg`;
+  if (d.id === "insulina") return `${fmtBR((n/1000).toFixed(2))} UI`;
+  if (d.dF === 1000) return `${fmtBR((n/1000).toFixed(2))} mg`;
+  return n >= 1000 ? `${fmtBR((n/1000).toFixed(2))} mg` : `${n.toFixed(0)} mcg`;
 }
 
 // Volume a retirar da ampola para Modo A
@@ -182,14 +184,14 @@ function TabBIC() {
 
   function selDroga(drug) {
     setDrogaSel(drug);
-    setDoseRaw(String(drug.doseInicio));
+    setDoseRaw(fmtBR(drug.doseInicio));
     setCopied(false);
   }
 
   function gerarTxt() {
     if (!ok) return "";
     return [
-      `${d.nome.toUpperCase()} — ${dose} ${d.unidade}`,
+      `${d.nome.toUpperCase()} — ${fmtBR(dose)} ${d.unidade}`,
       `Peso: ${pkKg.toFixed(3).replace(".",",")} kg`,
       "",
       "── MODO A (peso-dependente) ─────────────────",
@@ -233,7 +235,7 @@ function TabBIC() {
         <input type="text" inputMode="decimal" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)} placeholder="Ex: 1450"
           style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
         <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoRaw).replace(",", ".")))} />
-        {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{pkKg.toFixed(3)} kg</p>}
+        {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{fmtBR(pkKg.toFixed(3))} kg</p>}
       </div>
 
       {/* Grupo filter */}
@@ -255,7 +257,7 @@ function TabBIC() {
               border: `1.5px solid ${drogaSel?.id === dr.id ? dr.cor : "var(--border)"}`,
               background: drogaSel?.id === dr.id ? dr.cor + "12" : "var(--surface)" }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: drogaSel?.id === dr.id ? dr.cor : "var(--text-2)" }}>{dr.nome}</div>
-            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</div>
+            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{fmtBR(dr.doseMin)}–{fmtBR(dr.doseMax)} {dr.unidade}</div>
           </button>
         ))}
       </div>
@@ -264,9 +266,9 @@ function TabBIC() {
       {d && (
         <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 12, border: "1px solid var(--border)" }}>
           <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 4 }}>
-            Dose ({d.unidade}) — alvo {d.doseMin}–{d.doseMax}
+            Dose ({d.unidade}) — alvo {fmtBR(d.doseMin)}–{fmtBR(d.doseMax)}
           </label>
-          <input type="text" inputMode="decimal" value={doseRaw} onChange={e => setDoseRaw(e.target.value)} placeholder={String(d.doseInicio)}
+          <input type="text" inputMode="decimal" value={doseRaw} onChange={e => setDoseRaw(e.target.value)} placeholder={fmtBR(d.doseInicio)}
             style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid " + d.cor + "60", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
         </div>
       )}
@@ -289,10 +291,10 @@ function TabBIC() {
               <span style={{ fontSize: 11, color: C }}>{d.mA_label}</span>
             </div>
             <div style={{ padding: "10px 14px" }}>
-              <RxRow label="Preparar">{amt} em {d.vol} mL {d.diluente}</RxRow>
+              <RxRow label="Preparar">{amt} em {fmtBR(d.vol)} mL {d.diluente}</RxRow>
               {aVol && <RxRow label={`Retirar [${d.amp}]`}>{aVol}</RxRow>}
               <RxRow label="Completar com">
-                {d.diluente} até {d.vol} mL
+                {d.diluente} até {fmtBR(d.vol)} mL
               </RxRow>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
                 <span style={{ fontSize: 12, color: "var(--muted)" }}>Infundir</span>
@@ -309,7 +311,7 @@ function TabBIC() {
               <span style={{ fontSize: 11, color: "#D97706" }}>{d.mB_label}</span>
             </div>
             <div style={{ padding: "10px 14px" }}>
-              <RxRow label="Preparar (padrão)">{d.mB_total} em {d.vol} mL {d.diluente}</RxRow>
+              <RxRow label="Preparar (padrão)">{d.mB_total} em {fmtBR(d.vol)} mL {d.diluente}</RxRow>
               <RxRow label="Acesso">{d.acesso}</RxRow>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0 4px" }}>
                 <span style={{ fontSize: 12, color: "var(--muted)" }}>Infundir para este peso</span>
@@ -345,7 +347,7 @@ function TabBIC() {
         {DROGAS.map(dr => (
           <div key={dr.id} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 11, gap: 6 }}>
             <span style={{ color: dr.cor, fontWeight: 700, flexShrink: 0 }}>{dr.nome}</span>
-            <span style={{ color: "var(--text-2)", textAlign: "right" }}>{dr.doseMin}–{dr.doseMax} {dr.unidade}</span>
+            <span style={{ color: "var(--text-2)", textAlign: "right" }}>{fmtBR(dr.doseMin)}–{fmtBR(dr.doseMax)} {dr.unidade}</span>
           </div>
         ))}
       </div>

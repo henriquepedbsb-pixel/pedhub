@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcular, finalDose) para testes unitários */
 /**
  * canguru.jsx — PedHub
  * UCIN Canguru · Prescrição e Receituário Neonatal
@@ -15,6 +16,7 @@ import {
   Printer, AlertTriangle, CheckCircle,
   Info, Activity, ClipboardList, RefreshCw, Clock,
 } from 'lucide-react';
+import { fmtBR } from '../lib/numero';
 
 /* ── Paleta ── */
 const COR = {
@@ -104,7 +106,7 @@ const parseFld = v => parseFloat(String(v).replace(',', '.'));
 
 /* Resolve a dose final exibida: usa o valor editado manualmente se for válido,
    caso contrário cai no valor sugerido pelo cálculo automático. */
-function finalDose(manualStr, suggested) {
+export function finalDose(manualStr, suggested) {
   const num = parseFld(manualStr);
   return manualStr !== '' && !Number.isNaN(num) && num >= 0 ? num : suggested;
 }
@@ -125,7 +127,7 @@ const HOJE_ISO = new Date().toISOString().split('T')[0];
 /* ════════════════════════════════════════════
    MOTOR DE CÁLCULO COMPARTILHADO
 ════════════════════════════════════════════ */
-function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
+export function calcular({ pesoG, pesornG, igSemStr, igDiasStr, diasVidaStr,
                     tipoDieta, volKgStr, tomadasStr, sachetStr, formula,
                     ferroMarca = 'sulfato', znMarca = 'padrao', polivitMarca = 'growvit' }) {
   const peso   = parseFld(pesoG);
@@ -472,7 +474,7 @@ function TabPrescricao() {
             ))}
           </div>
           <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
-            {FERRO_PRODUTOS[ferroMarca].sal} — {FERRO_PRODUTOS[ferroMarca].mgGota} mg Fe/gota
+            {FERRO_PRODUTOS[ferroMarca].sal} — {fmtBR(FERRO_PRODUTOS[ferroMarca].mgGota)} mg Fe/gota
             {FERRO_PRODUTOS[ferroMarca].alternativa ? ' (alternativa ao sulfato ferroso)' : ''}
           </div>
         </Fld>
@@ -499,7 +501,7 @@ function TabPrescricao() {
             ))}
           </div>
           <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
-            {POLIVIT_PRODUTOS[polivitMarca].sal} — {POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1)} UI Vit.D/gota
+            {POLIVIT_PRODUTOS[polivitMarca].sal} — {fmtBR(POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1))} UI Vit.D/gota
             (regime padrão 6 gotas 12/12h)
           </div>
         </Fld>
@@ -654,7 +656,7 @@ function TabReceituario() {
             ))}
           </div>
           <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
-            {FERRO_PRODUTOS[ferroMarca].sal} — {FERRO_PRODUTOS[ferroMarca].mgGota} mg Fe/gota
+            {FERRO_PRODUTOS[ferroMarca].sal} — {fmtBR(FERRO_PRODUTOS[ferroMarca].mgGota)} mg Fe/gota
             {FERRO_PRODUTOS[ferroMarca].alternativa ? ' (alternativa ao sulfato ferroso)' : ''}
           </div>
         </Fld>
@@ -681,7 +683,7 @@ function TabReceituario() {
             ))}
           </div>
           <div style={{ fontSize: 11, color: COR.muted, marginTop: 5 }}>
-            {POLIVIT_PRODUTOS[polivitMarca].sal} — {POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1)} UI Vit.D/gota
+            {POLIVIT_PRODUTOS[polivitMarca].sal} — {fmtBR(POLIVIT_PRODUTOS[polivitMarca].uiGota.toFixed(1))} UI Vit.D/gota
             (regime padrão 6 gotas 12/12h)
           </div>
         </Fld>
@@ -714,7 +716,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
   const ferroFinal   = res.ferroAtivo ? finalDose(ferroManual, res.ferroGotas) : 0;
   const znDoseAtiva  = res.znIndicado && !res.znSuspenso && res.znAtivo && res.znVol >= 0.05;
   const znFinal      = znDoseAtiva ? finalDose(znManual, res.znVol) : 0;
-  const fmtFerro = n => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+  const fmtFerro = n => (Number.isInteger(n) ? String(n) : fmtBR(n.toFixed(1)));
 
   // Conduta em texto plano para copiar. Espelha os mesmos campos de `res` do
   // render (fonte única — sem novo cálculo) e, por privacidade (T6), NÃO
@@ -723,19 +725,19 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
     const linhaFerro = () =>
       (!res.ferroAtivo && res.preT)
         ? `Ferro (${res.ferroProd.sal}): iniciar no 30.º dia de vida (faltam ${res.ferroDiasRest} dia${res.ferroDiasRest !== 1 ? 's' : ''})`
-        : `${ferroLabel}: ${fmtFerro(ferroFinal)} gotas VO 1×/dia (${res.ferroDose.toFixed(2)} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${res.ferroProd.mgGota} mg Fe)`;
+        : `${ferroLabel}: ${fmtFerro(ferroFinal)} gotas VO 1×/dia (${fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${fmtBR(res.ferroProd.mgGota)} mg Fe)`;
     const linhaFos = () => {
       if (!res.fosIndicado) return "Fosfato tricálcico 12,9%: não indicado (IG ≥ 32s e PN ≥ 1500 g)";
       if (res.fosSuspenso) return "Fosfato tricálcico 12,9%: suspenso (IGPM ≥ 40 sem)";
       if (res.pSuficDieta) return "Fosfato tricálcico 12,9%: não necessário — dieta supre ≥ 75 mg P/kg/dia";
-      return `Fosfato tricálcico 12,9% (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia): ${res.pVol.toFixed(2)} mL/dia VO — 4 tomadas de ${res.pTom.toFixed(2)} mL a cada 6h`;
+      return `Fosfato tricálcico 12,9% (${fmtBR(res.pDoseMgKg.toFixed(1))} mg P/kg/dia): ${fmtBR(res.pVol.toFixed(2))} mL/dia VO — 4 tomadas de ${fmtBR(res.pTom.toFixed(2))} mL a cada 6h`;
     };
     const linhaZn = () => {
       if (!res.znIndicado) return "Zinco: não indicado (IG ≥ 37 sem)";
       if (res.znSuspenso) return "Zinco: suspenso — idade corrigida ≥ 6 meses";
       if (!res.znAtivo) return `Zinco: iniciar com IGPM ≥ 36 sem (faltam ${res.znSemRest} sem)`;
       if (res.znVol < 0.05) return `Zinco: não necessário — dieta supre alvo (${res.znRate} mg/kg/dia)`;
-      return `${znLabel}: ${znFinal.toFixed(2)} mL/dia VO 1×/dia (${res.znRate} mg/kg/dia · ${res.znProd.sal})`;
+      return `${znLabel}: ${fmtBR(znFinal.toFixed(2))} mL/dia VO 1×/dia (${res.znRate} mg/kg/dia · ${res.znProd.sal})`;
     };
     const linhaVitD = () =>
       res.vitDNec <= 0
@@ -743,12 +745,12 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
         : `Vitamina D (colecalciferol): ${res.vitDG200} gotas VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
 
     const dieta = [
-      `Volume total: ${res.volTotal.toFixed(1)} mL/dia`,
-      `Por tomada: ${res.volTom.toFixed(1)} mL · ${res.tom}× ao dia`,
-      `Calorias: ${res.kcalKg.toFixed(1)} kcal/kg/dia`,
-      `Proteína: ${res.protKg.toFixed(2)} g/kg/dia`,
-      `Fósforo: ${(res.dP / res.pk).toFixed(1)} mg/kg/dia`,
-      `Zinco: ${(res.dZn / res.pk).toFixed(2)} mg/kg/dia`,
+      `Volume total: ${fmtBR(res.volTotal.toFixed(1))} mL/dia`,
+      `Por tomada: ${fmtBR(res.volTom.toFixed(1))} mL · ${res.tom}× ao dia`,
+      `Calorias: ${fmtBR(res.kcalKg.toFixed(1))} kcal/kg/dia`,
+      `Proteína: ${fmtBR(res.protKg.toFixed(2))} g/kg/dia`,
+      `Fósforo: ${fmtBR((res.dP / res.pk).toFixed(1))} mg/kg/dia`,
+      `Zinco: ${fmtBR((res.dZn / res.pk).toFixed(2))} mg/kg/dia`,
     ];
     if (res.tipoDieta === 'lm_fm85') dieta.push(`FM85: ${res.sach} sachês/dia (1 sachê/25 mL LM)`);
     if (res.tipoDieta === 'formula') dieta.push(`Fórmula: ${res.formulaNome}`);
@@ -801,12 +803,12 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
 
         <Card className="print-hide">
           <CardHead Icon={Droplets}>Dieta enteral</CardHead>
-          <RxRow label="Volume total">{res.volTotal.toFixed(1)} mL/dia</RxRow>
-          <RxRow label="Por tomada">{res.volTom.toFixed(1)} mL · {res.tom}× ao dia</RxRow>
-          <RxRow label="Calorias">{res.kcalKg.toFixed(1)} kcal/kg/dia</RxRow>
-          <RxRow label="Proteína">{res.protKg.toFixed(2)} g/kg/dia</RxRow>
-          <RxRow label="Fósforo">{(res.dP / res.pk).toFixed(1)} mg/kg/dia</RxRow>
-          <RxRow label="Zinco">{(res.dZn / res.pk).toFixed(2)} mg/kg/dia</RxRow>
+          <RxRow label="Volume total">{fmtBR(res.volTotal.toFixed(1))} mL/dia</RxRow>
+          <RxRow label="Por tomada">{fmtBR(res.volTom.toFixed(1))} mL · {res.tom}× ao dia</RxRow>
+          <RxRow label="Calorias">{fmtBR(res.kcalKg.toFixed(1))} kcal/kg/dia</RxRow>
+          <RxRow label="Proteína">{fmtBR(res.protKg.toFixed(2))} g/kg/dia</RxRow>
+          <RxRow label="Fósforo">{fmtBR((res.dP / res.pk).toFixed(1))} mg/kg/dia</RxRow>
+          <RxRow label="Zinco">{fmtBR((res.dZn / res.pk).toFixed(2))} mg/kg/dia</RxRow>
           {res.tipoDieta === 'lm_fm85' && (
             <RxRow label="FM85">{res.sach} sachês/dia · 1 sachê/25 mL LM</RxRow>
           )}
@@ -830,8 +832,8 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               <>
                 <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN ·
-                  1 gota = {res.ferroProd.mgGota} mg Fe — {res.ferroProd.sal})
+                  {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN ·
+                  1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
                 </span>
                 <DoseEditor
                   suggested={res.ferroGotas} value={ferroManual}
@@ -844,7 +846,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
 
           <div className={res.fosSuspenso ? 'print-hide' : undefined}>
             <RxItem n="2"
-              label={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}
+              label={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${fmtBR(res.pDoseMgKg.toFixed(1))} mg P/kg/dia)` : ''}`}
               status={!res.fosIndicado ? 'nao-indicado' : res.fosSuspenso ? 'suspenso' : res.pSuficDieta ? 'dieta-ok' : 'ativo'}>
               {!res.fosIndicado ? (
                 <NaoIndicadoBadge>Não indicado — IG ≥ 32s e PN ≥ 1500 g</NaoIndicadoBadge>
@@ -859,8 +861,8 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
                 <OkBadge>Não necessário — dieta supre ≥ 75 mg P/kg/dia</OkBadge>
               ) : (
                 <>
-                  <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO — 4 tomadas de{' '}
-                  <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+                  <strong>{fmtBR(res.pVol.toFixed(2))} mL/dia</strong> VO — 4 tomadas de{' '}
+                  <strong>{fmtBR(res.pTom.toFixed(2))} mL</strong> a cada 6h (6/6h)
                   <div style={{ fontSize: 11, color: COR.warn, marginTop: 3 }}>
                     Distribuição 6/6h fixa — independente do horário das refeições
                   </div>
@@ -887,7 +889,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
                 <OkBadge>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</OkBadge>
               ) : (
                 <>
-                  <strong>{znFinal.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <strong>{fmtBR(znFinal.toFixed(2))} mL/dia</strong> VO 1×/dia
                   <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                     {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'} · {res.znProd.sal})
                   </span>
@@ -1026,7 +1028,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
   const ferroFinal  = res.ferroAtivo ? finalDose(ferroManual, res.ferroGotas) : 0;
   const znDoseAtiva = res.znIndicado && !res.znSuspenso && res.znAtivo && res.znVol >= 0.05;
   const znFinal     = znDoseAtiva ? finalDose(znManual, res.znVol) : 0;
-  const fmtFerro = n => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+  const fmtFerro = n => (Number.isInteger(n) ? String(n) : fmtBR(n.toFixed(1)));
 
   return (
     <>
@@ -1077,8 +1079,8 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
               <>
                 <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
-                  {' '}({res.ferroDose.toFixed(2)} mg Fe/dia · {res.ferroRate} mg/kg/dia ·
-                  1 gota = {res.ferroProd.mgGota} mg Fe — {res.ferroProd.sal})
+                  {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia ·
+                  1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
                 </span>
                 <DoseEditor
                   suggested={res.ferroGotas} value={ferroManual}
@@ -1090,7 +1092,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
           </RxDocItem>
 
           <div className={res.fosSuspenso ? 'print-hide' : undefined}>
-            <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${res.pDoseMgKg.toFixed(1)} mg P/kg/dia)` : ''}`}>
+            <RxDocItem n="2" titulo={`Fosfato tricálcico 12,9%${res.fosAtivo && !res.pSuficDieta ? ` (${fmtBR(res.pDoseMgKg.toFixed(1))} mg P/kg/dia)` : ''}`}>
               {!res.fosIndicado ? (
                 <span style={{ color: COR.slate }}>Não indicado — IG ≥ 32s e PN ≥ 1500 g</span>
               ) : res.fosSuspenso ? (
@@ -1104,8 +1106,8 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
                 <span style={{ color: COR.ok }}>Não necessário — dieta supre ≥ 75 mg P/kg/dia</span>
               ) : (
                 <>
-                  <strong>{res.pVol.toFixed(2)} mL/dia</strong> VO em 4 tomadas de{' '}
-                  <strong>{res.pTom.toFixed(2)} mL</strong> a cada 6h (6/6h)
+                  <strong>{fmtBR(res.pVol.toFixed(2))} mL/dia</strong> VO em 4 tomadas de{' '}
+                  <strong>{fmtBR(res.pTom.toFixed(2))} mL</strong> a cada 6h (6/6h)
                 </>
               )}
             </RxDocItem>
@@ -1128,7 +1130,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
                 <span style={{ color: COR.ok }}>Não necessário — dieta supre alvo ({res.znRate} mg/kg/dia)</span>
               ) : (
                 <>
-                  <strong>{znFinal.toFixed(2)} mL/dia</strong> VO 1×/dia
+                  <strong>{fmtBR(znFinal.toFixed(2))} mL/dia</strong> VO 1×/dia
                   <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                     {' '}({res.znRate} mg/kg/dia · {res.znHighCrit ? '<32s ou PN<1500g' : '32–37s'} · {res.znProd.sal})
                   </span>
@@ -1221,10 +1223,10 @@ function Fld({ label, children }) {
 function Inp({ value, onChange, placeholder, mode }) {
   return (
     <input
-      type={mode === 'numeric' ? 'number' : 'text'}
+      type="text"
       inputMode={mode || 'text'}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={e => onChange(mode === 'numeric' ? e.target.value.replace(/\D/g, '') : e.target.value)}
       placeholder={placeholder}
       style={{ width: '100%', padding: '11px 12px', borderRadius: RS, border: `1.5px solid ${COR.borda}`, fontSize: 14, background: "var(--surface)", color: "var(--text)", outline: 'none', boxSizing: 'border-box' }}
     />
@@ -1332,7 +1334,7 @@ function RxItem({ n, label, status, children }) {
    automático, mas livre para o médico ajustar. Visível apenas na tela
    (print-hide) — a impressão mostra sempre o valor final em texto (acima). */
 function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 }) {
-  const sugStr  = suggested.toFixed(decimals);
+  const sugStr  = fmtBR(suggested.toFixed(decimals));
   const num     = parseFld(value);
   const isValid = value !== '' && !Number.isNaN(num) && num >= 0;
   const current = isValid ? num : suggested;

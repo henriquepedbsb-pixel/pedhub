@@ -8,6 +8,7 @@ import {
   ChevronDown, ChevronUp, Activity,
   Zap, Info, Thermometer, Shield, Plus, Droplet
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const COR_NEO = "#0F766E";
 const COR_SEPSE = "#7C3AED";
@@ -99,14 +100,14 @@ function MedicCalculator() {
             <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>Via IV — 0,2 mL/kg (0,02 mg/kg)</p>
             <p style={{ margin: 0, fontSize: 10, color: "var(--muted)" }}>Rápido + flush 3 mL SF · repetir 3–5 min</p>
           </div>
-          <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${(p * 0.2).toFixed(2)} mL` : "— mL"}</strong>
+          <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${fmtBR((p * 0.2).toFixed(2))} mL` : "— mL"}</strong>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, marginBottom: 8, borderBottom: "1px solid #99F6E4", alignItems: "flex-start" }}>
           <div>
             <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>Via ET — 1,0 mL/kg (0,1 mg/kg) · USO ÚNICO</p>
             <p style={{ margin: 0, fontSize: 10, color: "var(--muted)" }}>Enquanto cateterismo VU é realizado</p>
           </div>
-          <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${(p * 1.0).toFixed(1)} mL` : "— mL"}</strong>
+          <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${fmtBR((p * 1.0).toFixed(1))} mL` : "— mL"}</strong>
         </div>
         <p style={{ margin: "0 0 5px", fontSize: 11, fontWeight: 700, color: COR_NEO, letterSpacing: 0.5, textTransform: "uppercase" }}>Expansor de volume (SF 0,9%)</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
