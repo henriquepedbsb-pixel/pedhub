@@ -1,22 +1,37 @@
+// src/modulos/vacinal.jsx
+/* eslint-disable react-refresh/only-export-components -- exporta CALENDAR, CATCHUP, getStatus e regraAplicavel para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import { Calendar, CheckCircle, Info, AlertTriangle, Clock, Syringe } from "lucide-react";
 
 const PRIMARY = "#06B6D4";
 
-/* ─── Calendário SBIm 2025/2026 + PNI/NT 77/2025 + Guia Técnico Pneumo 20 ──
+/* ─── Calendário SBIm 2026/2027 + Calendário Nacional de Vacinação 2026 (PNI) ──
    Fontes:
-   • SBIm Calendário Criança 2025/2026
-   • Nota Técnica nº 77/2025 DPNI/SVSA/MS — MenACWY reforço 12m (jul/2025)
+   • SBIm — Calendário de Vacinação Criança 2026/2027 (versão de 17/06/2026)
+   • PNI/MS — Calendário Nacional de Vacinação 2026 (criança e adolescente)
+   • NT nº 87/2026 CGICI/DPNI — 2º reforço de VIP aos 4 anos (desde 03/08/2026)
+   • NT nº 193/2024 CGICI/DPNI — novos limites de idade da vacina rotavírus
+   • NT nº 77/2025 DPNI — MenACWY no reforço dos 12 meses (jul/2025)
    • Guia Técnico PNI — Pneumo 20 no SUS (jun/2026)
    Esquema meningocócico PNI: MenC 1ª (3m) · MenC 2ª (5m) · MenACWY reforço (12m)
    Visitas de 3m e 5m: somente vacina meningocócica — sem coadministração
+   Pólio: esquema exclusivo com VIP (a VOP saiu do calendário).
+   Nirsevimabe: indicações e doses pertencem ao módulo Bronquiolite — aqui só a referência.
 ──────────────────────────────────────────────────────────────────────────── */
-const CALENDAR = [
+export const CALENDAR = [
   {
     faixa: "Ao nascer (RN)", minDias: 0, maxDias: 3,
-    sus:     ["BCG-ID (dose única)", "Hepatite B (1ª dose)"],
-    privado: ["BCG-ID (dose única)", "Hepatite B (1ª dose)"],
+    sus:     [
+      "BCG-ID (dose única)",
+      "Hepatite B (1ª dose)",
+      "Nirsevimabe (anticorpo anti-VSR): prematuros e crianças de risco — ver módulo Bronquiolite",
+    ],
+    privado: [
+      "BCG-ID (dose única)",
+      "Hepatite B (1ª dose)",
+      "Nirsevimabe (anticorpo anti-VSR): dose única para menores de 12 meses — ver módulo Bronquiolite",
+    ],
   },
   {
     faixa: "2 meses", minDias: 55, maxDias: 75,
@@ -29,8 +44,8 @@ const CALENDAR = [
     privado: [
       "Pentavalente ou Hexavalente (1ª)",
       "VIP (1ª)",
-      "Pneumo 20 — VPC20 (1ª)",
-      "Rotavírus (1ª)",
+      "Pneumocócica VPC20 ou VPC15 (1ª)",
+      "Rotavírus (1ª) — monovalente ou pentavalente",
     ],
   },
   {
@@ -49,7 +64,7 @@ const CALENDAR = [
     privado: [
       "Pentavalente ou Hexavalente (2ª)",
       "VIP (2ª)",
-      "Pneumo 20 — VPC20 (2ª)",
+      "Pneumocócica VPC20 ou VPC15 (2ª)",
       "Rotavírus (2ª)",
     ],
   },
@@ -64,18 +79,21 @@ const CALENDAR = [
       "Pentavalente (3ª — DTP+Hib+HepB)",
       "VIP (3ª)",
       "Influenza (anual a partir de 6m — 2 doses na 1ª vez, intervalo 30 dias)",
+      "Covid-19 (rotina do PNI de 6 meses a menores de 5 anos — esquema conforme a vacina; ver orientação do MS)",
     ],
     privado: [
       "Pentavalente ou Hexavalente (3ª)",
       "VIP (3ª)",
+      "Pneumocócica VPC20 ou VPC15 (3ª) — esquema 3+1 da SBIm",
+      "Rotavírus (3ª) — somente no esquema com a pentavalente",
       "Influenza (anual — 2 doses na 1ª vez)",
       "MenACWY (opcional — se não iniciou aos 3m)",
     ],
   },
   {
     faixa: "9 meses", minDias: 265, maxDias: 285,
-    sus:     ["Febre Amarela (regiões endêmicas ou viajantes) — dose única antes dos 2 anos"],
-    privado: ["Febre Amarela (regiões endêmicas ou viajantes)"],
+    sus:     ["Febre Amarela (1ª dose) — reforço aos 4 anos"],
+    privado: ["Febre Amarela (1ª dose) — 2ª dose aos 4 anos"],
   },
   {
     faixa: "12 meses", minDias: 350, maxDias: 380,
@@ -83,11 +101,10 @@ const CALENDAR = [
       "SCR Tríplice Viral (1ª)",
       "Pneumo 20 — VPC20 (1º reforço)",
       "MenACWY (1º reforço) — substituiu MenC em jul/2025",
-      "Hepatite A (1ª — dose única no SUS)",
     ],
     privado: [
       "SCRV Tetraviral SCR+Varicela (1ª)",
-      "Pneumo 20 — VPC20 (reforço)",
+      "Pneumocócica VPC20 ou VPC15 (reforço)",
       "MenACWY (reforço)",
       "Hepatite A (1ª)",
       "MenB (3ª — reforço)",
@@ -95,42 +112,75 @@ const CALENDAR = [
   },
   {
     faixa: "15 meses", minDias: 440, maxDias: 470,
-    sus:     ["DTP (1º reforço)", "VOP (1º reforço)", "SCRV Tetraviral (ou SCR 2ª dose)"],
-    privado: ["DTP (1º reforço)", "VOP (1º reforço)", "SCRV (2ª)", "Hepatite A (2ª)", "Varicela (se não recebeu tetraviral)"],
+    sus:     [
+      "DTP (1º reforço)",
+      "VIP (1º reforço)",
+      "Hepatite A (dose única)",
+      "SCRV Tetraviral — ou SCR (2ª dose) + Varicela (1ª dose)",
+    ],
+    privado: [
+      "Tríplice bacteriana (1º reforço) — preferir acelular (DTPa)",
+      "VIP (1º reforço)",
+      "SCRV (2ª)",
+      "Varicela (se não recebeu tetraviral)",
+    ],
+  },
+  {
+    faixa: "18 meses", minDias: 530, maxDias: 560,
+    sus:     [],
+    privado: ["Hepatite A (2ª) — 6 meses após a 1ª dose"],
   },
   {
     faixa: "4–5 anos", minDias: 1460, maxDias: 1825,
-    sus:     ["DTP (2º reforço)", "VOP (2º reforço)", "SCR (2ª dose se não recebeu) ou SCRV"],
-    privado: ["DTP (2º reforço)", "VOP (2º reforço)", "SCRV (se necessário)", "Influenza (anual)", "MenACWY (reforço)"],
+    sus:     [
+      "DTP (2º reforço)",
+      "VIP (2º reforço) — incluído no PNI em 03/08/2026",
+      "Febre Amarela (reforço)",
+      "Varicela (2ª dose)",
+    ],
+    privado: [
+      "Tríplice bacteriana + pólio (2º reforço, 4–6 anos) — DTPa-VIP ou dTpa-VIP",
+      "Febre Amarela (2ª dose)",
+      "SCRV (se necessário)",
+      "Influenza (anual)",
+      "MenACWY (2º reforço — 5 a 6 anos)",
+      "Dengue — Qdenga a partir de 4 anos (2 doses, intervalo de 3 meses)",
+    ],
   },
   {
     faixa: "9–10 anos", minDias: 3285, maxDias: 3650,
-    sus:     ["HPV (2 doses para meninas e meninos, intervalo 6 meses)"],
-    privado: ["HPV (2 doses, intervalo 6 meses)", "MenACWY (dose única ou reforço)", "dTpa (reforço)"],
+    sus:     ["HPV4 — dose única (meninas e meninos de 9 a 14 anos)"],
+    privado: ["HPV9 (2 doses, intervalo 6 meses)", "MenACWY (dose única ou reforço)", "dTpa (reforço — preferencialmente entre 9 e 11 anos)"],
   },
   {
     faixa: "11–14 anos", minDias: 4015, maxDias: 5110,
-    sus:     ["HPV (completar esquema)", "dT ou dTpa", "MenACWY (reforço — disponível no SUS)"],
+    sus:     [
+      "HPV4 — dose única, se ainda não vacinado",
+      "dT ou dTpa",
+      "MenACWY (reforço — disponível no SUS)",
+      "Dengue — Qdenga (2 doses, intervalo de 3 meses) — 10 a 14 anos",
+    ],
     privado: ["HPV (completar esquema)", "dTpa", "MenACWY", "Influenza (anual)"],
   },
   {
     faixa: "Anual (≥ 6 meses)", minDias: 175, maxDias: 99999,
-    sus:     ["Influenza (campanha anual)"],
+    sus:     ["Influenza — anual; no PNI, rotina de 6 meses a menores de 6 anos e grupos de risco"],
     privado: ["Influenza (recomendado todo ano)"],
   },
 ];
 
 /* ─── Regras de ATRASO / CATCH-UP ─────────────────────────────────────────────
    Fontes:
-   • SBIm Calendário de Vacinação Criança 2025/2026 (atualização de atrasados)
-   • PNI/Ministério da Saúde — Instrução Normativa Calendário Nacional
+   • SBIm Calendário de Vacinação Criança 2026/2027 (atualização de atrasados)
+   • PNI/Ministério da Saúde — Instrução Normativa Calendário Nacional 2026
+   • NT nº 193/2024 CGICI/DPNI — rotavírus: D1 até 11m29d · D2 até 23m29d
    • Manual de Normas e Procedimentos para Vacinação (MS)
    Cada vacina traz a conduta conforme a idade em que a criança chega atrasada.
    Doses individuais e técnica: não duplicar — referência ao calendário acima.
 ──────────────────────────────────────────────────────────────────────────── */
 
 // minM / maxM: janela em meses de idade ATUAL da criança
-const CATCHUP = [
+export const CATCHUP = [
   {
     vacina: "BCG",
     janelaLimite: "Até 4 anos 11m 29d",
@@ -174,10 +224,10 @@ const CATCHUP = [
     alerta: null,
   },
   {
-    vacina: "Poliomielite (VIP/VOP)",
-    janelaLimite: "Até menos de 5 anos",
+    vacina: "Poliomielite (VIP)",
+    janelaLimite: "PNI: menores de 5 anos",
     regras: [
-      { minM: 2,  maxM: 59,   texto: "Esquema de 3 doses de VIP (intervalo mínimo 4 semanas) + reforços aos 15m e 4 anos. Completar as doses faltantes sem reiniciar." },
+      { minM: 2,  maxM: 59,   texto: "Esquema exclusivo com VIP (a VOP saiu do calendário): 3 doses (intervalo mínimo 4 semanas) + reforço aos 15 meses e 2º reforço aos 4 anos (PNI, desde 03/08/2026). Completar as doses faltantes sem reiniciar." },
       { minM: 60, maxM: 9999, texto: "Para crianças a partir de 5 anos não vacinadas, completar 3 doses de VIP. Acima dessa idade a vacinação de rotina não é mais preconizada se esquema completo." },
     ],
     limiteRigido: false,
@@ -198,14 +248,14 @@ const CATCHUP = [
   },
   {
     vacina: "Rotavírus",
-    janelaLimite: "1ª dose até 3m15d · última até 7m29d",
+    janelaLimite: "1ª dose até 11m29d · 2ª dose até 23m29d",
     regras: [
-      { minM: 0, maxM: 3,    texto: "1ª dose só pode ser iniciada até 3 meses e 15 dias de idade. Se a 1ª ainda não foi dada e a criança já passou desse limite, NÃO iniciar." },
-      { minM: 4, maxM: 7,    texto: "Doses subsequentes só podem ser aplicadas até 7 meses e 29 dias. Após esse limite, NÃO completar o esquema." },
-      { minM: 8, maxM: 9999, texto: "Janela encerrada: rotavírus NÃO pode mais ser aplicada (nem iniciar, nem completar). Esquema considerado perdido." },
+      { minM: 0,  maxM: 11,   texto: "1ª dose (D1): indicada aos 2 meses; pode ser aplicada de 1 mês e 15 dias até 11 meses e 29 dias. 2ª dose (D2): indicada aos 4 meses; de 3 meses e 15 dias até 23 meses e 29 dias. Intervalo mínimo de 30 dias entre as doses." },
+      { minM: 12, maxM: 23,   texto: "Fora do prazo para a 1ª dose (limite: 11 meses e 29 dias). Quem já recebeu a 1ª dose ainda pode receber a 2ª até 23 meses e 29 dias, com intervalo mínimo de 30 dias." },
+      { minM: 24, maxM: 9999, texto: "Janela encerrada: rotavírus NÃO pode mais ser aplicada a partir de 24 meses (nem iniciar, nem completar)." },
     ],
     limiteRigido: true,
-    alerta: "JANELA RÍGIDA: 1ª dose até 3m15d e última até 7m29d. Fora disso não se aplica de forma alguma.",
+    alerta: "Limites de idade do PNI (NT nº 193/2024): 1ª dose até 11 meses e 29 dias e 2ª dose até 23 meses e 29 dias. Até dez/2024 os limites eram 3m15d e 7m29d.",
   },
   {
     vacina: "Meningocócica ACWY / C",
@@ -244,7 +294,7 @@ const CATCHUP = [
     vacina: "Varicela",
     janelaLimite: "Atualizar conforme calendário",
     regras: [
-      { minM: 12, maxM: 47,   texto: "SUS: 1 dose aos 15 meses (tetraviral). Privado/SBIm: 2 doses (12m e 15m–4a). Completar conforme esquema." },
+      { minM: 12, maxM: 47,   texto: "SUS: 2 doses — 15 meses (tetraviral) e 4 anos. Privado/SBIm: 2 doses após 1 ano de idade (12m e 15m–4a). Completar conforme esquema." },
       { minM: 48, maxM: 9999, texto: "Garantir 2 doses (intervalo mínimo 3 meses em menores de 13 anos; 4 semanas a partir de 13 anos). Atualizar suscetíveis." },
     ],
     limiteRigido: false,
@@ -252,9 +302,9 @@ const CATCHUP = [
   },
   {
     vacina: "HPV",
-    janelaLimite: "SUS 9–14 anos · catch-up conforme elegibilidade",
+    janelaLimite: "SUS 9–14 anos (dose única) · catch-up conforme elegibilidade",
     regras: [
-      { minM: 108, maxM: 179,  texto: "9–14 anos (imunocompetentes): 2 doses com intervalo de 6 meses. PNI oferece para meninas e meninos." },
+      { minM: 108, maxM: 179,  texto: "9–14 anos: no PNI, HPV4 em dose única para meninas e meninos. A SBIm recomenda HPV9 em 2 doses (intervalo de 6 meses). Imunocomprometidos: 3 doses." },
       { minM: 180, maxM: 9999, texto: "A partir de 15 anos ou imunocomprometidos: 3 doses (0 / 1–2 / 6 meses). Confirmar elegibilidade SUS x privado." },
     ],
     limiteRigido: false,
@@ -262,10 +312,10 @@ const CATCHUP = [
   },
   {
     vacina: "Febre Amarela",
-    janelaLimite: "Conforme área de risco",
+    janelaLimite: "A partir de 9 meses",
     regras: [
-      { minM: 9,  maxM: 59,   texto: "Dose aos 9 meses + reforço aos 4 anos (em área com recomendação). Atrasado: aplicar a dose; reforço único após 10 anos se exposição persistente." },
-      { minM: 60, maxM: 9999, texto: "Não vacinado em área de risco: 1 dose (dose única considerada protetora pela OMS na maioria dos casos). Avaliar reforço conforme exposição." },
+      { minM: 9,  maxM: 59,   texto: "Dose aos 9 meses + reforço aos 4 anos. Atrasado: aplicar a dose. PNI: quem recebeu a 1ª dose antes dos 5 anos deve receber a 2ª dose, independentemente da idade atual." },
+      { minM: 60, maxM: 9999, texto: "Não vacinado: 1 dose. PNI: dose única quando aplicada a partir dos 5 anos. A SBIm recomenda uma 2ª dose 10 anos após a 1ª. Quem recebeu a 1ª dose antes dos 5 anos e não fez o reforço: aplicar a 2ª dose." },
     ],
     limiteRigido: false,
     alerta: null,
@@ -330,7 +380,7 @@ function idadeMeses(dias) {
 }
 
 // Tolerância apenas no limite superior (atraso de até 30 dias)
-function getStatus(item, idadeDias) {
+export function getStatus(item, idadeDias) {
   if (idadeDias === null) return "none";
   const graceAtraso = 30;
   if (idadeDias >= item.minDias && idadeDias <= item.maxDias + graceAtraso) return "due";
@@ -346,10 +396,14 @@ const STATUS_STYLES = {
 };
 
 // Seleciona a regra de catch-up aplicável à idade atual (em meses)
-function regraAplicavel(vac, meses) {
+export function regraAplicavel(vac, meses) {
   if (meses === null) return null;
+  // Compara por MESES COMPLETOS: maxM: 11 vale até 11 meses e 29 dias. (Com o
+  // valor fracionário, idades como 11,5 meses caíam entre duas regras e a
+  // tela mostrava "sem conduta específica".)
+  const m = Math.floor(meses);
   for (const r of vac.regras) {
-    if (meses >= r.minM && meses <= r.maxM) return r;
+    if (m >= r.minM && m <= r.maxM) return r;
   }
   return null;
 }
@@ -363,9 +417,11 @@ export default function Vacinal() {
   const idadeStr  = formatarIdade(idadeDias);
   const meses     = idadeMeses(idadeDias);
 
+  // Só as faixas que têm vacina no modo escolhido (ex.: 18 meses não existe no SUS).
+  const faixasDoModo = CALENDAR.filter(item => (modo === "sus" ? item.sus : item.privado).length > 0);
   const faixasVisiveis = idadeDias === null
-    ? CALENDAR
-    : CALENDAR.filter(item => {
+    ? faixasDoModo
+    : faixasDoModo.filter(item => {
         const s = getStatus(item, idadeDias);
         return s === "due" || s === "upcoming";
       }).slice(0, 8);
@@ -378,7 +434,7 @@ export default function Vacinal() {
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
           Calendário Vacinal
         </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2025/2026 · PNI atualizado jun/2026</p>
+        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2026/2027 · PNI atualizado ago/2026</p>
       </div>
 
       {/* Abas */}
@@ -509,17 +565,23 @@ export default function Vacinal() {
           {/* Notas */}
           <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid var(--border)" }}>
             <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: "0 0 8px" }}>
-              Notas SBIm 2025/2026 · PNI
+              Notas SBIm 2026/2027 · PNI
             </p>
             {[
               "Pneumo 20 (VPC20): substituiu a Pneumo 10 no SUS a partir de jun/2026 (Guia Técnico PNI/MS). Esquema mantido: 2m, 4m e reforço 12m. Durante transição, podem ocorrer esquemas mistos VPC10/VPC20",
+              "Pneumocócica no privado (SBIm): VPC20 ou VPC15, intercambiáveis, em esquema 3+1 para quem inicia até os 6 meses",
+              "Poliomielite: esquema exclusivo com VIP (a VOP saiu do calendário). PNI: 2, 4 e 6 meses + reforço aos 15 meses e, desde 03/08/2026, 2º reforço aos 4 anos. SBIm: 2º reforço entre 4 e 6 anos, de preferência com vacina combinada (DTPa-VIP ou dTpa-VIP)",
+              "Rotavírus (PNI, NT nº 193/2024): 1ª dose de 1 mês e 15 dias até 11 meses e 29 dias; 2ª dose de 3 meses e 15 dias até 23 meses e 29 dias; intervalo mínimo de 30 dias",
               "MenACWY no SUS: desde 1º/jul/2025 (NT nº 77/2025 DPNI), o reforço aos 12 meses passou de MenC para MenACWY — amplia proteção para sorogrupos A, C, W e Y",
               "Visitas de 3 e 5 meses (SUS): exclusivas para vacina meningocócica C, sem coadministração com outras vacinas do esquema básico",
               "Influenza: anual a partir de 6 meses · 2 doses (intervalo 30 dias) na 1ª vacinação · Dose única nos anos seguintes",
-              "HPV: 2 doses para imunocompetentes 9–14 anos (intervalo 6 meses) · 3 doses se imunocomprometidos ou a partir de 15 anos",
+              "HPV: no SUS, HPV4 em dose única para meninas e meninos de 9 a 14 anos · SBIm: HPV9 em 2 doses (intervalo 6 meses) · 3 doses se imunocomprometidos ou a partir de 15 anos",
               "MenB (Bexsero): esquema privado (SBIm) — 3 e 5 meses + reforço entre 12 e 15 meses",
-              "Febre Amarela: dose única até 2 anos · Reforço único após 10 anos se viagem para área de risco",
-              "Varicela: 2 doses no esquema privado — tetraviral 12m + monocomponente 15m ou 4–5a",
+              "Febre Amarela: 9 meses + reforço aos 4 anos. PNI: se a 1ª dose foi antes dos 5 anos, indicar a 2ª dose em qualquer idade; se aplicada a partir dos 5 anos, dose única. SBIm: 2ª dose 10 anos após a 1ª também nesse caso",
+              "Varicela: SUS — 15 meses (tetraviral) e 4 anos · Privado — 2 doses: tetraviral 12m + monocomponente 15m ou 4–5a",
+              "Hepatite A: SUS — dose única aos 15 meses (até menores de 5 anos) · Privado (SBIm) — 2 doses com intervalo de 6 meses",
+              "Dengue (Qdenga): 2 doses com intervalo de 3 meses. PNI: 10 a 14 anos. SBIm: a partir de 4 anos, independentemente de infecção prévia",
+              "Covid-19: no PNI, rotina de 6 meses a menores de 5 anos; o número de doses depende da vacina — consultar a orientação vigente do Ministério da Saúde",
             ].map((nota, i) => (
               <div key={i} style={{ display: "flex", gap: 6, marginBottom: 5 }}>
                 <Info size={12} color="#06B6D4" style={{ flexShrink: 0, marginTop: 2 }} />
@@ -623,8 +685,8 @@ export default function Vacinal() {
       )}
 
       <RodapeModulo
-        revisao="07/2026"
-        fonte="SBIm 2025/2026 · NT 77/2025 DPNI · Guia Técnico PNI jun/2026"
+        revisao="11/2026"
+        fonte="SBIm 2026/2027 (versão 17/06/2026) · Calendário Nacional de Vacinação 2026 (PNI/MS) · NT 87/2026 e NT 193/2024 CGICI/DPNI · NT 77/2025 DPNI · Guia Técnico PNI jun/2026"
         nota="Catch-up: confirmar no Manual de Normas e Procedimentos para Vacinação (MS) e adequar ao CRIE em imunodeprimidos."
       />
     </div>

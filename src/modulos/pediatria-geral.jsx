@@ -64,7 +64,7 @@ const SECOES = [
     mods: [
       { rota: "/pedfarma",     label: "PedFarma",           desc: "48 medicamentos · dose por peso",       Icon: Pill,        cor: "#8B5CF6" },
       { rota: "/antibioticos", label: "Antibioticoterapia", desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope, cor: "#0D9488" },
-      { rota: "/vacinal",      label: "Vacinal",            desc: "SBIm 2025/2026 · SUS / Privado",        Icon: Syringe,     cor: "#06B6D4" },
+      { rota: "/vacinal",      label: "Vacinal",            desc: "SBIm 2026/2027 · SUS / Privado",        Icon: Syringe,     cor: "#06B6D4" },
     ],
   },
   {
