@@ -312,7 +312,6 @@ ${[
     body: `<ul style="padding-left:18px;margin-top:8px;line-height:1.7">
 <li><strong>Bilirrubina direta > 1 mg/dL é sempre patológico</strong></li>
 <li>Icterícia persistindo após 14 dias → investigar colestase obrigatoriamente</li>
-<li>BD > 20% do TSB → suspeitar colestase neonatal</li>
 <li>Causas: atresia de vias biliares, PFIC, galactosemia, hipotireoidismo, TORCH, nutrição parenteral prolongada</li>
 <li>Encaminhamento urgente a gastroenterologista/hepatologista pediátrico se BD > 1 mg/dL</li>
 </ul>`,
