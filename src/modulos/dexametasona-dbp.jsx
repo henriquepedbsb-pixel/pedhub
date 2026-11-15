@@ -106,7 +106,7 @@ function FaseCard({ fase, cor }) {
           <div key={conc} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"3px 0", fontSize:12 }}>
             <span style={{ color:"var(--muted)" }}>Vol [{conc}]{note && <span style={{ color:cor, fontWeight:700 }}>{note}</span>}</span>
             <span style={{ fontWeight:600, color: vol < 0.05 ? "#D97706" : "var(--text-2)" }}>
-              {f3(vol)} mL{vol < 0.01 ? " ⚠" : ""}
+              {f3(vol)} mL{vol < 0.01 ? <AlertTriangle size={11} aria-label="Volume muito pequeno" style={{ display: "inline-block", verticalAlign: "-1px", marginLeft: 4 }} /> : null}
             </span>
           </div>
         ))}

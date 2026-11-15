@@ -6,9 +6,13 @@ import { avisoPesoKg } from "../lib/sanity";
 import {
   Heart, Wind, AlertTriangle, CheckCircle,
   ChevronDown, ChevronUp, Activity,
-  Zap, Info, Thermometer, Shield, Plus, Droplet
+  Zap, Info, Thermometer, Shield, Plus, Droplet,
+  Ban, Star, Timer,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const COR_NEO = "#0F766E";
 const COR_SEPSE = "#7C3AED";
@@ -156,7 +160,7 @@ function TabReanimacao() {
           <p style={{ margin: "0 0 5px", fontSize: 12, fontWeight: 700, color: "var(--tx-blue)", display: "flex", alignItems: "center", gap: 5 }}><Droplet size={14} style={{ flexShrink: 0 }} />ORDENHA DO CORDÃO (quando não é possível aguardar 60s)</p>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "var(--text-2)" }}>Técnica: comprimir 20 cm do cordão (placenta → RN) durante 2 s, repetir 3×.</p>
           <p style={{ margin: "0 0 4px", fontSize: 13, color: "var(--text-2)" }}>Permitida: RN <strong>≥28 semanas</strong> sem boa vitalidade quando não é possível aguardar 60s.</p>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#DC2626" }}>⛔ CONTRAINDICADA em RN &lt;28 semanas — risco aumentado de HPIV grave.</p>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#DC2626" }}><Ban size={14} style={ICONE_INLINE} />CONTRAINDICADA em RN &lt;28 semanas — risco aumentado de HPIV grave.</p>
         </Caixa>
       </Secao>
 
@@ -211,14 +215,14 @@ function TabReanimacao() {
           <p style={{ margin: 0, fontSize: 12, color: "var(--tx-green)" }}>VMM-Peça-T · Interface: máscara facial · PEEP 5–6 cmH₂O · Fluxo ~10 L/min</p>
         </Caixa>
         <Caixa cor="var(--tint-red)" borda="#FCA5A5" mb={10}>
-          <p style={{ margin: "0 0 4px", fontSize: 12, fontWeight: 700, color: "var(--tx-red)" }}>⭐ VPP — MINUTO DE OURO (iniciar ≤60 s após nascimento):</p>
+          <p style={{ margin: "0 0 4px", fontSize: 12, fontWeight: 700, color: "var(--tx-red)" }}><Star size={13} style={ICONE_INLINE} />VPP — MINUTO DE OURO (iniciar ≤60 s após nascimento):</p>
           <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "var(--tx-red)" }}>Apneia OU respiração irregular OU FC &lt;100 bpm</p>
           <p style={{ margin: 0, fontSize: 13, color: "var(--text-2)" }}>Equipamento: <strong>VMM-Peça-T</strong> (balão autoinflável = reserva, se VMM falhar)</p>
         </Caixa>
         <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 700, color: "var(--text-2)" }}>PARÂMETROS INICIAIS DA VPP:</p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginBottom: 12 }}>
           {[
-            { label: "FiO₂ inicial", valor: "60%", destaque: true, desc: "⭐ SBP 2026" },
+            { label: "FiO₂ inicial", valor: "60%", destaque: true, desc: "SBP 2026" },
             { label: "Pinsp", valor: "20–25 cmH₂O", destaque: false, desc: "ajustar pela expansão" },
             { label: "PEEP", valor: "5–6 cmH₂O", destaque: false, desc: "" },
             { label: "Frequência", valor: "30–60 mpm", destaque: false, desc: "ocluuui/solta/solta" },
@@ -253,7 +257,7 @@ function TabReanimacao() {
               <p style={{ margin: 0, fontSize: 13, color: "var(--text-2)" }}>{item}</p>
             </div>
           ))}
-          <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--tx-amber)" }}>⏱️ Cada tentativa: máx. 30 segundos.</p>
+          <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--tx-amber)" }}><Timer size={13} style={ICONE_INLINE} />Cada tentativa: máx. 30 segundos.</p>
         </Caixa>
         <p style={{ margin: "0 0 5px", fontSize: 12, fontWeight: 700, color: "var(--text-2)" }}>MATERIAL — Quadro 2 · SBP 2026:</p>
         <TabelaSimples cols={["IG", "Peso est.", "Cânula", "Sonda", "Lâmina"]} rows={CANULAS.map(c => [c.ig, c.peso, c.canula, c.sonda, c.lamina])} cabCor="#FED7AA" />

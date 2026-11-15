@@ -1,12 +1,15 @@
 // Preview — Reanimação RN ≥34 semanas · Diretrizes SBP 2026
 import { useState } from "react";
-import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info } from "lucide-react";
+import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info, Timer, X } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const BG  = "#0284C7";
 const BGL = "var(--tint-blue)";
@@ -216,7 +219,7 @@ function TabVPP() {
           <h2 className="font-bold text-gray-800">VPP — Ventilação com Pressão Positiva</h2>
         </div>
         <div className="bg-red-50 border border-red-300 rounded-xl p-3 mb-4">
-          <p className="text-sm font-bold text-red-800">⏱ Minuto de Ouro — Indicação</p>
+          <p className="text-sm font-bold text-red-800"><Timer size={15} style={ICONE_INLINE} />Minuto de Ouro — Indicação</p>
           <p className="text-sm text-red-700 mt-0.5">Apneia ou respiração irregular e/ou FC &lt;100 bpm após passos iniciais</p>
           <p className="text-xs text-red-600 font-semibold mt-1">Risco de morte ou morbidade aumenta 16% a cada 30 seg de atraso</p>
         </div>
@@ -535,7 +538,7 @@ function TabMeds({ adrIV, adrET, exVol, p }) {
             ["Atropina, albumina, vasopressores","Não referenciados nas Diretrizes SBP 2026 para reanimação ao nascimento."],
           ].map(([med, desc]) => (
             <div key={med} className="flex gap-2 items-start">
-              <span className="text-red-500 font-black text-sm mt-0.5 flex-shrink-0">✕</span>
+              <span className="text-red-500 font-black text-sm mt-0.5 flex-shrink-0"><X size={14} strokeWidth={3} /></span>
               <div>
                 <p className="text-sm font-bold text-gray-800">{med}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{desc}</p>

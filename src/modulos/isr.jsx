@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcularISR, calcTubo, calcLamina) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
+import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen, Timer } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
 import RodapeModulo from "../components/RodapeModulo";
@@ -9,6 +9,9 @@ import { montarTextoConduta } from "../lib/exportarTexto";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -559,7 +562,7 @@ export default function ISR() {
 
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
-              ⏱ Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
+              <Timer size={13} style={ICONE_INLINE} />Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
             </p>
           </div>
 

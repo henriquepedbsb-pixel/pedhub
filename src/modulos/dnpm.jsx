@@ -3,6 +3,7 @@ import RodapeModulo from "../components/RodapeModulo";
 import {
   Activity, Heart, MessageCircle, Star, Move,
   AlertTriangle, Calendar, Info, RotateCcw,
+  Check,
 } from "lucide-react";
 
 /* ── Tokens de cor ── */
@@ -376,7 +377,7 @@ export default function Dnpm() {
                       <button key={i} onClick={() => toggleCheck(activeFaixaId, dom, i)}
                         style={{ display: "flex", alignItems: "flex-start", gap: 10, width: "100%", background: "transparent", border: "none", padding: "7px 0", cursor: "pointer", textAlign: "left", borderBottom: i < items.length - 1 ? `1px solid ${bd}` : "none" }}>
                         <div style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", border: `2px solid ${isChk ? cor : bd}`, background: isChk ? cor : "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2 }}>
-                          {isChk && <span style={{ fontSize: 11, color: "#fff", fontWeight: 800, lineHeight: 1 }}>✓</span>}
+                          {isChk && <Check size={12} color="#fff" strokeWidth={3.5} />}
                         </div>
                         <span style={{ fontSize: 13, lineHeight: 1.55, color: isChk ? "var(--muted)" : TEXTO, textDecoration: isChk ? "line-through" : "none" }}>
                           {item}

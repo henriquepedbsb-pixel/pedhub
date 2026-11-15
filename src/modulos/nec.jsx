@@ -1,12 +1,15 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (estagioBell, calcATBNec) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield } from 'lucide-react';
+import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield, Radiation } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -220,7 +223,7 @@ export default function NEC() {
           {/* Achados radiológicos */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('rx')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}>☢️ Achados Radiológicos (RX Abdome)</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><Radiation size={15} style={ICONE_INLINE} />Achados Radiológicos (RX Abdome)</p>
               {aberto==='rx'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='rx' && (

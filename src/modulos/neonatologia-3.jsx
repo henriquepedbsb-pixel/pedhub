@@ -13,8 +13,12 @@ import {
   Calculator, ClipboardList, BookOpen, Activity,
   AlertTriangle, Info, TrendingUp, Printer,
   RefreshCw, ChevronDown, ChevronUp,
+  Check,
 } from 'lucide-react';
 import { limparDecimal, fmtBR } from '../lib/numero';
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 /* ── Paleta ── */
 const C = {
@@ -669,7 +673,7 @@ export default function IctericiaNeonatal() {
           </div>
           {idadeFoiAutoCalculada && (
             <p style={{fontSize:10.5,color:"var(--tx-teal)",fontWeight:600,marginBottom:8}}>
-              ✓ Calculado automaticamente a partir do nascimento
+              <Check size={12} style={ICONE_INLINE} strokeWidth={3} />Calculado automaticamente a partir do nascimento
             </p>
           )}
           {nascInfo.status === 'ok' && !idadeFoiAutoCalculada && (
