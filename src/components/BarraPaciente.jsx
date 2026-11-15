@@ -21,6 +21,7 @@ import {
   pacienteVazio,
 } from "../lib/paciente";
 import { fmtBR } from "../lib/numero";
+import { mascararData } from "../lib/data";
 
 // Altura da faixa colapsada — o Header (App.jsx) usa isto como offset sticky.
 export const BARRA_PACIENTE_H = 40;
@@ -216,9 +217,9 @@ export default function BarraPaciente() {
                 <span style={{ fontWeight: 400, color: "var(--muted)" }}>(opcional)</span>
               </span>
               <input
-                inputMode="numeric" placeholder="dd/mm/aaaa"
+                inputMode="numeric" placeholder="dd/mm/aaaa" maxLength={10} autoComplete="off"
                 value={rascunho.dataNascimento}
-                onChange={(e) => setCampo("dataNascimento", e.target.value)}
+                onChange={(e) => setCampo("dataNascimento", mascararData(e.target.value))}
                 onBlur={() => commit("dataNascimento")}
                 style={inputStyle}
               />

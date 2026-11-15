@@ -16,6 +16,7 @@ import {
   Check,
 } from 'lucide-react';
 import { limparDecimal, fmtBR } from '../lib/numero';
+import { mascararData, dataExiste } from '../lib/data';
 
 // Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
 const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
@@ -144,6 +145,8 @@ export function avaliarNascimento(dataStr, horaStr, agoraMs = Date.now()) {
   const h = String(horaStr || '').trim();
   if (!d) return { status: 'sem-data', horas: null };
   const m = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  // Data ainda sendo digitada ("12/1") não é erro — só não calcula.
+  if (!m && d.length < 10 && /^[\d/]+$/.test(d)) return { status: 'data-incompleta', horas: null };
   if (!m) return { status: 'data-invalida', horas: null };
   if (!h) return { status: 'sem-hora', horas: null };
   const hm = h.match(/^(\d{1,2}):(\d{2})$/);
@@ -151,7 +154,9 @@ export function avaliarNascimento(dataStr, horaStr, agoraMs = Date.now()) {
 
   const dia = parseInt(m[1], 10), mes = parseInt(m[2], 10), ano = parseInt(m[3], 10);
   const hh = parseInt(hm[1], 10), min = parseInt(hm[2], 10);
-  if (mes < 1 || mes > 12 || dia < 1 || dia > 31 || hh > 23 || min > 59) {
+  // dataExiste recusa 31/02, 31/04 etc. — `new Date()` rolaria para o mês
+  // seguinte em silêncio e a idade de vida sairia errada em dias.
+  if (!dataExiste(dia, mes, ano) || hh > 23 || min > 59) {
     return { status: 'data-invalida', horas: null };
   }
   const nascimento = new Date(ano, mes - 1, dia, hh, min, 0, 0);
@@ -605,9 +610,9 @@ export default function IctericiaNeonatal() {
             </p>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
               <Fld label="Data de nascimento">
-                <input type="text" placeholder="dd/mm/aaaa"
+                <input type="text" inputMode="numeric" placeholder="dd/mm/aaaa" maxLength={10} autoComplete="off"
                   value={paciente.dataNascimento || ''}
-                  onChange={e => setPaciente({ dataNascimento: e.target.value })}
+                  onChange={e => setPaciente({ dataNascimento: mascararData(e.target.value) })}
                   style={inpStyle}/>
               </Fld>
               <Fld label="Hora de nascimento">
@@ -624,7 +629,7 @@ export default function IctericiaNeonatal() {
             )}
             {(nascInfo.status === 'data-invalida' || nascInfo.status === 'hora-invalida') && (
               <p style={{fontSize:10.5,color:"var(--tx-red)",marginTop:6}}>
-                Data ou hora de nascimento em formato inválido.
+                Data ou hora de nascimento inválida — confira.
               </p>
             )}
             {nascInfo.status === 'futuro' && (
