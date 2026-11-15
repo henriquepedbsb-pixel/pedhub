@@ -64,7 +64,9 @@ export function sugerirEletro(dias) {
     na:  dias <= 2 ? "0"   : "2",
     k:   dias <= 2 ? "0"   : "1",
     ca:  "1,5",
-    p:   "45",
+    // Fósforo fica de fora da sugestão automática (decisão do responsável
+    // médico, 15/11/2026): o campo começa em 0 e só entra na bolsa se o médico
+    // preencher — assim o sódio do glicerofosfato nunca entra sem ser visto.
     mg:  "0,2",
   };
 }
@@ -101,7 +103,10 @@ export function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
   const naGlic    = volP * SOL.GLICEROFOSF_NA;          // mEq/dia
   const naPresc   = dNa * pk;                            // mEq/dia
   const naGlicKg  = naGlic / pk;                         // mEq/kg/dia
-  const naExcesso = naGlic > naPresc + 1e-9;
+  // Tolerância de exibição (não é limite clínico): 31 mg de P são 1,001 mmol,
+  // então "P 31 + Na 2" daria 2,002 mEq — um excesso que nem aparece na tela.
+  // Só avisa quando a diferença aparece com uma casa decimal (> 0,05 mEq/kg/dia).
+  const naExcesso = naGlicKg - dNa > 0.05;
 
   const volNa  = Math.max(0, naPresc - naGlic) / SOL.NACL20;
   const volK   = (dK  * pk) / SOL.KCL10;
@@ -272,6 +277,11 @@ function ResultNPT({ r }) {
               <span style={{ fontWeight: 600, color: "var(--text-2)" }}>{val}</span>
             </div>
           ))}
+          {!(r.dP > 0) && (
+            <div style={{ marginTop: 8, padding: "7px 10px", background: "var(--tint-amber)", borderRadius: 7, fontSize: 11, color: "var(--tx-amber)", lineHeight: 1.45 }}>
+              <strong>Fósforo não incluído nesta bolsa</strong> (campo em 0). SBP 2023: fosfato desde o 1º dia de NP, 1–2 mmol/kg/dia (31–62 mg/kg/dia), de preferência orgânico. Para incluir, preencher o campo P. Reposição oral (fosfato tricálcico): módulo Canguru.
+            </div>
+          )}
           {r.dP > 0 && (
             <div style={{ marginTop: 8, fontSize: 11, color: "var(--muted)", lineHeight: 1.45 }}>
               Fósforo: {f2(r.mmolP)} mmol/dia. O glicerofosfato leva {f2(r.naGlic)} mEq de sódio ({f2(r.naGlicKg)} mEq/kg/dia), já descontado do NaCl 20%.
@@ -342,7 +352,7 @@ function TabNPT() {
   const [doseNa,   setDoseNa]   = useState("0");
   const [doseK,    setDoseK]    = useState("0");
   const [doseCa,   setDoseCa]   = useState("1,5");
-  const [doseP,    setDoseP]    = useState("45");
+  const [doseP,    setDoseP]    = useState("0");
   const [doseMg,   setDoseMg]   = useState("0,2");
   const [resultado, setResultado] = useState(null);
   const [erro, setErro]           = useState("");
@@ -360,7 +370,6 @@ function TabNPT() {
       setDoseNa(s.na);
       setDoseK(s.k);
       setDoseCa(s.ca);
-      setDoseP(s.p);
       setDoseMg(s.mg);
     }
   }
@@ -388,7 +397,7 @@ function TabNPT() {
   function limpar() {
     setPesoG(""); setDataNasc(""); setAcesso("central"); setVolKgD("80");
     setDoseAA("2,5"); setTig("5"); setDoseLip("1,5");
-    setDoseNa("0"); setDoseK("0"); setDoseCa("1,5"); setDoseP("45"); setDoseMg("0,2");
+    setDoseNa("0"); setDoseK("0"); setDoseCa("1,5"); setDoseP("0"); setDoseMg("0,2");
     setResultado(null); setErro("");
   }
 
@@ -469,7 +478,7 @@ function TabNPT() {
             <Inp value={doseCa} set={setDoseCa} placeholder="1,5" mode="decimal" />
           </Fld>
           <Fld label="P (mg/kg/dia)" hint="46–62 (preT)">
-            <Inp value={doseP} set={setDoseP} placeholder="45" mode="decimal" />
+            <Inp value={doseP} set={setDoseP} placeholder="0" mode="decimal" />
           </Fld>
         </Grid2>
         <Fld label="Mg (mEq/kg/dia)" hint="0,2–0,4">
@@ -513,8 +522,8 @@ export default function Neonatologia5() {
       </div>
       <RodapeModulo
         revisao="07/2026"
-        fonte="ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023 · Glycophos, bula profissional (Fresenius Kabi)"
-        nota="Eletrólitos sugeridos automaticamente — ajustar conforme labs e condição clínica. Não substitui prescrição médica individualizada."
+        fonte="ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023 · SBP 2023 — Recomendações para NP em RN pré-termo (GPA nº 108) · Glycophos, bula profissional (Fresenius Kabi)"
+        nota="Na, K, Ca e Mg sugeridos automaticamente — ajustar conforme labs e condição clínica. Fósforo começa em 0: preencher para incluir na bolsa. Não substitui prescrição médica individualizada."
       />
     </div>
   );

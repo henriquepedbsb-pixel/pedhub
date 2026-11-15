@@ -171,8 +171,13 @@ reabrir como "divergência":**
   **sem dose mínima** (AHA PALS Update 2015). Não "unificar" as duas.
 - **Fósforo na NPT (`neonatologia-5`) = glicerofosfato de sódio** (1 mmol P +
   2 mEq Na por mL, bula Glycophos). O sódio que ele leva é descontado do NaCl
-  20%; se passar do Na prescrito, o módulo avisa. Fosfato tricálcico é de uso
-  **oral** (fica em `canguru` / `seguimento-prematuro-risco`), nunca em NPT.
+  20%; se passar do Na prescrito, o módulo avisa. **O campo de fósforo começa
+  em 0** e fica fora da sugestão automática de eletrólitos — só entra na bolsa
+  se o médico preencher (a tela avisa quando está fora). Fosfato tricálcico é de
+  uso **oral** (fica em `canguru` / `seguimento-prematuro-risco`), nunca em NPT.
+  Referência entregue pelo responsável: SBP 2023, *Recomendações para Nutrição
+  Parenteral em RN Pré-termo* (GPA nº 108) — fosfato desde o 1º dia de NP,
+  1–2 mmol/kg/dia até o 10º dia, de preferência orgânico.
 
 ---
 

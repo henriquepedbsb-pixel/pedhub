@@ -94,6 +94,9 @@ describe('sugerirEletro — sugestão por dia de vida', () => {
     expect(sugerirEletro(3)).toMatchObject({ na: '2', k: '1' });
   });
   it('sem data de nascimento não sugere', () => expect(sugerirEletro(null)).toBeNull());
+  it('não sugere fósforo: o campo começa em 0 e só entra se o médico preencher', () => {
+    for (const dia of [0, 1, 2, 3, 10, 30]) expect(sugerirEletro(dia)).not.toHaveProperty('p');
+  });
 });
 
 describe('calcNPT — fósforo como glicerofosfato de sódio', () => {
@@ -120,6 +123,12 @@ describe('calcNPT — fósforo como glicerofosfato de sódio', () => {
     const semNa = calcNPT({ ...kg1, doseNa: '0' });
     expect(semNa.volNa).toBe(0);
     expect(semNa.naExcesso).toBe(true);
+  });
+  it('1 mmol/kg de fósforo (31 mg) com Na 2 não dispara aviso por arredondamento', () => {
+    const r = calcNPT({ ...kg1, doseP: '31', doseNa: '2' });   // 2,002 mEq/kg de Na
+    expect(r.naExcesso).toBe(false);
+    expect(r.volNa).toBe(0);
+    expect(calcNPT({ ...kg1, doseP: '32', doseNa: '2' }).naExcesso).toBe(true);   // 2,07 mEq/kg
   });
   it('sem fósforo, o NaCl não muda e não há aviso', () => {
     const r = calcNPT({ ...base, pesoG: '1000', doseNa: '2' });
