@@ -17,20 +17,21 @@ export const HUBS = {
   "/neonatal":        { label: "Neonatologia", cor: "#0E7490", grupo: "Neonatologia" },
 };
 
-/* ─── Seções de cada hub, na ordem de exibição ───────────────────────────── */
+/* ─── Seções de cada hub, na ordem de exibição ─────────────────────────────
+   curto → (opcional) nome usado no atalho de seção do hub. */
 const SECOES = {
   "/pediatria-geral": [
     { titulo: "Emergências", Icon: AlertTriangle },
-    { titulo: "Terapia Intensiva & Procedimentos", Icon: Zap },
-    { titulo: "Farmacologia & Imunização", Icon: Pill },
-    { titulo: "Crescimento & Avaliação", Icon: Scale },
-    { titulo: "Especialidades Pediátricas", Icon: FlaskConical },
+    { titulo: "Terapia Intensiva & Procedimentos", curto: "Terapia intensiva", Icon: Zap },
+    { titulo: "Farmacologia & Imunização", curto: "Farmacologia", Icon: Pill },
+    { titulo: "Crescimento & Avaliação", curto: "Crescimento", Icon: Scale },
+    { titulo: "Especialidades Pediátricas", curto: "Especialidades", Icon: FlaskConical },
   ],
   "/neonatal": [
     { titulo: "Sala de Parto", Icon: Zap },
     { titulo: "Cuidados Intensivos", Icon: Thermometer },
-    { titulo: "Metabólico & Nutrição", Icon: Droplets },
-    { titulo: "Avaliação & Conforto", Icon: Stethoscope },
+    { titulo: "Metabólico & Nutrição", curto: "Metabólico", Icon: Droplets },
+    { titulo: "Avaliação & Conforto", curto: "Avaliação", Icon: Stethoscope },
     { titulo: "Especialidades", Icon: Microscope },
   ],
 };
@@ -42,7 +43,10 @@ const SECOES = {
    desc  → linha de apoio do card e da busca.
    cor   → cor de identidade do módulo (hex fixo — CLAUDE.md, regra 3).
    tags  → termos de busca que NÃO estão no nome/descrição: sinônimos, siglas,
-           fármacos, escalas. Só incluir termo cujo conteúdo existe no módulo. */
+           fármacos, escalas. Só incluir termo cujo conteúdo existe no módulo.
+   descNoCabecalho → (opcional) true nos módulos que já não repetem o título
+           numa faixa colorida própria: o cabeçalho global mostra a `desc`
+           como subtítulo. Ligar ao migrar o módulo para o cabeçalho único. */
 export const MODULOS = [
   /* ══ Pediatria Geral ══ */
   /* ── Emergências ── */
@@ -98,7 +102,7 @@ export const MODULOS = [
     tags: "refluxo drge constipacao obstipacao alergia proteina leite vaca aplv omeprazol regurgitacao hepato hepatologia figado colestase colestase neonatal bilirrubina direta conjugada atresia vias biliares kasai ictericia colestatica ursodesoxicolico" },
   { rota: "/formulas", label: "Fórmulas Infantis", desc: "Nestlé × Danone · Escada APLV", Icon: FlaskConical, cor: "#10B981", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "leite formula infantil hidrolisado aminoacido soja aplv alergia proteina leite vaca desmame nan aptamil" },
-  { rota: "/hidratacao", label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", Icon: Droplets, cor: "#3B82F6", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
+  { rota: "/hidratacao", label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", descNoCabecalho: true, Icon: Droplets, cor: "#3B82F6", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "manutencao liquido soro reidratacao tro plano volume holliday segar desidratacao venoso plano a plano b plano c sro expansao glicose sodio potassio" },
   { rota: "/dermato", label: "Dermatologia", desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield, cor: "#EC4899", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "dermatite atopica impetigo escabiose sarna urticaria pele coceira prurido" },
@@ -185,9 +189,46 @@ export function secoesDoHub(rotaHub) {
   }));
 }
 
-/* Mapa rota → { label, cor, voltar } para o cabeçalho global (App.jsx).
-   Hubs voltam para a home ("/"); módulos voltam para o hub do seu grupo. */
+/* Mapa rota → { label, cor, voltar, sub?, info? } para o cabeçalho global
+   (App.jsx). Hubs voltam para a home ("/") e mostram a contagem de ferramentas
+   (`info`); módulos voltam para o hub do seu grupo e, quando marcados com
+   descNoCabecalho, mostram a descrição como subtítulo (`sub`). */
 export const MODULO_MAP = {
-  ...Object.fromEntries(Object.entries(HUBS).map(([rota, h]) => [rota, { label: h.label, cor: h.cor }])),
-  ...Object.fromEntries(MODULOS.map((m) => [m.rota, { label: m.label, cor: m.cor, voltar: HUB_DO_GRUPO[m.grupo] }])),
+  ...Object.fromEntries(Object.entries(HUBS).map(([rota, h]) => [rota, {
+    label: h.label, cor: h.cor,
+    info: `${MODULOS.filter((m) => m.grupo === h.grupo).length} ferramentas`,
+  }])),
+  ...Object.fromEntries(MODULOS.map((m) => [m.rota, {
+    label: m.label, cor: m.cor, voltar: HUB_DO_GRUPO[m.grupo],
+    ...(m.descNoCabecalho ? { sub: m.desc } : {}),
+  }])),
+};
+
+/* ─── Busca ──────────────────────────────────────────────────────────────────
+   Compartilhada pela busca global da home e pela busca dentro de cada hub. */
+
+/* Normaliza para busca: remove acentos e caixa (ex.: "ictericia" acha "Icterícia"). */
+export const normalizarBusca = (s) => String(s ?? "").normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+
+/* Quebra o texto digitado em termos já normalizados. */
+export const termosDaBusca = (texto) => normalizarBusca(texto).trim().split(/\s+/).filter(Boolean);
+
+/* Casa se TODAS as palavras da busca aparecem em label + desc + tags. */
+export const casaBusca = (m, termos) => {
+  const hay = normalizarBusca(`${m.label} ${m.desc} ${m.tags || ""}`);
+  return termos.every((t) => hay.includes(t));
+};
+
+/* Palavra-chave que explicou o resultado: se o módulo casou por uma tag (e não
+   pelo nome/descrição visível), devolve essa tag para exibir "achado por X".
+   Devolve null quando o match já é óbvio pelo título/descrição. */
+export const keywordDoMatch = (m, termos) => {
+  const visivel = normalizarBusca(`${m.label} ${m.desc}`);
+  if (termos.every((t) => visivel.includes(t))) return null;
+  const tags = normalizarBusca(m.tags || "").split(/\s+/).filter(Boolean);
+  for (const t of termos) {
+    const tag = tags.find((k) => k.includes(t));
+    if (tag) return tag;
+  }
+  return null;
 };

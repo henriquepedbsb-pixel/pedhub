@@ -120,7 +120,9 @@ global. Os módulos aparecem só dentro do hub correspondente ou na busca.
 **Catálogo único (15/11/2026): `src/lib/catalogo.js`.** Nome, descrição,
 ícone, cor, grupo, seção do hub e termos de busca de cada módulo moram só ali.
 A home (`PedHub.jsx`: busca, favoritos, contagens), o cabeçalho (`App.jsx`:
-`MODULO_MAP`) e os dois hubs (`secoesDoHub()`) leem desse arquivo — não há mais
+`MODULO_MAP`) e os dois hubs (`HubModulos.jsx` via `secoesDoHub()`) leem desse
+arquivo; as funções de busca (`casaBusca`, `termosDaBusca`, `keywordDoMatch`)
+também moram ali — não há mais
 listas independentes para manter em sincronia. Campos: `label` (nome completo:
 cabeçalho, busca, favoritos), `curto` (opcional, só no card do hub), `desc`,
 `Icon`, `cor`, `grupo`, `secao`, `tags`. A ordem das entradas é a ordem dos
@@ -232,8 +234,27 @@ Mais interativo, desde que nunca menos seguro nem menos claro.
 
 - DM Sans (corpo) + DM Serif Display (títulos quando aplicável)
 - Cards com borda arredondada, sombra sutil, fundo branco/cinza claro
-- Mobile-first — validar em 390px de largura
+- Mobile-first — validar em 390px de largura (uso é quase todo no celular)
 - Cada módulo tem cor própria em hex
+
+**Layout aprovado pelo responsável (15/11/2026) — aplicar aos poucos, um
+módulo por commit, começando pelos mais acessados:**
+- **Hubs:** "grade compacta" em `src/components/HubModulos.jsx` (compartilhado
+  pelos dois hubs). Sem faixa colorida repetindo o título — nome e contagem
+  ficam no cabeçalho global. Busca dentro do hub, atalhos de seção
+  (`curto` da seção no catálogo), cards em 2 colunas; o card que sobraria
+  sozinho ocupa a linha inteira.
+- **Calculadoras:** sem faixa colorida repetindo o título; o cabeçalho global
+  mostra a descrição como subtítulo quando o módulo tem `descNoCabecalho: true`
+  no catálogo (ligar ao migrar). Abas e opções com `src/components/Segmentado.jsx`
+  (alvo de 44 px, ativo por classe). Resultado principal numa faixa fixa no
+  rodapé com `src/components/BarraResultado.jsx` (+ `BotaoCopiar solido`); a
+  página reserva `BARRA_RESULTADO_H` de espaço no fim. Rótulo de campo em texto
+  normal (não CAIXA ALTA de 11 px), campo com 48 px de altura.
+- **Feito:** os dois hubs e `hidratacao`. Próximos candidatos: `pedfarma`,
+  `urgencias`, `isr`, `dilucao-bic`, `tig-neonatal`.
+- **Mantido de propósito:** cores de identidade dos módulos e a home com os
+  dois portais + busca global.
 
 ---
 

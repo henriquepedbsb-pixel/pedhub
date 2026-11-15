@@ -120,13 +120,34 @@ function Header() {
         >
           <ArrowLeft size={20} color={modulo.cor} />
         </button>
-        <span style={{
+        <div style={{
+          display: "flex", flexDirection: "column", gap: 1,
+          flex: 1, minWidth: 0,
           fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 700, fontSize: 16, color: "var(--text)",
-          flex: 1,
         }}>
-          {modulo.label}
-        </span>
+          <span style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", lineHeight: 1.25 }}>
+            {modulo.label}
+          </span>
+          {/* Subtítulo: só nos módulos que já não repetem o título numa faixa
+              própria (campo descNoCabecalho do catálogo). */}
+          {modulo.sub && (
+            <span style={{
+              fontSize: 12, color: "var(--muted)", lineHeight: 1.25,
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>
+              {modulo.sub}
+            </span>
+          )}
+        </div>
+        {/* Hubs: contagem de ferramentas (antes ficava na faixa colorida do hub). */}
+        {modulo.info && (
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12.5, color: "var(--muted)", whiteSpace: "nowrap", flexShrink: 0,
+          }}>
+            {modulo.info}
+          </span>
+        )}
         <div style={{
           width: 8, height: 8, borderRadius: "50%",
           background: modulo.cor, flexShrink: 0,

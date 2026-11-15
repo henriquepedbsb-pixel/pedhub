@@ -5,7 +5,7 @@ import { useState, useEffect, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "./lib/favoritos";
 import FavoritoStar from "./components/FavoritoStar";
-import { MODULOS } from "./lib/catalogo";
+import { MODULOS, normalizarBusca, casaBusca, keywordDoMatch } from "./lib/catalogo";
 import {
   Baby,
   ChevronRight,
@@ -26,29 +26,6 @@ import {
    mora em src/lib/catalogo.js — fonte única, compartilhada com o cabeçalho
    (App.jsx) e com os hubs. Fica completo aqui para que a BUSCA encontre também
    os módulos individuais, que não aparecem no grid da home. */
-
-/* Normaliza para busca: remove acentos e caixa (ex.: "ictericia" acha "Icterícia"). */
-const normalizarBusca = (s) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-
-/* Casa se TODAS as palavras da busca aparecem em label + desc + tags. */
-const casaBusca = (m, termos) => {
-  const hay = normalizarBusca(`${m.label} ${m.desc} ${m.tags || ""}`);
-  return termos.every(t => hay.includes(t));
-};
-
-/* Palavra-chave que explicou o resultado: se o módulo casou por uma tag (e não
-   pelo nome/descrição visível), devolve essa tag para exibir "achado por X".
-   Devolve null quando o match já é óbvio pelo título/descrição. */
-const keywordDoMatch = (m, termos) => {
-  const visivel = normalizarBusca(`${m.label} ${m.desc}`);
-  if (termos.every(t => visivel.includes(t))) return null;
-  const tags = normalizarBusca(m.tags || "").split(/\s+/).filter(Boolean);
-  for (const t of termos) {
-    const tag = tags.find(k => k.includes(t));
-    if (tag) return tag;
-  }
-  return null;
-};
 
 /* ─── Módulos em desenvolvimento (placeholders — sem rota) ─────────────────
    Sem campo `cor`: o BreveCard é neutro por design (cinza dos tokens), para
