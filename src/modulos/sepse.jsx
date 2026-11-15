@@ -5,6 +5,8 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -167,7 +169,7 @@ const CBORDER = '#FECACA';
 // ─── Componente ──────────────────────────────────────────────────────────────
 export default function Sepse() {
   const [tab,      setTab]     = useState('suspeitar');
-  const [peso,     setPeso]    = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [lactato,  setLactato] = useState('');
   const [fc,       setFc]      = useState('');
   const [fr,       setFr]      = useState('');
@@ -374,6 +376,7 @@ export default function Sepse() {
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
               <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 12,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none', border: `2px solid ${p > 0 ? C : '#D1D5DB'}` }} />
+              <OrigemPeso ativo={pesoDaBarra} />
               <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -627,6 +630,7 @@ export default function Sepse() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO PACIENTE (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '16px', fontWeight: '600', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
               </div>
             )}
 

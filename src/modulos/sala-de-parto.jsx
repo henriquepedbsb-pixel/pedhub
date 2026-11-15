@@ -12,6 +12,8 @@ import {
   Info,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const COR = "#B45309"; // amber-700 — cor do módulo Sala de Parto
 
@@ -121,7 +123,7 @@ export function calcMaterialSalaParto(peso, ig) {
 // ─────────────────────────────────────────────────────────
 
 export default function SalaDeParto() {
-  const [pesoStr, setPesoStr] = useState("");
+  const [pesoStr, setPesoStr, pesoDaBarra] = useCampoPeso();
   const [igStr, setIgStr] = useState("");
 
   const peso = parseFloat(pesoStr.replace(",", "."));
@@ -158,6 +160,7 @@ export default function SalaDeParto() {
             placeholder="Ex: 1,8"
             className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-amber-500"
           />
+          <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoStr).replace(',', '.')))} />
         </div>
         <div>

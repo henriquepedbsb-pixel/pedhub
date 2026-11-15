@@ -13,6 +13,8 @@ import {
   Info, AlertTriangle, CheckCircle, Copy, ExternalLink,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY   = "#0D9488";
 const C_DART    = "#0891B2";
@@ -113,7 +115,7 @@ function FaseCard({ fase, cor }) {
   );
 }
 
-function PesoInput({ value, set, cor }) {
+function PesoInput({ value, set, cor, daBarra }) {
   const pk = pPesoG(value);
   return (
     <div style={{ background:"var(--bg)", borderRadius:10, padding:"12px 14px", marginBottom:12, border:"1px solid var(--border)" }}>
@@ -121,6 +123,7 @@ function PesoInput({ value, set, cor }) {
       <input type="text" inputMode="decimal" value={value} onChange={e=>set(e.target.value)} placeholder="Ex: 850"
         style={{ width:"100%", padding:"8px 10px", borderRadius:7, fontSize:14, border:`1.5px solid ${cor}50`, outline:"none", background:"var(--surface)", boxSizing:"border-box" }} />
       {pk && <p style={{ fontSize:11, color:cor, fontWeight:600, margin:"5px 0 0" }}>{fmtBR((pk/1000).toFixed(3))} kg</p>}
+      <OrigemPeso ativo={daBarra} />
     </div>
   );
 }
@@ -134,7 +137,7 @@ async function copiarTxt(txt, setCopied) {
 /* ── Tab DART ────────────────────────────────────────────────────────────── */
 function TabDART() {
   const C = C_DART;
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso("g");
   const [copied, setCopied] = useState(false);
   const pk = pPesoG(pesoRaw);
   const pkKg = pk ? pk / 1000 : null;
@@ -163,7 +166,7 @@ function TabDART() {
         ))}
       </div>
 
-      <PesoInput value={pesoRaw} set={setPesoRaw} cor={C} />
+      <PesoInput value={pesoRaw} set={setPesoRaw} cor={C} daBarra={pesoDaBarra} />
       <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoRaw).replace(',', '.')))} />
 
       {fases && (
@@ -212,7 +215,7 @@ function TabDART() {
 /* ── Tab HMIB ────────────────────────────────────────────────────────────── */
 function TabHMIB() {
   const C = C_HMIB;
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso("g");
   const [copied, setCopied] = useState(false);
   const pk = pPesoG(pesoRaw);
   const pkKg = pk ? pk / 1000 : null;
@@ -253,7 +256,7 @@ function TabHMIB() {
         <span style={{ fontSize:12, color:"var(--tx-green)", fontWeight:600 }}>BPD Outcome Estimator — NICHD (neonatal.rti.org)</span>
       </a>
 
-      <PesoInput value={pesoRaw} set={setPesoRaw} cor={C} />
+      <PesoInput value={pesoRaw} set={setPesoRaw} cor={C} daBarra={pesoDaBarra} />
 
       {fases && (
         <>

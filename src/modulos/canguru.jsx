@@ -17,6 +17,8 @@ import {
   Info, Activity, ClipboardList, RefreshCw, Clock,
 } from 'lucide-react';
 import { fmtBR } from '../lib/numero';
+import { useCampoPeso } from '../lib/paciente';
+import OrigemPeso from '../components/OrigemPeso';
 
 /* ── Paleta ── */
 const COR = {
@@ -343,7 +345,7 @@ export default function Canguru() {
 ════════════════════════════════════════════ */
 function TabPrescricao() {
   const [nome,      setNome]      = useState('');
-  const [pesoG,     setPesoG]     = useState('');
+  const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g");
   const [pesornG,   setPesornG]   = useState('');
   const [igSem,     setIgSem]     = useState('');
   const [igDias,    setIgDias]    = useState('');
@@ -409,6 +411,7 @@ function TabPrescricao() {
         <Grid2>
           <Fld label="Peso atual (g) *">
             <Inp value={pesoG} onChange={setPesoG} placeholder="1450" mode="decimal" />
+            <OrigemPeso ativo={pesoDaBarra} />
             <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoG).replace(',', '.')))} />
           </Fld>
           <Fld label="Peso nasc. (g) *">
@@ -526,7 +529,7 @@ function TabPrescricao() {
 function TabReceituario() {
   const [nomePac,   setNomePac]   = useState('');
   const [nrSES,     setNrSES]     = useState('');
-  const [pesoG,     setPesoG]     = useState('');
+  const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g");
   const [pesornG,   setPesornG]   = useState('');
   const [igSem,     setIgSem]     = useState('');
   const [igDias,    setIgDias]    = useState('');
@@ -597,6 +600,7 @@ function TabReceituario() {
         <Grid2>
           <Fld label="Peso atual (g) *">
             <Inp value={pesoG} onChange={setPesoG} placeholder="1450" mode="decimal" />
+            <OrigemPeso ativo={pesoDaBarra} />
           </Fld>
           <Fld label="Peso nasc. (g) *">
             <Inp value={pesornG} onChange={setPesornG} placeholder="1200" mode="decimal" />

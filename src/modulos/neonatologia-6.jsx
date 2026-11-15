@@ -5,6 +5,8 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const BG  = "#0284C7";
 const BGL = "var(--tint-blue)";
@@ -548,7 +550,7 @@ function TabMeds({ adrIV, adrET, exVol, p }) {
 
 export default function App() {
   const [aba,     setAba]     = useState(0);
-  const [peso,    setPeso]    = useState("");
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [ig,      setIg]      = useState("");
   const [vitaboa, setVitaboa] = useState(null);
   const [meconio, setMeconio] = useState(null);
@@ -591,6 +593,7 @@ export default function App() {
             onChange={e => setPeso(e.target.value)}
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-400"
           />
+          <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
         </div>
         <div className="flex-1">

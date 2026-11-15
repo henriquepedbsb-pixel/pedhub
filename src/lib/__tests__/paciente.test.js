@@ -6,6 +6,7 @@ import {
   calcIdadeCorrigida,
   pacienteVazio,
   VAZIO,
+  pesoParaCampo,
 } from '../paciente.js';
 
 describe('parsePesoKg — decimal-BR e entradas inválidas', () => {
@@ -103,5 +104,28 @@ describe('pacienteVazio', () => {
     expect(pacienteVazio({ ...VAZIO, idadeValor: '2' })).toBe(false);
     expect(pacienteVazio({ ...VAZIO, igSemanas: '34' })).toBe(false);
     expect(pacienteVazio({ ...VAZIO, dataNascimento: '01/01/2026' })).toBe(false);
+  });
+});
+
+describe('pesoParaCampo — peso da barra (kg) levado ao campo de um módulo', () => {
+  it('campo em kg: mesmo valor, com vírgula decimal', () => {
+    expect(pesoParaCampo('12,5')).toBe('12,5');
+    expect(pesoParaCampo('12.5')).toBe('12,5');
+    expect(pesoParaCampo('3')).toBe('3');
+    expect(pesoParaCampo('1,45', 'kg')).toBe('1,45');
+  });
+  it('campo em gramas: converte e arredonda para grama inteiro', () => {
+    expect(pesoParaCampo('1,45', 'g')).toBe('1450');
+    expect(pesoParaCampo('0,85', 'g')).toBe('850');
+    expect(pesoParaCampo('3,2', 'g')).toBe('3200');
+    expect(pesoParaCampo('1,2345', 'g')).toBe('1235');
+  });
+  it('sem peso válido na barra o campo fica vazio', () => {
+    expect(pesoParaCampo('')).toBe('');
+    expect(pesoParaCampo('abc')).toBe('');
+    expect(pesoParaCampo('0')).toBe('');
+    expect(pesoParaCampo('-2')).toBe('');
+    expect(pesoParaCampo(undefined, 'g')).toBe('');
+    expect(pesoParaCampo(null)).toBe('');
   });
 });

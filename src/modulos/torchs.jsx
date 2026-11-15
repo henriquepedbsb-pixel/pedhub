@@ -25,6 +25,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const COR = "#6366F1"; // indigo-500 — cor do módulo TORCHS
 
@@ -408,7 +410,7 @@ function OutrosAgentes() {
 
 export default function Torchs() {
   const [aba, setAba] = useState("diferencial");
-  const [pesoStr, setPesoStr] = useState("");
+  const [pesoStr, setPesoStr, pesoDaBarra] = useCampoPeso();
   const [abertas, setAbertas] = useState({ rastreio: false, diagnostico: true, tratamento: false, seguimento: false });
 
   const peso = parseFloat(pesoStr.replace(",", "."));
@@ -449,6 +451,7 @@ export default function Torchs() {
             placeholder="Ex: 3,2"
             className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-indigo-400"
           />
+          <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoStr).replace(',', '.')))} />
         </div>
       )}

@@ -7,6 +7,8 @@ import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -147,7 +149,7 @@ const TABS = [
 // ─── Componente principal ─────────────────────────────────────────────────────
 export default function ISR() {
   const [tab,       setTab]      = useState('avaliar');
-  const [peso,      setPeso]     = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [idade,     setIdade]    = useState('');
   const [contexto,  setContexto] = useState('normal');
   const [usarRocur, setUsarRocur]= useState(false);
@@ -347,6 +349,7 @@ export default function ISR() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>

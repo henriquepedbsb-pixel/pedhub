@@ -7,6 +7,8 @@ import BotaoCopiar from "../components/BotaoCopiar";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY = "#3B82F6";
 
@@ -344,7 +346,7 @@ function TabPlanoC({ peso }) {
 
 export default function Hidratacao() {
   const [tab, setTab]       = useState(0);
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const peso = parsePeso(pesoRaw);
   const tabs  = ["Holliday-Segar", "Plano A", "Plano B", "Plano C"];
   const cores = [PRIMARY, "#10B981", "#F59E0B", "#EF4444"];
@@ -362,6 +364,7 @@ export default function Hidratacao() {
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
+        <OrigemPeso ativo={pesoDaBarra} />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
         {peso && <p style={{ fontSize: 12, fontWeight: 700, color: PRIMARY, margin: "4px 0 0" }}>{fmtBR(peso)} kg · Holliday: {fmtBR(holliday(peso).vol)} mL/dia ({fmtBR(holliday(peso).volHora)} mL/h)</p>}
       </div>

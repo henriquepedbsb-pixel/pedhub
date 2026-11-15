@@ -18,6 +18,8 @@ import {
   Zap,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 /* ─── Utilitários ─────────────────────────────────────────────────────────── */
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -1061,7 +1063,7 @@ export default function Urgencias() {
   const [modo, setModo]           = useState("crise");   // "crise" | "detalhado"
   const [criseAtiva, setCrise]    = useState(null);       // id da crise aberta
   const [tab, setTab]             = useState(0);
-  const [pesoRaw, setPesoRaw]     = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const [alturaRaw, setAlturaRaw] = useState("");
   const [mostrarBroselow, setMostrarBroselow] = useState(false);
 
@@ -1133,6 +1135,7 @@ export default function Urgencias() {
               background: "var(--surface)", color: "var(--text)",
             }}
           />
+          <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(',', '.')))} />
           {peso && (
             <div style={{

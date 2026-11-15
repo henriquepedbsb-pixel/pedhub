@@ -8,7 +8,7 @@
 // em ambiente de teste (node) não há sessionStorage, e no navegador o
 // armazenamento pode estar cheio/indisponível — nada disso pode quebrar a UI.
 
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 const KEY = "pedhub-paciente";
 
@@ -173,4 +173,35 @@ if (typeof window !== "undefined") {
 /* Hook reativo: devolve o estado do paciente. */
 export function usePaciente() {
   return useSyncExternalStore(subscrever, getSnapshot, getSnapshot);
+}
+
+/* ─── Peso da barra → campo de peso dos módulos ────────────────────────────── */
+
+// Texto que vai para o campo de peso de um módulo a partir do peso da barra
+// (sempre em kg). `unidade` é a do CAMPO de destino: "kg" ou "g". Sem peso
+// válido na barra → "" (campo fica vazio, como sempre foi).
+export function pesoParaCampo(pesoBarra, unidade = "kg") {
+  const kg = parsePesoKg(pesoBarra);
+  if (kg === null) return "";
+  if (unidade === "g") return String(Math.round(kg * 1000));
+  return String(kg).replace(".", ",");
+}
+
+/* Estado de um campo de PESO ATUAL que nasce com o peso da barra do paciente.
+   Uso (troca direta do useState do módulo):
+     const [peso, setPeso, pesoDaBarra] = useCampoPeso();      // campo em kg
+     const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g"); // campo em gramas
+   - Enquanto o médico não digitar no campo, ele acompanha a barra (inclusive
+     se o peso for alterado ou limpo lá).
+   - Digitou no campo (ou apagou) → vale o que foi digitado; a barra não
+     sobrescreve mais.
+   - `pesoDaBarra` = true quando o valor mostrado veio da barra — os módulos
+     exibem <OrigemPeso /> para deixar a origem visível.
+   Só para campos de peso ATUAL. Peso de nascimento é outro dado: não usar. */
+export function useCampoPeso(unidade = "kg") {
+  const paciente = usePaciente();
+  const [digitado, setDigitado] = useState(null); // null = ainda não mexeu no campo
+  const daBarra = pesoParaCampo(paciente.peso, unidade);
+  const valor = digitado === null ? daBarra : digitado;
+  return [valor, setDigitado, digitado === null && daBarra !== ""];
 }
