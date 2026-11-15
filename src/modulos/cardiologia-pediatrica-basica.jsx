@@ -1171,7 +1171,6 @@ export default function CardiologiaPediatricaBasica() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* Abas */}
       <div className="px-4 pt-4">
         <div className="flex gap-1 p-1 bg-gray-100 rounded-xl">

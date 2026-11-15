@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta helpers de data e calcularIdadesPMA para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { CalendarClock, Info, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#2563EB";
@@ -143,10 +144,16 @@ export default function IdadeGestacional() {
 
   const limparDisabled = !dataNasc && !igSemRaw && !igDiaRaw;
 
+  // Idade principal para a faixa fixa — a mesma que o card de destaque mostra.
+  let barra = null;
+  if (resultado) {
+    if (resultado.aTermo) barra = { rotulo: "Idade cronológica (nascido a termo)", valor: fmtCronologica(resultado.cronoDias) };
+    else if (resultado.fase === "igpm") barra = { rotulo: "IGPM (idade pós-menstrual)", valor: fmtSemDias(resultado.pmaDias) };
+    else barra = { rotulo: "Idade corrigida", valor: resultado.corrigidaDias === 0 ? "Termo (40 semanas)" : fmtMesesDias(resultado.corrigidaDias) };
+  }
+
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
-
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)", paddingBottom: barra ? BARRA_RESULTADO_H : 0 }}>
       {/* Entradas */}
       <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>
         <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", marginBottom: 4 }}>
@@ -351,6 +358,8 @@ export default function IdadeGestacional() {
         fonte="SBP / AAP — Engle WA, Pediatrics 2004 (reafirmado 2024)"
         nota="Confira a idade gestacional ao nascer com o método de datação mais confiável disponível."
       />
+
+      {barra && <BarraResultado rotulo={barra.rotulo} valor={barra.valor} />}
     </div>
   );
 }

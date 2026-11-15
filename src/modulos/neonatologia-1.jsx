@@ -421,7 +421,6 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "DM Sans, sans-serif", maxWidth: 480, margin: "0 auto", backgroundColor: "var(--tint-slate)", minHeight: "100vh" }}>
-
       {/* Tabs */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
         {[{ label: "Reanimação <34s", cor: COR_NEO }, { label: "Sepse Precoce", cor: COR_SEPSE }].map((tab, i) => (

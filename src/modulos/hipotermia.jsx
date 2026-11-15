@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { ClipboardCheck, Calculator, Thermometer, TrendingUp, ChevronDown, ChevronUp, Clock, CheckCircle2, Brain, Ban, ClipboardList, Snowflake, BarChart3, Zap, AlertTriangle, Microscope, Check, X, RotateCcw } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
@@ -112,9 +113,11 @@ export default function Hipotermia() {
   });
 
   // ── Render ───────────────────────────────────────────────────────────────────
+  const nPreenchidos = Object.keys(scores).length;
+  const somaParcial = Object.values(scores).reduce((s, v) => s + v, 0);
+  const barraScore = tab === 'score';
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', paddingBottom: barraScore ? BARRA_RESULTADO_H + 16 : 16, backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Alerta janela terapêutica */}
       <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -136,7 +139,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: ELEGÍVEL ════════════════ */}
       {tab === 'elegivel' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critério A */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><CheckCircle2 size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critério A — Evento Perinatal</p>
@@ -227,7 +229,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: SCORE ════════════════ */}
       {tab === 'score' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '600' }}>
               Escore de Thompson (1997) · máximo 23 pontos · ≥ 7 = candidato à hipotermia
@@ -303,7 +304,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: PROTOCOLO ════════════════ */}
       {tab === 'protocolo' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Temperatura alvo */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Thermometer size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Temperatura Alvo e Duração</p>
@@ -430,7 +430,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: REAQUECIMENTO ════════════════ */}
       {tab === 'reaquec' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Alerta */}
           <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', border: '1px solid #FECACA' }}>
             <p style={{ margin: 0, fontSize: '12px', color: '#DC2626', fontWeight: '700', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
@@ -548,6 +547,14 @@ export default function Hipotermia() {
         revisao="07/2026"
         fonte="Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
       />
+
+      {/* Escore de Thompson sempre à vista enquanto se marcam os itens. */}
+      {barraScore && (
+        <BarraResultado
+          rotulo={`Escore de Thompson · ${nPreenchidos}/${THOMPSON.length} itens`}
+          valor={thompsonClass ? `${thompsonTotal}/23 · ${thompsonClass.label}` : `${somaParcial}/23 · incompleto`}
+        />
+      )}
     </div>
   );
 }

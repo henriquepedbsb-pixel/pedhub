@@ -229,7 +229,6 @@ export default function Dnpm() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: FUNDO, paddingBottom: 60 }}>
 
-
       <div style={{ padding: "16px 16px 0" }}>
 
         {/* ── Card de data ── */}

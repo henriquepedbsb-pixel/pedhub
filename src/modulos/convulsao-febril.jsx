@@ -124,7 +124,6 @@ export default function ConvulsaoFebril() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* Classificador rápido interativo */}
       <div className="px-4 pt-4">
         <div className="border border-gray-200 rounded-2xl bg-white p-4">

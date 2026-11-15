@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { ColestaseConteudo } from "./colestase-neonatal";
 
-
 /* ─── Componentes base ────────────────────────────────────────────────────── */
 function InfoBox({ color, children }) {
   return (
@@ -291,7 +290,6 @@ export default function Gastropediatria() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

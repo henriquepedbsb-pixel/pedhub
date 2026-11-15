@@ -88,7 +88,6 @@ export default function FebreSemFoco() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

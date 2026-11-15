@@ -102,7 +102,6 @@ export default function Bronquiolite() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-
       {/* Peso persistente */}
       <div style={{ marginBottom: '12px', ...card({ padding: '10px' }) }}>
         <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg) — usado na aba OAF</label>
@@ -124,7 +123,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: AVALIAR ════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Definição */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C }}><ClipboardList size={15} style={{verticalAlign:'-2px', marginRight:6}} />Diagnóstico Clínico</p>
@@ -262,7 +260,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: TRATAR ════════════ */}
       {tab === 'tratar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* NÃO USAR */}
           <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '12px', padding: '14px', border: '1px solid #FECACA' }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: '#DC2626' }}><Ban size={15} style={{verticalAlign:'-2px', marginRight:6}} />NÃO USAR rotineiramente</p>
@@ -376,7 +373,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: OAF ════════════ */}
       {tab === 'oaf' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               OAF (HFNC) = 1ª linha de escalonamento quando O₂ convencional falha · antes do CPAP
@@ -459,7 +455,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: ALTA ════════════ */}
       {tab === 'alta' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critérios de alta */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><CheckCircle2 size={15} style={{verticalAlign:'-2px', marginRight:6}} />Critérios de Alta Hospitalar</p>
@@ -518,7 +513,6 @@ export default function Bronquiolite() {
             </button>
             {aberto === 'prev' && (
               <div style={{ marginTop: '10px' }}>
-
                 {/* Identidade */}
                 <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: `3px solid ${C}` }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Nirsevimab (Beyfortus®) · ANVISA 2024 · SBP/SBIm 2024</p>

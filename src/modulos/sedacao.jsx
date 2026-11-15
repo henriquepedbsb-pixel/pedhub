@@ -85,7 +85,6 @@ export default function Sedacao() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-
       <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 8, minWidth: 'max-content' }}>
           {ABAS.map(t => (

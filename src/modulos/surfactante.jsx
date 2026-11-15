@@ -8,6 +8,7 @@ import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 
 // Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
 const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
@@ -95,9 +96,10 @@ export default function Surfactante() {
     fontSize: '11px', fontWeight: '600', textAlign: 'center',
   });
 
+  const barra = tab === 'calcular' && p > 0 && calcs;
+  const primeira = dosaC === 'primeira';
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', paddingBottom: barra ? BARRA_RESULTADO_H + 16 : 16, backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
@@ -111,7 +113,6 @@ export default function Surfactante() {
       {/* ════════════════ TAB: INDICAÇÕES ════════════════ */}
       {tab === 'indicacoes' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* SDR — diagnóstico */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Wind size={15} style={{ marginRight: 6, flexShrink: 0 }} />Síndrome do Desconforto Respiratório (SDR)</p>
@@ -216,7 +217,6 @@ export default function Surfactante() {
       {/* ════════════════ TAB: CALCULAR ════════════════ */}
       {tab === 'calcular' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Peso */}
           <div style={card()}>
             <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
@@ -249,7 +249,6 @@ export default function Surfactante() {
           {/* Resultados */}
           {p > 0 && calcs ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
               {surf === 'curosurf' && (
                 <>
                   {/* Dose Curosurf */}
@@ -365,7 +364,6 @@ export default function Surfactante() {
       {/* ════════════════ TAB: ADMINISTRAR ════════════════ */}
       {tab === 'administrar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Seletor de técnica */}
           <div style={card()}>
             <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>TÉCNICA</p>
@@ -458,7 +456,6 @@ export default function Surfactante() {
       {/* ════════════════ TAB: PÓS-DOSE ════════════════ */}
       {tab === 'posdose' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Monitorização */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6, flexShrink: 0 }} />Monitorização Pós-Surfactante</p>
@@ -531,6 +528,19 @@ export default function Surfactante() {
         revisao="07/2026"
         fonte="Sweet DG et al. European Consensus Guidelines on the Management of RDS 2022 · SBP Surfactante 2020 · Bula Curosurf® e Survanta®"
       />
+
+      {/* Dose escolhida sempre à vista na aba Calcular (mesmos valores dos cards acima). */}
+      {barra && (surf === 'curosurf' ? (
+        <BarraResultado
+          rotulo={`Curosurf® · ${primeira ? '1ª dose (200 mg/kg)' : '2ª/3ª dose (100 mg/kg)'} · ${fmtBR(p)} kg`}
+          valor={`${fmtBR(primeira ? calcs.cuDose1mg : calcs.cuDose2mg)} mg = ${fmtBR(primeira ? calcs.cuVol1 : calcs.cuVol2)} mL`}
+        />
+      ) : surf === 'survanta' ? (
+        <BarraResultado
+          rotulo={`Survanta® · 100 mg/kg · ${fmtBR(p)} kg`}
+          valor={`${fmtBR(calcs.svDoseMg)} mg = ${fmtBR(calcs.svVol)} mL`}
+        />
+      ) : null)}
     </div>
   );
 }

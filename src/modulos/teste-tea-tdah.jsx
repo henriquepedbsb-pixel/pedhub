@@ -180,7 +180,6 @@ export default function TesteTeaTdah() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Módulo de <strong>rastreio e encaminhamento</strong> na consulta pediátrica — não substitui avaliação

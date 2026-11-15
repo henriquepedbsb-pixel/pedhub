@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
 import { tigGlicoseGramasDia, tigConcentracao } from "../lib/calc/tig";
@@ -316,9 +317,9 @@ export default function TigNeonatal() {
   /* Range bar dot */
   const rangePos = tig ? Math.min(Math.max((tig / 14) * 100, 0), 100) : 50;
 
+  const barra = calc && !calc.error;
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: FUNDO, paddingBottom: 60 }}>
-
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: FUNDO, paddingBottom: barra ? BARRA_RESULTADO_H : 60 }}>
 
       <div style={{ padding: "16px 16px 0" }}>
 
@@ -670,6 +671,16 @@ export default function TigNeonatal() {
         fonte="SBP · AAP · ESPGHAN/ESPEN 2018 · NeoFax 2023"
         nota="NaCl 20% = 3,4 mEq/mL · KCl 10% = 1,34 mEq/mL · concentração periférica máx. 12,5%."
       />
+
+      {/* Resultado principal sempre à vista enquanto se ajustam TIG, volume e eletrólitos. */}
+      {barra && (
+        <BarraResultado
+          rotulo={`TIG ${fmtBR(tig)} · conc. final ${fmtBR((calc.conc_alvo * 100).toFixed(1))}%`}
+          valor={`${fmtBR(calc.vol_total.toFixed(1))} mL/dia · ${fmtBR(calc.mlh.toFixed(1))} mL/h`}
+        >
+          <BotaoCopiar montar={montarTextoTig} cor={AZ_E} solido rotulo="Copiar" ariaLabel="Copiar prescrição" />
+        </BarraResultado>
+      )}
     </div>
   );
 }

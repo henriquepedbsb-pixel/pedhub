@@ -254,7 +254,6 @@ export default function Sepse() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
         {TABS.map(t => (
@@ -267,7 +266,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: SUSPEITAR ════════════════ */}
       {tab === 'suspeitar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Definições Phoenix 2024 */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><ClipboardList size={15} style={ICONE_INLINE} />Definições — Phoenix 2024</p>
@@ -364,7 +362,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: AVALIAR ════════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Parâmetros editáveis */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><BarChart3 size={15} style={ICONE_INLINE} />Parâmetros do Paciente</p>
@@ -539,7 +536,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: TRATAR ════════════════ */}
       {tab === 'tratar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Antibióticos */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Timer size={15} style={ICONE_INLINE} />Antibióticos — TEMPO CRÍTICO</p>
@@ -775,7 +771,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: METAS ════════════════ */}
       {tab === 'monitorar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Metas de ressuscitação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}><Target size={15} style={ICONE_INLINE} />Metas de Ressuscitação</p>

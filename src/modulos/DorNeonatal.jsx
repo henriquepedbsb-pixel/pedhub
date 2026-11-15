@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
@@ -157,6 +158,12 @@ const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
       {done
         ? <div style={{fontSize:13,fontWeight:700,color:int.c,marginTop:6}}>{int.l}</div>
         : <div style={{fontSize:11,color:C.muted,marginTop:4}}>Preencha todos os itens para interpretação</div>}
+
+      {/* Escore sempre à vista enquanto se rolam os itens (faixa fixa no rodapé). */}
+      <BarraResultado
+        rotulo={`${label} · ${filled}/${items.length} itens`}
+        valor={done ? `${score}/${maxLabel} · ${int.l}` : `${score}/${maxLabel} · incompleto`}
+      />
     </div>
   );
 };
@@ -249,9 +256,8 @@ export default function DorNeonatal() {
   ════════════════════════════════════════════════════════════════════════ */
   return (
     <div style={{fontFamily:"'Inter',system-ui,sans-serif",
-      background:C.bg, minHeight:"100vh", padding:"12px 0 28px"}}>
+      background:C.bg, minHeight:"100vh", padding:`12px 0 ${BARRA_RESULTADO_H + 12}px`}}>
       <div style={{maxWidth:480, margin:"0 auto", padding:"0 12px"}}>
-
 
         {/* ── Tabs ──────────────────────────────────────────────────────── */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",
@@ -500,7 +506,6 @@ export default function DorNeonatal() {
           revisao="07/2026"
           fonte="NIPS: Lawrence J et al. Neonatal Netw 1993;12(6):59-66 · PIPP-R: Stevens BJ et al. Clin J Pain 2014;30(3):238-243 · N-PASS: Hummel P et al. J Perinatol 2008;28(1):55-60 · CRIES: Krechel SW, Bildner J. Paediatr Anaesth 1995;5(1):53-61"
         />
-
 
       </div>
     </div>

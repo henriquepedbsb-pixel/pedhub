@@ -405,7 +405,6 @@ export default function Dermato() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       <div style={{ padding: 16 }}>
         {/* Seletor de modo */}
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>

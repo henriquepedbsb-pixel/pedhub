@@ -247,7 +247,6 @@ export default function Dor() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', backgroundColor: "var(--bg)", minHeight: '100vh', padding: '16px' }}>
 
-
       {/* ── Abas principais ────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
         {ABAS.map(aba => (

@@ -1086,7 +1086,6 @@ export default function Urgencias() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       {/* ── Toggle de modo ── */}
       <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", background: "var(--surface)" }}>
         {[

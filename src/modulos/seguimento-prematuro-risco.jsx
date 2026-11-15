@@ -141,7 +141,6 @@ export default function SeguimentoPrematuroRisco() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Este módulo cobre a <strong>estrutura do programa de seguimento</strong>, os alvos nutricionais, anemia e

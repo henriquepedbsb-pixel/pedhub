@@ -278,11 +278,9 @@ export default function AnalgesiaSedacao() {
   });
 
 
-
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
-
 
       {/* Peso persistente */}
       <div style={{ ...card({ padding:'10px' }), marginBottom:'12px' }}>
@@ -305,7 +303,6 @@ export default function AnalgesiaSedacao() {
       {/* ════════════ TAB: AVALIAR ════════════ */}
       {tab==='avaliar' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
             <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'700' }}>
               Princípio: analgesia ANTES de sedação (analgo-sedação). Avaliar dor a cada 4-6h. Tratar a causa da dor.
@@ -385,7 +382,6 @@ export default function AnalgesiaSedacao() {
       {/* ════════════ TAB: ANALGESIA ════════════ */}
       {tab==='analgesia' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
             <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'600' }}>
               Analgesia-first: tratar dor antes de sedar · use a menor dose eficaz · reavaliar por escala (FLACC) a cada 4h
@@ -411,7 +407,6 @@ export default function AnalgesiaSedacao() {
       {/* ════════════ TAB: SEDAÇÃO ════════════ */}
       {tab==='sedacao' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'10px', padding:'10px', border:'1px solid #BFDBFE' }}>
             <p style={{ margin:0, fontSize:'12px', color:"var(--tx-blue)", fontWeight:'600' }}>
               Meta: menor nível de sedação que permita conforto e segurança · RAMSAY 2-3 ou COMFORT-B 11-17 · "wake-up" diário quando possível
@@ -437,7 +432,6 @@ export default function AnalgesiaSedacao() {
       {/* ════════════ TAB: DESMAME ════════════ */}
       {tab==='desmame' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           {/* Quando desmamar */}
           <div style={card({ border:`1px solid ${CBR}` })}>
             <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C }}><ClipboardList size={14} style={{verticalAlign:'-2px', marginRight:6}} />Quando Iniciar Desmame</p>

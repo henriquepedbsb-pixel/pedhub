@@ -81,7 +81,6 @@ export default function MalformacoesCirurgicasNeonatais() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Este módulo cobre a <strong>estabilização inicial e conduta pré-transferência</strong> para o centro com cirurgia

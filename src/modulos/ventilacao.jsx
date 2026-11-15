@@ -177,7 +177,6 @@ export default function Ventilacao() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
         {TABS.map(t => (
@@ -190,7 +189,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: INICIAR ════════════════ */}
       {tab === 'iniciar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Parâmetros iniciais */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Settings size={15} style={ICONE_INLINE} />Parâmetros Iniciais (ventilação protetora)</p>
@@ -281,7 +279,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: CALCULAR ════════════════ */}
       {tab === 'calcular' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Inputs básicos */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />Dados do Paciente</p>
@@ -437,7 +434,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: MODOS ════════════════ */}
       {tab === 'modos' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {[
             {
               sigla: 'VCV', nome: 'Volume Control Ventilation', cor: C,
@@ -510,7 +506,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: DESMAME ════════════════ */}
       {tab === 'desmame' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critérios diários */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Avaliação Diária de Desmame</p>

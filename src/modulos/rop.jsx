@@ -124,7 +124,6 @@ export default function Rop() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* Verificador rápido de indicação de triagem */}
       <div className="px-4 pt-4">
         <div className="border border-gray-200 rounded-2xl bg-white p-4">

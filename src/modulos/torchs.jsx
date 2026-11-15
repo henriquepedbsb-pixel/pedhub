@@ -426,7 +426,6 @@ export default function Torchs() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* Peso do RN — usado nas calculadoras de dose (oculto no diferencial) */}
       {aba !== "diferencial" && (
         <div className="px-4 pt-4">

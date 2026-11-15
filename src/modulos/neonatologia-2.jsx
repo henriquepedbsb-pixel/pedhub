@@ -9,7 +9,6 @@ import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
 
-
 export function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 10 ? v : null;
@@ -294,7 +293,6 @@ export default function Neonatologia2() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

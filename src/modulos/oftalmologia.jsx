@@ -84,7 +84,6 @@ export default function Oftalmologia() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="px-4 pt-4">
         <div className="flex gap-2 overflow-x-auto pb-1">
           {ABAS.map((a) => {

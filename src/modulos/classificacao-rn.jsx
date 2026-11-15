@@ -284,7 +284,6 @@ export default function ClassificacaoRN() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", padding: 16, backgroundColor: "var(--bg)", minHeight: "100vh" }}>
 
-
       <Card>
         <CardTitle>Sexo</CardTitle>
         <div style={{ display: "flex", gap: 8 }}>

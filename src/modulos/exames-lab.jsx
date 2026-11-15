@@ -292,7 +292,6 @@ export default function ExamesLab() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-
       <CatChips cats={CATS} active={cat} onChange={handleCat} />
 
       {cat === 'hemograma' && (

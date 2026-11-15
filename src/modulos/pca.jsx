@@ -116,7 +116,6 @@ export default function Pca() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* Peso do RN — usado nas calculadoras de dose farmacológica */}
       <div className="px-4 pt-4">
         <label className="block text-xs font-semibold text-gray-500 mb-1">

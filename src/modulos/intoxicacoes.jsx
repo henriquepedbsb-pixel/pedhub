@@ -106,7 +106,6 @@ export default function Intoxicacoes() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       {/* CIATOX — sempre visível, em qualquer aba */}
       <div className="px-4 pt-4">
         <div

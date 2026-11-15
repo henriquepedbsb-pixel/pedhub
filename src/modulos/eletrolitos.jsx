@@ -295,12 +295,10 @@ export default function Eletrolitos() {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
       <style>{`
         .eletro-chip { padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #D1D5DB; background-color: var(--surface-2); color: var(--text-2); text-align: left; font-family: inherit; }
         .eletro-chip.is-on { background-color: #7C3AED !important; color: #FFFFFF !important; border-color: #7C3AED !important; }
       `}</style>
-
 
       {/* Peso + Idade persistentes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
@@ -331,7 +329,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: SÓDIO ════════════════ */}
       {tab === 'na' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Classificação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio · Normal 135-145 mEq/L</p>
@@ -497,7 +494,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: POTÁSSIO ════════════════ */}
       {tab === 'k' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Classificação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Potássio · Normal 3,5-5,0 mEq/L</p>
@@ -618,7 +614,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: CÁLCIO ════════════════ */}
       {tab === 'ca' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Cálcio · Valores de Referência</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -697,7 +692,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: MAGNÉSIO ════════════════ */}
       {tab === 'mg' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Magnésio · Normal 1,5-2,5 mg/dL</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
@@ -774,7 +768,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: TFG (SCHWARTZ) ════════════════ */}
       {tab === 'tfg' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Calculadora */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />TFG estimada · Equação de Schwartz</p>

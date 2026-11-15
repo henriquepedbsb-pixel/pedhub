@@ -227,7 +227,6 @@ export default function ISR() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
         {TABS.map(t => (
@@ -240,7 +239,6 @@ export default function ISR() {
       {/* ════════════════ TAB: AVALIAR ════════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Indicações */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Zap size={15} style={{ marginRight: 6 }} />Indicações de ISR</p>
@@ -340,7 +338,6 @@ export default function ISR() {
       {/* ════════════════ TAB: CALCULAR ════════════════ */}
       {tab === 'calcular' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Inputs */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6 }} />Dados do Paciente</p>
@@ -389,7 +386,6 @@ export default function ISR() {
           {/* Resultados */}
           {p > 0 && drugs ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
               {/* Pré-medicação */}
               <div style={card()}>
                 <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>PRÉ-MEDICAÇÃO</p>
@@ -556,7 +552,6 @@ export default function ISR() {
       {/* ════════════════ TAB: PROTOCOLO ════════════════ */}
       {tab === 'protocolo' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               <Timer size={13} style={ICONE_INLINE} />Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
@@ -643,7 +638,6 @@ export default function ISR() {
       {/* ════════════════ TAB: VIA DIFÍCIL ════════════════ */}
       {tab === 'dificil' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               Em criança, dessaturação é rápida. Definir plano A/B/C/D ANTES de induzir. Nunca mais de 2 tentativas sem reavaliação.

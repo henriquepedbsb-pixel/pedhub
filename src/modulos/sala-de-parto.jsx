@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcMaterialSalaParto) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import {
@@ -132,10 +133,10 @@ export default function SalaDeParto() {
     diametroTOT, profundidadeTOT, calibreSonda, calibreCateter,
     uvcProfundidade, uacAltaProfundidade, uacBaixaProfundidade,
   } = calcMaterialSalaParto(peso, ig);
+  const barra = diametroTOT !== null || profundidadeTOT !== null;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
-
+    <div className="min-h-screen bg-gray-50 pb-10" style={barra ? { paddingBottom: BARRA_RESULTADO_H + 16 } : undefined}>
       {/* Peso e IG — usados em todas as calculadoras */}
       <div className="px-4 pt-4 grid grid-cols-2 gap-3">
         <div>
@@ -246,6 +247,14 @@ export default function SalaDeParto() {
         revisao="07/2026"
         fonte="NRP-SBP · NRP/AAP · Cloherty — Manual of Neonatal Care"
       />
+
+      {/* TOT sempre à vista (mesmos valores do card acima). */}
+      {barra && (
+        <BarraResultado
+          rotulo="Tubo endotraqueal · diâmetro e profundidade no lábio"
+          valor={`${diametroTOT !== null ? diametroTOT + " mm" : "— (informe a IG)"} · ${profundidadeTOT !== null ? fmtBR(profundidadeTOT) + " cm" : "— (informe o peso)"}`}
+        />
+      )}
     </div>
   );
 }

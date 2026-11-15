@@ -103,7 +103,6 @@ export default function Adolescencia() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Módulo de apoio ao pediatra na consulta do adolescente. Todo o conteúdo orienta a conduta do

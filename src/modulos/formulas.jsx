@@ -313,7 +313,6 @@ export default function Formulas() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       {/* Tabs */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {

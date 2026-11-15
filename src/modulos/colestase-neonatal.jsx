@@ -365,7 +365,6 @@ export function ColestaseConteudo() {
 export default function ColestaseNeonatal() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
       <div style={{ padding: "0 16px" }}>
         <ColestaseConteudo />
       </div>

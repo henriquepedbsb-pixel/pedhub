@@ -664,7 +664,6 @@ export default function Percentis({ somenteOMS = false }) {
     <div style={{ fontFamily:"'DM Sans', sans-serif", maxWidth:"480px", margin:"0 auto",
       padding:"16px", backgroundColor:"var(--bg)", minHeight:"100vh" }}>
 
-
       {/* Tabs (ocultas no modo somente OMS) */}
       {!somenteOMS && (
         <div style={{ display:"flex", gap:"4px", background:"var(--surface-2)", borderRadius:"10px",
