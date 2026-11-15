@@ -39,10 +39,10 @@ sem rota, aparecem só como "em breve" na home):
 5. Convulsão Neonatal — Etiologias · tipos de crise · fenobarbital
 6. Sepse Neonatal — Precoce × tardia · fatores de risco · ATB
 
-A contagem exibida na home é derivada do array `MODULOS` em `PedHub.jsx`
-(`MODULOS.length` + filtro por `grupo`). Ao criar/remover módulo, essa
-entrada do catálogo é obrigatória (ver seção 4), senão a home conta errado e
-a busca global não acha o módulo.
+A contagem exibida na home é derivada do array `MODULOS` de
+`src/lib/catalogo.js` (`MODULOS.length` + filtro por `grupo`). Ao criar/remover
+módulo, essa entrada do catálogo é obrigatória (ver seção 4), senão a home
+conta errado e a busca global não acha o módulo.
 
 ---
 
@@ -117,17 +117,23 @@ localmente antes de abrir PR. `@vitest/coverage-v8` pode ser adicionado se for m
 `PedHub.jsx` mostra 2 cards-portal (Pediatria Geral / Neonatologia) + busca
 global. Os módulos aparecem só dentro do hub correspondente ou na busca.
 
-`pediatria-geral.jsx` e `neonatal.jsx` têm listas de cards **totalmente
-independentes** do array `MODULOS` do `PedHub.jsx`.
+**Catálogo único (15/11/2026): `src/lib/catalogo.js`.** Nome, descrição,
+ícone, cor, grupo, seção do hub e termos de busca de cada módulo moram só ali.
+A home (`PedHub.jsx`: busca, favoritos, contagens), o cabeçalho (`App.jsx`:
+`MODULO_MAP`) e os dois hubs (`secoesDoHub()`) leem desse arquivo — não há mais
+listas independentes para manter em sincronia. Campos: `label` (nome completo:
+cabeçalho, busca, favoritos), `curto` (opcional, só no card do hub), `desc`,
+`Icon`, `cor`, `grupo`, `secao`, `tags`. A ordem das entradas é a ordem dos
+cards. `src/lib/__tests__/catalogo.test.js` falha se uma rota do `App.jsx`
+ficar sem entrada no catálogo (ou o contrário).
 
-**Criar módulo = 4 pontos no mesmo commit:**
-1. array `MODULOS` em `PedHub.jsx`
-2. lazy import + `<Route>` + entrada do `MODULO_MAP` em `App.jsx`
-3. card no hub (`pediatria-geral.jsx` ou `neonatal.jsx`)
-4. o próprio arquivo em `src/modulos/`
+**Criar módulo = 3 pontos no mesmo commit:**
+1. uma entrada em `MODULOS` de `src/lib/catalogo.js` (com `grupo` e `secao`)
+2. lazy import + `<Route>` em `App.jsx`
+3. o próprio arquivo em `src/modulos/`
 
-**Deletar módulo = remover as 3 referências do `App.jsx` ANTES ou no mesmo
-commit da exclusão do arquivo.** Import órfão gera
+**Deletar módulo = remover o lazy import e o `<Route>` do `App.jsx` e a
+entrada do catálogo ANTES ou no mesmo commit da exclusão do arquivo.** Import órfão gera
 `Could not resolve ./modulos/X` e derruba **todos** os deploys seguintes em
 cadeia.
 
@@ -340,7 +346,8 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
   **Divergência resolvida (25/07/2026):** dipirona no `dor` estava 15–25 vs
   catálogo 10–15 — usuário confirmou o catálogo (Harriet Lane/SBP); `dor`
   alinhado para 10–15.
-- **T4 — FEITO.** Busca global por conteúdo via `SEARCH_TAGS` em `PedHub.jsx`
+- **T4 — FEITO.** Busca global por conteúdo via campo `tags` de cada módulo em
+  `src/lib/catalogo.js` (era o mapa `SEARCH_TAGS` em `PedHub.jsx`)
   (acento/case-insensível, match por substring), exibindo "achado por X" quando
   o resultado veio de uma keyword e não do nome/descrição visível.
 - **T5 — ENCERRADA.** Favoritos ✓ (`src/lib/favoritos.js`, chave

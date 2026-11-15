@@ -5,95 +5,21 @@ import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "../lib/favoritos";
 import FavoritoStar from "../components/FavoritoStar";
+import { secoesDoHub, nomeNoHub } from "../lib/catalogo";
 import {
   Baby,
-  Scale,
-  Zap,
-  Wind,
-  Calculator,
-  CalendarClock,
-  Thermometer,
-  BookOpen,
-  AlertTriangle,
-  Pill,
-  Heart,
-  Droplets,
-  Stethoscope,
-  Activity,
-  Leaf,
-  Ruler,
-  Syringe,
-  Footprints,
-  Waves,
-  ScanEye,
-  Users,
-  Microscope,
 } from "lucide-react";
 
 const COR_HUB = "#0E7490";
 
-/* ─── Seções temáticas ───────────────────────────────────────────────────── */
-const SECOES = [
-  {
-    titulo: "Sala de Parto",
-    Icon: Zap,
-    mods: [
-      { rota: "/neonatologia-1",   label: "Reanimação RNPT <34s", desc: "Sala de parto · SBP 2026",       Icon: Zap,        cor: "#0E7490" },
-      { rota: "/neonatologia-6",   label: "Reanimação RN ≥34s",   desc: "Sala de parto · SBP 2026",       Icon: Wind,       cor: "#0284C7" },
-      { rota: "/neonatologia-4",   label: "Scores Neonatais",     desc: "Apgar · Capurro · Silverman",    Icon: Calculator, cor: "#7C3AED" },
-      { rota: "/classificacao-rn", label: "Classificação do RN",  desc: "IG · Peso · Estatura ao nascer", Icon: Ruler,      cor: "#DB2777" },
-      { rota: "/sala-de-parto",    label: "Sala de Parto",        desc: "TOT · Sonda · Cateteres umbilicais", Icon: Syringe, cor: "#B45309" },
-      { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: AlertTriangle, cor: "#047857" },
-    ],
-  },
-  {
-    titulo: "Cuidados Intensivos",
-    Icon: Thermometer,
-    mods: [
-      { rota: "/hipotermia",       label: "Hipotermia Terapêutica",  desc: "EHI · Thompson · reaquecimento", Icon: Thermometer,   cor: "#4F46E5" },
-      { rota: "/surfactante",      label: "Surfactante",             desc: "LISA · INSURE · dose por peso",  Icon: BookOpen,       cor: "#059669" },
-      { rota: "/nec",              label: "Enterocolite Necrosante", desc: "Bell · ATB por peso/IG · cirurgia", Icon: AlertTriangle, cor: "#92400E" },
-      { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",   Icon: Pill,           cor: "#0891B2" },
-      { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D" },
-      { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1", Icon: Activity,    cor: "#F97316" },
-    ],
-  },
-  {
-    titulo: "Metabólico & Nutrição",
-    Icon: Droplets,
-    mods: [
-      { rota: "/neonatologia-2", label: "Hipoglicemia Neonatal", desc: "Hipoglicemia · Gel de Dextrose",      Icon: Heart,    cor: "#0D9488" },
-      { rota: "/neonatologia-5", label: "NPT Neonatal",          desc: "Nutrição Parenteral · Eletrólitos",   Icon: Droplets, cor: "#6366F1" },
-      { rota: "/tig-neonatal",   label: "TIG Neonatal",          desc: "Taxa de Infusão de Glicose · UCIN",   Icon: Droplets, cor: "#0891B2" },
-      { rota: "/canguru",        label: "Canguru",               desc: "Prescrição e Receituário Neonatal",   Icon: Heart,    cor: "#10B981" },
-      { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D" },
-    ],
-  },
-  {
-    titulo: "Avaliação & Conforto",
-    Icon: Stethoscope,
-    mods: [
-      { rota: "/idade-gestacional", label: "Idade Gestacional",  desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB" },
-      { rota: "/percentis",         label: "Percentis",          desc: "OMS · Intergrowth · Fenton",          Icon: Scale,         cor: "#3B82F6" },
-      { rota: "/dor-neonatal",    label: "Dor Neonatal",       desc: "NIPS · PIPP-R · N-PASS · CRIES",     Icon: Activity,    cor: "#EF4444" },
-      { rota: "/neonatologia-3",  label: "Icterícia Neonatal", desc: "Fototerapia AAP 2022 · Causas",      Icon: Stethoscope, cor: "#D97706" },
-    ],
-  },
-  {
-    titulo: "Especialidades",
-    Icon: Microscope,
-    mods: [
-      { rota: "/cuidados-pele-rn", label: "Pele do RN",         desc: "SBP GPA 140 · Higiene · Emolientes", Icon: Leaf,        cor: "#0891B2" },
-      { rota: "/rop",             label: "Retinopatia (ROP)",  desc: "Triagem · momento do exame · seguimento", Icon: ScanEye,   cor: "#0369A1" },
-      { rota: "/colestase-neonatal", label: "Colestase Neonatal", desc: "Bilirrubina direta · atresia · exames · tratamento", Icon: Droplets, cor: "#CA8A04" },
-      { rota: "/triagem-neonatal", label: "Triagem Neonatal",  desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6" },
-    ],
-  },
-];
+/* ─── Seções temáticas ───────────────────────────────────────────────────────
+   Seções e cards vêm de src/lib/catalogo.js (fonte única do catálogo). */
+const SECOES = secoesDoHub("/neonatal");
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
-  const { label, desc, Icon, cor } = modulo;
+  const { desc, Icon, cor } = modulo;
+  const label = nomeNoHub(modulo);
   return (
     <button
       onClick={onClick}

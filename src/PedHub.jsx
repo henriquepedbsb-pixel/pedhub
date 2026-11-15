@@ -5,41 +5,15 @@ import { useState, useEffect, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "./lib/favoritos";
 import FavoritoStar from "./components/FavoritoStar";
+import { MODULOS } from "./lib/catalogo";
 import {
-  Activity,
-  AlertTriangle,
   Baby,
-  BookOpen,
-  Brain,
-  Bug,
-  Calculator,
-  CalendarClock,
   ChevronRight,
-  Eye,
-  Footprints,
-  Milk,
-  ClipboardList,
-  Droplets,
-  FlaskConical,
-  Heart,
-  Leaf,
-  Microscope,
   Moon,
-  Pill,
-  Scale,
   Search,
-  Shield,
   Star,
   Stethoscope,
   Sun,
-  Syringe,
-  Thermometer,
-  Zap,
-  Wind,
-  Waves,
-  Users,
-  ScanEye,
-  Ruler,
   TestTube,
   Gauge,
   Biohazard,
@@ -48,139 +22,17 @@ import {
   ShieldAlert,
 } from "lucide-react";
 
-/* ─── Catálogo completo de módulos ───────────────────────────────────────── */
-/* Mantido íntegro para que a BUSCA encontre também os módulos individuais,  */
-/* mesmo que estes não apareçam no grid da home (acessados via Hub próprio). */
-const MODULOS = [
-  /* ── Pediatria Geral (ocultos no grid — acessados via Hub; visíveis na busca) ── */
-  { rota: "/percentis-oms",    label: "Percentis (OMS)",      desc: "OMS · curva 0–60 meses",                Icon: Scale,         cor: "#3B82F6", grupo: "Pediatria Geral" },
-  { rota: "/urgencias",        label: "Urgências",            desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444", grupo: "Pediatria Geral" },
-  { rota: "/formulas",         label: "Fórmulas",             desc: "Nestlé × Danone · Escada APLV",         Icon: FlaskConical,  cor: "#10B981", grupo: "Pediatria Geral" },
-  { rota: "/gastropediatria",  label: "Gastro e Hepato",      desc: "DRGE · APLV · Constipação · Colestase",  Icon: Activity,      cor: "#F59E0B", grupo: "Pediatria Geral" },
-  { rota: "/pedfarma",         label: "PedFarma",             desc: "48 medicamentos · dose por peso",       Icon: Pill,          cor: "#8B5CF6", grupo: "Pediatria Geral" },
-  { rota: "/vacinal",          label: "Vacinal",              desc: "SBIm 2026/2027 · SUS / Privado",        Icon: Syringe,       cor: "#06B6D4", grupo: "Pediatria Geral" },
-  { rota: "/hidratacao",       label: "Hidratação",           desc: "Holliday-Segar · Planos A / B / C",     Icon: Droplets,      cor: "#3B82F6", grupo: "Pediatria Geral" },
-  { rota: "/scores",           label: "Scores",               desc: "Gorelick · Westley · PEWS",             Icon: ClipboardList, cor: "#F97316", grupo: "Pediatria Geral" },
-  { rota: "/febre-sem-foco",   label: "Febre Sem Foco",       desc: "Fluxo por faixa etária · PECARN",       Icon: Thermometer,   cor: "#EF4444", grupo: "Pediatria Geral" },
-  { rota: "/tce-leve",         label: "TCE Leve",             desc: "PECARN · TC vs Observação",             Icon: Brain,         cor: "#7C3AED", grupo: "Pediatria Geral" },
-  { rota: "/dnpm",             label: "DNPM",                 desc: "Marcos do desenvolvimento · Alarmes",   Icon: Baby,          cor: "#8B5CF6", grupo: "Pediatria Geral" },
-  { rota: "/dermato",          label: "Dermato",              desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield,        cor: "#EC4899", grupo: "Pediatria Geral" },
-  { rota: "/sepse",            label: "Sepse Pediátrica",     desc: "SSC 2026 · BIC e diluição · Phoenix",   Icon: Activity,      cor: "#DC2626", grupo: "Pediatria Geral" },
-  { rota: "/isr",              label: "ISR Pediátrica",       desc: "Sequência rápida · doses · via difícil", Icon: Zap,          cor: "#C2410C", grupo: "Pediatria Geral" },
-  { rota: "/ventilacao",       label: "Ventilação Mecânica",  desc: "VC · FR · PARDS · desmame",             Icon: Wind,          cor: "#0891B2", grupo: "Pediatria Geral" },
-  { rota: "/eletrolitos",      label: "Eletrólitos",          desc: "Na · K · Ca · Mg · correções",          Icon: Droplets,      cor: "#7C3AED", grupo: "Pediatria Geral" },
-  { rota: "/bronquiolite",     label: "Bronquiolite",         desc: "Gravidade · OAF · nirsevimab",          Icon: Stethoscope,   cor: "#0D9488", grupo: "Pediatria Geral" },
-  { rota: "/analgesia-sedacao",label: "Analgesia e Sedação",  desc: "FLACC · BIC · desmame · WAT-1",         Icon: Moon,          cor: "#F59E0B", grupo: "Pediatria Geral" },
-  { rota: "/dor",              label: "Escalas de Dor",       desc: "FLACC · Wong-Baker · NRS · Escada",     Icon: Activity,      cor: "#F97316", grupo: "Pediatria Geral" },
-  { rota: "/antibioticos",     label: "Antibioticoterapia",   desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope,   cor: "#0D9488", grupo: "Pediatria Geral" },
-  { rota: "/sedacao",          label: "Sedação",              desc: "Cetamina · Midazolam · Fentanil · Checklist", Icon: Syringe, cor: "#6366F1", grupo: "Pediatria Geral" },
-  { rota: "/exames-lab",       label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9", grupo: "Pediatria Geral" },
-  { rota: "/torchs",           label: "Infecções Congênitas", desc: "TORCHS · sífilis, toxo, CMV, herpes, rubéola", Icon: Bug,     cor: "#E11D48", grupo: "Pediatria Geral" },
-  { rota: "/intoxicacoes",     label: "Intoxicações",         desc: "Ingestão acidental · CIATOX · antídotos", Icon: AlertTriangle, cor: "#65A30D", grupo: "Pediatria Geral" },
-  { rota: "/aleitamento",      label: "Aleitamento",          desc: "Amamentação · técnica · introdução alimentar", Icon: Milk, cor: "#F43F5E", grupo: "Pediatria Geral" },
-  { rota: "/oftalmologia",     label: "Oftalmologia",         desc: "Reflexo vermelho · triagem visual",     Icon: Eye,           cor: "#1E3A8A", grupo: "Pediatria Geral" },
-  { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D", grupo: "Pediatria Geral" },
-  { rota: "/convulsao-febril", label: "Convulsão Febril",     desc: "Classificação simples × complexa · critérios de PL", Icon: Zap, cor: "#D946EF", grupo: "Pediatria Geral" },
-  { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · hipertensão arterial", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral" },
-  { rota: "/adolescencia",     label: "Adolescência",            desc: "Tanner · saúde mental · contracepção",  Icon: Users,       cor: "#7E22CE", grupo: "Pediatria Geral" },
-  { rota: "/teste-tea-tdah",   label: "Rastreio TEA/TDAH",       desc: "M-CHAT-R/F · DSM-5 · fluxo de encaminhamento", Icon: Brain, cor: "#3730A3", grupo: "Pediatria Geral" },
-
-  /* ── Neonatologia (ocultos no grid — acessados via Hub; visíveis na busca) ── */
-  { rota: "/cuidados-pele-rn", label: "Pele do RN",              desc: "SBP GPA 140 · Higiene · Emolientes",  Icon: Leaf,        cor: "#0891B2", grupo: "Neonatologia" },
-  { rota: "/neonatologia-1",   label: "Reanimação RNPT <34s",    desc: "Sala de parto · SBP 2026",            Icon: Zap,         cor: "#0E7490", grupo: "Neonatologia" },
-  { rota: "/neonatologia-6",   label: "Reanimação RN ≥34s",      desc: "Sala de parto · SBP 2026",            Icon: Wind,        cor: "#0284C7", grupo: "Neonatologia" },
-  { rota: "/neonatologia-2",   label: "Hipoglicemia Neonatal",   desc: "Hipoglicemia · Gel de Dextrose",      Icon: Heart,       cor: "#0D9488", grupo: "Neonatologia" },
-  { rota: "/neonatologia-3",   label: "Icterícia Neonatal",      desc: "Fototerapia AAP 2022 · Causas",       Icon: Stethoscope, cor: "#D97706", grupo: "Neonatologia" },
-  { rota: "/colestase-neonatal", label: "Colestase Neonatal",    desc: "Bilirrubina direta · atresia · exames · tratamento", Icon: Droplets, cor: "#CA8A04", grupo: "Neonatologia" },
-  { rota: "/neonatologia-4",   label: "Scores Neonatais",        desc: "Apgar · Capurro · Silverman",         Icon: Calculator,  cor: "#7C3AED", grupo: "Neonatologia" },
-  { rota: "/neonatologia-5",   label: "NPT Neonatal",            desc: "Nutrição Parenteral Total · Eletrólitos", Icon: Droplets, cor: "#6366F1", grupo: "Neonatologia" },
-  { rota: "/hipotermia",       label: "Hipotermia Terapêutica",  desc: "EHI · Thompson · reaquecimento",      Icon: Thermometer, cor: "#4F46E5", grupo: "Neonatologia" },
-  { rota: "/surfactante",      label: "Surfactante",             desc: "LISA · INSURE · dose por peso",       Icon: BookOpen,    cor: "#059669", grupo: "Neonatologia" },
-  { rota: "/nec",              label: "Enterocolite Necrosante", desc: "Bell · ATB por peso/IG · cirurgia",   Icon: AlertTriangle, cor: "#92400E", grupo: "Neonatologia" },
-  { rota: "/canguru",          label: "Canguru",                 desc: "Prescrição e Receituário Neonatal",   Icon: Heart,       cor: "#10B981", grupo: "Neonatologia" },
-  { rota: "/tig-neonatal",     label: "TIG Neonatal",            desc: "Taxa de Infusão de Glicose · UCIN",   Icon: Droplets,    cor: "#0891B2", grupo: "Neonatologia" },
-  { rota: "/dexametasona-dbp", label: "Dexa DBP",                desc: "DART · Protocolo HMIB · RNPT",        Icon: Pill,        cor: "#0891B2", grupo: "Neonatologia" },
-  { rota: "/dilucao-bic",      label: "Diluição e BIC",          desc: "Vasoativas · Sedoanalgesia · PGE1",   Icon: Activity,    cor: "#F97316", grupo: "Neonatologia" },
-  { rota: "/dor-neonatal",     label: "Dor Neonatal",            desc: "NIPS · PIPP-R · N-PASS · CRIES",      Icon: Activity,    cor: "#EF4444", grupo: "Neonatologia" },
-  { rota: "/idade-gestacional", label: "Idade Gestacional",       desc: "IGPM · idade corrigida · cronológica", Icon: CalendarClock, cor: "#2563EB", grupo: "Neonatologia" },
-  { rota: "/percentis",        label: "Percentis (completo)",    desc: "OMS · Intergrowth · Fenton",          Icon: Scale,       cor: "#3B82F6", grupo: "Neonatologia" },
-  { rota: "/sala-de-parto",    label: "Sala de Parto",           desc: "TOT · Sonda · Cateteres umbilicais",  Icon: Syringe,     cor: "#B45309", grupo: "Neonatologia" },
-  { rota: "/classificacao-rn", label: "Classificação do RN",     desc: "IG · Peso · Estatura ao nascer",      Icon: Ruler,       cor: "#DB2777", grupo: "Neonatologia" },
-  { rota: "/triagem-neonatal", label: "Triagem Neonatal",        desc: "Pezinho · olhinho · orelhinha · coraçãozinho", Icon: Footprints, cor: "#14B8A6", grupo: "Neonatologia" },
-  { rota: "/pca",              label: "PCA",                     desc: "Canal arterial · hsPDA · fechamento farmacológico", Icon: Waves, cor: "#BE185D", grupo: "Neonatologia" },
-  { rota: "/malformacoes-cirurgicas-neonatais", label: "Malformações Cirúrgicas", desc: "Gastrosquise · onfalocele · hérnia diafragmática", Icon: Wind, cor: "#047857", grupo: "Neonatologia" },
-  { rota: "/rop",              label: "Retinopatia da Prematuridade", desc: "Triagem · momento do exame · seguimento", Icon: ScanEye, cor: "#0369A1", grupo: "Neonatologia" },
-  { rota: "/seguimento-prematuro-risco", label: "Seguimento do Prematuro", desc: "Equipe · calendário de consultas · sinais de alarme", Icon: Users, cor: "#15803D", grupo: "Neonatologia" },
-];
-
-/* ─── Palavras-chave de busca por módulo ─────────────────────────────────────
-   Sinônimos, fármacos, protocolos e condições que NÃO estão no título/desc,
-   para a busca encontrar "o que eu preciso" e não só "o nome do módulo". */
-const SEARCH_TAGS = {
-  "/percentis-oms": "peso altura estatura perimetro cefalico crescimento imc z-escore curva",
-  "/urgencias": "adrenalina epinefrina pals rcp parada anafilaxia asma crise convulsiva estado de mal choque cetoacidose cad salbutamol emergencia reanimacao broselow fita comprimento dose peso emergencia desfibrilacao cardioversao amiodarona adenosina atropina midazolam diazepam fenitoina hipoglicemia glicose sulfato magnesio tubo",
-  "/formulas": "leite formula infantil hidrolisado aminoacido soja aplv alergia proteina leite vaca desmame nan aptamil",
-  "/gastropediatria": "refluxo drge constipacao obstipacao alergia proteina leite vaca aplv omeprazol regurgitacao hepato hepatologia figado colestase colestase neonatal bilirrubina direta conjugada atresia vias biliares kasai ictericia colestatica ursodesoxicolico",
-  "/pedfarma": "amoxicilina paracetamol dipirona ibuprofeno azitromicina cefalexina antibiotico corticoide prednisolona dexametasona omeprazol ondansetrona dose bula prescricao medicamento remedio equivalencia hidrocortisona metilprednisolona prednisona salbutamol claritromicina ceftriaxona cefuroxima sulfametoxazol metronidazol clindamicina nitrofurantoina loratadina cetirizina hidroxizina esomeprazol lactulose simeticona fenobarbital levetiracetam carbamazepina valproato diazepam fluconazol nistatina aciclovir oseltamivir montelucaste sulfato ferroso ferro zinco vitamina d vitamina a naloxona difenidramina ipratropio budesonida domperidona",
-  "/vacinal": "vacina imunizacao calendario sbim pni atraso bcg hepatite pentavalente triplice meningo pneumo rotavirus febre amarela hpv dengue qdenga covid polio vip varicela nirsevimabe nirsevimab vsr",
-  "/hidratacao": "manutencao liquido soro reidratacao tro plano volume holliday segar desidratacao venoso plano a plano b plano c sro expansao glicose sodio potassio",
-  "/scores": "gorelick westley pews finnegan crupe desidratacao abstinencia dor triagem escore laringotraqueobronquite laringite croup",
-  "/febre-sem-foco": "febre lactente rochester pecarn bacteremia ibg sepse oculta neonato",
-  "/tce-leve": "trauma cranio cabeca cranioencefalico pecarn tomografia observacao",
-  "/dnpm": "desenvolvimento neuropsicomotor marcos atraso denver",
-  "/dermato": "dermatite atopica impetigo escabiose sarna urticaria pele coceira prurido",
-  "/sepse": "choque septico ssc surviving phoenix vasoativa noradrenalina lactato rodwell cristaloide hidrocortisona antibiotico adrenalina perfusao",
-  "/isr": "intubacao sequencia rapida via aerea dificil cetamina rocuronio succinilcolina laringoscopia tubo lamina atropina fentanil propofol midazolam pre-oxigenacao tot",
-  "/ventilacao": "ventilador mecanica pards volume corrente peep desmame indice oxigenacao vm driving pressure hipercapnia permissiva fio2 extubacao",
-  "/eletrolitos": "sodio potassio calcio magnesio hiponatremia hipernatremia hipocalemia hipercalemia correcao kcl gluconato schwartz tfg creatinina osmolaridade sodio corrigido bicarbonato acidose hiperglicemia",
-  "/bronquiolite": "vsr sibilancia oxigenio alto fluxo oaf nirsevimab lactente chiado nirsevimabe palivizumab palivizumabe salina hipertonica cpap apneia",
-  "/analgesia-sedacao": "sedacao analgesia flacc wat-1 abstinencia fentanil midazolam morfina bic desmame",
-  "/dor": "escala dor flacc wong-baker faces nrs analgesia escada oms tramadol morfina paracetamol dipirona ibuprofeno codeina opioide",
-  "/antibioticos": "antibiotico atb empirico pneumonia itu meningite celulite escolha sindrome otite oma faringite amigdalite sepse mastoidite pielonefrite erisipela abscesso",
-  "/sedacao": "sedacao procedimento cetamina midazolam fentanil propofol jejum checklist",
-  "/exames-lab": "hemograma laboratorio valores referencia hormonio tsh ferritina vitamina d leucograma hemoglobina plaquetas pcr procalcitonina creatinina ureia tgo tgp bilirrubina gasometria t4 livre urina glicemia ferro b12 neutrofilos",
-  "/torchs": "torch sifilis toxoplasmose citomegalovirus cmv rubeola herpes zika congenita",
-  "/intoxicacoes": "intoxicacao envenenamento ingestao acidental antidoto ciatox acetilcisteina naloxona paracetamol ferro carvao ativado flumazenil benzodiazepinico rumack deferoxamina caustico monoxido",
-  "/aleitamento": "amamentacao leite materno pega mamada introducao alimentar",
-  "/oftalmologia": "reflexo vermelho olhinho catarata visao triagem visual",
-  "/doencas-exantematicas": "sarampo rubeola exantema subito escarlatina eritema infeccioso mao pe boca varicela",
-  "/convulsao-febril": "convulsao febril crise febre puncao lombar",
-  "/cardiologia-pediatrica-basica": "sopro cardiaco coracao cardiopatia inocente patologico hipertensao arterial pressao pa percentil has normotenso pressao alta tratamento anti-hipertensivo dose recem nascido neonatal dionne rn lactente",
-  "/adolescencia": "adolescente tanner puberdade contracepcao saude mental",
-  "/teste-tea-tdah": "autismo tea tdah m-chat rastreio deficit atencao hiperatividade",
-  "/cuidados-pele-rn": "pele recem-nascido banho emoliente cordao umbilical higiene",
-  "/neonatologia-1": "reanimacao neonatal sala parto prematuro rnpt vpp apgar",
-  "/neonatologia-6": "reanimacao neonatal sala parto termo rnt vpp apgar",
-  "/neonatologia-2": "hipoglicemia glicemia gel dextrose glicose neonatal diazoxido hiperinsulinismo bolus filho de mae diabetica",
-  "/neonatologia-3": "ictericia bilirrubina fototerapia exsanguineotransfusao aap kernicterus tsb tcb transcutanea zona sbp albumina imunoglobulina hemolise g6pd incompatibilidade colestase",
-  "/colestase-neonatal": "colestase bilirrubina direta conjugada atresia vias biliares kasai colangiografia acolia coluria fezes claras alagille pfic ursodesoxicolico udca vitaminas lipossoluveis ggt hepatologia colestase neonatal",
-  "/neonatologia-4": "apgar capurro silverman ballard idade gestacional score",
-  "/neonatologia-5": "npt nutricao parenteral aminoacido lipidio glicose eletrolito neonatal",
-  "/hipotermia": "hipotermia terapeutica ehi encefalopatia asfixia thompson resfriamento aeeg reaquecimento criterios",
-  "/surfactante": "surfactante lisa insure curosurf prematuro sdr membrana hialina survanta mist fio2",
-  "/nec": "enterocolite necrosante bell prematuro abdome pneumatose pneumoperitonio metronidazol ampicilina gentamicina walsh",
-  "/canguru": "metodo canguru prescricao receituario ucin fm85 ferro zinco fosfato tricalcico vitamina d colecalciferol polivitaminico dieta enteral sulfato ferroso",
-  "/tig-neonatal": "tig taxa infusao glicose vig glicemia npt concentracao hiperglicemia hipoglicemia acesso periferico",
-  "/dexametasona-dbp": "dexametasona displasia broncopulmonar dbp dart corticoide prematuro",
-  "/dilucao-bic": "bomba infusao bic vasoativa dopamina dobutamina adrenalina noradrenalina milrinona pge1 dose prostaglandina alprostadil fentanil midazolam morfina insulina gotejamento diluicao",
-  "/dor-neonatal": "dor neonatal nips pipp n-pass cries escala",
-  "/idade-gestacional": "idade gestacional corrigida igpm cronologica pos-menstrual prematuro",
-  "/percentis": "percentil curva fenton intergrowth oms peso estatura perimetro cefalico",
-  "/classificacao-rn": "classificacao recem-nascido rn aig pig gig peso ao nascer baixo peso muito baixo extremo baixo simetrico assimetrico termo pos-termo prematuro extremo intergrowth fenton perimetro cefalico idade gestacional",
-  "/sala-de-parto": "sala parto tot canula sonda cateter umbilical calibre tubo profundidade",
-  "/triagem-neonatal": "triagem pezinho olhinho orelhinha coracaozinho teste linguinha oximetria emissoes otoacusticas peate fenilcetonuria hipotireoidismo fibrose cistica hiperplasia adrenal biotinidase frenulo",
-  "/pca": "pca canal arterial persistente hspda ibuprofeno paracetamol indometacina",
-  "/malformacoes-cirurgicas-neonatais": "malformacao cirurgica gastrosquise onfalocele hernia diafragmatica atresia",
-  "/rop": "retinopatia prematuridade rop triagem oftalmologica",
-  "/seguimento-prematuro-risco": "seguimento prematuro follow-up alto risco calendario consultas doenca metabolica ossea fosfatase alcalina idade corrigida ferro anemia",
-};
+/* O catálogo de módulos (nome, descrição, ícone, cor, grupo e termos de busca)
+   mora em src/lib/catalogo.js — fonte única, compartilhada com o cabeçalho
+   (App.jsx) e com os hubs. Fica completo aqui para que a BUSCA encontre também
+   os módulos individuais, que não aparecem no grid da home. */
 
 /* Normaliza para busca: remove acentos e caixa (ex.: "ictericia" acha "Icterícia"). */
 const normalizarBusca = (s) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
 /* Casa se TODAS as palavras da busca aparecem em label + desc + tags. */
 const casaBusca = (m, termos) => {
-  const hay = normalizarBusca(`${m.label} ${m.desc} ${SEARCH_TAGS[m.rota] || ""}`);
+  const hay = normalizarBusca(`${m.label} ${m.desc} ${m.tags || ""}`);
   return termos.every(t => hay.includes(t));
 };
 
@@ -190,7 +42,7 @@ const casaBusca = (m, termos) => {
 const keywordDoMatch = (m, termos) => {
   const visivel = normalizarBusca(`${m.label} ${m.desc}`);
   if (termos.every(t => visivel.includes(t))) return null;
-  const tags = normalizarBusca(SEARCH_TAGS[m.rota] || "").split(/\s+/).filter(Boolean);
+  const tags = normalizarBusca(m.tags || "").split(/\s+/).filter(Boolean);
   for (const t of termos) {
     const tag = tags.find(k => k.includes(t));
     if (tag) return tag;
