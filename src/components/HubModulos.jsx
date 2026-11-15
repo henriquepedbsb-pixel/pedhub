@@ -18,6 +18,11 @@ import { HUBS, secoesDoHub, nomeNoHub, termosDaBusca, casaBusca } from "../lib/c
 const CABECALHO_H = 62;
 const idSecao = (i) => `hub-secao-${i}`;
 
+/* Altura única dos cards em coluna: cabe ícone + nome em até 2 linhas +
+   descrição em 1 linha. Fixar a altura (em vez de deixar o nome ditar) evita
+   linhas de alturas diferentes quando um nome longo quebra em duas linhas. */
+const CARD_H = 118;
+
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 /* No card em coluna o texto precisa de largura explícita: sem ela, a descrição
    (uma linha, com reticências) empurraria o card para fora da grade. */
@@ -27,7 +32,11 @@ function Texto({ modulo, largo }) {
       display: "flex", flexDirection: "column", gap: 1, minWidth: 0,
       ...(largo ? { flex: 1 } : { width: "100%" }),
     }}>
-      <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text)", lineHeight: 1.25, overflowWrap: "anywhere" }}>
+      <span style={{
+        fontWeight: 600, fontSize: 14, color: "var(--text)", lineHeight: 1.25, overflowWrap: "anywhere",
+        // No máximo 2 linhas: garante que nenhum card passe de CARD_H.
+        display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
+      }}>
         {nomeNoHub(modulo)}
       </span>
       <span style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -61,8 +70,11 @@ function ModuloCard({ modulo, largo, favorito, onClick }) {
           display: "flex",
           flexDirection: largo ? "row" : "column",
           alignItems: largo ? "center" : "flex-start",
+          // Em coluna: ícone no topo, nome e descrição alinhados embaixo — todos
+          // os cards ficam com a mesma altura e o texto na mesma linha de base.
+          justifyContent: largo ? "flex-start" : "space-between",
           gap: largo ? 10 : 6,
-          width: "100%", height: "100%", minHeight: 64, boxSizing: "border-box",
+          width: "100%", height: largo ? "100%" : CARD_H, minHeight: 64, boxSizing: "border-box",
           padding: largo ? "10px 44px 10px 12px" : "10px 12px 12px",
           background: "var(--surface)",
           border: "1.5px solid var(--border)",
