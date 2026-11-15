@@ -127,7 +127,7 @@ function SeverityBadge({ label, range, cor, bg }) {
   return (
     <div style={{ flex: 1, backgroundColor: bg, borderRadius: '8px', padding: '8px', textAlign: 'center', border: `1px solid ${cor}20` }}>
       <p style={{ margin: 0, fontSize: '11px', fontWeight: '800', color: cor }}>{label}</p>
-      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{range}</p>
+      <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{range}</p>
     </div>
   );
 }
@@ -136,10 +136,10 @@ function ResultBox({ label, valor, unit, sub, cor }) {
   const corFinal = cor || C;
   return (
     <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-      <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>{label}</p>
+      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>{label}</p>
       <p style={{ margin: '4px 0 0 0', fontSize: '24px', fontWeight: '800', color: corFinal, lineHeight: 1 }}>{fmtBR(valor)}</p>
-      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{unit}</p>
-      {sub && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: corFinal, fontWeight: '600' }}>{sub}</p>}
+      <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{unit}</p>
+      {sub && <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: corFinal, fontWeight: '600' }}>{sub}</p>}
     </div>
   );
 }
@@ -148,7 +148,7 @@ function Field({ label, val, set, ph, unit }) {
   const ativo = parseNum(val) > 0;
   return (
     <div>
-      <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>
+      <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>
         {label}{unit ? ` (${unit})` : ''}
       </label>
       <input
@@ -295,35 +295,25 @@ export default function Eletrolitos() {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
       <style>{`
         .eletro-chip { padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #D1D5DB; background-color: var(--surface-2); color: var(--text-2); text-align: left; font-family: inherit; }
         .eletro-chip.is-on { background-color: #7C3AED !important; color: #FFFFFF !important; border-color: #7C3AED !important; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #5B21B6 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Droplets size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Distúrbios Eletrolíticos</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Pediátrico · Harriet Lane 22ª ed. · Nelson Textbook · UpToDate 2024</p>
-      </div>
-
       {/* Peso + Idade persistentes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
         <div style={card({ padding: '10px' })}>
-          <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
+          <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg)</label>
           <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
           <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
         </div>
         <div style={card({ padding: '10px' })}>
-          <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
+          <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
           <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 3"
             style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-          <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: "var(--muted)" }}>Fator: {fmtBR(fat)} (água corporal)</p>
+          <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Fator: {fmtBR(fat)} (água corporal)</p>
         </div>
       </div>
 
@@ -339,7 +329,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: SÓDIO ════════════════ */}
       {tab === 'na' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Classificação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Sódio · Normal 135-145 mEq/L</p>
@@ -505,7 +494,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: POTÁSSIO ════════════════ */}
       {tab === 'k' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Classificação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Potássio · Normal 3,5-5,0 mEq/L</p>
@@ -559,9 +547,9 @@ export default function Eletrolitos() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
                   <ResultBox label="Gluconato Ca 10%" valor={calcs.kC.volCa} unit="mL IV" sub="1 mL/kg em 5-10 min" />
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>= {fmtBR(calcs.kC.mgCa)} mg</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>= {fmtBR(calcs.kC.mgCa)} mg</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Máx 20 mL (2g)</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Efeito: 1-3 min · Duração: 30-60 min</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Efeito: 1-3 min · Duração: 30-60 min</p>
                   </div>
                 </div>
                 <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>2. SHIFT INTRACELULAR (15-30 min)</p>
@@ -626,7 +614,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: CÁLCIO ════════════════ */}
       {tab === 'ca' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Cálcio · Valores de Referência</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -705,7 +692,6 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: MAGNÉSIO ════════════════ */}
       {tab === 'mg' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Activity size={15} style={{verticalAlign:'-2px', marginRight:6}} />Magnésio · Normal 1,5-2,5 mg/dL</p>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
@@ -782,12 +768,11 @@ export default function Eletrolitos() {
       {/* ════════════════ TAB: TFG (SCHWARTZ) ════════════════ */}
       {tab === 'tfg' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Calculadora */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Calculator size={15} style={{verticalAlign:'-2px', marginRight:6}} />TFG estimada · Equação de Schwartz</p>
 
-            <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VERSÃO DA FÓRMULA</p>
+            <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VERSÃO DA FÓRMULA</p>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
               <Chip ativo={versaoEf === '2009'} onClick={() => setSchVersao('2009')}>Beira do leito 2009</Chip>
               <Chip ativo={versaoEf === 'original'} onClick={() => setSchVersao('original')}>Original (k por idade)</Chip>
@@ -795,7 +780,7 @@ export default function Eletrolitos() {
 
             {versaoEf === 'original' && (
               <div style={{ marginBottom: '10px' }}>
-                <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>FAIXA DO PACIENTE (define o k)</p>
+                <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>FAIXA DO PACIENTE (define o k)</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                   {GRUPOS_K.map(g => (
                     <Chip key={g.id} ativo={grupoEf === g.id} onClick={() => setSchGrupo(g.id)}>
@@ -806,7 +791,7 @@ export default function Eletrolitos() {
               </div>
             )}
 
-            <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: "var(--muted)" }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: "var(--muted)" }}>
               {schVersao === null && schGrupo === null
                 ? (menorQue1
                     ? 'Versão original sugerida pela idade informada (< 1 ano). Faixa pré-selecionada: RN a termo/lactente — escolha RN pré-termo se aplicável.'
@@ -814,7 +799,7 @@ export default function Eletrolitos() {
                 : 'Seleção manual ativa.'}
               {(schVersao !== null || schGrupo !== null) && (
                 <button type="button" onClick={() => { setSchVersao(null); setSchGrupo(null); }}
-                  style={{ marginLeft: '6px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: C, fontSize: '10px', fontWeight: '700', textDecoration: 'underline', fontFamily: 'inherit' }}>
+                  style={{ marginLeft: '6px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: C, fontSize: '11px', fontWeight: '700', textDecoration: 'underline', fontFamily: 'inherit' }}>
                   Voltar ao automático
                 </button>
               )}
@@ -853,7 +838,7 @@ export default function Eletrolitos() {
                   unit="mL/min/1,73 m²"
                   sub={`${fmtBR(sch.k)} × ${fmtBR(alt)} ÷ ${fmtBR(cr)}`}
                 />
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)", textAlign: 'center' }}>
+                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)", textAlign: 'center' }}>
                   {versaoEf === '2009' ? 'Schwartz beira do leito 2009 · k = 0,413' : `Schwartz original · k = ${fmtBR(sch.k)}`}
                 </p>
               </div>
@@ -879,7 +864,7 @@ export default function Eletrolitos() {
                 </div>
               );
             })}
-            <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
               {sch && id < 2
                 ? 'Destaque da categoria só a partir de 2 anos (informe a idade acima): em menores de 2 anos a TFG ainda está em maturação e as categorias KDIGO não se aplicam.'
                 : 'mL/min/1,73 m². A categoria exige alteração persistente por ≥ 3 meses; um único valor não classifica doença renal crônica.'}

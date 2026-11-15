@@ -247,20 +247,6 @@ export default function Dor() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', backgroundColor: "var(--bg)", minHeight: '100vh', padding: '16px' }}>
 
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div style={{
-        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-        borderRadius: '16px', padding: '20px 20px 18px',
-        marginBottom: '16px', color: 'white',
-      }}>
-        <h1 style={{ fontSize: '22px', fontWeight: '700', margin: 0, lineHeight: 1.2 }}>
-          Dor em Pediatria
-        </h1>
-        <p style={{ fontSize: '13px', margin: '6px 0 0', opacity: 0.9 }}>
-          Avaliação · Escada analgésica · Medidas não farmacológicas
-        </p>
-      </div>
-
       {/* ── Abas principais ────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
         {ABAS.map(aba => (
@@ -315,7 +301,7 @@ export default function Dor() {
                   <div style={{ fontSize: '13px', fontWeight: '700', color: escalaAtiva === e.id ? '#EA580C' : "var(--text-2)" }}>
                     {e.label}
                   </div>
-                  <div style={{ fontSize: '10px', color: "var(--muted)", marginTop: '2px', lineHeight: 1.3 }}>
+                  <div style={{ fontSize: '11px', color: "var(--muted)", marginTop: '2px', lineHeight: 1.3 }}>
                     {e.idade}
                   </div>
                 </button>
@@ -458,7 +444,7 @@ export default function Dor() {
                       <div style={{ fontSize: '15px', fontWeight: '800', color: "var(--text-2)", marginTop: '4px' }}>
                         {f.valor}
                       </div>
-                      <div style={{ fontSize: '9px', color: "var(--muted)", lineHeight: 1.3, marginTop: '2px' }}>
+                      <div style={{ fontSize: '11px', color: "var(--muted)", lineHeight: 1.3, marginTop: '2px' }}>
                         {f.desc}
                       </div>
                     </button>

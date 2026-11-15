@@ -73,7 +73,7 @@ function PecarnCard({ items }) {
           </div>
           <div style={{ flex: 1, textAlign: "left" }}>
             <span style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.4 }}>{item.label}</span>
-            <span style={{ fontSize: 10, marginLeft: 6, fontWeight: 700, color: item.alto_risco ? "#EF4444" : "#F59E0B" }}>{item.alto_risco ? "• ALTO RISCO" : "• MODERADO"}</span>
+            <span style={{ fontSize: 11, marginLeft: 6, fontWeight: 700, color: item.alto_risco ? "#EF4444" : "#F59E0B" }}>{item.alto_risco ? "• ALTO RISCO" : "• MODERADO"}</span>
           </div>
         </button>
       ))}
@@ -102,10 +102,6 @@ export default function TceLeve() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>TCE Leve</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>PECARN · TC vs Observação</p>
-      </div>
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

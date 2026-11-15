@@ -63,7 +63,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -81,17 +81,6 @@ export default function MalformacoesCirurgicasNeonatais() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #064E3B)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Wind size={22} />
-          Malformações Cirúrgicas Neonatais
-        </h1>
-        <p className="text-emerald-100 text-xs mt-1">
-          Gastrosquise · Onfalocele · Hérnia diafragmática — conduta pré-transferência
-        </p>
-      </div>
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Este módulo cobre a <strong>estabilização inicial e conduta pré-transferência</strong> para o centro com cirurgia

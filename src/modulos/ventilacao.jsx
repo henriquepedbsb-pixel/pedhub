@@ -167,7 +167,7 @@ export default function Ventilacao() {
 
   const inputField = (label, val, set, ph, unit = '') => (
     <div>
-      <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
+      <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
       <input type="text" inputMode="decimal" value={val} onChange={e => set(limparDecimal(e.target.value))} placeholder={ph}
         style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${parseNum(val) > 0 ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: parseNum(val) > 0 ? '700' : '400', color: parseNum(val) > 0 ? C : "var(--text-2)", boxSizing: 'border-box', outline: 'none' }} />
     </div>
@@ -176,15 +176,6 @@ export default function Ventilacao() {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #0E7490 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Wind size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Ventilação Mecânica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Pediátrica · PALICC 2023 · ARDSnet adaptado · Harriet Lane 22ª ed.</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
@@ -198,7 +189,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: INICIAR ════════════════ */}
       {tab === 'iniciar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Parâmetros iniciais */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Settings size={15} style={ICONE_INLINE} />Parâmetros Iniciais (ventilação protetora)</p>
@@ -218,8 +208,8 @@ export default function Ventilacao() {
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />FR de Referência por Faixa Etária</p>
             <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: CLT, padding: '7px 12px' }}>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: C }}>FAIXA ETÁRIA</span>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: C }}>FR (irpm)</span>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: C }}>FAIXA ETÁRIA</span>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: C }}>FR (irpm)</span>
               </div>
               {[
                 { label: 'RN (0-1 mês)',       fr: '40-60' },
@@ -277,7 +267,7 @@ export default function Ventilacao() {
                       <div>VC: <strong>{ctx.vc} mL/kg</strong> · PEEP: <strong>{ctx.peep}</strong> · I:E: <strong>{ctx.ie}</strong></div>
                       <div>Pplat: <strong>{ctx.pplat} cmH₂O</strong> · DP: <strong>{ctx.dp} cmH₂O</strong></div>
                     </div>
-                    <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{ctx.obs}</p>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{ctx.obs}</p>
                   </div>
                 ))}
               </div>
@@ -289,7 +279,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: CALCULAR ════════════════ */}
       {tab === 'calcular' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Inputs básicos */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center', gap: 6 }}><BarChart3 size={15} style={{ flexShrink: 0 }} />Dados do Paciente</p>
@@ -300,13 +289,13 @@ export default function Ventilacao() {
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
                 <OrigemPeso ativo={pesoDaBarra} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Usar peso ideal se obeso</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Usar peso ideal se obeso</p>
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
                 <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 4"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Para FR por faixa etária</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Para FR por faixa etária</p>
               </div>
             </div>
 
@@ -328,14 +317,14 @@ export default function Ventilacao() {
               <p style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VOLUME CORRENTE E FREQUÊNCIA</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                 <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÍNIMO (6 mL/kg)</p>
+                  <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VC MÍNIMO (6 mL/kg)</p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(calcs.vc6)}</p>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: C }}>mL</p>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: C }}>mL</p>
                 </div>
                 <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÁXIMO (8 mL/kg)</p>
+                  <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VC MÁXIMO (8 mL/kg)</p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(calcs.vc8)}</p>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>mL</p>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6EE7B7' }}>mL</p>
                 </div>
               </div>
 
@@ -344,7 +333,7 @@ export default function Ventilacao() {
                 <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>
                   <strong>{ctx?.label}:</strong> VC {ctx?.vc} mL/kg · PEEP {ctx?.peep} cmH₂O · I:E {ctx?.ie}
                 </p>
-                <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{ctx?.obs}</p>
+                <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{ctx?.obs}</p>
               </div>
 
               {id > 0 && calcs.fr && (
@@ -377,11 +366,11 @@ export default function Ventilacao() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <p style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: calcs.ioClass.cor, lineHeight: 1 }}>{fmtBR(calcs.io)}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Índice de Oxigenação</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Índice de Oxigenação</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: calcs.ioClass.cor }}>{calcs.ioClass.label}</p>
-                    {calcs.ioClass.extra && <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{calcs.ioClass.extra}</p>}
+                    {calcs.ioClass.extra && <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{calcs.ioClass.extra}</p>}
                   </div>
                 </div>
               </div>
@@ -414,14 +403,14 @@ export default function Ventilacao() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: calcs.dpAlerta ? "var(--tint-red)" : "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : "var(--tx-green)", lineHeight: 1 }}>{fmtBR(calcs.dp)}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cmH₂O (DP)</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>cmH₂O (DP)</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
                   </div>
                   {calcs.cst && (
                     <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(calcs.cst)}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL/cmH₂O</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>Compliance estática</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>mL/cmH₂O</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#93C5FD' }}>Compliance estática</p>
                     </div>
                   )}
                 </div>
@@ -445,7 +434,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: MODOS ════════════════ */}
       {tab === 'modos' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {[
             {
               sigla: 'VCV', nome: 'Volume Control Ventilation', cor: C,
@@ -518,7 +506,6 @@ export default function Ventilacao() {
       {/* ════════════════ TAB: DESMAME ════════════════ */}
       {tab === 'desmame' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critérios diários */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center', gap: 6 }}><ClipboardList size={15} style={{ flexShrink: 0 }} />Avaliação Diária de Desmame</p>

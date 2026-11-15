@@ -5,7 +5,8 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
+import { RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -146,7 +147,7 @@ const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
       <div style={{fontSize:11,fontWeight:600,color:done?int.c:C.muted,
         textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>
         {label} &nbsp;
-        <span style={{fontWeight:400,fontSize:10}}>({filled}/{items.length} itens)</span>
+        <span style={{fontWeight:400,fontSize:11}}>({filled}/{items.length} itens)</span>
       </div>
 
       <div style={{fontSize:48,fontWeight:900,lineHeight:1,color:done?int.c:C.muted}}>
@@ -157,6 +158,12 @@ const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
       {done
         ? <div style={{fontSize:13,fontWeight:700,color:int.c,marginTop:6}}>{int.l}</div>
         : <div style={{fontSize:11,color:C.muted,marginTop:4}}>Preencha todos os itens para interpretação</div>}
+
+      {/* Escore sempre à vista enquanto se rolam os itens (faixa fixa no rodapé). */}
+      <BarraResultado
+        rotulo={`${label} · ${filled}/${items.length} itens`}
+        valor={done ? `${score}/${maxLabel} · ${int.l}` : `${score}/${maxLabel} · incompleto`}
+      />
     </div>
   );
 };
@@ -173,7 +180,7 @@ const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
           display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
           {item.label}
           {item.ctx && (
-            <span style={{fontSize:10,background:"var(--tint-amber)",color:"var(--tx-amber)",
+            <span style={{fontSize:11,background:"var(--tint-amber)",color:"var(--tx-amber)",
               borderRadius:4,padding:"1px 6px",fontWeight:500}}>
               CONTEXTUAL
             </span>
@@ -249,26 +256,8 @@ export default function DorNeonatal() {
   ════════════════════════════════════════════════════════════════════════ */
   return (
     <div style={{fontFamily:"'Inter',system-ui,sans-serif",
-      background:C.bg, minHeight:"100vh", padding:"12px 0 28px"}}>
+      background:C.bg, minHeight:"100vh", padding:`12px 0 ${BARRA_RESULTADO_H + 12}px`}}>
       <div style={{maxWidth:480, margin:"0 auto", padding:"0 12px"}}>
-
-        {/* ── Cabeçalho ─────────────────────────────────────────────────── */}
-        <div style={{
-          background:"linear-gradient(135deg,#1E293B 0%,#334155 100%)",
-          borderRadius:16, padding:"16px 20px", marginBottom:14,
-        }}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <Activity size={22} color="#60A5FA"/>
-            <div>
-              <div style={{fontSize:17,fontWeight:800,color:"var(--tint-slate)"}}>
-                Dor Neonatal
-              </div>
-              <div style={{fontSize:11,color:"var(--muted)",marginTop:1}}>
-                NIPS · PIPP-R · N-PASS · CRIES
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* ── Tabs ──────────────────────────────────────────────────────── */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",
@@ -281,7 +270,7 @@ export default function DorNeonatal() {
               borderRadius:10, padding:"8px 4px", cursor:"pointer",
             }}>
               <div style={{fontSize:13,fontWeight:700}}>{t.label}</div>
-              <div style={{fontSize:9,marginTop:2,opacity:0.85}}>{t.desc}</div>
+              <div style={{fontSize:11,marginTop:2,opacity:0.85}}>{t.desc}</div>
             </button>
           ))}
         </div>
@@ -344,7 +333,7 @@ export default function DorNeonatal() {
                 border:       `2px solid ${painDone ? painInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.06em",
+                <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.06em",
                   color:painDone?painInt.c:C.muted}}>DOR</div>
                 <div style={{fontSize:36,fontWeight:900,lineHeight:1.1,
                   color:painDone?painInt.c:C.muted}}>
@@ -352,11 +341,11 @@ export default function DorNeonatal() {
                   <span style={{fontSize:13}}>/10</span>
                 </div>
                 {nga !== null && nga > 0 && (
-                  <div style={{fontSize:10,color:C.ok,marginTop:1}}>+{nga} ajuste IG</div>
+                  <div style={{fontSize:11,color:C.ok,marginTop:1}}>+{nga} ajuste IG</div>
                 )}
                 {painDone
-                  ? <div style={{fontSize:10,fontWeight:700,color:painInt.c,marginTop:3}}>{painInt.l}</div>
-                  : <div style={{fontSize:10,color:C.muted,marginTop:2}}>{painFilled}/5 itens + IG</div>}
+                  ? <div style={{fontSize:11,fontWeight:700,color:painInt.c,marginTop:3}}>{painInt.l}</div>
+                  : <div style={{fontSize:11,color:C.muted,marginTop:2}}>{painFilled}/5 itens + IG</div>}
               </div>
 
               {/* Sedação */}
@@ -365,7 +354,7 @@ export default function DorNeonatal() {
                 border:       `2px solid ${sedDone ? sedInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.06em",
+                <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.06em",
                   color:sedDone?sedInt.c:C.muted}}>SEDAÇÃO</div>
                 <div style={{fontSize:36,fontWeight:900,lineHeight:1.1,
                   color:sedDone?sedInt.c:C.muted}}>
@@ -373,8 +362,8 @@ export default function DorNeonatal() {
                   <span style={{fontSize:13}}>/−10</span>
                 </div>
                 {sedDone
-                  ? <div style={{fontSize:10,fontWeight:700,color:sedInt.c,marginTop:3}}>{sedInt.l}</div>
-                  : <div style={{fontSize:10,color:C.muted,marginTop:2}}>{sedFilled}/5 itens</div>}
+                  ? <div style={{fontSize:11,fontWeight:700,color:sedInt.c,marginTop:3}}>{sedInt.l}</div>
+                  : <div style={{fontSize:11,color:C.muted,marginTop:2}}>{sedFilled}/5 itens</div>}
               </div>
             </div>
 
@@ -408,7 +397,7 @@ export default function DorNeonatal() {
                 <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:8,
                   display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                   Ajuste de Prematuridade
-                  <span style={{fontSize:10,background:C.npassBg,color:"var(--tx-green)",
+                  <span style={{fontSize:11,background:C.npassBg,color:"var(--tx-green)",
                     borderRadius:4,padding:"1px 6px",fontWeight:500}}>
                     + PONTOS AO ESCORE
                   </span>
@@ -517,7 +506,6 @@ export default function DorNeonatal() {
           revisao="07/2026"
           fonte="NIPS: Lawrence J et al. Neonatal Netw 1993;12(6):59-66 · PIPP-R: Stevens BJ et al. Clin J Pain 2014;30(3):238-243 · N-PASS: Hummel P et al. J Perinatol 2008;28(1):55-60 · CRIES: Krechel SW, Bildner J. Paediatr Anaesth 1995;5(1):53-61"
         />
-
 
       </div>
     </div>

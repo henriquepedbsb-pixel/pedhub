@@ -405,11 +405,6 @@ export default function Dermato() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Dermatologia Pediátrica</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Dermatoses comuns da infância</p>
-      </div>
-
       <div style={{ padding: 16 }}>
         {/* Seletor de modo */}
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>

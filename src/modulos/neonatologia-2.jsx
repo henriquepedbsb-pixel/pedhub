@@ -9,8 +9,6 @@ import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
 
-const PRIMARY = "#0D9488";
-
 export function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 10 ? v : null;
@@ -259,7 +257,7 @@ function TabGelDextrose() {
           "Retirar da geladeira e aguardar atingir T. ambiente antes de administrar",
         ].map((step, i) => (
           <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6 }}>
-            <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#0D9488", color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#0D9488", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
               {i + 1}
             </div>
             <span style={{ fontSize: 11.5, color: "var(--text-2)", lineHeight: 1.5 }}>{step}</span>
@@ -295,11 +293,6 @@ export default function Neonatologia2() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia II</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Hipoglicemia Neonatal</p>
-      </div>
-
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

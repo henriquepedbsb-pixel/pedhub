@@ -49,7 +49,7 @@ describe("catálogo de módulos — fonte única", () => {
   });
 
   it("cabeçalho: módulo volta para o hub do seu grupo; hub volta para a home", () => {
-    expect(MODULO_MAP["/urgencias"]).toEqual({ label: "Urgências", cor: "#EF4444", voltar: "/pediatria-geral" });
+    expect(MODULO_MAP["/urgencias"]).toEqual({ label: "Urgências", cor: "#EF4444", voltar: "/pediatria-geral", sub: "Anafilaxia · Asma · Convulsão · Choque" });
     expect(MODULO_MAP["/neonatologia-3"].voltar).toBe("/neonatal");
     expect(MODULO_MAP["/percentis-oms"].voltar).toBe("/pediatria-geral");
     expect(MODULO_MAP["/percentis"].voltar).toBe("/neonatal");
@@ -109,11 +109,11 @@ describe("catálogo — busca compartilhada e cabeçalho", async () => {
     expect(MODULO_MAP["/neonatal"].info).toBe("25 ferramentas");
   });
 
-  it("subtítulo no cabeçalho só nos módulos marcados com descNoCabecalho", () => {
+  it("todo módulo mostra a descrição como subtítulo no cabeçalho; hubs não", () => {
     expect(MODULO_MAP["/hidratacao"].sub).toBe(porRota("/hidratacao").desc);
-    expect(MODULO_MAP["/pedfarma"].sub).toBe(porRota("/pedfarma").desc);
-    expect(MODULO_MAP["/urgencias"].sub).toBeUndefined();
-    for (const m of MODULOS) expect(Boolean(MODULO_MAP[m.rota].sub), m.rota).toBe(Boolean(m.descNoCabecalho));
+    for (const m of MODULOS) expect(MODULO_MAP[m.rota].sub, m.rota).toBe(m.desc);
+    expect(MODULO_MAP["/pediatria-geral"].sub).toBeUndefined();
+    expect(MODULO_MAP["/neonatal"].sub).toBeUndefined();
   });
 
   it("seções com nome curto para o atalho do hub", () => {

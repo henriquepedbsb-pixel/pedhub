@@ -246,7 +246,7 @@ function TabBIC() {
       <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
         {GRUPOS.map(g => (
           <button key={g} onClick={() => { setGrupo(g); setDrogaSel(null); }}
-            style={{ flex: 1, padding: "7px 4px", fontSize: 10.5, fontWeight: grupo === g ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer",
+            style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: grupo === g ? 700 : 500, borderRadius: 7, border: "none", cursor: "pointer",
               background: grupo === g ? "var(--text-2)" : "var(--surface-2)", color: grupo === g ? "#fff" : "var(--text-2)" }}>
             {g}
           </button>
@@ -261,7 +261,7 @@ function TabBIC() {
               border: `1.5px solid ${drogaSel?.id === dr.id ? dr.cor : "var(--border)"}`,
               background: drogaSel?.id === dr.id ? dr.cor + "12" : "var(--surface)" }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: drogaSel?.id === dr.id ? dr.cor : "var(--text-2)" }}>{dr.nome}</div>
-            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{fmtBR(dr.doseMin)}–{fmtBR(dr.doseMax)} {dr.unidade}</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{fmtBR(dr.doseMin)}–{fmtBR(dr.doseMax)} {dr.unidade}</div>
           </button>
         ))}
       </div>
@@ -304,7 +304,7 @@ function TabBIC() {
                 <span style={{ fontSize: 12, color: "var(--muted)" }}>Infundir</span>
                 <span style={{ fontSize: 20, fontWeight: 800, color: C }}>{f2(rA)} mL/h</span>
               </div>
-              <div style={{ fontSize: 10, color: "var(--muted)", textAlign: "right" }}>{d.mA_eq}</div>
+              <div style={{ fontSize: 11, color: "var(--muted)", textAlign: "right" }}>{d.mA_eq}</div>
             </div>
           </div>
 
@@ -345,7 +345,7 @@ function TabBIC() {
 
       {/* Tabela de referência */}
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
           Doses de referência — NeoFax 2023
         </div>
         {DROGAS.map(dr => (
@@ -363,10 +363,6 @@ function TabBIC() {
 export default function DilucaoBic() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Diluição e BIC</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Drogas de Infusão Contínua · Neonatal</p>
-      </div>
       <div style={{ padding: 16 }}>
         <TabBIC />
       </div>

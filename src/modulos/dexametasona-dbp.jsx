@@ -17,7 +17,6 @@ import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
 
-const PRIMARY   = "#0D9488";
 const C_DART    = "#0891B2";
 const C_HMIB    = "#0D9488";
 
@@ -153,7 +152,7 @@ function TabDART() {
 
       {/* Indicação */}
       <div style={{ background:"var(--tint-blue)", borderRadius:10, padding:"12px 14px", marginBottom:10, border:"1px solid #BAE6FD" }}>
-        <div style={{ fontSize:10, fontWeight:700, color:"var(--tx-blue)", letterSpacing:".08em", textTransform:"uppercase", marginBottom:8 }}>Indicação (DART)</div>
+        <div style={{ fontSize:11, fontWeight:700, color:"var(--tx-blue)", letterSpacing:".08em", textTransform:"uppercase", marginBottom:8 }}>Indicação (DART)</div>
         {[
           "RNPT ventilador-dependente ≥ 7 dias de vida",
           "FiO₂ > 0,30 ou dificuldade de desmame ventilatório",
@@ -180,7 +179,7 @@ function TabDART() {
             <span style={{ fontSize:12, fontWeight:700, color:C }}>Dose acumulada (10 dias)</span>
             <span style={{ fontSize:15, fontWeight:800, color:C }}>{f3(ACUM_DART*pkKg)} mg</span>
           </div>
-          <p style={{ fontSize:10, color:"var(--muted)", textAlign:"right", margin:"0 0 12px" }}>
+          <p style={{ fontSize:11, color:"var(--muted)", textAlign:"right", margin:"0 0 12px" }}>
             {fmtBR(ACUM_DART)} mg/kg × {fmtBR(pkKg.toFixed(3))} kg
           </p>
 
@@ -202,7 +201,7 @@ function TabDART() {
       </div>
 
       <div style={{ background:"var(--bg)", borderRadius:9, padding:"10px 14px", border:"1px solid var(--border)" }}>
-        <div style={{ fontSize:10, fontWeight:700, color:"var(--muted)", textTransform:"uppercase", letterSpacing:".07em", marginBottom:8 }}>Monitorização</div>
+        <div style={{ fontSize:11, fontWeight:700, color:"var(--muted)", textTransform:"uppercase", letterSpacing:".07em", marginBottom:8 }}>Monitorização</div>
         {["Glicemia a cada 6–12h nas primeiras 48h","Pressão arterial diária","Sinais de infecção (PCR, hemograma)","Avaliar desmame ventilatório após 48h"].map((m,i)=>(
           <div key={i} style={{ display:"flex", gap:7, marginBottom:4, fontSize:11.5, color:"var(--text-2)" }}>
             <CheckCircle size={11} color={C} style={{ flexShrink:0, marginTop:2 }} />{m}
@@ -231,7 +230,7 @@ function TabHMIB() {
 
       {/* Critérios de inclusão */}
       <div style={{ background:"var(--tint-green)", borderRadius:10, padding:"12px 14px", marginBottom:10, border:"1px solid #BBF7D0" }}>
-        <div style={{ fontSize:10, fontWeight:700, color:"var(--tx-green)", letterSpacing:".08em", textTransform:"uppercase", marginBottom:8 }}>Critérios de inclusão</div>
+        <div style={{ fontSize:11, fontWeight:700, color:"var(--tx-green)", letterSpacing:".08em", textTransform:"uppercase", marginBottom:8 }}>Critérios de inclusão</div>
         {[
           "RN com mais de 10 dias de vida",
           "VM com FiO₂ > 30% e MAP > 9 cmH₂O",
@@ -269,13 +268,13 @@ function TabHMIB() {
             <span style={{ fontSize:12, fontWeight:700, color:C }}>Dose acumulada (9 dias)</span>
             <span style={{ fontSize:15, fontWeight:800, color:C }}>{f3(ACUM_HMIB*pkKg)} mg</span>
           </div>
-          <p style={{ fontSize:10, color:"var(--muted)", textAlign:"right", margin:"0 0 10px" }}>
+          <p style={{ fontSize:11, color:"var(--muted)", textAlign:"right", margin:"0 0 10px" }}>
             {fmtBR(ACUM_HMIB)} mg/kg × {fmtBR(pkKg.toFixed(3))} kg
           </p>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:12 }}>
             {[["Intervalo entre ciclos","14 dias"],["Máx. ciclos","3 ciclos"]].map(([lbl,val])=>(
               <div key={lbl} style={{ background:"var(--bg)", borderRadius:8, padding:"8px 12px", border:"1px solid var(--border)", textAlign:"center" }}>
-                <div style={{ fontSize:10, color:"var(--muted)", marginBottom:3 }}>{lbl}</div>
+                <div style={{ fontSize:11, color:"var(--muted)", marginBottom:3 }}>{lbl}</div>
                 <div style={{ fontSize:14, fontWeight:800, color:"var(--text-2)" }}>{val}</div>
               </div>
             ))}
@@ -291,7 +290,7 @@ function TabHMIB() {
 
       {/* Observações do protocolo */}
       <div style={{ background:"var(--bg)", borderRadius:10, padding:"12px 14px", border:"1px solid var(--border)" }}>
-        <div style={{ fontSize:10, fontWeight:700, color:"var(--muted)", textTransform:"uppercase", letterSpacing:".07em", marginBottom:8 }}>Observações — Protocolo HMIB</div>
+        <div style={{ fontSize:11, fontWeight:700, color:"var(--muted)", textTransform:"uppercase", letterSpacing:".07em", marginBottom:8 }}>Observações — Protocolo HMIB</div>
         {[
           "Não há evidência que embase o uso de diuréticos visando a extubação.",
           "O uso do corticosteroide deve ser discutido em equipe durante a rotina.",
@@ -315,11 +314,6 @@ export default function DexametasonaDbp() {
 
   return (
     <div style={{ fontFamily:"'DM Sans', sans-serif", maxWidth:480, margin:"0 auto", minHeight:"100vh", background:"var(--surface)" }}>
-      <div style={{ background:PRIMARY, padding:"20px 16px 16px", color:"#fff" }}>
-        <h1 style={{ fontFamily:"'DM Serif Display', serif", fontSize:24, margin:"0 0 4px" }}>Dexa DBP</h1>
-        <p style={{ fontSize:13, opacity:0.9, margin:0 }}>Dexametasona · RNPT · Displasia Broncopulmonar</p>
-      </div>
-
       <div style={{ display:"flex", background:"var(--surface)", borderBottom:"2px solid var(--border)" }}>
         {tabs.map((t,i)=>{
           const active = tab === i;

@@ -254,15 +254,6 @@ export default function Sepse() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #B91C1C 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <AlertTriangle size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Sepse Pediátrica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Surviving Sepsis Campaign 2026 · SCCM / ESICM</p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
         {TABS.map(t => (
@@ -275,7 +266,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: SUSPEITAR ════════════════ */}
       {tab === 'suspeitar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Definições Phoenix 2024 */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><ClipboardList size={15} style={ICONE_INLINE} />Definições — Phoenix 2024</p>
@@ -361,7 +351,7 @@ export default function Sepse() {
               'Reavaliação clínica a cada 15-30 minutos',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: "var(--tx-green)" }}>
-                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -372,7 +362,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: AVALIAR ════════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Parâmetros editáveis */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><BarChart3 size={15} style={ICONE_INLINE} />Parâmetros do Paciente</p>
@@ -393,7 +382,7 @@ export default function Sepse() {
                 { label: 'SpO₂ (%)',            value: spo2, set: setSpo2, ph: '98'   },
               ].map((c, i) => (
                 <div key={i}>
-                  <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{c.label}</label>
+                  <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{c.label}</label>
                   <input type="text" inputMode="decimal" value={c.value} onChange={e => c.set(limparDecimal(e.target.value))} placeholder={c.ph}
                     style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', outline: 'none', color: "var(--text-2)" }} />
                 </div>
@@ -443,13 +432,13 @@ export default function Sepse() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(calc.bolus)}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL / bolus</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>({fmtBR(volBolus)} mL/kg)</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>mL / bolus</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#93C5FD' }}>({fmtBR(volBolus)} mL/kg)</p>
                   </div>
                   <div style={{ backgroundColor: comUTI ? "var(--tint-green)" : CLIGHT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                     <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? "var(--tx-green)" : C, lineHeight: 1 }}>{fmtBR(calc.maximo)}</p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL máximo</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: comUTI ? '#6EE7B7' : '#FCA5A5' }}>({comUTI ? 60 : 40} mL/kg · 1ª hora)</p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>mL máximo</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: comUTI ? '#6EE7B7' : '#FCA5A5' }}>({comUTI ? 60 : 40} mL/kg · 1ª hora)</p>
                   </div>
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', fontSize: '12px', color: "var(--text-2)", lineHeight: '1.6' }}>
@@ -547,7 +536,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: TRATAR ════════════════ */}
       {tab === 'tratar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Antibióticos */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Timer size={15} style={ICONE_INLINE} />Antibióticos — TEMPO CRÍTICO</p>
@@ -644,7 +632,7 @@ export default function Sepse() {
                 <button key={d.id} onClick={() => setDrugSel(d.id)}
                   style={{ padding: '9px 4px', borderRadius: '8px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${drugSel === d.id ? d.cor : "var(--border)"}`, backgroundColor: drugSel === d.id ? d.corBg : "var(--surface-2)", fontSize: '11px', fontWeight: drugSel === d.id ? '700' : '500', color: drugSel === d.id ? d.cor : "var(--muted)" }}>
                   {d.nome}
-                  {d.alt && <span style={{ display: 'block', fontSize: '9px', opacity: 0.7, marginTop: '1px' }}>{d.alt}</span>}
+                  {d.alt && <span style={{ display: 'block', fontSize: '11px', opacity: 0.7, marginTop: '1px' }}>{d.alt}</span>}
                 </button>
               ))}
             </div>
@@ -662,7 +650,7 @@ export default function Sepse() {
                       {d.nome}{d.alt ? ` (${d.alt})` : ''}
                     </p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>{d.indicacao}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{d.ref} · {d.apresentacao}</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{d.ref} · {d.apresentacao}</p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', fontWeight: '700', color: d.cor }}>
                       Dose: {fmtBR(d.doseMin)}–{fmtBR(d.doseMax)} {d.unidade} · início: {fmtBR(d.doseStart)} {d.unidade}
                     </p>
@@ -670,7 +658,7 @@ export default function Sepse() {
 
                   {/* Dilution */}
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>DILUIÇÃO PADRÃO — SERINGA 50 mL</p>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>DILUIÇÃO PADRÃO — SERINGA 50 mL</p>
                     <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: "var(--text-2)" }}>
                       <strong>{fmtBR(d.mgKgDil)} {d.tipo}/kg</strong> em <strong>{fmtBR(d.volDil)} mL</strong> de SG5%
                     </p>
@@ -685,7 +673,7 @@ export default function Sepse() {
                         <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
                           + Completar com <strong>{fmtBR(dil.volSG5.toFixed(2))} mL</strong> de SG5% → 50 mL total
                         </p>
-                        <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+                        <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
                           Concentração final: {fmtBR(dil.concFinal.toFixed(4))} {d.tipo}/mL
                         </p>
                       </div>
@@ -696,11 +684,11 @@ export default function Sepse() {
 
                   {/* Velocity table */}
                   <div style={{ marginBottom: '10px' }}>
-                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>VELOCIDADE DE INFUSÃO (mL/h)</p>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>VELOCIDADE DE INFUSÃO (mL/h)</p>
                     <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: d.corBg, padding: '7px 12px' }}>
-                        <span style={{ fontSize: '10px', fontWeight: '700', color: d.cor }}>DOSE ({d.unidade})</span>
-                        <span style={{ fontSize: '10px', fontWeight: '700', color: d.cor }}>VELOCIDADE (mL/h)</span>
+                        <span style={{ fontSize: '11px', fontWeight: '700', color: d.cor }}>DOSE ({d.unidade})</span>
+                        <span style={{ fontSize: '11px', fontWeight: '700', color: d.cor }}>VELOCIDADE (mL/h)</span>
                       </div>
                       {d.dosesTabela.map((dose, i) => {
                         const vel = calcVel(d, dose);
@@ -708,14 +696,14 @@ export default function Sepse() {
                         return (
                           <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: isS ? d.corBg : (i % 2 === 0 ? "var(--surface-2)" : "var(--surface)"), borderTop: '1px solid var(--border)', padding: '7px 12px', alignItems: 'center' }}>
                             <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: isS ? '700' : '400' }}>
-                              {fmtBR(dose)}{isS && <span style={{ fontSize: '9px', color: d.cor, marginLeft: '4px' }}>← início</span>}
+                              {fmtBR(dose)}{isS && <span style={{ fontSize: '11px', color: d.cor, marginLeft: '4px' }}>← início</span>}
                             </span>
                             <span style={{ fontSize: '14px', color: isS ? d.cor : "var(--text)", fontWeight: '800' }}>{fmtBR(vel)}</span>
                           </div>
                         );
                       })}
                     </div>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
                       Velocidade independente do peso com esta diluição ({fmtBR(d.mgKgDil)} {d.tipo}/kg em {fmtBR(d.volDil)} mL)
                     </p>
                   </div>
@@ -783,7 +771,6 @@ export default function Sepse() {
       {/* ════════════════ TAB: METAS ════════════════ */}
       {tab === 'monitorar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Metas de ressuscitação */}
           <div style={card()}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}><Target size={15} style={ICONE_INLINE} />Metas de Ressuscitação</p>
@@ -842,7 +829,7 @@ export default function Sepse() {
               'Implementar reabilitação precoce individualizada (rec. 59, novo 2026)',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: "var(--text-2)", marginBottom: '6px', alignItems: 'flex-start' }}>
-                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}

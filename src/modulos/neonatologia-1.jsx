@@ -102,14 +102,14 @@ function MedicCalculator() {
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, marginBottom: 8, borderBottom: "1px solid #99F6E4", alignItems: "flex-start" }}>
           <div>
             <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>Via IV — 0,2 mL/kg (0,02 mg/kg)</p>
-            <p style={{ margin: 0, fontSize: 10, color: "var(--muted)" }}>Rápido + flush 3 mL SF · repetir 3–5 min</p>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--muted)" }}>Rápido + flush 3 mL SF · repetir 3–5 min</p>
           </div>
           <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${fmtBR((p * 0.2).toFixed(2))} mL` : "— mL"}</strong>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, marginBottom: 8, borderBottom: "1px solid #99F6E4", alignItems: "flex-start" }}>
           <div>
             <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>Via ET — 1,0 mL/kg (0,1 mg/kg) · USO ÚNICO</p>
-            <p style={{ margin: 0, fontSize: 10, color: "var(--muted)" }}>Enquanto cateterismo VU é realizado</p>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--muted)" }}>Enquanto cateterismo VU é realizado</p>
           </div>
           <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${fmtBR((p * 1.0).toFixed(1))} mL` : "— mL"}</strong>
         </div>
@@ -117,7 +117,7 @@ function MedicCalculator() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>10 mL/kg EV lento (5–10 min)</p>
-            <p style={{ margin: 0, fontSize: 10, color: "var(--muted)" }}>Suspeita de hipovolemia / choque</p>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--muted)" }}>Suspeita de hipovolemia / choque</p>
           </div>
           <strong style={{ fontSize: 17, color: COR_NEO }}>{ok ? `${(p * 10).toFixed(0)} mL` : "— mL"}</strong>
         </div>
@@ -230,9 +230,9 @@ function TabReanimacao() {
             { label: "Fluxo gás", valor: "~10 L/min", destaque: false, desc: "" },
           ].map((item, i) => (
             <div key={i} style={{ background: item.destaque ? "var(--tint-blue)" : "var(--tint-slate)", border: item.destaque ? "2px solid #3B82F6" : "1px solid var(--border)", borderRadius: 8, padding: "8px 10px" }}>
-              <p style={{ margin: 0, fontSize: 10, color: item.destaque ? "#1D4ED8" : "var(--muted)", fontWeight: 600 }}>{item.label}</p>
+              <p style={{ margin: 0, fontSize: 11, color: item.destaque ? "#1D4ED8" : "var(--muted)", fontWeight: 600 }}>{item.label}</p>
               <p style={{ margin: "2px 0 0", fontSize: 15, fontWeight: 700, color: item.destaque ? "#1D4ED8" : "var(--text-2)" }}>{item.valor}</p>
-              {item.desc ? <p style={{ margin: 0, fontSize: 10, color: item.destaque ? "#3B82F6" : "var(--muted)" }}>{item.desc}</p> : null}
+              {item.desc ? <p style={{ margin: 0, fontSize: 11, color: item.destaque ? "#3B82F6" : "var(--muted)" }}>{item.desc}</p> : null}
             </div>
           ))}
         </div>
@@ -353,7 +353,7 @@ function TabSepse() {
           ].map((f, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--tint-purple)", borderRadius: 8, padding: "8px 11px" }}>
               <p style={{ margin: 0, fontSize: 13, color: "var(--text-2)", flex: 1, paddingRight: 8 }}>{f.fator}</p>
-              <span style={{ fontSize: 10, fontWeight: 700, color: f.peso === "Alto risco" ? "#DC2626" : "#D97706", background: f.peso === "Alto risco" ? "var(--tint-red)" : "var(--tint-amber)", padding: "2px 6px", borderRadius: 4, flexShrink: 0 }}>{f.peso}</span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: f.peso === "Alto risco" ? "#DC2626" : "#D97706", background: f.peso === "Alto risco" ? "var(--tint-red)" : "var(--tint-amber)", padding: "2px 6px", borderRadius: 4, flexShrink: 0 }}>{f.peso}</span>
             </div>
           ))}
         </div>
@@ -421,13 +421,6 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "DM Sans, sans-serif", maxWidth: 480, margin: "0 auto", backgroundColor: "var(--tint-slate)", minHeight: "100vh" }}>
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${COR_NEO}, #0891B2)`, padding: "20px 16px 16px" }}>
-        <p style={{ margin: "0 0 2px", fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: "#CCFBF1", textTransform: "uppercase" }}>Neonatologia</p>
-        <h1 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 700, color: "#fff" }}>Reanimação RNPT &lt;34s</h1>
-        <p style={{ margin: 0, fontSize: 12, color: "#A7F3D0" }}>Diretrizes SBP / PRN-SBP 2026 · Sepse Neonatal Precoce</p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
         {[{ label: "Reanimação <34s", cor: COR_NEO }, { label: "Sepse Precoce", cor: COR_SEPSE }].map((tab, i) => (

@@ -389,7 +389,7 @@ export default function Hidratacao() {
       // o espaço dela para não cobrir o rodapé do módulo.
       paddingBottom: peso ? BARRA_RESULTADO_H : 0,
     }}>
-      {/* Título e subtítulo ficam no cabeçalho global (descNoCabecalho no catálogo). */}
+      {/* Título e subtítulo ficam no cabeçalho global (desc do catálogo). */}
       <div style={{ padding: "12px 16px 0" }}>
         <Segmentado rotulo="Modo de cálculo" opcoes={abas} valor={tab} onChange={setTab} />
       </div>

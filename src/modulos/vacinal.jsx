@@ -432,14 +432,6 @@ export default function Vacinal() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
 
-      {/* Header */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Calendário Vacinal
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2026/2027 · PNI atualizado ago/2026</p>
-      </div>
-
       {/* Abas */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
         {[
@@ -537,12 +529,12 @@ export default function Vacinal() {
                   </div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {isMenoOnly && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#7C3AED", background: "var(--tint-purple)", padding: "2px 7px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#7C3AED", background: "var(--tint-purple)", padding: "2px 7px", borderRadius: 20 }}>
                         VISITA EXCLUSIVA
                       </span>
                     )}
                     {status === "due" && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "var(--tint-green)", padding: "2px 8px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#10B981", background: "var(--tint-green)", padding: "2px 8px", borderRadius: 20 }}>
                         PREVISTO AGORA
                       </span>
                     )}
@@ -633,7 +625,7 @@ export default function Vacinal() {
                         <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{vac.vacina}</span>
                       </div>
                       {vac.limiteRigido && (
-                        <span style={{ fontSize: 9, fontWeight: 700, color: "var(--tx-red)", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-red)", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
                           JANELA RÍGIDA
                         </span>
                       )}

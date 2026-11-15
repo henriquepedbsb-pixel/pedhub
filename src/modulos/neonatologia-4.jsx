@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta scores puros (Apgar/Silverman) para testes */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0891B2";
@@ -87,7 +88,6 @@ function ScoreCard({ label, vals, setVals }) {
   );
 }
 
-
 function TabApgar() {
   const [vals1, setVals1] = useState([null, null, null, null, null]);
   const [vals5, setVals5] = useState([null, null, null, null, null]);
@@ -105,6 +105,10 @@ function TabApgar() {
           <strong>Referência rápida:</strong> 7–10 = normal · 4–6 = depressão leve/moderada · 0–3 = depressão grave
         </p>
       </div>
+      <BarraResultado
+        rotulo="Apgar · 1.º e 5.º minuto"
+        valor={`1.º min: ${calcTotal(vals1) ?? "—"} · 5.º min: ${calcTotal(vals5) ?? "—"}`}
+      />
     </div>
   );
 }
@@ -159,9 +163,14 @@ function TabCapurro() {
   const allSet  = vals.every(x => x !== null);
   const total   = allSet ? vals.reduce((a, b) => a + b, 0) : null;
   const ig      = total !== null ? ((total + 204) / 7).toFixed(1) : null;
+  const nCap    = vals.filter(x => x !== null).length;
 
   return (
     <div>
+      <BarraResultado
+        rotulo={`Capurro somático · ${nCap}/${vals.length} itens`}
+        valor={ig ? `IG estimada: ${fmtBR(ig)} semanas` : "Marque todos os itens"}
+      />
       <InfoBox color={COR_CAP}>
         <strong>Capurro Somático (Capurro H et al., 1978).</strong> Fórmula: IG (semanas) = (soma + 204) ÷ 7. Válido para RN ≥ 29 semanas. Precisão ± 1–2 semanas.
       </InfoBox>
@@ -271,12 +280,16 @@ function TabSilverman() {
               <button key={opt.v} onClick={() => set(i, opt.v)}
                 style={{ flex: 1, padding: "8px 4px", fontSize: 11, fontWeight: vals[i] === opt.v ? 700 : 500, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_SA : "var(--border)"), cursor: "pointer", background: vals[i] === opt.v ? COR_SA : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)", lineHeight: 1.3, textAlign: "center" }}>
                 {opt.l}<br />
-                <span style={{ fontSize: 10, opacity: 0.7 }}>({opt.v})</span>
+                <span style={{ fontSize: 11, opacity: 0.7 }}>({opt.v})</span>
               </button>
             ))}
           </div>
         </div>
       ))}
+
+      {interacted && (
+        <BarraResultado rotulo="Silverman-Andersen" valor={`${total}/10 · ${cls.grau}`} />
+      )}
 
       {/* Resultado — aparece somente após 1ª seleção */}
       {interacted ? (
@@ -336,11 +349,7 @@ export default function Neonatologia4() {
   const cores = ["#5B21B6", PRIMARY, COR_SA];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia IV</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Apgar · Capurro · Silverman-Andersen</p>
-      </div>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)", paddingBottom: BARRA_RESULTADO_H }}>
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {
           const active = tab === i;

@@ -179,7 +179,7 @@ function TimelineStep({ time, color, title, actions, isLast }) {
           background: color, color: "#fff", borderRadius: 10,
           width: 52, padding: "6px 4px",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: 1.3,
+          fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: 1.3,
         }}>
           {time}
         </div>
@@ -1086,14 +1086,6 @@ export default function Urgencias() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      {/* ── Header ── */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Urgências Pediátricas
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Protocolos e doses por peso</p>
-      </div>
-
       {/* ── Toggle de modo ── */}
       <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", background: "var(--surface)" }}>
         {[
@@ -1219,7 +1211,7 @@ export default function Urgencias() {
                 </button>
               </div>
             )}
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4 }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4 }}>
               Estimativa para uso emergencial quando o peso real não pode ser obtido de imediato (ex.: paciente inconsciente, sem acompanhante). Pesar a criança assim que possível — o peso real medido sempre tem prioridade sobre esta estimativa.
             </p>
           </div>
@@ -1254,7 +1246,7 @@ export default function Urgencias() {
                   onClick={() => setTab(i)}
                   style={{
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                    padding: "10px 12px", fontSize: 10, fontWeight: active ? 700 : 500,
+                    padding: "10px 12px", fontSize: 11, fontWeight: active ? 700 : 500,
                     color: active ? PRIMARY : "var(--muted)",
                     background: "transparent", border: "none",
                     borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),

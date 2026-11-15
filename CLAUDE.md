@@ -237,16 +237,16 @@ Mais interativo, desde que nunca menos seguro nem menos claro.
 - Mobile-first — validar em 390px de largura (uso é quase todo no celular)
 - Cada módulo tem cor própria em hex
 
-**Layout aprovado pelo responsável (15/11/2026) — aplicar aos poucos, um
-módulo por commit, começando pelos mais acessados:**
+**Layout aprovado pelo responsável (15/11/2026) — aplicado a todos os módulos
+em 15/11/2026; vale para todo módulo novo:**
 - **Hubs:** "grade compacta" em `src/components/HubModulos.jsx` (compartilhado
   pelos dois hubs). Sem faixa colorida repetindo o título — nome e contagem
   ficam no cabeçalho global. Busca dentro do hub, atalhos de seção
   (`curto` da seção no catálogo), cards em 2 colunas; o card que sobraria
   sozinho ocupa a linha inteira.
-- **Calculadoras:** sem faixa colorida repetindo o título; o cabeçalho global
-  mostra a descrição como subtítulo quando o módulo tem `descNoCabecalho: true`
-  no catálogo (ligar ao migrar). Abas e opções com `src/components/Segmentado.jsx`
+- **Todos os módulos:** sem faixa colorida repetindo o título — o cabeçalho
+  global mostra `label` e, como subtítulo, a `desc` do catálogo.
+- **Calculadoras:** abas e opções com `src/components/Segmentado.jsx`
   (alvo de 44 px, ativo por classe). Resultado principal numa faixa fixa no
   rodapé com `src/components/BarraResultado.jsx` (+ `BotaoCopiar solido`); a
   página reserva `BARRA_RESULTADO_H` de espaço no fim. Rótulo de campo em texto
@@ -256,9 +256,16 @@ módulo por commit, começando pelos mais acessados:**
   rolar (`position: sticky`, `top: BARRA_PACIENTE_H + CABECALHO_H` —
   `CABECALHO_H` em `src/lib/layout.js`; o cabeçalho global tem altura fixa).
   Filtros/indicações como chips `.ph-chip` + `.is-active` (cor via `--chip-cor`).
-- Texto mínimo de 11 px; `CalcDose` já segue isso (afeta todos os módulos que o embutem).
-- **Feito:** os dois hubs, `hidratacao` e `pedfarma`. Próximos candidatos:
-  `urgencias`, `isr`, `dilucao-bic`, `tig-neonatal`.
+- Texto mínimo de 11 px em todo o app (gráficos SVG em escala são exceção).
+- Abas presas ao rolar usam `top: BARRA_PACIENTE_H + CABECALHO_H`, nunca `top: 0`
+  (ficariam por baixo do cabeçalho global).
+- **Faixa de resultado hoje em:** `hidratacao`, `tig-neonatal`, `surfactante`
+  (aba Calcular), `idade-gestacional`, `dor-neonatal`, `hipotermia` (aba Escore),
+  `neonatologia-4` (Apgar/Capurro/Silverman), `sala-de-parto` (TOT). Módulos com
+  vários resultados lado a lado (`urgencias`, `isr`, `dilucao-bic`,
+  `eletrolitos`, NPT, `canguru`) ficam sem faixa de propósito.
+- **Pendente (aos poucos, sob pedido):** trocar as abas próprias de cada módulo
+  por `Segmentado` e os rótulos em CAIXA ALTA pelos rótulos normais de 48 px.
 - **Mantido de propósito:** cores de identidade dos módulos e a home com os
   dois portais + busca global.
 

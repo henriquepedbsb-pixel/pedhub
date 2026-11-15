@@ -255,7 +255,7 @@ function FormulaCard({ f, open, onToggle }) {
               { label: "DANONE", data: f.danone, bg: "var(--tint-blue)", border: "#BFDBFE" },
             ].map(({ label, data, bg, border }) => (
               <div key={label} style={{ background: bg, border: "1px solid " + border, borderRadius: 10, padding: "10px 10px" }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
                 <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 6px", lineHeight: 1.3 }}>{data.produto}</p>
                 <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>{data.sub}</p>
                 {data.items.map((item, i) => (
@@ -313,14 +313,6 @@ export default function Formulas() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      {/* Header */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Fórmulas Infantis
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Nestlé × Danone · Escada APLV · jan/2024</p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import CalcDose from "../components/CalcDose";
-import { Stethoscope, AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
+import { AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
 
 const CP = '#0D9488';
 const CD = '#0F766E';
@@ -350,17 +350,6 @@ export default function Antibioticos() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-      {/* HEADER */}
-      <div style={{ background: CP, padding: '20px 16px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Stethoscope size={22} color="#fff" />
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Antibioticoterapia</div>
-            <div style={{ fontSize: 12, color: '#fff', opacity: 0.88 }}>Escolha empírica por síndrome clínica · Pediátrica</div>
-          </div>
-        </div>
-      </div>
-
       {/* CHIPS */}
       <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 8, minWidth: 'max-content' }}>
@@ -383,7 +372,7 @@ export default function Antibioticos() {
                 return (
                   <button key={i} onClick={() => setFaixaIdx(i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 10, width: '100%', textAlign: 'left', border: `2px solid ${faixaIdx === i ? CP : "var(--border)"}`, background: faixaIdx === i ? CL : "var(--surface-2)", cursor: 'pointer', ...F }}>
                     <div style={{ fontSize: 13, fontWeight: faixaIdx === i ? 700 : 400, color: faixaIdx === i ? CD : "var(--text-2)" }}>{g.label}</div>
-                    {badge && <span style={{ background: badge.badgeBg, color: badge.badgeCor, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
+                    {badge && <span style={{ background: badge.badgeBg, color: badge.badgeCor, fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
                   </button>
                 );
               })}

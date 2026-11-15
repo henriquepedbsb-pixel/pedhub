@@ -365,11 +365,6 @@ export function ColestaseConteudo() {
 export default function ColestaseNeonatal() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, #92400E 100%)`, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Colestase Neonatal</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Bilirrubina direta · atresia · exames · tratamento</p>
-      </div>
-
       <div style={{ padding: "0 16px" }}>
         <ColestaseConteudo />
       </div>

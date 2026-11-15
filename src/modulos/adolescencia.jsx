@@ -9,7 +9,6 @@ import {
   HeartHandshake,
   Brain,
   ClipboardList,
-  Users,
 } from "lucide-react";
 
 const COR = "#7E22CE"; // purple-700 — cor do módulo Adolescência
@@ -67,7 +66,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -104,17 +103,6 @@ export default function Adolescencia() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #581C87)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Users size={22} />
-          Adolescência
-        </h1>
-        <p className="text-purple-100 text-xs mt-1">
-          Estadiamento de Tanner · rastreio de saúde mental · abordagem
-        </p>
-      </div>
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Módulo de apoio ao pediatra na consulta do adolescente. Todo o conteúdo orienta a conduta do

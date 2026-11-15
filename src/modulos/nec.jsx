@@ -73,7 +73,7 @@ function DoseRow({ label, dose, unit, vol, freq, ampola, cor }) {
           <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{fmtBR(vol)} mL · {freq}</p>
         </div>
       </div>
-      <p style={{ margin:0, fontSize:'10px', color:"var(--muted)" }}>{ampola}</p>
+      <p style={{ margin:0, fontSize:'11px', color:"var(--muted)" }}>{ampola}</p>
     </div>
   );
 }
@@ -165,15 +165,6 @@ export default function NEC() {
   return (
     <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
 
-      {/* Header */}
-      <div style={{ background:`linear-gradient(135deg, ${C} 0%, #78350F 100%)`, borderRadius:'14px', padding:'16px', marginBottom:'16px', color:'#FFF' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'4px' }}>
-          <AlertTriangle size={22} />
-          <h1 style={{ margin:0, fontSize:'20px', fontWeight:'800' }}>Enterocolite Necrosante</h1>
-        </div>
-        <p style={{ margin:0, fontSize:'11px', opacity:0.85 }}>NEC · Bell Modified Staging · Vermont Oxford · SBP · NeoFax 2023</p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display:'flex', gap:'6px', marginBottom:'16px' }}>
         {TABS.map(t=>(
@@ -186,7 +177,6 @@ export default function NEC() {
       {/* ════════════════ TAB: DIAGNÓSTICO ════════════════ */}
       {tab==='diagnostico' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           {/* Definição */}
           <div style={card({ border:`1px solid ${CBR}` })}>
             <p style={{ margin:'0 0 8px 0', fontSize:'14px', fontWeight:'700', color:C, display:'flex', alignItems:'center', gap:6 }}><ClipboardList size={15} />Enterocolite Necrosante (NEC)</p>
@@ -241,7 +231,7 @@ export default function NEC() {
                     <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>{row.sig}</p>
                   </div>
                 ))}
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>
                   Solicitar RX em AP e perfil (decúbito lateral D) · USG abdominal: útil para pneumatose, ascite e gás portal
                 </p>
               </div>
@@ -278,7 +268,6 @@ export default function NEC() {
       {/* ════════════════ TAB: BELL STAGING ════════════════ */}
       {tab==='estadio' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           <div style={{ backgroundColor:CLT, borderRadius:'10px', padding:'10px', border:`1px solid ${CBR}` }}>
             <p style={{ margin:0, fontSize:'12px', color:"var(--tx-amber)", fontWeight:'700' }}>
               Estadiamento de Bell Modificado (Walsh & Kliegman 1986) · selecione os achados para classificar
@@ -377,7 +366,6 @@ export default function NEC() {
       {/* ════════════════ TAB: TRATAR ════════════════ */}
       {tab==='tratar' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           {/* Medidas gerais */}
           <div style={card({ border:`1px solid ${CBR}` })}>
             <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'700', color:C, display:'flex', alignItems:'center', gap:6 }}><OctagonX size={15} />Medidas Imediatas (todos os estágios)</p>
@@ -391,7 +379,7 @@ export default function NEC() {
               'Consulta cirúrgica nos estágios II e III',
             ].map((item, i) => (
               <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:"var(--text-2)", marginBottom:'5px', alignItems:'flex-start' }}>
-                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'16px', height:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'9px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
+                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'16px', height:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
                 {item}
               </div>
             ))}
@@ -468,7 +456,6 @@ export default function NEC() {
       {/* ════════════════ TAB: CIRURGIA ════════════════ */}
       {tab==='cirurgia' && (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-
           {/* Indicações absolutas e relativas */}
           <div style={{ backgroundColor:"var(--tint-red)", borderRadius:'12px', padding:'14px', border:'1px solid #FECACA' }}>
             <p style={{ margin:'0 0 10px 0', fontSize:'14px', fontWeight:'800', color:'#DC2626', display:'flex', alignItems:'center', gap:6 }}><AlertTriangle size={15} />Indicações Cirúrgicas</p>
@@ -501,12 +488,12 @@ export default function NEC() {
               <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #3B82F6' }}>
                 <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-blue)" }}>Drenagem Peritoneal (DP)</p>
                 <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Indicada em: ELBW (abaixo de 1.000 g) como ponte · hemodinamicamente instável para laparotomia · prematuros extremos de alto risco cirúrgico</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
               </div>
               <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
                 <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-amber)" }}>Laparotomia Exploradora</p>
                 <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Tratamento definitivo · ressecção do intestino necrótico · criação de enterostomia · reconstrução de trânsito posterior (6-8 semanas)</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
               </div>
               <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px' }}>
                 <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)", fontWeight:'600' }}>

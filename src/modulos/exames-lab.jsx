@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Microscope, Info, AlertTriangle, AlertCircle, Venus, Mars } from "lucide-react";
+import { Info, AlertTriangle, AlertCircle, Venus, Mars } from "lucide-react";
 
 // Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
 const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
@@ -291,16 +291,6 @@ export default function ExamesLab() {
 
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
-
-      <div style={{ background: CS, padding: '20px 16px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Microscope size={22} color="#fff" />
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Exames Laboratoriais</div>
-            <div style={{ fontSize: 12, color: '#fff', opacity: 0.88 }}>Valores de referência pediátricos por faixa etária</div>
-          </div>
-        </div>
-      </div>
 
       <CatChips cats={CATS} active={cat} onChange={handleCat} />
 

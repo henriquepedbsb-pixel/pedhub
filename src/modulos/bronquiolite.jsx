@@ -102,18 +102,9 @@ export default function Bronquiolite() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #0F766E 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Stethoscope size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Bronquiolite Viral</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>AAP 2023 · SBP 2017 · NICE 2021</p>
-      </div>
-
       {/* Peso persistente */}
       <div style={{ marginBottom: '12px', ...card({ padding: '10px' }) }}>
-        <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg) — usado na aba OAF</label>
+        <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg) — usado na aba OAF</label>
         <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 6,5"
           style={{ width: '100%', padding: '6px 10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
         <OrigemPeso ativo={pesoDaBarra} />
@@ -132,7 +123,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: AVALIAR ════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Definição */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C }}><ClipboardList size={15} style={{verticalAlign:'-2px', marginRight:6}} />Diagnóstico Clínico</p>
@@ -244,7 +234,7 @@ export default function Bronquiolite() {
               <div style={{ marginTop: '10px', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: CLT, padding: '7px 10px' }}>
                   {['Faixa etária', 'Normal', 'Elevada (mod)'].map((h, i) => (
-                    <span key={i} style={{ fontSize: '10px', fontWeight: '700', color: C }}>{h}</span>
+                    <span key={i} style={{ fontSize: '11px', fontWeight: '700', color: C }}>{h}</span>
                   ))}
                 </div>
                 {[
@@ -258,7 +248,7 @@ export default function Bronquiolite() {
                     ))}
                   </div>
                 ))}
-                <div style={{ padding: '6px 10px', fontSize: '10px', color: "var(--muted)", backgroundColor: "var(--bg)", borderTop: '1px solid var(--border)' }}>
+                <div style={{ padding: '6px 10px', fontSize: '11px', color: "var(--muted)", backgroundColor: "var(--bg)", borderTop: '1px solid var(--border)' }}>
                   FR &gt; coluna "Elevada" → considerar grave
                 </div>
               </div>
@@ -270,7 +260,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: TRATAR ════════════ */}
       {tab === 'tratar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* NÃO USAR */}
           <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '12px', padding: '14px', border: '1px solid #FECACA' }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '800', color: '#DC2626' }}><Ban size={15} style={{verticalAlign:'-2px', marginRight:6}} />NÃO USAR rotineiramente</p>
@@ -304,7 +293,7 @@ export default function Bronquiolite() {
               'Não necessita exames complementares de rotina',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -326,7 +315,7 @@ export default function Bronquiolite() {
               'Escalar para OAF se SpO₂ < 90% com O₂ convencional ou piora do esforço',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -348,7 +337,7 @@ export default function Bronquiolite() {
               'Apneia recorrente: VM invasiva precoce',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                <span style={{ backgroundColor: '#DC2626', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#DC2626', color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -384,7 +373,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: OAF ════════════ */}
       {tab === 'oaf' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               OAF (HFNC) = 1ª linha de escalonamento quando O₂ convencional falha · antes do CPAP
@@ -400,14 +388,14 @@ export default function Bronquiolite() {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>FLUXO INICIAL</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>FLUXO INICIAL</p>
                     <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(oaf.inicial)}</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: C }}>L/min (1 L/kg/min)</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: C }}>L/min (1 L/kg/min)</p>
                   </div>
                   <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #FED7AA' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>FLUXO MÁXIMO</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>FLUXO MÁXIMO</p>
                     <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{fmtBR(oaf.maximo)}</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: '#D97706' }}>L/min (2 L/kg · máx 60 L/min)</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: '#D97706' }}>L/min (2 L/kg · máx 60 L/min)</p>
                   </div>
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
@@ -433,7 +421,7 @@ export default function Bronquiolite() {
               { titulo: 'Falha de OAF', desc: 'SpO₂ < 90% apesar de fluxo máximo ou FiO₂ ≥0,6 sem melhora em 1-2h → escalar para CPAP ou VM' },
             ].map((step, i) => (
               <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px' }}>
-                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 <div>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{step.titulo}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{step.desc}</p>
@@ -467,7 +455,6 @@ export default function Bronquiolite() {
       {/* ════════════ TAB: ALTA ════════════ */}
       {tab === 'alta' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critérios de alta */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><CheckCircle2 size={15} style={{verticalAlign:'-2px', marginRight:6}} />Critérios de Alta Hospitalar</p>
@@ -526,7 +513,6 @@ export default function Bronquiolite() {
             </button>
             {aberto === 'prev' && (
               <div style={{ marginTop: '10px' }}>
-
                 {/* Identidade */}
                 <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', marginBottom: '10px', borderLeft: `3px solid ${C}` }}>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>Nirsevimab (Beyfortus®) · ANVISA 2024 · SBP/SBIm 2024</p>
@@ -540,13 +526,13 @@ export default function Bronquiolite() {
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
                   <div style={{ flex: 1, backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px', textAlign: 'center', border: '1px solid #BFDBFE' }}>
                     <p style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>50 mg</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>para {'<'} 5 kg</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: "var(--tx-blue)", fontWeight: '600' }}>0,5 mL IM dose única</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>para {'<'} 5 kg</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: "var(--tx-blue)", fontWeight: '600' }}>0,5 mL IM dose única</p>
                   </div>
                   <div style={{ flex: 1, backgroundColor: CLT, borderRadius: '8px', padding: '10px', textAlign: 'center', border: `1px solid ${CBR}` }}>
                     <p style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: C, lineHeight: 1 }}>100 mg</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>para ≥ 5 kg</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: C, fontWeight: '600' }}>1 mL IM dose única</p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>para ≥ 5 kg</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: C, fontWeight: '600' }}>1 mL IM dose única</p>
                   </div>
                 </div>
 
@@ -577,7 +563,7 @@ export default function Bronquiolite() {
 
                 {/* Palivizumab como alternativa */}
                 <div style={{ marginTop: '8px', backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '8px 10px', borderLeft: '3px solid #D97706' }}>
-                  <p style={{ margin: 0, fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>
                     Palivizumab (Synagis®) — alternativa quando nirsevimab indisponível: 15 mg/kg IM mensal × até 5 doses · somente grupos de alto risco
                   </p>
                 </div>

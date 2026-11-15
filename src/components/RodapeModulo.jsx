@@ -31,7 +31,7 @@ export default function RodapeModulo({ revisao, fonte, nota, marginTop = 20 }) {
 
   return (
     <div style={{ marginTop, background: "var(--surface-2)", borderRadius: 10, padding: 12 }}>
-      <p style={{ margin: 0, fontSize: 10, color: "var(--muted)", textAlign: "center", lineHeight: 1.6 }}>
+      <p style={{ margin: 0, fontSize: 11, color: "var(--muted)", textAlign: "center", lineHeight: 1.6 }}>
         {rastreio && (
           <>
             {rastreio}
@@ -41,7 +41,7 @@ export default function RodapeModulo({ revisao, fonte, nota, marginTop = 20 }) {
         {DISCLAIMER_PADRAO}
       </p>
       {nota && (
-        <p style={{ margin: "6px 0 0", fontSize: 10, color: "var(--muted)", textAlign: "center", lineHeight: 1.5 }}>
+        <p style={{ margin: "6px 0 0", fontSize: 11, color: "var(--muted)", textAlign: "center", lineHeight: 1.5 }}>
           {nota}
         </p>
       )}

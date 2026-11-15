@@ -86,7 +86,7 @@ function DoseCard({ nome, calc, unidade, obs }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -116,17 +116,6 @@ export default function Pca() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #831843)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Waves size={22} />
-          PCA — Persistência do Canal Arterial
-        </h1>
-        <p className="text-pink-100 text-xs mt-1">
-          Diagnóstico de repercussão hemodinâmica e conduta no RN pré-termo
-        </p>
-      </div>
-
       {/* Peso do RN — usado nas calculadoras de dose farmacológica */}
       <div className="px-4 pt-4">
         <label className="block text-xs font-semibold text-gray-500 mb-1">

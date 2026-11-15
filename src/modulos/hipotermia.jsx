@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { ClipboardCheck, Calculator, Thermometer, TrendingUp, ChevronDown, ChevronUp, Clock, CheckCircle2, Brain, Ban, ClipboardList, Snowflake, BarChart3, Zap, AlertTriangle, Microscope, Check, X, RotateCcw } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
@@ -112,17 +113,11 @@ export default function Hipotermia() {
   });
 
   // ── Render ───────────────────────────────────────────────────────────────────
+  const nPreenchidos = Object.keys(scores).length;
+  const somaParcial = Object.values(scores).reduce((s, v) => s + v, 0);
+  const barraScore = tab === 'score';
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
-
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #3730A3 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Thermometer size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Hipotermia Terapêutica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>EHI Neonatal · ≥ 36 semanas · Janela: 6h · ILCOR 2021 · AAP 2014</p>
-      </div>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', paddingBottom: barraScore ? BARRA_RESULTADO_H + 16 : 16, backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
       {/* Alerta janela terapêutica */}
       <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -144,7 +139,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: ELEGÍVEL ════════════════ */}
       {tab === 'elegivel' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Critério A */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><CheckCircle2 size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Critério A — Evento Perinatal</p>
@@ -235,7 +229,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: SCORE ════════════════ */}
       {tab === 'score' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '600' }}>
               Escore de Thompson (1997) · máximo 23 pontos · ≥ 7 = candidato à hipotermia
@@ -265,8 +258,8 @@ export default function Hipotermia() {
                 <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                   {item.opcoes.map((op, idx) => (
                     <button key={idx} onClick={() => setScore(item.id, idx)}
-                      style={{ flex: '1 1 auto', minWidth: '60px', padding: '5px 4px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: scores[item.id] === idx ? '700' : '400', backgroundColor: scores[item.id] === idx ? (idx === 0 ? '#10B981' : idx === 1 ? '#D97706' : '#DC2626') : "var(--surface-2)", color: scores[item.id] === idx ? '#FFF' : "var(--text-2)", textAlign: 'center' }}>
-                      {idx > 0 && <span style={{ marginRight: '2px', fontSize: '9px' }}>{idx}</span>}
+                      style={{ flex: '1 1 auto', minWidth: '60px', padding: '5px 4px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: scores[item.id] === idx ? '700' : '400', backgroundColor: scores[item.id] === idx ? (idx === 0 ? '#10B981' : idx === 1 ? '#D97706' : '#DC2626') : "var(--surface-2)", color: scores[item.id] === idx ? '#FFF' : "var(--text-2)", textAlign: 'center' }}>
+                      {idx > 0 && <span style={{ marginRight: '2px', fontSize: '11px' }}>{idx}</span>}
                       {op}
                     </button>
                   ))}
@@ -311,7 +304,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: PROTOCOLO ════════════════ */}
       {tab === 'protocolo' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Temperatura alvo */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Thermometer size={15} style={{ verticalAlign: '-2px', marginRight: 6 }} />Temperatura Alvo e Duração</p>
@@ -322,9 +314,9 @@ export default function Hipotermia() {
                 { label: 'PROIBIDO', valor: '< 33°C', sub: 'overshoot — arrisca', bg: "var(--tint-red)", cor: '#DC2626' },
               ].map((item, i) => (
                 <div key={i} style={{ backgroundColor: item.bg, borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                  <p style={{ margin: 0, fontSize: '9px', fontWeight: '700', color: "var(--muted)" }}>{item.label}</p>
+                  <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>{item.label}</p>
                   <p style={{ margin: '4px 0 2px 0', fontSize: '18px', fontWeight: '800', color: item.cor, lineHeight: 1 }}>{item.valor}</p>
-                  <p style={{ margin: 0, fontSize: '9px', color: "var(--muted)" }}>{item.sub}</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)" }}>{item.sub}</p>
                 </div>
               ))}
             </div>
@@ -426,7 +418,7 @@ export default function Hipotermia() {
                     </div>
                   ))}
                 </div>
-                <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)", display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
+                <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)", display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
                   <AlertTriangle size={11} style={{ flexShrink: 0, marginTop: '1px' }} />Convulsão sutil: desvio do olhar, pedaling, sugar, apneia — pode ser eletroencefalográfica sem clínica · exige aEEG/EEG para diagnóstico
                 </p>
               </div>
@@ -438,7 +430,6 @@ export default function Hipotermia() {
       {/* ════════════════ TAB: REAQUECIMENTO ════════════════ */}
       {tab === 'reaquec' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Alerta */}
           <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', border: '1px solid #FECACA' }}>
             <p style={{ margin: 0, fontSize: '12px', color: '#DC2626', fontWeight: '700', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
@@ -472,14 +463,14 @@ export default function Hipotermia() {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DELTA TEMP</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DELTA TEMP</p>
                     <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(reqCalc.deltaT)}°C</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: C }}>{fmtBR(parseNum(tempAtual))}°C → 37,0°C</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: C }}>{fmtBR(parseNum(tempAtual))}°C → 37,0°C</p>
                   </div>
                   <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>TEMPO ESTIMADO</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>TEMPO ESTIMADO</p>
                     <p style={{ margin: '4px 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(reqCalc.horas)}h</p>
-                    <p style={{ margin: 0, fontSize: '10px', color: '#6EE7B7' }}>a {fmtBR(taxaReq)}°C/hora</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: '#6EE7B7' }}>a {fmtBR(taxaReq)}°C/hora</p>
                   </div>
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
@@ -507,7 +498,7 @@ export default function Hipotermia() {
               { titulo: 'Pós-normotermia', desc: 'Evitar febre (> 37,5°C) nas 72h pós-reaquecimento · febre = pior prognóstico' },
             ].map((step, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: "var(--bg)", borderRadius: '8px' }}>
-                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 <div>
                   <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{step.titulo}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{step.desc}</p>
@@ -556,6 +547,14 @@ export default function Hipotermia() {
         revisao="07/2026"
         fonte="Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
       />
+
+      {/* Escore de Thompson sempre à vista enquanto se marcam os itens. */}
+      {barraScore && (
+        <BarraResultado
+          rotulo={`Escore de Thompson · ${nPreenchidos}/${THOMPSON.length} itens`}
+          valor={thompsonClass ? `${thompsonTotal}/23 · ${thompsonClass.label}` : `${somaParcial}/23 · incompleto`}
+        />
+      )}
     </div>
   );
 }

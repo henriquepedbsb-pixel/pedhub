@@ -131,13 +131,13 @@ function DoseCard({ label, dose, unit, vol, ampola, cor, obs, admin }) {
           <p style={{ margin: '1px 0 0 0', fontSize: '12px', color: "var(--text-2)", fontWeight: '600' }}>{fmtBR(vol)} mL</p>
         </div>
       </div>
-      <p style={{ margin: 0, fontSize: '10px', color: "var(--muted)" }}>{ampola}</p>
+      <p style={{ margin: 0, fontSize: '11px', color: "var(--muted)" }}>{ampola}</p>
       {admin && (
-        <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--text-2)" }}>
+        <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
           <strong>Administração:</strong> {admin}
         </p>
       )}
-      {obs && <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>{obs}</p>}
+      {obs && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>{obs}</p>}
     </div>
   );
 }
@@ -227,15 +227,6 @@ export default function ISR() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #9A3412 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Zap size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>ISR Pediátrica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Intubação de Sequência Rápida · Harriet Lane 22ª ed. · UpToDate 2024</p>
-      </div>
-
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
         {TABS.map(t => (
@@ -248,7 +239,6 @@ export default function ISR() {
       {/* ════════════════ TAB: AVALIAR ════════════════ */}
       {tab === 'avaliar' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Indicações */}
           <div style={card({ border: `1px solid ${CBR}` })}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C, display: 'flex', alignItems: 'center' }}><Zap size={15} style={{ marginRight: 6 }} />Indicações de ISR</p>
@@ -280,7 +270,7 @@ export default function ISR() {
               'Rampa (lactente): elevar ombros até ouvido alinhar com esterno',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '6px', fontSize: '12px', color: "var(--tx-green)" }}>
-                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: '#10B981', color: '#FFF', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -303,7 +293,7 @@ export default function ISR() {
                     <X size={13} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se contraindicada → usar rocurônio 1,2 mg/kg (aba Calcular)</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Se contraindicada → usar rocurônio 1,2 mg/kg (aba Calcular)</p>
               </div>
               <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #D97706' }}>
                 <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '700', color: '#D97706' }}>Propofol — usar com cautela se:</p>
@@ -315,7 +305,7 @@ export default function ISR() {
                     <AlertTriangle size={13} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />{c}
                   </div>
                 ))}
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Se PA borderline → cetamina 1,5 mg/kg é mais segura</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Se PA borderline → cetamina 1,5 mg/kg é mais segura</p>
               </div>
             </div>
           </div>
@@ -348,7 +338,6 @@ export default function ISR() {
       {/* ════════════════ TAB: CALCULAR ════════════════ */}
       {tab === 'calcular' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           {/* Inputs */}
           <div style={card()}>
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)", display: 'flex', alignItems: 'center' }}><BarChart3 size={15} style={{ marginRight: 6 }} />Dados do Paciente</p>
@@ -364,7 +353,7 @@ export default function ISR() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
                 <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 2,5"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
-                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>0,5 = 6 meses · 0,08 ≈ 1 mês</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>0,5 = 6 meses · 0,08 ≈ 1 mês</p>
               </div>
             </div>
 
@@ -397,7 +386,6 @@ export default function ISR() {
           {/* Resultados */}
           {p > 0 && drugs ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
               {/* Pré-medicação */}
               <div style={card()}>
                 <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>PRÉ-MEDICAÇÃO</p>
@@ -498,13 +486,13 @@ export default function ISR() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                     <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(drugs.tubo.tamanho)}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mm DI (com cuff)</p>
-                      <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>ter {fmtBR(drugs.tubo.tamanho - 0.5)} e {fmtBR(drugs.tubo.tamanho + 0.5)} disponíveis</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>mm DI (com cuff)</p>
+                      <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#93C5FD' }}>ter {fmtBR(drugs.tubo.tamanho - 0.5)} e {fmtBR(drugs.tubo.tamanho + 0.5)} disponíveis</p>
                     </div>
                     <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <p style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(drugs.tubo.profCole)}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cm na comissura</p>
-                      <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>fórmula DI × 3</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '11px', fontWeight: '600', color: "var(--muted)" }}>cm na comissura</p>
+                      <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#6EE7B7' }}>fórmula DI × 3</p>
                     </div>
                   </div>
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
@@ -512,7 +500,7 @@ export default function ISR() {
                       <strong>Lâmina:</strong> {drugs.lamina.tipo}
                     </p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{drugs.lamina.detalhe}</p>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
                       Pressão do cuff ≤ 25 cmH₂O · Confirmar com capnografia + ausculta + RX tórax
                     </p>
                   </div>
@@ -530,14 +518,14 @@ export default function ISR() {
                 <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '800', color: C, display: 'flex', alignItems: 'center' }}>
                   <ListChecks size={15} style={{ marginRight: 6 }} />Prescrição pronta — ordem de administração
                 </p>
-                <p style={{ margin: '0 0 10px 0', fontSize: '10px', color: "var(--muted)" }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: "var(--muted)" }}>
                   Peso {fmtBR(p)} kg · {drugs.ctx.label} · todas as drogas IV em bólus, com flush de {fmtBR(drugs.flush)} mL de SF 0,9% após cada uma.
                 </p>
                 {(() => {
                   const linhas = montarLinhasRx();
                   return linhas.map((l, i) => (
                     <div key={i} style={{ marginBottom: '6px' }}>
-                      {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.03em' }}>{l.t}</p>}
+                      {l.t && <p style={{ margin: '4px 0 2px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.03em' }}>{l.t}</p>}
                       <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
                         <span style={{ color: C, fontWeight: '700', flexShrink: 0 }}>›</span>
                         <span style={{ fontSize: '12px', color: "var(--text-2)", lineHeight: 1.4 }}>{l.d}</span>
@@ -545,7 +533,7 @@ export default function ISR() {
                     </div>
                   ));
                 })()}
-                <p style={{ margin: '8px 0 0 0', fontSize: '10px', color: "var(--tx-amber)", fontWeight: '600' }}>
+                <p style={{ margin: '8px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>
                   Confirmar posição do tubo por capnografia + ausculta + RX. Doses e diluições conforme Harriet Lane 22ª ed.
                 </p>
                 <div style={{ marginTop: 10 }}>
@@ -564,7 +552,6 @@ export default function ISR() {
       {/* ════════════════ TAB: PROTOCOLO ════════════════ */}
       {tab === 'protocolo' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               <Timer size={13} style={ICONE_INLINE} />Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
@@ -634,12 +621,12 @@ export default function ISR() {
           ].map((etapa, i) => (
             <div key={i} style={card()}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '8px', padding: '4px 8px', fontSize: '10px', fontWeight: '800', flexShrink: 0 }}>{etapa.tempo}</span>
+                <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '8px', padding: '4px 8px', fontSize: '11px', fontWeight: '800', flexShrink: 0 }}>{etapa.tempo}</span>
                 <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: "var(--text-2)" }}>{etapa.titulo}</p>
               </div>
               {etapa.itens.map((item, j) => (
                 <div key={j} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                  <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0, marginTop: '1px' }}>{j + 1}</span>
+                  <span style={{ backgroundColor: etapa.cor, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0, marginTop: '1px' }}>{j + 1}</span>
                   {item}
                 </div>
               ))}
@@ -651,7 +638,6 @@ export default function ISR() {
       {/* ════════════════ TAB: VIA DIFÍCIL ════════════════ */}
       {tab === 'dificil' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
               Em criança, dessaturação é rápida. Definir plano A/B/C/D ANTES de induzir. Nunca mais de 2 tentativas sem reavaliação.

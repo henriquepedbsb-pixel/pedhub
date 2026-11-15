@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components -- exporta helpers de data e calcularIdadesPMA para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 import { CalendarClock, Info, ChevronRight } from "lucide-react";
 
 const PRIMARY = "#2563EB";
@@ -143,17 +144,16 @@ export default function IdadeGestacional() {
 
   const limparDisabled = !dataNasc && !igSemRaw && !igDiaRaw;
 
+  // Idade principal para a faixa fixa — a mesma que o card de destaque mostra.
+  let barra = null;
+  if (resultado) {
+    if (resultado.aTermo) barra = { rotulo: "Idade cronológica (nascido a termo)", valor: fmtCronologica(resultado.cronoDias) };
+    else if (resultado.fase === "igpm") barra = { rotulo: "IGPM (idade pós-menstrual)", valor: fmtSemDias(resultado.pmaDias) };
+    else barra = { rotulo: "Idade corrigida", valor: resultado.corrigidaDias === 0 ? "Termo (40 semanas)" : fmtMesesDias(resultado.corrigidaDias) };
+  }
+
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-
-      {/* Header */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Idade Gestacional e Corrigida
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>IGPM até 40 semanas · idade corrigida · cronológica</p>
-      </div>
-
+    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)", paddingBottom: barra ? BARRA_RESULTADO_H : 0 }}>
       {/* Entradas */}
       <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>
         <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", marginBottom: 4 }}>
@@ -177,7 +177,7 @@ export default function IdadeGestacional() {
               placeholder="semanas" maxLength={2} autoComplete="off"
               style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
           </div>
           <div style={{ flex: 1 }}>
             <input
@@ -186,7 +186,7 @@ export default function IdadeGestacional() {
               placeholder="dias" maxLength={1} autoComplete="off"
               style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
           </div>
         </div>
 
@@ -358,6 +358,8 @@ export default function IdadeGestacional() {
         fonte="SBP / AAP — Engle WA, Pediatrics 2004 (reafirmado 2024)"
         nota="Confira a idade gestacional ao nascer com o método de datação mais confiável disponível."
       />
+
+      {barra && <BarraResultado rotulo={barra.rotulo} valor={barra.valor} />}
     </div>
   );
 }

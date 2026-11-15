@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Syringe, AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
 
 const CI = '#6366F1';
 const CD = "var(--tx-blue)";
@@ -85,16 +85,6 @@ export default function Sedacao() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-      <div style={{ background: CI, padding: '20px 16px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Syringe size={22} color="#fff" />
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Sedação em Procedimentos</div>
-            <div style={{ fontSize: 12, color: '#fff', opacity: 0.88 }}>Fármacos · Classificação · Checklist · Antagonistas</div>
-          </div>
-        </div>
-      </div>
-
       <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 8, minWidth: 'max-content' }}>
           {ABAS.map(t => (
@@ -115,7 +105,7 @@ export default function Sedacao() {
             <div key={i} style={{ background: "var(--surface)", borderRadius: 12, padding: 14, border: '1px solid var(--border)', marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8, gap: 8 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-2)", lineHeight: 1.4, flex: 1 }}>{p.titulo}</div>
-                <span style={{ background: p.nivelFundo, color: p.nivelCor, fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, flexShrink: 0, whiteSpace: 'nowrap' }}>{p.nivel}</span>
+                <span style={{ background: p.nivelFundo, color: p.nivelCor, fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, flexShrink: 0, whiteSpace: 'nowrap' }}>{p.nivel}</span>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
                 {p.agentes.map((a, ai) => <span key={ai} style={{ background: CL, color: CD, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, border: `1px solid ${CB}` }}>{a}</span>)}
@@ -157,11 +147,11 @@ export default function Sedacao() {
                   <div style={{ padding: '0 14px 14px', borderTop: `1px solid ${f.cor}30` }}>
                     <div style={{ display: 'flex', gap: 10, marginTop: 12, marginBottom: 12 }}>
                       <div style={{ flex: 1, background: "var(--bg)", borderRadius: 8, padding: '8px 12px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Onset</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Onset</div>
                         <div style={{ fontSize: 12, color: "var(--text-2)", marginTop: 2 }}>{f.onset}</div>
                       </div>
                       <div style={{ flex: 1, background: "var(--bg)", borderRadius: 8, padding: '8px 12px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Duração</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Duração</div>
                         <div style={{ fontSize: 12, color: "var(--text-2)", marginTop: 2 }}>{f.duracao}</div>
                       </div>
                     </div>

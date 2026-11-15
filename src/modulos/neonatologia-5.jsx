@@ -162,7 +162,7 @@ function Card({ children }) {
 }
 
 function CardHead({ label }) {
-  return <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 12 }}>{label}</div>;
+  return <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 12 }}>{label}</div>;
 }
 
 function Fld({ label, hint, children }) {
@@ -170,7 +170,7 @@ function Fld({ label, hint, children }) {
     <div style={{ marginBottom: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
         <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)" }}>{label}</label>
-        {hint && <span style={{ fontSize: 10, color: "var(--muted)" }}>{hint}</span>}
+        {hint && <span style={{ fontSize: 11, color: "var(--muted)" }}>{hint}</span>}
       </div>
       {children}
     </div>
@@ -255,9 +255,9 @@ function ResultNPT({ r }) {
           ["Lipídeos",     fmtBR(r.dLip) + " g/kg/d",  `${f1(r.kcalLip / r.pk)} kcal/kg`],
         ].map(([label, val, sub]) => (
           <div key={label} style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>{label}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>{label}</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: C }}>{fmtBR(val)}</div>
-            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{sub}</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{sub}</div>
           </div>
         ))}
       </div>
@@ -322,7 +322,7 @@ function ResultNPT({ r }) {
 
       {/* Tabela de alvos */}
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
           Alvos — RNPT · SBP 2023 e ESPGHAN/ESPEN 2018
         </div>
         {[
@@ -421,7 +421,7 @@ function TabNPT() {
         <div style={{ display: "flex", gap: 6 }}>
           {PERFIS.map(p => (
             <button key={p.label} onClick={() => aplicarPerfil(p)}
-              style={{ flex: 1, padding: "7px 2px", fontSize: 10.5, fontWeight: 600, borderRadius: 7, border: "1px solid var(--border)", cursor: "pointer", background: "var(--bg)", color: "var(--text-2)" }}>
+              style={{ flex: 1, padding: "7px 2px", fontSize: 11, fontWeight: 600, borderRadius: 7, border: "1px solid var(--border)", cursor: "pointer", background: "var(--bg)", color: "var(--text-2)" }}>
               {p.label}
             </button>
           ))}
@@ -519,10 +519,6 @@ function TabNPT() {
 export default function Neonatologia5() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia V</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>NPT Neonatal</p>
-      </div>
       <div style={{ padding: 16 }}>
         <TabNPT />
       </div>

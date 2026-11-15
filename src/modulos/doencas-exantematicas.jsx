@@ -69,7 +69,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -224,7 +224,7 @@ function DiferencialAchados({ onSelecionar }) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-sm text-gray-800">{r.label}</span>
                       {r.patognomonico && (
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-red-900 bg-red-50 rounded-full px-2 py-0.5">
+                        <span className="text-[11px] font-bold uppercase tracking-wide text-red-900 bg-red-50 rounded-full px-2 py-0.5">
                           achado patognomônico
                         </span>
                       )}
@@ -258,16 +258,6 @@ export default function DoencasExantematicas() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #450A0A)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Thermometer size={22} />
-          Doenças Exantemáticas
-        </h1>
-        <p className="text-red-100 text-xs mt-1">
-          Diagnóstico diferencial dos exantemas na infância
-        </p>
-      </div>
-
       <div className="px-4 pt-4">
         <div className="flex gap-2 overflow-x-auto pb-1">
           <button

@@ -101,7 +101,7 @@ function DoseCard({ nome, calc, unidade, obs }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -262,7 +262,7 @@ function DiferencialAchados({ onSelecionar }) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-sm text-gray-800">{r.label}</span>
                       {r.patognomonico && (
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-indigo-900 bg-indigo-100 rounded-full px-2 py-0.5">
+                        <span className="text-[11px] font-bold uppercase tracking-wide text-indigo-900 bg-indigo-100 rounded-full px-2 py-0.5">
                           achado patognomônico
                         </span>
                       )}
@@ -283,7 +283,7 @@ function DiferencialAchados({ onSelecionar }) {
               neuroimagem e o contexto materno.
             </AlertaBox>
           )}
-          <p className="text-[10px] text-gray-400 mt-3 px-1 leading-relaxed">
+          <p className="text-[11px] text-gray-400 mt-3 px-1 leading-relaxed">
             Achados discriminantes conforme SBP e AAP Red Book. Ferramenta de
             apoio ao raciocínio — a confirmação é sempre clínica e laboratorial.
           </p>
@@ -426,17 +426,6 @@ export default function Torchs() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #4F46E5)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Baby size={22} />
-          TORCHS — Infecções Congênitas
-        </h1>
-        <p className="text-indigo-100 text-xs mt-1">
-          Toxoplasmose · Rubéola · Citomegalovírus · Herpes · Sífilis congênita
-        </p>
-      </div>
-
       {/* Peso do RN — usado nas calculadoras de dose (oculto no diferencial) */}
       {aba !== "diferencial" && (
         <div className="px-4 pt-4">

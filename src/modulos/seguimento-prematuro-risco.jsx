@@ -72,7 +72,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -116,7 +116,7 @@ function TransfusaoTable() {
           <span className="text-center font-semibold" style={{ color: COR }}>{l.semSuporte}</span>
         </div>
       ))}
-      <div className="px-2 py-1.5 text-[10px] text-gray-400 border-t border-gray-100">Limiar de hematócrito (%) para indicar transfusão — estratégia restritiva</div>
+      <div className="px-2 py-1.5 text-[11px] text-gray-400 border-t border-gray-100">Limiar de hematócrito (%) para indicar transfusão — estratégia restritiva</div>
     </div>
   );
 }
@@ -141,17 +141,6 @@ export default function SeguimentoPrematuroRisco() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #14532D)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Users size={22} />
-          Seguimento do Prematuro de Risco
-        </h1>
-        <p className="text-green-100 text-xs mt-1">
-          Programa ambulatorial · nutrientes · anemia · doença metabólica óssea
-        </p>
-      </div>
-
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">
           Este módulo cobre a <strong>estrutura do programa de seguimento</strong>, os alvos nutricionais, anemia e
