@@ -274,7 +274,7 @@ export default function Pedfarma() {
       </div>
 
       <div style={{ padding: "12px 16px", background: "var(--tint-purple)", borderBottom: "1px solid #DDD6FE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#6D28D9", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg) — referência de dose</label>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-purple)", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg) — referência de dose</label>
         <input type="text" inputMode="decimal" placeholder="Ex: 20,0"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />

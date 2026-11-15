@@ -19,16 +19,22 @@ import { limparDecimal, fmtBR } from '../lib/numero';
 /* ── Paleta ── */
 const C = {
   head1: '#0d3b6e', head2: '#1a6896',
-  aap:  '#1a6896', aapL: '#e8f2fa',
-  sbp:  '#0d6e6e', sbpL: '#e0f2f1',
+  aap:  '#1a6896', aapL: "var(--tint-blue)",
+  sbp:  '#0d6e6e', sbpL: "var(--tint-teal)",
   prim: '#D97706',
-  fundo:'#eef2f7', card: '#ffffff', borda:'#d0dae8',
-  texto:'#1a1a2e', det: "var(--text-2)", muted:'#718096',
-  // Zone colors — clinical, preserve originals
-  z1bg:"var(--tint-green)", z1br:'#28a745', z1tx:'#155724',
-  z2bg:"var(--tint-amber)", z2br:'#ffc107', z2tx:'#856404',
-  z3bg:"var(--tint-amber)", z3br:'#ff9800', z3tx:'#e65100',
-  z4bg:"var(--tint-red)", z4br:'#dc3545', z4tx:'#721c24',
+  // Moldura neutra em tokens de tema (CLAUDE.md, regra 3 — exceção do "chrome"):
+  // superfícies, texto e bordas acompanham o claro/escuro. A borda usa um cinza
+  // translúcido, visível sobre superfície clara e escura.
+  fundo:"var(--bg)", card: "var(--surface)", borda:'rgba(100,116,139,0.35)',
+  texto:"var(--text)", det: "var(--text-2)", muted:"var(--muted)",
+  // Texto de destaque AAP/SBP: mesmo matiz, tom que inverte por tema.
+  aapTx: "var(--tx-blue)", sbpTx: "var(--tx-teal)",
+  // Zone colors — clinical, preserve originals. A cor da ZONA é a da borda (hex
+  // fixo); o texto usa os tokens semânticos, legíveis nos dois temas.
+  z1bg:"var(--tint-green)", z1br:'#28a745', z1tx:"var(--tx-green)",
+  z2bg:"var(--tint-amber)", z2br:'#ffc107', z2tx:"var(--tx-amber)",
+  z3bg:"var(--tint-amber)", z3br:'#ff9800', z3tx:"var(--tx-amber)",
+  z4bg:"var(--tint-red)", z4br:'#dc3545', z4tx:"var(--tx-red)",
   z5bg:'#b71c1c', z5br:'#7f0000', z5tx:'#ffffff',
 };
 const R = '10px', RS = '7px';
@@ -195,8 +201,8 @@ const GUIDE = [
 <table style="border-collapse:collapse;width:100%;font-size:0.83rem"><thead>
 <tr><th style="background:#1a6896;color:#fff;padding:6px 10px;text-align:left">Mecanismo</th><th style="background:#1a6896;color:#fff;padding:6px 10px;text-align:left">Causas</th></tr>
 </thead><tbody>
-<tr><td style="padding:6px 10px;border:1px solid #d0dae8">Sobrecarga ao hepatócito</td><td style="padding:6px 10px;border:1px solid #d0dae8">Incompatibilidade ABO/Rh, G6PD, esferocitose, eliptocitose, cefalohematoma, policitemia, transfusão feto-fetal</td></tr>
-<tr style="background:#f5f8fc"><td style="padding:6px 10px;border:1px solid #d0dae8">Deficiência de conjugação</td><td style="padding:6px 10px;border:1px solid #d0dae8">Imaturidade (prematuridade), S. de Gilbert, S. de Crigler-Najjar, hipotireoidismo, leite materno, hipoglicemia, hipóxia</td></tr>
+<tr><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Sobrecarga ao hepatócito</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Incompatibilidade ABO/Rh, G6PD, esferocitose, eliptocitose, cefalohematoma, policitemia, transfusão feto-fetal</td></tr>
+<tr style="background:var(--tint-slate)"><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Deficiência de conjugação</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Imaturidade (prematuridade), S. de Gilbert, S. de Crigler-Najjar, hipotireoidismo, leite materno, hipoglicemia, hipóxia</td></tr>
 </tbody></table>`,
   },
   {
@@ -213,7 +219,7 @@ ${[
   ['Bilirrubina fracionada','Sempre; BD > 1 mg/dL → investigar colestase'],
   ['Albumina','Sempre que TSB próxima ao limiar'],
   ['Esfregaço periférico','Suspeita de defeito eritrocitário (esferocitose, eliptocitose)'],
-].map((r,i)=>`<tr style="${i%2?'background:#f5f8fc':''}"><td style="padding:5px 8px;border:1px solid #d0dae8">${r[0]}</td><td style="padding:5px 8px;border:1px solid #d0dae8">${r[1]}</td></tr>`).join('')}
+].map((r,i)=>`<tr style="${i%2?'background:var(--tint-slate)':''}"><td style="padding:5px 8px;border:1px solid rgba(100,116,139,0.35)">${r[0]}</td><td style="padding:5px 8px;border:1px solid rgba(100,116,139,0.35)">${r[1]}</td></tr>`).join('')}
 </tbody></table>`,
   },
   {
@@ -238,10 +244,10 @@ ${[
 <table style="border-collapse:collapse;width:100%;font-size:0.83rem;margin-top:8px"><thead>
 <tr><th style="background:#1a6896;color:#fff;padding:6px 10px">Diferença TSB × limiar (na alta)</th><th style="background:#1a6896;color:#fff;padding:6px 10px">Consulta de retorno</th></tr>
 </thead><tbody>
-<tr><td style="padding:6px 10px;border:1px solid #d0dae8;text-align:center">&gt; 3,5 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid #d0dae8">Rotina</td></tr>
-<tr style="background:#f5f8fc"><td style="padding:6px 10px;border:1px solid #d0dae8;text-align:center">2,0 – 3,5 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid #d0dae8">Em 2 dias</td></tr>
-<tr><td style="padding:6px 10px;border:1px solid #d0dae8;text-align:center">0,1 – 1,9 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid #d0dae8">Em 1–2 dias; verificar TcB/TSB no retorno</td></tr>
-<tr style="background:#f5f8fc"><td style="padding:6px 10px;border:1px solid #d0dae8;text-align:center">Acima do limiar (alta domiciliar)</td><td style="padding:6px 10px;border:1px solid #d0dae8">Fototerapia domiciliar + retorno em 24h</td></tr>
+<tr><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35);text-align:center">&gt; 3,5 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Rotina</td></tr>
+<tr style="background:var(--tint-slate)"><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35);text-align:center">2,0 – 3,5 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Em 2 dias</td></tr>
+<tr><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35);text-align:center">0,1 – 1,9 mg/dL abaixo</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Em 1–2 dias; verificar TcB/TSB no retorno</td></tr>
+<tr style="background:var(--tint-slate)"><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35);text-align:center">Acima do limiar (alta domiciliar)</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">Fototerapia domiciliar + retorno em 24h</td></tr>
 </tbody></table>`,
   },
   {
@@ -291,7 +297,7 @@ ${[
   ['≥ 38 sem, com fator de risco','≥ 7,2'],
   ['35–37 sem, sem fator de risco','≥ 7,2'],
   ['35–37 sem, com fator de risco','≥ 6,8'],
-].map((r,i)=>`<tr style="${i%2?'background:#f5f8fc':''}"><td style="padding:6px 10px;border:1px solid #d0dae8">${r[0]}</td><td style="padding:6px 10px;border:1px solid #d0dae8;text-align:center">${r[1]}</td></tr>`).join('')}
+].map((r,i)=>`<tr style="${i%2?'background:var(--tint-slate)':''}"><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35)">${r[0]}</td><td style="padding:6px 10px;border:1px solid rgba(100,116,139,0.35);text-align:center">${r[1]}</td></tr>`).join('')}
 </tbody></table>`,
   },
   {
@@ -608,17 +614,17 @@ export default function IctericiaNeonatal() {
               </Fld>
             </div>
             {nascInfo.status === 'sem-hora' && (
-              <p style={{fontSize:10.5,color:'#b45309',marginTop:6}}>
+              <p style={{fontSize:10.5,color:"var(--tx-amber)",marginTop:6}}>
                 Falta a hora de nascimento para calcular a idade de vida automaticamente.
               </p>
             )}
             {(nascInfo.status === 'data-invalida' || nascInfo.status === 'hora-invalida') && (
-              <p style={{fontSize:10.5,color:'#b91c1c',marginTop:6}}>
+              <p style={{fontSize:10.5,color:"var(--tx-red)",marginTop:6}}>
                 Data ou hora de nascimento em formato inválido.
               </p>
             )}
             {nascInfo.status === 'futuro' && (
-              <p style={{fontSize:10.5,color:'#b91c1c',marginTop:6}}>
+              <p style={{fontSize:10.5,color:"var(--tx-red)",marginTop:6}}>
                 Data/hora de nascimento no futuro — verifique.
               </p>
             )}
@@ -662,7 +668,7 @@ export default function IctericiaNeonatal() {
             </Fld>
           </div>
           {idadeFoiAutoCalculada && (
-            <p style={{fontSize:10.5,color:'#0d6e6e',fontWeight:600,marginBottom:8}}>
+            <p style={{fontSize:10.5,color:"var(--tx-teal)",fontWeight:600,marginBottom:8}}>
               ✓ Calculado automaticamente a partir do nascimento
             </p>
           )}
@@ -670,7 +676,7 @@ export default function IctericiaNeonatal() {
             <p style={{fontSize:10.5,color:C.muted,marginBottom:8}}>
               Idade editada manualmente —{' '}
               <button type="button" onClick={recalcularAgora} style={{
-                background:'none',border:'none',color:C.aap,textDecoration:'underline',
+                background:'none',border:'none',color:C.aapTx,textDecoration:'underline',
                 cursor:'pointer',fontSize:10.5,padding:0,
               }}>
                 recalcular a partir do nascimento
@@ -786,7 +792,7 @@ export default function IctericiaNeonatal() {
           display:'flex', alignItems:'center', justifyContent:'center', gap:7,
           width:'100%', padding:'11px 0', marginBottom:14,
           border:`1.5px solid ${C.borda}`, borderRadius:R,
-          background:"var(--surface)", color:C.head2,
+          background:"var(--surface)", color:C.aapTx,
           fontSize:14, fontWeight:600, cursor:'pointer',
         }}>
           <Printer size={15}/> Imprimir / PDF
@@ -804,7 +810,7 @@ export default function IctericiaNeonatal() {
         {/* Banner protocolo */}
         <div style={{display:'flex',alignItems:'center',gap:10,padding:'8px 12px',
           borderRadius:RS,marginBottom:10,fontWeight:700,fontSize:13,
-          background:C.aapL,color:C.aap,border:`2px solid ${C.aap}`}}>
+          background:C.aapL,color:C.aapTx,border:`2px solid ${C.aap}`}}>
           <Badge type="aap">AAP 2022</Badge>
           Protocolo para RN ≥ 35 semanas
         </div>
@@ -950,7 +956,7 @@ export default function IctericiaNeonatal() {
       <>
         <div style={{display:'flex',alignItems:'center',gap:10,padding:'8px 12px',
           borderRadius:RS,marginBottom:10,fontWeight:700,fontSize:13,
-          background:C.sbpL,color:C.sbp,border:`2px solid ${C.sbp}`}}>
+          background:C.sbpL,color:C.sbpTx,border:`2px solid ${C.sbp}`}}>
           <Badge type="sbp">SBP 2021</Badge>
           Protocolo para RN &lt; 35 semanas (IG {ig} sem)
         </div>
@@ -1079,7 +1085,7 @@ export default function IctericiaNeonatal() {
                 </thead>
                 <tbody>
                   {tableData[key].data.map((row,ri) => (
-                    <tr key={ri} style={{background:ri%2?'#f5f8fc':''}}>
+                    <tr key={ri} style={{background:ri%2?"var(--tint-slate)":''}}>
                       <td style={{...tdStyle,fontWeight:700}}>{tableData[key].rows[ri]}</td>
                       {row.map((val,ci) => {
                         const isEdit = editCell && editCell.key===key && editCell.ri===ri && editCell.ci===ci;
@@ -1100,7 +1106,7 @@ export default function IctericiaNeonatal() {
                         return (
                           <td key={ci} onClick={()=>setEditCell({key,ri,ci})}
                             style={{...tdStyle,cursor:'pointer',
-                              background: isHl ? "var(--tint-amber)" : ri%2?'#f5f8fc':'',
+                              background: isHl ? "var(--tint-amber)" : ri%2?"var(--tint-slate)":'',
                               fontWeight: isHl ? 700 : 400,
                               outline: isHl ? `2px solid #ffc107` : 'none',
                             }}>
@@ -1161,7 +1167,7 @@ export default function IctericiaNeonatal() {
                     );
                   }
                   return (
-                    <tr key={ri} style={{background:ri%2?'#f5f8fc':''}}>
+                    <tr key={ri} style={{background:ri%2?"var(--tint-slate)":''}}>
                       <td style={{...tdStyle,fontWeight:700}}>{row.label}</td>
                       <td style={tdStyle}>{eCell('photoL')} – {eCell('photoH')}</td>
                       <td style={tdStyle}>{eCell('estL')} – {eCell('estH')}</td>
@@ -1188,7 +1194,7 @@ function GuiaTab() {
   return (
     <div style={{padding:'12px 14px 0'}}>
       {GUIDE.map((item,i) => (
-        <div key={i} style={{border:`1px solid #d0dae8`,borderRadius:'8px',marginBottom:8,overflow:'hidden'}}>
+        <div key={i} style={{border:`1px solid rgba(100,116,139,0.35)`,borderRadius:'8px',marginBottom:8,overflow:'hidden'}}>
           <button onClick={()=>setOpen(p=>({...p,[i]:!p[i]}))}
             style={{width:'100%',padding:'10px 14px',background:"var(--tint-slate)",border:'none',
               cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',
@@ -1260,9 +1266,9 @@ function Pill({color,children}) {
 
 function ABox({type,children}) {
   const styles = {
-    warn:   {bg:"var(--tint-amber)",tx:'#856404',br:'#ffc107'},
-    danger: {bg:"var(--tint-red)",tx:'#721c24',br:'#dc3545'},
-    info:   {bg:"var(--tint-teal)",tx:'#0c5460',br:'#bee5eb'},
+    warn:   {bg:"var(--tint-amber)",tx:"var(--tx-amber)",br:'#ffc107'},
+    danger: {bg:"var(--tint-red)",tx:"var(--tx-red)",br:'#dc3545'},
+    info:   {bg:"var(--tint-teal)",tx:"var(--tx-teal)",br:'#5EEAD4'},
   };
   const s = styles[type] || styles.info;
   return (
@@ -1277,7 +1283,7 @@ function ABox({type,children}) {
 function RiskSection({title,badge,children,style}) {
   return (
     <div style={style}>
-      <div style={{fontSize:12,fontWeight:700,color:badge==='aap'?C.aap:C.sbp,
+      <div style={{fontSize:12,fontWeight:700,color:badge==='aap'?C.aapTx:C.sbpTx,
         padding:'4px 8px',background:badge==='aap'?C.aapL:C.sbpL,
         borderRadius:5,marginBottom:7,display:'flex',alignItems:'center',gap:8}}>
         <Badge type={badge}>{badge==='aap'?'AAP 2022':'SBP 2021'}</Badge>

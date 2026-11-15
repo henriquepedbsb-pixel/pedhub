@@ -27,9 +27,11 @@ const COR = {
   mid:   '#047857',
   lite:  '#D1FAE5',
   fundo: "var(--tint-green)",
-  card:  '#ffffff',
-  borda: '#A7F3D0',
-  texto: '#1A2332',
+  card:  "var(--surface)",   // moldura neutra em token de tema (claro/escuro)
+  borda: 'rgba(16,185,129,0.4)', // verde translúcido: ~#A7F3D0 sobre branco, suave sobre superfície escura
+  texto: "var(--text)",
+  txVerde: "var(--tx-green)", // texto verde que inverte de tom por tema
+  liteBg: "var(--tint-green)", // fundo verde suave que acompanha o tema
   det:   "var(--text-2)",
   muted: "var(--muted)",
   warn:  '#D97706',
@@ -264,6 +266,11 @@ function printById(id) {
     '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">' +
     '<style>' +
     '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+    // A impressão é sempre em papel claro: os tokens de tema usados nos estilos
+    // inline do bloco recebem aqui os valores do tema claro.
+    ':root { --bg:#F6F8FB; --surface:#FFFFFF; --surface-2:#F3F4F6; --border:#E5E7EB; --text:#1A2332; --text-2:#374151; --muted:#5B6B80;' +
+    ' --tint-green:#ECFDF5; --tint-amber:#FFF7ED; --tint-red:#FEF2F2; --tint-purple:#F5F3FF; --tint-blue:#EFF6FF; --tint-teal:#F0FDFA; --tint-slate:#F8FAFC;' +
+    ' --tx-green:#047857; --tx-amber:#B45309; --tx-red:#B91C1C; --tx-blue:#1D4ED8; --tx-purple:#6D28D9; --tx-teal:#0F766E; }' +
     'body { font-family: "DM Sans", Arial, sans-serif; padding: 20px; background: #fff; color: #1A2332; }' +
     '.print-hide { display: none !important; }' +
     '@media print { body { padding: 10mm; } button { display: none !important; } }' +
@@ -797,8 +804,8 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               </div>
             </div>
             <div style={{
-              background: COR.lite, borderRadius: 8, padding: '5px 12px',
-              fontSize: 12, fontWeight: 700, color: COR.dark,
+              background: COR.liteBg, borderRadius: 8, padding: '5px 12px',
+              fontSize: 12, fontWeight: 700, color: COR.txVerde,
             }}>
               {res.dias} dias · IGPM {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''}
             </div>
@@ -1205,8 +1212,8 @@ function Card({ children, className }) {
 function CardHead({ Icon, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: COR.muted, marginBottom: 14 }}>
-      <div style={{ width: 22, height: 22, background: COR.lite, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon size={13} color={COR.mid} />
+      <div style={{ width: 22, height: 22, background: COR.liteBg, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon size={13} color={COR.txVerde} />
       </div>
       {children}
     </div>
@@ -1251,7 +1258,7 @@ function DateInp({ value, onChange }) {
 
 function IdadeBadge({ dias, igpm }) {
   return (
-    <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: COR.mid }}>
+    <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: COR.txVerde }}>
       <CheckCircle size={13} />
       {dias} dias de vida
       {igpm !== null && (
@@ -1367,7 +1374,7 @@ function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 })
           title="Usar valor sugerido"
           style={{
             display: 'flex', alignItems: 'center', gap: 4,
-            border: 'none', background: 'transparent', color: COR.mid,
+            border: 'none', background: 'transparent', color: COR.txVerde,
             fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: '4px 2px',
           }}
         >
@@ -1424,7 +1431,7 @@ function OkBadge({ children }) {
 function RxDocItem({ n, titulo, children }) {
   return (
     <div style={{ paddingBottom: 11, marginBottom: 11, borderBottom: `1px dotted ${COR.borda}` }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: COR.dark, marginBottom: 4 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: COR.txVerde, marginBottom: 4 }}>
         {n}. {titulo}
       </div>
       <div style={{ fontSize: 13, color: COR.texto, lineHeight: 1.55 }}>{children}</div>
@@ -1457,7 +1464,7 @@ function PrintBtn({ targetId }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         width: '100%', padding: '12px 0',
         border: `1.5px solid ${COR.borda}`, borderRadius: R,
-        background: "var(--surface)", color: COR.mid,
+        background: "var(--surface)", color: COR.txVerde,
         fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 4,
       }}
     >

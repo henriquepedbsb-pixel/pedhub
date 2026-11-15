@@ -10,6 +10,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
 @media (min-width: 620px) { .ph-shell { max-width: 600px; } }
 @media (min-width: 860px) { .ph-shell { max-width: 720px; } }
 
+/* --muted no tema claro: #5B6B80 dá contraste ≥ 4,9:1 sobre branco, --bg e
+   --surface-2 (WCAG AA). O valor anterior, #94A3B8, ficava em ~2,5:1. */
 /* ─── Tokens de tema ────────────────────────────────────────────────────────
    Moldura (bg/superfície/texto/borda) + tints de fundo + TEXTO semântico.
    Os tokens --tx-* resolvem o problema de textos semânticos escuros (ex.:
@@ -23,7 +25,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
   --border:     #EEF0F4;
   --text:       #0F172A;
   --text-2:     #374151;
-  --muted:      #94A3B8;
+  --muted:      #5B6B80;
   --header-bg:  rgba(255,255,255,0.82);
   --tint-blue:   #EFF6FF; --tint-red: #FEF2F2; --tint-green: #ECFDF5;
   --tint-amber:  #FFF7ED; --tint-purple: #F5F3FF; --tint-teal: #F0FDFA;
@@ -76,7 +78,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
   --border:     #EEF0F4;
   --text:       #0F172A;
   --text-2:     #374151;
-  --muted:      #94A3B8;
+  --muted:      #5B6B80;
   --header-bg:  rgba(255,255,255,0.82);
   --tint-blue:   #EFF6FF; --tint-red: #FEF2F2; --tint-green: #ECFDF5;
   --tint-amber:  #FFF7ED; --tint-purple: #F5F3FF; --tint-teal: #F0FDFA;
