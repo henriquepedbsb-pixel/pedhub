@@ -1,8 +1,10 @@
 # PedHub — Contexto e regras para o Claude Code
 
-Repositório: `henriquepedbsb-pixel/pedhub` (privado)
+Repositório: `henriquepedbsb-pixel/pedhub` (**público durante a fase de testes** —
+todos os direitos reservados, ver `LICENSE`; no plano gratuito do GitHub, tornar
+o repositório privado tira o site do GitHub Pages do ar)
 Responsável médico: Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
-Última atualização deste documento: 14/11/2026
+Última atualização deste documento: 15/11/2026
 
 ---
 
@@ -54,9 +56,10 @@ a busca global não acha o módulo.
 
 **Não introduzir dependência nova sem justificar e perguntar antes.**
 `vitest` (`^4.1.10`) **já está instalado e configurado** (`vitest.config.js`,
-scripts `npm test` / `npm run test:watch`) e o CI já roda `npm test` antes do
-build (`.github/workflows/ci.yml` e `main.yml`) — teste vermelho bloqueia
-deploy. `@vitest/coverage-v8` pode ser adicionado se for medir cobertura.
+scripts `npm test` / `npm run test:watch`) e o CI roda `npm run lint` e
+`npm test` antes do build (`.github/workflows/ci.yml` e `main.yml`, Node 22) —
+erro de lint ou teste vermelho bloqueia o deploy. Rodar `npm run lint`
+localmente antes de abrir PR. `@vitest/coverage-v8` pode ser adicionado se for medir cobertura.
 
 ---
 
