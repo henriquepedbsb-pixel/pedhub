@@ -10,6 +10,43 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
 @media (min-width: 620px) { .ph-shell { max-width: 600px; } }
 @media (min-width: 860px) { .ph-shell { max-width: 720px; } }
 
+/* ─── Seletor segmentado (abas e opções de calculadora) ──────────────────────
+   Estado ativo por classe + !important (CLAUDE.md, regra 3). A cor da opção
+   entra pela variável --seg-cor, definida inline pelo componente Segmentado:
+   ela pinta só o filete inferior; o texto usa os tokens de tema (contraste). */
+.ph-seg {
+  display: flex; gap: 3px; padding: 3px;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 13px;
+}
+.ph-seg-btn {
+  flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 4px 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  border: none; border-radius: 10px; background: transparent; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.2;
+  color: var(--text-2) !important; white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+.ph-seg-btn.is-active {
+  background: var(--surface) !important; color: var(--text) !important; font-weight: 700;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.16), inset 0 -3px 0 var(--seg-cor, var(--text));
+}
+.ph-seg-sub { font-size: 11.5px; font-weight: 500; color: var(--muted); }
+.ph-seg-btn.is-active .ph-seg-sub { color: var(--text-2); }
+
+/* ─── Hubs: atalhos de seção (rolam na horizontal, sem barra de rolagem) ──── */
+.ph-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.ph-chips::-webkit-scrollbar { display: none; }
+.ph-chip {
+  flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+  min-height: 40px; padding: 0 14px; border-radius: 20px;
+  background: var(--surface); border: 1.5px solid var(--border); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-2);
+  white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.ph-chip:active { background: var(--surface-2); }
+.ph-chip-n { font-weight: 500; color: var(--muted); }
+
 /* --muted no tema claro: #5B6B80 dá contraste ≥ 4,9:1 sobre branco, --bg e
    --surface-2 (WCAG AA). O valor anterior, #94A3B8, ficava em ~2,5:1. */
 /* ─── Tokens de tema ────────────────────────────────────────────────────────

@@ -82,3 +82,41 @@ describe("catálogo de módulos — fonte única", () => {
     expect(acha("schwartz")).toContain("/eletrolitos");
   });
 });
+
+describe("catálogo — busca compartilhada e cabeçalho", async () => {
+  const { termosDaBusca, casaBusca, keywordDoMatch } = await import("../catalogo.js");
+  const porRota = (r) => MODULOS.find((m) => m.rota === r);
+
+  it("termos: sem acento, sem caixa, sem espaços sobrando; vazio e null viram lista vazia", () => {
+    expect(termosDaBusca("  Icterícia   NEONATAL ")).toEqual(["ictericia", "neonatal"]);
+    expect(termosDaBusca("")).toEqual([]);
+    expect(termosDaBusca(null)).toEqual([]);
+  });
+
+  it("casa por nome, descrição ou termo de busca; exige todos os termos", () => {
+    expect(casaBusca(porRota("/hidratacao"), termosDaBusca("holliday"))).toBe(true);
+    expect(casaBusca(porRota("/sepse"), termosDaBusca("rodwell"))).toBe(true);
+    expect(casaBusca(porRota("/sepse"), termosDaBusca("rodwell zzz"))).toBe(false);
+  });
+
+  it("'achado por': só quando o termo não está no nome nem na descrição", () => {
+    expect(keywordDoMatch(porRota("/sepse"), termosDaBusca("rodwell"))).toBe("rodwell");
+    expect(keywordDoMatch(porRota("/sepse"), termosDaBusca("sepse"))).toBeNull();
+  });
+
+  it("hubs mostram a contagem de ferramentas no cabeçalho", () => {
+    expect(MODULO_MAP["/pediatria-geral"].info).toBe("31 ferramentas");
+    expect(MODULO_MAP["/neonatal"].info).toBe("25 ferramentas");
+  });
+
+  it("subtítulo no cabeçalho só nos módulos marcados com descNoCabecalho", () => {
+    expect(MODULO_MAP["/hidratacao"].sub).toBe(porRota("/hidratacao").desc);
+    expect(MODULO_MAP["/urgencias"].sub).toBeUndefined();
+    for (const m of MODULOS) expect(Boolean(MODULO_MAP[m.rota].sub), m.rota).toBe(Boolean(m.descNoCabecalho));
+  });
+
+  it("seções com nome curto para o atalho do hub", () => {
+    const pg = secoesDoHub("/pediatria-geral").map((s) => s.curto || s.titulo);
+    expect(pg).toEqual(["Emergências", "Terapia intensiva", "Farmacologia", "Crescimento", "Especialidades"]);
+  });
+});

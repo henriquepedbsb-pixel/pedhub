@@ -10,6 +10,8 @@ import { montarTextoConduta } from "../lib/exportarTexto";
 import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+import Segmentado from "../components/Segmentado";
+import BarraResultado, { BARRA_RESULTADO_H } from "../components/BarraResultado";
 
 const PRIMARY = "#3B82F6";
 
@@ -159,21 +161,17 @@ function TabHolliday({ peso }) {
           Eletrólitos de Manutenção
         </p>
 
-        {/* Toggle Isotônica / Hipotônica */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
-          {[
-            { val: "iso",  label: "Isotônica",  sub: "Na 3 mEq/kg/dia",  cor: PRIMARY    },
-            { val: "hipo", label: "Hipotônica", sub: "Na 2 mEq/kg/dia",  cor: "#8B5CF6"  },
-          ].map(op => (
-            <button key={op.val} onClick={() => setTipoSol(op.val)} style={{
-              flex: 1, padding: "8px 6px", borderRadius: 8, border: "1.5px solid " + (tipoSol === op.val ? op.cor : "var(--border)"),
-              background: tipoSol === op.val ? op.cor + "12" : "var(--surface-2)",
-              cursor: "pointer", textAlign: "center",
-            }}>
-              <div style={{ fontWeight: 700, fontSize: 12, color: tipoSol === op.val ? op.cor : "var(--text-2)" }}>{op.label}</div>
-              <div style={{ fontSize: 10, color: tipoSol === op.val ? op.cor : "var(--muted)", marginTop: 2 }}>{op.sub}</div>
-            </button>
-          ))}
+        {/* Seletor Isotônica / Hipotônica */}
+        <div style={{ marginBottom: 12 }}>
+          <Segmentado
+            rotulo="Solução de manutenção"
+            valor={tipoSol}
+            onChange={setTipoSol}
+            opcoes={[
+              { valor: "iso",  label: "Isotônica",  sub: "Na 3 mEq/kg/dia", cor: PRIMARY   },
+              { valor: "hipo", label: "Hipotônica", sub: "Na 2 mEq/kg/dia", cor: "#8B5CF6" },
+            ]}
+          />
         </div>
 
         {/* Cards Na e K */}
@@ -240,12 +238,8 @@ function TabHolliday({ peso }) {
           color="#D97706"
         />
 
-        <div style={{ marginTop: 12 }}>
-          <BotaoCopiar montar={montarTexto} cor={corTipo} rotulo="Copiar prescrição" />
-        </div>
-
         {/* Notas clínicas */}
-        <div style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)" }}>
+        <div style={{ background: "var(--bg)", borderRadius: 8, padding: "10px 12px", border: "1px solid var(--border)", marginTop: 12 }}>
           <p style={{ fontWeight: 600, fontSize: 11, color: "var(--text-2)", margin: "0 0 6px" }}>Referências clínicas</p>
           <ItemList color="var(--muted)" items={[
             "Isotônica (Na 3 mEq/kg/dia): preferida para pacientes hospitalizados — menor risco de hiponatremia (AAP 2018, SBP)",
@@ -266,6 +260,19 @@ function TabHolliday({ peso }) {
           "Máximo: 2.400 mL/dia (adulto jovem)",
         ]} />
       </div>
+
+      {/* Resultado principal sempre à vista + copiar a prescrição */}
+      <BarraResultado
+        rotulo={"Manutenção · " + fmtBR(peso) + " kg"}
+        valor={fmtBR(vol) + " mL/dia · " + fmtBR(volHora) + " mL/h"}
+      >
+        <BotaoCopiar
+          montar={montarTexto}
+          cor={tipoSol === "iso" ? "#1D4ED8" : "#6D28D9"}
+          solido larguraTotal={false}
+          rotulo="Copiar" ariaLabel="Copiar prescrição" rotuloErro="Não copiou"
+        />
+      </BarraResultado>
     </div>
   );
 }
@@ -295,6 +302,12 @@ function TabPlanoA({ peso }) {
         <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 8px" }}>Preparo da SRO domiciliar</p>
         <ItemList color="#10B981" items={["1 litro de água filtrada ou fervida", "1 colher de café de sal (3,5 g)", "2 colheres de sopa rasas de açúcar (20 g)", "Usar em até 24h · Conservar em geladeira"]} />
       </div>
+      {peso && (
+        <BarraResultado
+          rotulo={"Manutenção (referência) · " + fmtBR(peso) + " kg"}
+          valor={fmtBR(holliday(peso).vol) + " mL/dia · " + fmtBR(holliday(peso).volHora) + " mL/h"}
+        />
+      )}
     </div>
   );
 }
@@ -313,6 +326,12 @@ function TabPlanoB({ peso }) {
         <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 8px" }}>Reposição de perdas durante o plano</p>
         <ItemList color="#F59E0B" items={["Vômito: 5–10 mL/kg de SRO após cada episódio", "Evacuação diarreica: 10 mL/kg de SRO após cada evacuação", "Após 4h: reavaliar estado de hidratação e reclassificar plano"]} />
       </div>
+      {peso && (
+        <BarraResultado
+          rotulo={"SRO em 4 horas (75 mL/kg) · " + fmtBR(peso) + " kg"}
+          valor={fmtBR(sroPeso) + " mL"}
+        />
+      )}
     </div>
   );
 }
@@ -341,6 +360,12 @@ function TabPlanoC({ peso }) {
         <p style={{ fontWeight: 700, color: "var(--tx-amber)", fontSize: 13, margin: "0 0 8px" }}>Soluções disponíveis</p>
         <ItemList color="#D97706" items={["SF 0,9%: Na 154 mEq/L, Cl 154 mEq/L — isotônica", "RL (Ringer Lactato): Na 130, K 4, Ca 3, Cl 109, Lac 28 mEq/L — preferida em expansão volumétrica", "SG5%+SF0,9%: glicose + isotônica — manutenção", "Evitar soluções hipotônicas (SG5% isolada) em expansão"]} />
       </div>
+      {peso && (
+        <BarraResultado
+          rotulo={"Expansão (20 mL/kg) · " + fmtBR(peso) + " kg"}
+          valor={fmtBR(sf1) + " mL em 20–30 min"}
+        />
+      )}
     </div>
   );
 }
@@ -349,41 +374,35 @@ export default function Hidratacao() {
   const [tab, setTab]       = useState(0);
   const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const peso = parsePeso(pesoRaw);
-  const tabs  = ["Holliday-Segar", "Plano A", "Plano B", "Plano C"];
-  const cores = [PRIMARY, "#10B981", "#F59E0B", "#EF4444"];
+  const abas = [
+    { valor: 0, label: "Holliday-Segar", cor: PRIMARY   },
+    { valor: 1, label: "Plano A",        cor: "#10B981" },
+    { valor: 2, label: "Plano B",        cor: "#F59E0B" },
+    { valor: 3, label: "Plano C",        cor: "#EF4444" },
+  ];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Hidratação</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Holliday-Segar · Planos A / B / C</p>
+    <div style={{
+      fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh",
+      background: "var(--surface)", boxSizing: "border-box",
+      // Com peso válido há uma faixa fixa de resultado no rodapé da tela: reserva
+      // o espaço dela para não cobrir o rodapé do módulo.
+      paddingBottom: peso ? BARRA_RESULTADO_H : 0,
+    }}>
+      {/* Título e subtítulo ficam no cabeçalho global (descNoCabecalho no catálogo). */}
+      <div style={{ padding: "12px 16px 0" }}>
+        <Segmentado rotulo="Modo de cálculo" opcoes={abas} valor={tab} onChange={setTab} />
       </div>
-      <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-blue)", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg)</label>
+      <div style={{ padding: "12px 16px 0" }}>
+        <label htmlFor="hid-peso" style={{ fontSize: 12.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 6 }}>Peso (kg)</label>
         <input
+          id="hid-peso"
           type="text" inputMode="decimal" placeholder="Ex: 12,5"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
+          style={{ width: "100%", height: 48, padding: "0 14px", borderRadius: 12, fontSize: 17, fontWeight: 600, color: "var(--text)", border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box", fontFamily: "inherit" }}
         />
         <OrigemPeso ativo={pesoDaBarra} />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
-        {peso && <p style={{ fontSize: 12, fontWeight: 700, color: PRIMARY, margin: "4px 0 0" }}>{fmtBR(peso)} kg · Holliday: {fmtBR(holliday(peso).vol)} mL/dia ({fmtBR(holliday(peso).volHora)} mL/h)</p>}
-      </div>
-      <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
-        {tabs.map((t, i) => {
-          const active = tab === i;
-          return (
-            <button key={i} onClick={() => setTab(i)} style={{
-              flexShrink: 0, flex: 1, padding: "11px 6px", fontSize: 11,
-              fontWeight: active ? 700 : 500, color: active ? cores[i] : "var(--muted)",
-              background: "transparent", border: "none",
-              borderBottom: "2.5px solid " + (active ? cores[i] : "transparent"),
-              cursor: "pointer",
-            }}>
-              {t}
-            </button>
-          );
-        })}
       </div>
       <div style={{ padding: 16 }}>
         {tab === 0 && <TabHolliday peso={peso} />}

@@ -6,7 +6,11 @@
 
    `cor` é a cor de identidade do módulo (hex literal, passado pelo módulo —
    regra 3). Verde de sucesso e vermelho de erro são cores SEMÂNTICAS, também
-   hex literal por design. */
+   hex literal por design.
+
+   `solido` preenche o botão com `cor` e texto branco — para uso sobre a faixa
+   de resultado (BarraResultado); passar uma `cor` escura o bastante para texto
+   branco. `ariaLabel` e `rotuloErro` permitem um rótulo visível curto. */
 import { useState } from "react";
 import { Copy, Check, AlertTriangle } from "lucide-react";
 import { copiarTexto } from "../lib/exportarTexto.js";
@@ -21,6 +25,9 @@ export default function BotaoCopiar({
   rotulo = "Copiar conduta",
   larguraTotal = true,
   disabled = false,
+  solido = false,
+  ariaLabel,
+  rotuloErro = "Não foi possível copiar",
 }) {
   const [estado, setEstado] = useState("idle"); // idle | ok | erro
 
@@ -34,14 +41,16 @@ export default function BotaoCopiar({
   const ok = estado === "ok";
   const erro = estado === "erro";
   const borda = ok ? VERDE : erro ? VERMELHO : cor;
-  const label = ok ? "Copiado!" : erro ? "Não foi possível copiar" : rotulo;
+  const label = ok ? "Copiado!" : erro ? rotuloErro : rotulo;
+  const fundo = ok ? VERDE : solido ? (erro ? VERMELHO : cor) : "var(--surface)";
+  const corTexto = ok || solido ? "#fff" : erro ? VERMELHO : cor;
 
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      aria-label={rotulo}
+      aria-label={ariaLabel || rotulo}
       style={{
         display: "flex",
         alignItems: "center",
@@ -51,8 +60,9 @@ export default function BotaoCopiar({
         padding: "11px 16px",
         border: `1.5px solid ${borda}`,
         borderRadius: 12,
-        background: ok ? VERDE : "var(--surface)",
-        color: ok ? "#fff" : erro ? VERMELHO : cor,
+        background: fundo,
+        color: corTexto,
+        whiteSpace: "nowrap",
         fontSize: 14,
         fontWeight: 600,
         cursor: disabled ? "not-allowed" : "pointer",
