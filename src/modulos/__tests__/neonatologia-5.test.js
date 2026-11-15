@@ -51,9 +51,17 @@ describe('calcNPT — alertas', () => {
     expect(calcNPT(base).periAlert).toBe(false);
     expect(calcNPT({ ...base, acesso: 'periferico' }).periAlert).toBe(true);
   });
-  it('TIG acima de 12 mg/kg/min', () => {
+  it('TIG acima da faixa da fase estável da SBP 2023 (7–10 mg/kg/min)', () => {
     expect(calcNPT({ ...base, volKgD: '150', tig: '13' }).highTIG).toBe(true);
+    expect(calcNPT({ ...base, volKgD: '150', tig: '10,5' }).highTIG).toBe(true);
+    expect(calcNPT({ ...base, volKgD: '150', tig: '10' }).highTIG).toBe(false);
     expect(calcNPT(base).highTIG).toBe(false);
+  });
+  it('aminoácidos acima de 3,5 g/kg/dia (SBP 2023 não recomenda)', () => {
+    expect(calcNPT({ ...base, doseAA: '3,5' }).highAA).toBe(false);
+    expect(calcNPT({ ...base, doseAA: '3,6' }).highAA).toBe(true);
+    expect(calcNPT({ ...base, doseAA: '4' }).highAA).toBe(true);
+    expect(calcNPT(base).highAA).toBe(false);
   });
   it('aporte calórico abaixo de 50 kcal/kg/dia', () => {
     expect(calcNPT({ ...base, doseAA: '1', tig: '4', doseLip: '0,5' }).lowKcal).toBe(true);
@@ -94,6 +102,10 @@ describe('sugerirEletro — sugestão por dia de vida', () => {
     expect(sugerirEletro(3)).toMatchObject({ na: '2', k: '1' });
   });
   it('sem data de nascimento não sugere', () => expect(sugerirEletro(null)).toBeNull());
+  it('cálcio sugerido: 1,6 mEq/kg/dia = 0,8 mmol, piso da SBP 2023 para o 1º–10º dia', () => {
+    expect(sugerirEletro(1).ca).toBe('1,6');
+    expect(sugerirEletro(5).ca).toBe('1,6');
+  });
   it('não sugere fósforo: o campo começa em 0 e só entra se o médico preencher', () => {
     for (const dia of [0, 1, 2, 3, 10, 30]) expect(sugerirEletro(dia)).not.toHaveProperty('p');
   });

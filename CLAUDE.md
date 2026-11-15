@@ -178,6 +178,13 @@ reabrir como "divergência":**
   Referência entregue pelo responsável: SBP 2023, *Recomendações para Nutrição
   Parenteral em RN Pré-termo* (GPA nº 108) — fosfato desde o 1º dia de NP,
   1–2 mmol/kg/dia até o 10º dia, de preferência orgânico.
+- **Faixas da NPT seguem a SBP 2023** (decisão de 15/11/2026): AA 1,5–2 no 1º
+  dia e 2,5–3,5 g/kg/dia depois (alerta acima de 3,5); glicose início 4–6 e fase
+  estável 7–10 mg/kg/min (alerta acima de 10); lipídeos 1–2 até 3,5–4; Ca
+  0,8–2 mmol/kg/dia até o 10º dia e 1,6–3,5 depois (campo em mEq: 1,6–4 e
+  3,2–7; começa em 1,6); P 1–2 e 1,6–3,5 mmol/kg/dia; calorias 45–55 na fase
+  inicial e 90–120 kcal/kg/dia na estável. Na, K e Mg continuam nas faixas da
+  ESPGHAN/ESPEN 2018, que coincidem com as da SBP.
 
 ---
 

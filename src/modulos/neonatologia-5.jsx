@@ -57,13 +57,14 @@ const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !
 const f1  = n => (Math.round(n * 10)   / 10).toFixed(1).replace(".", ",");
 const f2  = n => (Math.round(n * 100) / 100).toFixed(2).replace(".", ",");
 
-/* ── Sugestão de eletrólitos por dia de vida (ESPGHAN/ESPEN 2018) ────────── */
+/* ── Sugestão de eletrólitos por dia de vida (SBP 2023 · ESPGHAN/ESPEN 2018) ── */
 export function sugerirEletro(dias) {
   if (dias === null) return null;
   return {
     na:  dias <= 2 ? "0"   : "2",
     k:   dias <= 2 ? "0"   : "1",
-    ca:  "1,5",
+    // 0,8 mmol/kg/dia = 1,6 mEq/kg/dia: piso da faixa da SBP 2023 para o 1º–10º dia.
+    ca:  "1,6",
     // Fósforo fica de fora da sugestão automática (decisão do responsável
     // médico, 15/11/2026): o campo começa em 0 e só entra na bolsa se o médico
     // preencher — assim o sódio do glicerofosfato nunca entra sem ser visto.
@@ -140,7 +141,10 @@ export function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
     dAA, dTIG, dLip, dNa, dK, dCa, dP, dMg,
     kcalAA, kcalGlucose, kcalLip, kcalKgD, kcalNPC,
     periAlert: acesso === "periferico" && concGluco > 12.5,
-    highTIG:   dTIG > 12,
+    // Faixas da SBP 2023 (GPA nº 108): glicose na fase estável 7–10 mg/kg/min;
+    // aminoácidos — "não se recomenda ofertas superiores a 3,5 g/kg/dia".
+    highTIG:   dTIG > 10,
+    highAA:    dAA > 3.5,
     lowKcal:   kcalKgD < 50,
     highKcal:  kcalKgD > 130,
     caPAlert:  dCa > 0 && dP > 0,
@@ -236,7 +240,8 @@ function ResultNPT({ r }) {
   return (
     <div>
       {r.periAlert && <Alerta color="#DC2626" text={`SG ${f1(r.concGluco)}% — concentração > 12,5%: ACESSO CENTRAL obrigatório.`} />}
-      {r.highTIG   && <Alerta color="#D97706" text={`TIG ${fmtBR(r.dTIG)} mg/kg/min acima de 12 — monitorar glicemia e verificar acesso central.`} />}
+      {r.highTIG   && <Alerta color="#D97706" text={`TIG ${fmtBR(r.dTIG)} mg/kg/min acima da faixa da fase estável (7–10, SBP 2023) — monitorar glicemia e verificar acesso central.`} />}
+      {r.highAA    && <Alerta color="#D97706" text={`Aminoácidos ${fmtBR(r.dAA)} g/kg/dia — a SBP 2023 não recomenda ofertas acima de 3,5 g/kg/dia.`} />}
       {r.lowKcal   && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia abaixo de 50 — aporte insuficiente.`} />}
       {r.highKcal  && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia acima de 130 — risco de hiperalimentação.`} />}
       {r.naExcesso && <Alerta color="#D97706" text={`O glicerofosfato de sódio já fornece ${f2(r.naGlicKg)} mEq/kg/dia de sódio, acima do Na prescrito (${fmtBR(r.dNa)} mEq/kg/dia). NaCl 20% zerado — rever a dose de fósforo ou o sódio total.`} />}
@@ -317,18 +322,18 @@ function ResultNPT({ r }) {
       {/* Tabela de alvos */}
       <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", border: "1px solid var(--border)" }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 8 }}>
-          Alvos ESPGHAN/ESPEN 2018 — RNPT
+          Alvos — RNPT · SBP 2023 e ESPGHAN/ESPEN 2018
         </div>
         {[
-          ["AA",       "3,5–4,5 g/kg/d (início 2–3; increm. 0,5–1/d)"],
-          ["TIG",      "início 4–6; máx 12–13 mg/kg/min"],
-          ["Lipídeos", "início 1–2; alvo 3–4 g/kg/d"],
+          ["AA",       "1º dia: 1,5–2 · do 2º dia em diante: 2,5–3,5 g/kg/d (não passar de 3,5)"],
+          ["TIG",      "início 4–6 · fase estável 7–10 mg/kg/min"],
+          ["Lipídeos", "início 1–2 · aumentar até 3,5–4 g/kg/d"],
           ["Na",       "dias 1–2: 0–2 · dia 3+: 2–5 mEq/kg/d"],
           ["K",        "dias 1–2: 0 (aguardar diurese) · dia 3+: 1–3"],
-          ["Ca",       "1,5–2,5 mEq/kg/d (preT) · 0,6–1,5 (RNT)"],
-          ["P",        "1,5–2 mmol/kg/d = 46–62 mg/kg/d (preT)"],
+          ["Ca",       "1º–10º dia: 0,8–2 mmol (1,6–4 mEq) · depois: 1,6–3,5 mmol (3,2–7 mEq)/kg/d"],
+          ["P",        "1º–10º dia: 1–2 mmol (31–62 mg) · depois: 1,6–3,5 mmol (50–108 mg)/kg/d"],
           ["Mg",       "0,2–0,4 mEq/kg/d"],
-          ["Calorias", "80–120 kcal/kg/d"],
+          ["Calorias", "fase inicial: 45–55 · fase estável: 90–120 kcal/kg/d"],
         ].map(([n, v]) => (
           <div key={n} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 11, gap: 8 }}>
             <span style={{ color: "var(--muted)", fontWeight: 700, flexShrink: 0 }}>{n}</span>
@@ -351,7 +356,7 @@ function TabNPT() {
   const [doseLip,  setDoseLip]  = useState("1,5");
   const [doseNa,   setDoseNa]   = useState("0");
   const [doseK,    setDoseK]    = useState("0");
-  const [doseCa,   setDoseCa]   = useState("1,5");
+  const [doseCa,   setDoseCa]   = useState("1,6");
   const [doseP,    setDoseP]    = useState("0");
   const [doseMg,   setDoseMg]   = useState("0,2");
   const [resultado, setResultado] = useState(null);
@@ -397,14 +402,14 @@ function TabNPT() {
   function limpar() {
     setPesoG(""); setDataNasc(""); setAcesso("central"); setVolKgD("80");
     setDoseAA("2,5"); setTig("5"); setDoseLip("1,5");
-    setDoseNa("0"); setDoseK("0"); setDoseCa("1,5"); setDoseP("0"); setDoseMg("0,2");
+    setDoseNa("0"); setDoseK("0"); setDoseCa("1,6"); setDoseP("0"); setDoseMg("0,2");
     setResultado(null); setErro("");
   }
 
   return (
     <div>
       <InfoBox>
-        <strong>NPT Neonatal — ESPGHAN/ESPEN 2018 · BRASPEN 2022.</strong>{" "}
+        <strong>NPT Neonatal — SBP 2023 · ESPGHAN/ESPEN 2018 · BRASPEN 2022.</strong>{" "}
         Sistema 2 bolsas. Eletrólitos sugeridos automaticamente pelo dia de vida — editáveis.
         Periférico: SG ≤ 12,5%.
       </InfoBox>
@@ -452,14 +457,14 @@ function TabNPT() {
       <Card>
         <CardHead label="Macronutrientes" />
         <Grid2>
-          <Fld label="AA (g/kg/dia)" hint="alvo 3,5–4,5">
+          <Fld label="AA (g/kg/dia)" hint="alvo 2,5–3,5">
             <Inp value={doseAA} set={setDoseAA} placeholder="2,5" mode="decimal" />
           </Fld>
-          <Fld label="TIG (mg/kg/min)" hint="início 4–6">
+          <Fld label="TIG (mg/kg/min)" hint="4–6 → 7–10">
             <Inp value={tig} set={setTig} placeholder="5" mode="decimal" />
           </Fld>
         </Grid2>
-        <Fld label="Lipídeos (g/kg/dia)" hint="início 1–2; alvo 3–4">
+        <Fld label="Lipídeos (g/kg/dia)" hint="início 1–2 · até 3,5–4">
           <Inp value={doseLip} set={setDoseLip} placeholder="1,5" mode="decimal" />
         </Fld>
       </Card>
@@ -474,10 +479,10 @@ function TabNPT() {
           <Fld label="K (mEq/kg/dia)" hint={diasCalc !== null && diasCalc <= 2 ? "aguardar diurese" : "dia 3+: 1–3"}>
             <Inp value={doseK} set={setDoseK} placeholder="0–2" mode="decimal" />
           </Fld>
-          <Fld label="Ca (mEq/kg/dia)" hint="1,5–2,5">
-            <Inp value={doseCa} set={setDoseCa} placeholder="1,5" mode="decimal" />
+          <Fld label="Ca (mEq/kg/dia)" hint={diasCalc !== null && diasCalc > 10 ? "3,2–7" : "1,6–4"}>
+            <Inp value={doseCa} set={setDoseCa} placeholder="1,6" mode="decimal" />
           </Fld>
-          <Fld label="P (mg/kg/dia)" hint="46–62 (preT)">
+          <Fld label="P (mg/kg/dia)" hint={diasCalc !== null && diasCalc > 10 ? "50–108" : "31–62"}>
             <Inp value={doseP} set={setDoseP} placeholder="0" mode="decimal" />
           </Fld>
         </Grid2>
