@@ -59,7 +59,7 @@ function CorticoideConversor() {
         Converte a dose entre corticosteroides sistêmicos pela <strong>potência anti-inflamatória equivalente</strong> — útil ao trocar via (ex: hidrocortisona IV → prednisolona VO no desmame).
       </p>
 
-      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>CORTICOIDE DE ORIGEM</label>
+      <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>CORTICOIDE DE ORIGEM</label>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
         {CORTICOIDES_EQUIV.map(c => (
           <button
@@ -77,7 +77,7 @@ function CorticoideConversor() {
         ))}
       </div>
 
-      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>DOSE ATUAL (mg)</label>
+      <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, letterSpacing: "0.04em" }}>DOSE ATUAL (mg)</label>
       <input
         type="text"
         inputMode="decimal"
@@ -107,7 +107,7 @@ function CorticoideConversor() {
                   <p style={{ fontSize: 12, fontWeight: isOrigem ? 700 : 600, color: isOrigem ? PRIMARY : "#111827", margin: 0 }}>
                     {c.nome}{isOrigem && " (origem)"}
                   </p>
-                  <p style={{ fontSize: 10, color: "var(--muted)", margin: "1px 0 0" }}>{c.duracao} · Mineralocorticoide: {c.mineralocorticoide}</p>
+                  <p style={{ fontSize: 11, color: "var(--muted)", margin: "1px 0 0" }}>{c.duracao} · Mineralocorticoide: {c.mineralocorticoide}</p>
                 </div>
                 <p style={{ fontSize: 16, fontWeight: 800, color: isOrigem ? PRIMARY : "var(--text-2)", margin: 0 }}>{fmtBR(equivDose)} mg</p>
               </div>

@@ -105,7 +105,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -330,7 +330,7 @@ function AbaHipertensao() {
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <div className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
-                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">
+                <div className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">
                   Sistólica
                 </div>
                 <div className="text-sm font-bold text-gray-800">
@@ -341,7 +341,7 @@ function AbaHipertensao() {
                 </div>
               </div>
               <div className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
-                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">
+                <div className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">
                   Diastólica
                 </div>
                 <div className="text-sm font-bold text-gray-800">
@@ -418,7 +418,7 @@ function AbaHipertensao() {
               />
             )}
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[11px] text-gray-500">
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P90</span>
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(217,119,6,0.4)" }} />Elevada P90–P95</span>
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Estágio 1 P95–+12</span>
@@ -720,12 +720,12 @@ function AbaTratamento() {
           <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
-                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose inicial</div>
+                <div className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">Dose inicial</div>
                 <div className="text-base font-extrabold" style={{ color: COR }}>{fmtBR(dose.inicial)} mg/dia</div>
                 <div className="text-[11px] text-gray-500">{medSel.inicialTxt}</div>
               </div>
               <div className="rounded-lg bg-white/70 px-2 py-2 text-center">
-                <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Dose máxima</div>
+                <div className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">Dose máxima</div>
                 <div className="text-base font-extrabold" style={{ color: COR }}>{fmtBR(dose.maxima)} mg/dia</div>
                 <div className="text-[11px] text-gray-500">{medSel.maximaTxt}</div>
               </div>
@@ -867,7 +867,7 @@ function AbaTratamento() {
               <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
                 <div className="flex justify-between gap-2">
                   <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
-                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                  <span className="text-[11px] text-gray-500">{f.via}</span>
                 </div>
                 <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
                 <div className="text-[11px] text-gray-400">{f.obs}</div>
@@ -882,7 +882,7 @@ function AbaTratamento() {
               <div key={f.nome} className="rounded-lg border border-gray-200 px-2.5 py-2">
                 <div className="flex justify-between gap-2">
                   <span className="font-semibold text-gray-800 text-xs">{f.nome}</span>
-                  <span className="text-[10px] text-gray-500">{f.via}</span>
+                  <span className="text-[11px] text-gray-500">{f.via}</span>
                 </div>
                 <div className="text-[11px] text-gray-600">{f.classe} · {f.dose}</div>
                 <div className="text-[11px] text-gray-400">{f.obs}</div>
@@ -974,7 +974,7 @@ function AbaNeonatal() {
             onChange={(e) => setSemana(Number(e.target.value))}
             className="w-full accent-rose-700"
           />
-          <div className="flex justify-between text-[10px] text-gray-400">
+          <div className="flex justify-between text-[11px] text-gray-400">
             {DIONNE_SEMANAS.map((s) => (
               <span key={s}>{s}</span>
             ))}
@@ -990,7 +990,7 @@ function AbaNeonatal() {
         {/* Valores de referência da semana selecionada */}
         {semRef && (
           <div className="mt-3 overflow-hidden rounded-xl border border-gray-200">
-            <div className="grid grid-cols-4 bg-gray-50 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+            <div className="grid grid-cols-4 bg-gray-50 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
               <div className="px-2 py-1.5">{semRef} sem</div>
               <div className="px-2 py-1.5 text-center">P50</div>
               <div className="px-2 py-1.5 text-center">P95</div>
@@ -1028,7 +1028,7 @@ function AbaNeonatal() {
                 { k: "pam", label: "PAM", val: pamN },
               ].map((c) => (
                 <div key={c.k} className="rounded-lg bg-white/70 px-2 py-1.5 text-center">
-                  <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{c.label}</div>
+                  <div className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">{c.label}</div>
                   <div className="text-sm font-bold text-gray-800">{fmtBR(c.val != null ? c.val : "—")}</div>
                   <div className="text-[11px] font-semibold" style={{ color: info.cor }}>{resultado.faixas[c.k] || "—"}</div>
                 </div>
@@ -1074,7 +1074,7 @@ function AbaNeonatal() {
                 />
               ))}
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-gray-500">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[11px] text-gray-500">
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(5,150,105,0.35)" }} />Normal &lt; P95</span>
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(234,88,12,0.42)" }} />Hipertensão P95–P99</span>
             <span className="flex items-center gap-1"><span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(220,38,38,0.42)" }} />Grave ≥ P99</span>

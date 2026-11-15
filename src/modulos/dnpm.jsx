@@ -234,7 +234,7 @@ export default function Dnpm() {
 
         {/* ── Card de data ── */}
         <div style={CARD}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: MUTED, marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: MUTED, marginBottom: 14 }}>
             <div style={{ width: 22, height: 22, background: VD_L, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Calendar size={13} color={VD_M} />
             </div>
@@ -292,7 +292,7 @@ export default function Dnpm() {
                 );
               })}
             </div>
-            <p style={{ fontSize: 10.5, color: MUTED, marginTop: 4, marginLeft: 2 }}>
+            <p style={{ fontSize: 11, color: MUTED, marginTop: 4, marginLeft: 2 }}>
               ● Faixa atual da criança
             </p>
           </div>

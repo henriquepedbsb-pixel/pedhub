@@ -934,7 +934,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
           </RxItem>
 
           <div style={{ borderTop: `1px solid ${COR.lite}`, paddingTop: 10, marginTop: 10 }}>
-            <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: COR.muted, marginBottom: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: COR.muted, marginBottom: 8 }}>
               Não farmacológico
             </div>
             {['Seguimento com Fonoaudiologia e Fisioterapia',
@@ -1193,7 +1193,7 @@ function Card({ children, className }) {
 
 function CardHead({ Icon, children }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: COR.muted, marginBottom: 14 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: COR.muted, marginBottom: 14 }}>
       <div style={{ width: 22, height: 22, background: COR.liteBg, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Icon size={13} color={COR.txVerde} />
       </div>
@@ -1365,11 +1365,11 @@ function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 })
       </div>
       {edited && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: COR.warn, background: COR.warnL, padding: '2px 7px', borderRadius: 999 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: COR.warn, background: COR.warnL, padding: '2px 7px', borderRadius: 999 }}>
             editado manualmente
           </span>
           {bigDiff && (
-            <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10.5, color: COR.err }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11, color: COR.err }}>
               <AlertTriangle size={11} /> valor bem diferente do sugerido — confira
             </span>
           )}
@@ -1432,7 +1432,7 @@ function Alerta({ cor, bg, children }) {
 function InfoCell({ label, value }) {
   return (
     <div>
-      <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: COR.muted, marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: COR.muted, marginBottom: 2 }}>{label}</div>
       <div style={{ fontWeight: 600, color: COR.texto, fontSize: 13 }}>{value}</div>
     </div>
   );

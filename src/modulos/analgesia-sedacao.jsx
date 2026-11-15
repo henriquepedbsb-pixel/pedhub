@@ -134,7 +134,7 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
       <div style={{ backgroundColor:droga.corBg, borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${droga.cor}` }}>
         <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:droga.cor }}>{droga.nome} · {droga.tipo}</p>
         <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>{droga.indicacao}</p>
-        <p style={{ margin:'3px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>{droga.apresentacao}</p>
+        <p style={{ margin:'3px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{droga.apresentacao}</p>
       </div>
 
       {/* Bolus */}
@@ -184,7 +184,7 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
                 <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:"var(--text-2)" }}>
                   Retirar <strong>{fmtBR(dil.volDroga)} mL</strong> + <strong>{fmtBR(dil.volSF)} mL</strong> SF → {fmtBR(droga.volDil)} mL total
                 </p>
-                <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
+                <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>
                   Conc final: {fmtBR(dil.conc)} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
                 </p>
               </>
@@ -196,8 +196,8 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
           {/* Tabela velocidades */}
           <div style={{ border:'1px solid var(--border)', borderRadius:'8px', overflow:'hidden' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor:droga.corBg, padding:'6px 12px' }}>
-              <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>DOSE ({droga.unidade})</span>
-              <span style={{ fontSize:'10px', fontWeight:'700', color:droga.cor }}>mL/h</span>
+              <span style={{ fontSize:'11px', fontWeight:'700', color:droga.cor }}>DOSE ({droga.unidade})</span>
+              <span style={{ fontSize:'11px', fontWeight:'700', color:droga.cor }}>mL/h</span>
             </div>
             {droga.bic.map((dose, i) => {
               const vel = calcVel(droga, dose);
@@ -205,14 +205,14 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
               return (
                 <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?"var(--surface-2)":"var(--surface)"), borderTop:'1px solid var(--border)', padding:'7px 12px' }}>
                   <span style={{ fontSize:'12px', color:"var(--text-2)", fontWeight:isStart?'700':'400' }}>
-                    {fmtBR(dose)}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
+                    {fmtBR(dose)}{isStart&&<span style={{ fontSize:'11px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
                   </span>
                   <span style={{ fontSize:'13px', color:isStart?droga.cor:"var(--text)", fontWeight:'800' }}>{fmtBR(vel)}</span>
                 </div>
               );
             })}
           </div>
-          <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
+          <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>
             Velocidade independente do peso com esta diluição ({fmtBR(droga.mgKgDil)} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {fmtBR(droga.volDil)} mL)
           </p>
         </div>
@@ -286,7 +286,7 @@ export default function AnalgesiaSedacao() {
 
       {/* Peso persistente */}
       <div style={{ ...card({ padding:'10px' }), marginBottom:'12px' }}>
-        <label style={{ fontSize:'10px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
+        <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
         <input type="text" inputMode="decimal" value={peso} onChange={e=>setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
           style={{ width:'100%', padding:'6px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
         <OrigemPeso ativo={pesoDaBarra} />
@@ -373,7 +373,7 @@ export default function AnalgesiaSedacao() {
                   <div key={i} style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', borderLeft:`3px solid ${e.cor}` }}>
                     <p style={{ margin:'0 0 2px 0', fontSize:'12px', fontWeight:'700', color:e.cor }}>{e.nome} · {e.faixa}</p>
                     <p style={{ margin:'0 0 2px 0', fontSize:'11px', color:"var(--text-2)" }}>{e.itens}</p>
-                    <p style={{ margin:0, fontSize:'10px', color:"var(--muted)", fontWeight:'600' }}>{e.corte}</p>
+                    <p style={{ margin:0, fontSize:'11px', color:"var(--muted)", fontWeight:'600' }}>{e.corte}</p>
                   </div>
                 ))}
               </div>
@@ -399,7 +399,7 @@ export default function AnalgesiaSedacao() {
                 <button key={d.id} onClick={()=>setDrugA(d.id)}
                   style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugA===d.id?d.cor:"var(--border)"}`, backgroundColor: drugA===d.id?d.corBg:"var(--surface-2)", cursor:'pointer', fontSize:'11px', fontWeight:drugA===d.id?'700':'500', color:drugA===d.id?d.cor:"var(--muted)", textAlign:'center' }}>
                   {d.nome}
-                  <span style={{ display:'block', fontSize:'9px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
+                  <span style={{ display:'block', fontSize:'11px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
                 </button>
               ))}
             </div>
@@ -425,7 +425,7 @@ export default function AnalgesiaSedacao() {
                 <button key={d.id} onClick={()=>setDrugS(d.id)}
                   style={{ padding:'8px 4px', borderRadius:'8px', border:`2px solid ${drugS===d.id?d.cor:"var(--border)"}`, backgroundColor: drugS===d.id?d.corBg:"var(--surface-2)", cursor:'pointer', fontSize:'11px', fontWeight:drugS===d.id?'700':'500', color:drugS===d.id?d.cor:"var(--muted)", textAlign:'center' }}>
                   {d.nome}
-                  <span style={{ display:'block', fontSize:'9px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
+                  <span style={{ display:'block', fontSize:'11px', opacity:0.7, marginTop:'1px' }}>{d.tipo}</span>
                 </button>
               ))}
             </div>
@@ -473,7 +473,7 @@ export default function AnalgesiaSedacao() {
                     </div>
                   ))}
                 </div>
-                <p style={{ margin:'6px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>Aplicar a cada 8-12h durante o desmame · pontuação máxima: 11</p>
+                <p style={{ margin:'6px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>Aplicar a cada 8-12h durante o desmame · pontuação máxima: 11</p>
               </div>
             )}
           </div>
@@ -489,7 +489,7 @@ export default function AnalgesiaSedacao() {
               { titulo:'Meta de desmame', desc:'Desmame completo em 5-10 dias (uso > 1 semana) ou 1-2 dias (uso < 5 dias)' },
             ].map((step, i) => (
               <div key={i} style={{ display:'flex', gap:'8px', alignItems:'flex-start', marginBottom:'8px', padding:'8px 10px', backgroundColor:"var(--bg)", borderRadius:'8px' }}>
-                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'20px', height:'20px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'10px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
+                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'20px', height:'20px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
                 <div>
                   <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--text-2)" }}>{step.titulo}</p>
                   <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{step.desc}</p>

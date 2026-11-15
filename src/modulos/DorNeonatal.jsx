@@ -146,7 +146,7 @@ const ScoreBadge = ({ score, maxLabel, items, scores, interp, label }) => {
       <div style={{fontSize:11,fontWeight:600,color:done?int.c:C.muted,
         textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>
         {label} &nbsp;
-        <span style={{fontWeight:400,fontSize:10}}>({filled}/{items.length} itens)</span>
+        <span style={{fontWeight:400,fontSize:11}}>({filled}/{items.length} itens)</span>
       </div>
 
       <div style={{fontSize:48,fontWeight:900,lineHeight:1,color:done?int.c:C.muted}}>
@@ -173,7 +173,7 @@ const ItemSelector = ({ items, scores, setScores, ac, acBg }) => (
           display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
           {item.label}
           {item.ctx && (
-            <span style={{fontSize:10,background:"var(--tint-amber)",color:"var(--tx-amber)",
+            <span style={{fontSize:11,background:"var(--tint-amber)",color:"var(--tx-amber)",
               borderRadius:4,padding:"1px 6px",fontWeight:500}}>
               CONTEXTUAL
             </span>
@@ -264,7 +264,7 @@ export default function DorNeonatal() {
               borderRadius:10, padding:"8px 4px", cursor:"pointer",
             }}>
               <div style={{fontSize:13,fontWeight:700}}>{t.label}</div>
-              <div style={{fontSize:9,marginTop:2,opacity:0.85}}>{t.desc}</div>
+              <div style={{fontSize:11,marginTop:2,opacity:0.85}}>{t.desc}</div>
             </button>
           ))}
         </div>
@@ -327,7 +327,7 @@ export default function DorNeonatal() {
                 border:       `2px solid ${painDone ? painInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.06em",
+                <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.06em",
                   color:painDone?painInt.c:C.muted}}>DOR</div>
                 <div style={{fontSize:36,fontWeight:900,lineHeight:1.1,
                   color:painDone?painInt.c:C.muted}}>
@@ -335,11 +335,11 @@ export default function DorNeonatal() {
                   <span style={{fontSize:13}}>/10</span>
                 </div>
                 {nga !== null && nga > 0 && (
-                  <div style={{fontSize:10,color:C.ok,marginTop:1}}>+{nga} ajuste IG</div>
+                  <div style={{fontSize:11,color:C.ok,marginTop:1}}>+{nga} ajuste IG</div>
                 )}
                 {painDone
-                  ? <div style={{fontSize:10,fontWeight:700,color:painInt.c,marginTop:3}}>{painInt.l}</div>
-                  : <div style={{fontSize:10,color:C.muted,marginTop:2}}>{painFilled}/5 itens + IG</div>}
+                  ? <div style={{fontSize:11,fontWeight:700,color:painInt.c,marginTop:3}}>{painInt.l}</div>
+                  : <div style={{fontSize:11,color:C.muted,marginTop:2}}>{painFilled}/5 itens + IG</div>}
               </div>
 
               {/* Sedação */}
@@ -348,7 +348,7 @@ export default function DorNeonatal() {
                 border:       `2px solid ${sedDone ? sedInt.c : C.border}`,
                 borderRadius: 14, padding:"12px 8px", textAlign:"center",
               }}>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.06em",
+                <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.06em",
                   color:sedDone?sedInt.c:C.muted}}>SEDAÇÃO</div>
                 <div style={{fontSize:36,fontWeight:900,lineHeight:1.1,
                   color:sedDone?sedInt.c:C.muted}}>
@@ -356,8 +356,8 @@ export default function DorNeonatal() {
                   <span style={{fontSize:13}}>/−10</span>
                 </div>
                 {sedDone
-                  ? <div style={{fontSize:10,fontWeight:700,color:sedInt.c,marginTop:3}}>{sedInt.l}</div>
-                  : <div style={{fontSize:10,color:C.muted,marginTop:2}}>{sedFilled}/5 itens</div>}
+                  ? <div style={{fontSize:11,fontWeight:700,color:sedInt.c,marginTop:3}}>{sedInt.l}</div>
+                  : <div style={{fontSize:11,color:C.muted,marginTop:2}}>{sedFilled}/5 itens</div>}
               </div>
             </div>
 
@@ -391,7 +391,7 @@ export default function DorNeonatal() {
                 <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:8,
                   display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                   Ajuste de Prematuridade
-                  <span style={{fontSize:10,background:C.npassBg,color:"var(--tx-green)",
+                  <span style={{fontSize:11,background:C.npassBg,color:"var(--tx-green)",
                     borderRadius:4,padding:"1px 6px",fontWeight:500}}>
                     + PONTOS AO ESCORE
                   </span>

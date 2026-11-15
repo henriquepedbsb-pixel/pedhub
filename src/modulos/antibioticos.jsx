@@ -373,7 +373,7 @@ export default function Antibioticos() {
                 return (
                   <button key={i} onClick={() => setFaixaIdx(i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 10, width: '100%', textAlign: 'left', border: `2px solid ${faixaIdx === i ? CP : "var(--border)"}`, background: faixaIdx === i ? CL : "var(--surface-2)", cursor: 'pointer', ...F }}>
                     <div style={{ fontSize: 13, fontWeight: faixaIdx === i ? 700 : 400, color: faixaIdx === i ? CD : "var(--text-2)" }}>{g.label}</div>
-                    {badge && <span style={{ background: badge.badgeBg, color: badge.badgeCor, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
+                    {badge && <span style={{ background: badge.badgeBg, color: badge.badgeCor, fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
                   </button>
                 );
               })}

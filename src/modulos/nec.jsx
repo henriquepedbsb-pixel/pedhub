@@ -73,7 +73,7 @@ function DoseRow({ label, dose, unit, vol, freq, ampola, cor }) {
           <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{fmtBR(vol)} mL · {freq}</p>
         </div>
       </div>
-      <p style={{ margin:0, fontSize:'10px', color:"var(--muted)" }}>{ampola}</p>
+      <p style={{ margin:0, fontSize:'11px', color:"var(--muted)" }}>{ampola}</p>
     </div>
   );
 }
@@ -233,7 +233,7 @@ export default function NEC() {
                     <p style={{ margin:'2px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>{row.sig}</p>
                   </div>
                 ))}
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>
                   Solicitar RX em AP e perfil (decúbito lateral D) · USG abdominal: útil para pneumatose, ascite e gás portal
                 </p>
               </div>
@@ -383,7 +383,7 @@ export default function NEC() {
               'Consulta cirúrgica nos estágios II e III',
             ].map((item, i) => (
               <div key={i} style={{ display:'flex', gap:'8px', fontSize:'12px', color:"var(--text-2)", marginBottom:'5px', alignItems:'flex-start' }}>
-                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'16px', height:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'9px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
+                <span style={{ backgroundColor:C, color:'#FFF', borderRadius:'50%', width:'16px', height:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:'700', flexShrink:0 }}>{i+1}</span>
                 {item}
               </div>
             ))}
@@ -493,12 +493,12 @@ export default function NEC() {
               <div style={{ backgroundColor:"var(--tint-blue)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #3B82F6' }}>
                 <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-blue)" }}>Drenagem Peritoneal (DP)</p>
                 <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Indicada em: ELBW (abaixo de 1.000 g) como ponte · hemodinamicamente instável para laparotomia · prematuros extremos de alto risco cirúrgico</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>30% dos pacientes com DP evitam laparotomia · restantes necessitam laparotomia posterior</p>
               </div>
               <div style={{ backgroundColor:"var(--tint-amber)", borderRadius:'8px', padding:'10px', borderLeft:'3px solid #D97706' }}>
                 <p style={{ margin:0, fontSize:'12px', fontWeight:'700', color:"var(--tx-amber)" }}>Laparotomia Exploradora</p>
                 <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--text-2)" }}>Tratamento definitivo · ressecção do intestino necrótico · criação de enterostomia · reconstrução de trânsito posterior (6-8 semanas)</p>
-                <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
+                <p style={{ margin:'4px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>Preferida em: acima de 1.000 g com perfuração · instabilidade refratária a DP · sem benefício de DP após 24-48h</p>
               </div>
               <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px' }}>
                 <p style={{ margin:0, fontSize:'11px', color:"var(--text-2)", fontWeight:'600' }}>

@@ -255,7 +255,7 @@ function FormulaCard({ f, open, onToggle }) {
               { label: "DANONE", data: f.danone, bg: "var(--tint-blue)", border: "#BFDBFE" },
             ].map(({ label, data, bg, border }) => (
               <div key={label} style={{ background: bg, border: "1px solid " + border, borderRadius: 10, padding: "10px 10px" }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.06em", margin: "0 0 2px" }}>{label}</p>
                 <p style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, margin: "0 0 6px", lineHeight: 1.3 }}>{data.produto}</p>
                 <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>{data.sub}</p>
                 {data.items.map((item, i) => (

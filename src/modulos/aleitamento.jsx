@@ -69,7 +69,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -223,7 +223,7 @@ function CalcPerdaPeso() {
         </p>
       )}
 
-      <p className="text-[10px] text-gray-400 mt-2 leading-relaxed">
+      <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
         Referência: perda até 7–10% esperada nos primeiros dias · recuperação do peso
         de nascimento até o 10º–14º dia (SBP/OMS).
       </p>

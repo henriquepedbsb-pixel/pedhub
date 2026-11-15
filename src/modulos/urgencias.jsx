@@ -179,7 +179,7 @@ function TimelineStep({ time, color, title, actions, isLast }) {
           background: color, color: "#fff", borderRadius: 10,
           width: 52, padding: "6px 4px",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 10, fontWeight: 700, textAlign: "center", lineHeight: 1.3,
+          fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: 1.3,
         }}>
           {time}
         </div>
@@ -1212,7 +1212,7 @@ export default function Urgencias() {
                 </button>
               </div>
             )}
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4 }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4 }}>
               Estimativa para uso emergencial quando o peso real não pode ser obtido de imediato (ex.: paciente inconsciente, sem acompanhante). Pesar a criança assim que possível — o peso real medido sempre tem prioridade sobre esta estimativa.
             </p>
           </div>
@@ -1247,7 +1247,7 @@ export default function Urgencias() {
                   onClick={() => setTab(i)}
                   style={{
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                    padding: "10px 12px", fontSize: 10, fontWeight: active ? 700 : 500,
+                    padding: "10px 12px", fontSize: 11, fontWeight: active ? 700 : 500,
                     color: active ? PRIMARY : "var(--muted)",
                     background: "transparent", border: "none",
                     borderBottom: "2.5px solid " + (active ? PRIMARY : "transparent"),

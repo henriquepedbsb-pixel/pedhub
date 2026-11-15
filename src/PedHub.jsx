@@ -202,7 +202,7 @@ function BreveCard({ modulo, onClick }) {
           <Icon size={20} color="var(--muted)" />
         </div>
         <span style={{
-          fontSize: 9, fontWeight: 700, color: "var(--muted)", background: "var(--surface-2)",
+          fontSize: 11, fontWeight: 700, color: "var(--muted)", background: "var(--surface-2)",
           border: "1px solid var(--border)",
           padding: "3px 7px", borderRadius: 20, letterSpacing: "0.04em", whiteSpace: "nowrap",
         }}>EM BREVE</span>
@@ -472,7 +472,7 @@ export default function PedHub() {
                     <ModuloCard modulo={m} onClick={() => irPara(m.rota)} />
                     <FavoritoStar rota={m.rota} ativo={favRotas.includes(m.rota)} />
                     {kw && (
-                      <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 2px 0", lineHeight: 1.3 }}>
+                      <p style={{ fontSize: 11, color: "var(--muted)", margin: "3px 2px 0", lineHeight: 1.3 }}>
                         achado por “{kw}”
                       </p>
                     )}

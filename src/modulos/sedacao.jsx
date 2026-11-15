@@ -106,7 +106,7 @@ export default function Sedacao() {
             <div key={i} style={{ background: "var(--surface)", borderRadius: 12, padding: 14, border: '1px solid var(--border)', marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8, gap: 8 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-2)", lineHeight: 1.4, flex: 1 }}>{p.titulo}</div>
-                <span style={{ background: p.nivelFundo, color: p.nivelCor, fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, flexShrink: 0, whiteSpace: 'nowrap' }}>{p.nivel}</span>
+                <span style={{ background: p.nivelFundo, color: p.nivelCor, fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, flexShrink: 0, whiteSpace: 'nowrap' }}>{p.nivel}</span>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
                 {p.agentes.map((a, ai) => <span key={ai} style={{ background: CL, color: CD, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, border: `1px solid ${CB}` }}>{a}</span>)}
@@ -148,11 +148,11 @@ export default function Sedacao() {
                   <div style={{ padding: '0 14px 14px', borderTop: `1px solid ${f.cor}30` }}>
                     <div style={{ display: 'flex', gap: 10, marginTop: 12, marginBottom: 12 }}>
                       <div style={{ flex: 1, background: "var(--bg)", borderRadius: 8, padding: '8px 12px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Onset</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Onset</div>
                         <div style={{ fontSize: 12, color: "var(--text-2)", marginTop: 2 }}>{f.onset}</div>
                       </div>
                       <div style={{ flex: 1, background: "var(--bg)", borderRadius: 8, padding: '8px 12px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Duração</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: 'uppercase' }}>Duração</div>
                         <div style={{ fontSize: 12, color: "var(--text-2)", marginTop: 2 }}>{f.duracao}</div>
                       </div>
                     </div>

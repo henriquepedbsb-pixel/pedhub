@@ -8,6 +8,8 @@ import { avisoPesoKg } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+import { BARRA_PACIENTE_H } from "../components/BarraPaciente";
+import { CABECALHO_H } from "../lib/layout";
 
 // Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
 const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
@@ -605,7 +607,7 @@ export default function App() {
       </div>
 
       {/* ABAS */}
-      <div className="bg-white border-b border-gray-200 flex overflow-x-auto" style={{ position: "sticky", top: 0, zIndex: 10 }}>
+      <div className="bg-white border-b border-gray-200 flex overflow-x-auto" style={{ position: "sticky", top: BARRA_PACIENTE_H + CABECALHO_H, zIndex: 10 }}>
         {ABAS.map((t, i) => (
           <button key={t} onClick={() => setAba(i)}
             className="flex-shrink-0 px-4 py-3 text-sm border-b-2 transition-colors whitespace-nowrap"

@@ -72,7 +72,7 @@ const CARD = {
 /* ── Sub-componentes ── */
 function CardHead({ icon: Icon, label }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: MUTED, marginBottom: 16 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: MUTED, marginBottom: 16 }}>
       <div style={{ width: 22, height: 22, background: AZ_L, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Icon size={13} color={AZ_M} />
       </div>
@@ -108,7 +108,7 @@ function Pill({ label, active, onClick }) {
 function SeccaoRx({ titulo, mBottom, children }) {
   return (
     <div style={{ marginBottom: mBottom !== undefined ? mBottom : 14 }}>
-      <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED, paddingBottom: 5, marginBottom: 4, borderBottom: "1px solid " + BORDA }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED, paddingBottom: 5, marginBottom: 4, borderBottom: "1px solid " + BORDA }}>
         {titulo}
       </div>
       {children}
@@ -168,11 +168,11 @@ function DoseEdit({ value, onChange, onReset, suggested, unit, decimals = 1, zer
       </div>
       {edited && (
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: WARN, background: WARN_L, padding: "2px 7px", borderRadius: 999 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: WARN, background: WARN_L, padding: "2px 7px", borderRadius: 999 }}>
             editado manualmente
           </span>
           {bigDiff && (
-            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10.5, color: DANGER }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 11, color: DANGER }}>
               <AlertTriangle size={11} /> confira — destoa muito do sugerido
             </span>
           )}
@@ -413,7 +413,7 @@ export default function TigNeonatal() {
           <>
             {/* Hero: concentração */}
             <div style={{ borderRadius: 13, padding: "26px 18px 20px", textAlign: "center", marginBottom: 12, background: heroGrad }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 6 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 6 }}>
                 Concentração necessária
               </div>
               <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4 }}>
@@ -434,7 +434,7 @@ export default function TigNeonatal() {
                 { label: "Volume bomba", val: calc.mlh.toFixed(1), unit: "mL / h"  },
               ].map(({ label, val, unit }) => (
                 <div key={label} style={{ background: "var(--surface)", border: "1px solid " + BORDA, borderRadius: 13, padding: 14, textAlign: "center", boxShadow: "0 1px 3px rgba(13,59,110,0.07)" }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: 6 }}>{label}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: 6 }}>{label}</div>
                   <div style={{ fontSize: 28, fontWeight: 800, color: AZ_E, lineHeight: 1, letterSpacing: -1 }}>{fmtBR(val)}</div>
                   <div style={{ fontSize: 11.5, fontWeight: 600, color: DETALHE, marginTop: 4 }}>{unit}</div>
                 </div>
@@ -530,14 +530,14 @@ export default function TigNeonatal() {
 
                   {/* Total */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: AZ_L, borderRadius: 9, padding: "10px 12px", marginTop: 8 }}>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: AZ_E }}>Volume total</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: AZ_E }}>Volume total</span>
                     <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: AZ_E }}>
                       {fmtBR(calc.vol_total.toFixed(1))} mL/dia · {fmtBR(calc.mlh.toFixed(1))} mL/h
                     </span>
                   </div>
 
                   {/* Nota */}
-                  <p style={{ fontSize: 10.5, color: MUTED, fontStyle: "italic", marginTop: 9, lineHeight: 1.55 }}>
+                  <p style={{ fontSize: 11, color: MUTED, fontStyle: "italic", marginTop: 9, lineHeight: 1.55 }}>
                     Glicose: {fmtBR(calc.gg.toFixed(1))} g/dia · Conc. final: {fmtBR((calc.conc_alvo * 100).toFixed(1))}%
                   </p>
 
@@ -579,7 +579,7 @@ export default function TigNeonatal() {
               <div style={{ position: "relative", height: 10, borderRadius: 5, background: "linear-gradient(to right, #dc2626 0%, #dc2626 28.57%, #d97706 28.57%, #d97706 42.86%, #16a34a 42.86%, #16a34a 57.14%, #d97706 57.14%, #d97706 71.43%, #dc2626 71.43%, #dc2626 100%)", margin: "10px 0 6px" }}>
                 <div style={{ position: "absolute", top: "50%", left: rangePos + "%", transform: "translate(-50%,-50%)", width: 16, height: 16, borderRadius: "50%", background: "var(--surface)", border: "2.5px solid " + AZ_E, boxShadow: "0 2px 6px rgba(0,0,0,0.28)" }} />
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: MUTED, fontWeight: 500 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: MUTED, fontWeight: 500 }}>
                 {["0", "4", "6", "8", "10", "14+"].map(t => <span key={t}>{t}</span>)}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 14px", marginTop: 13 }}>
@@ -627,7 +627,7 @@ export default function TigNeonatal() {
           <div style={{ borderRadius: 9, border: "1px solid " + BORDA, overflow: "hidden" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", background: FUNDO, padding: "8px 11px", borderBottom: "1px solid " + BORDA }}>
               {["TIG (mg/kg/min)", "Interpretação"].map(h => (
-                <span key={h} style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: MUTED }}>{h}</span>
+                <span key={h} style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: MUTED }}>{h}</span>
               ))}
             </div>
             {[

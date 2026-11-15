@@ -63,7 +63,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );

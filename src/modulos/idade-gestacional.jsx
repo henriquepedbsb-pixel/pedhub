@@ -170,7 +170,7 @@ export default function IdadeGestacional() {
               placeholder="semanas" maxLength={2} autoComplete="off"
               style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>semanas (20–44)</p>
           </div>
           <div style={{ flex: 1 }}>
             <input
@@ -179,7 +179,7 @@ export default function IdadeGestacional() {
               placeholder="dias" maxLength={1} autoComplete="off"
               style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #93C5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "3px 0 0", textAlign: "center" }}>dias (0–6)</p>
           </div>
         </div>
 

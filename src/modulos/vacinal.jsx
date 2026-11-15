@@ -530,12 +530,12 @@ export default function Vacinal() {
                   </div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {isMenoOnly && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#7C3AED", background: "var(--tint-purple)", padding: "2px 7px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#7C3AED", background: "var(--tint-purple)", padding: "2px 7px", borderRadius: 20 }}>
                         VISITA EXCLUSIVA
                       </span>
                     )}
                     {status === "due" && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#10B981", background: "var(--tint-green)", padding: "2px 8px", borderRadius: 20 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#10B981", background: "var(--tint-green)", padding: "2px 8px", borderRadius: 20 }}>
                         PREVISTO AGORA
                       </span>
                     )}
@@ -626,7 +626,7 @@ export default function Vacinal() {
                         <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{vac.vacina}</span>
                       </div>
                       {vac.limiteRigido && (
-                        <span style={{ fontSize: 9, fontWeight: 700, color: "var(--tx-red)", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-red)", background: "var(--tint-red)", padding: "2px 7px", borderRadius: 20, whiteSpace: "nowrap" }}>
                           JANELA RÍGIDA
                         </span>
                       )}

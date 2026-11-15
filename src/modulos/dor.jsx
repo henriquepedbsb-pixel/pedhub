@@ -302,7 +302,7 @@ export default function Dor() {
                   <div style={{ fontSize: '13px', fontWeight: '700', color: escalaAtiva === e.id ? '#EA580C' : "var(--text-2)" }}>
                     {e.label}
                   </div>
-                  <div style={{ fontSize: '10px', color: "var(--muted)", marginTop: '2px', lineHeight: 1.3 }}>
+                  <div style={{ fontSize: '11px', color: "var(--muted)", marginTop: '2px', lineHeight: 1.3 }}>
                     {e.idade}
                   </div>
                 </button>
@@ -445,7 +445,7 @@ export default function Dor() {
                       <div style={{ fontSize: '15px', fontWeight: '800', color: "var(--text-2)", marginTop: '4px' }}>
                         {f.valor}
                       </div>
-                      <div style={{ fontSize: '9px', color: "var(--muted)", lineHeight: 1.3, marginTop: '2px' }}>
+                      <div style={{ fontSize: '11px', color: "var(--muted)", lineHeight: 1.3, marginTop: '2px' }}>
                         {f.desc}
                       </div>
                     </button>

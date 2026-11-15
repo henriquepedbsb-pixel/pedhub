@@ -72,7 +72,7 @@ function AlertaBox({ children, tone = "amber" }) {
 
 function FonteTag({ children }) {
   return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
+    <span className="inline-block text-[11px] font-medium uppercase tracking-wide text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 mr-1">
       {children}
     </span>
   );
@@ -116,7 +116,7 @@ function TransfusaoTable() {
           <span className="text-center font-semibold" style={{ color: COR }}>{l.semSuporte}</span>
         </div>
       ))}
-      <div className="px-2 py-1.5 text-[10px] text-gray-400 border-t border-gray-100">Limiar de hematócrito (%) para indicar transfusão — estratégia restritiva</div>
+      <div className="px-2 py-1.5 text-[11px] text-gray-400 border-t border-gray-100">Limiar de hematócrito (%) para indicar transfusão — estratégia restritiva</div>
     </div>
   );
 }

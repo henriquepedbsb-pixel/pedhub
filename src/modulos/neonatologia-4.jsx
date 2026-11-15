@@ -271,7 +271,7 @@ function TabSilverman() {
               <button key={opt.v} onClick={() => set(i, opt.v)}
                 style={{ flex: 1, padding: "8px 4px", fontSize: 11, fontWeight: vals[i] === opt.v ? 700 : 500, borderRadius: 8, border: "1.5px solid " + (vals[i] === opt.v ? COR_SA : "var(--border)"), cursor: "pointer", background: vals[i] === opt.v ? COR_SA : "var(--surface-2)", color: vals[i] === opt.v ? "#fff" : "var(--text-2)", lineHeight: 1.3, textAlign: "center" }}>
                 {opt.l}<br />
-                <span style={{ fontSize: 10, opacity: 0.7 }}>({opt.v})</span>
+                <span style={{ fontSize: 11, opacity: 0.7 }}>({opt.v})</span>
               </button>
             ))}
           </div>

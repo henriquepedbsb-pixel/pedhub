@@ -258,7 +258,7 @@ function TabGelDextrose() {
           "Retirar da geladeira e aguardar atingir T. ambiente antes de administrar",
         ].map((step, i) => (
           <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6 }}>
-            <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#0D9488", color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+            <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#0D9488", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
               {i + 1}
             </div>
             <span style={{ fontSize: 11.5, color: "var(--text-2)", lineHeight: 1.5 }}>{step}</span>

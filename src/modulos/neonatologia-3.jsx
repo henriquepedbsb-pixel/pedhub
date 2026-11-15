@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { limparDecimal, fmtBR } from '../lib/numero';
 import { mascararData, dataExiste } from '../lib/data';
+import { BARRA_PACIENTE_H } from "../components/BarraPaciente";
+import { CABECALHO_H } from "../lib/layout";
 
 // Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
 const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
@@ -551,7 +553,7 @@ export default function IctericiaNeonatal() {
     }}>
 
       {/* ── Tab bar ── */}
-      <div style={{display:'flex',background:"var(--surface)",borderBottom:`2px solid ${C.borda}`,position:'sticky',top:0,zIndex:99,overflow:'auto'}}>
+      <div style={{display:'flex',background:"var(--surface)",borderBottom:`2px solid ${C.borda}`,position:'sticky',top:BARRA_PACIENTE_H + CABECALHO_H,zIndex:10,overflow:'auto'}}>
         {[
           {id:'calc',   Icon:Calculator,   label:'Calculadora'},
           {id:'tables', Icon:ClipboardList, label:'Tabelas'},
@@ -613,17 +615,17 @@ export default function IctericiaNeonatal() {
               </Fld>
             </div>
             {nascInfo.status === 'sem-hora' && (
-              <p style={{fontSize:10.5,color:"var(--tx-amber)",marginTop:6}}>
+              <p style={{fontSize:11,color:"var(--tx-amber)",marginTop:6}}>
                 Falta a hora de nascimento para calcular a idade de vida automaticamente.
               </p>
             )}
             {(nascInfo.status === 'data-invalida' || nascInfo.status === 'hora-invalida') && (
-              <p style={{fontSize:10.5,color:"var(--tx-red)",marginTop:6}}>
+              <p style={{fontSize:11,color:"var(--tx-red)",marginTop:6}}>
                 Data ou hora de nascimento inválida — confira.
               </p>
             )}
             {nascInfo.status === 'futuro' && (
-              <p style={{fontSize:10.5,color:"var(--tx-red)",marginTop:6}}>
+              <p style={{fontSize:11,color:"var(--tx-red)",marginTop:6}}>
                 Data/hora de nascimento no futuro — verifique.
               </p>
             )}
@@ -667,16 +669,16 @@ export default function IctericiaNeonatal() {
             </Fld>
           </div>
           {idadeFoiAutoCalculada && (
-            <p style={{fontSize:10.5,color:"var(--tx-teal)",fontWeight:600,marginBottom:8}}>
+            <p style={{fontSize:11,color:"var(--tx-teal)",fontWeight:600,marginBottom:8}}>
               <Check size={12} style={ICONE_INLINE} strokeWidth={3} />Calculado automaticamente a partir do nascimento
             </p>
           )}
           {nascInfo.status === 'ok' && !idadeFoiAutoCalculada && (
-            <p style={{fontSize:10.5,color:C.muted,marginBottom:8}}>
+            <p style={{fontSize:11,color:C.muted,marginBottom:8}}>
               Idade editada manualmente —{' '}
               <button type="button" onClick={recalcularAgora} style={{
                 background:'none',border:'none',color:C.aapTx,textDecoration:'underline',
-                cursor:'pointer',fontSize:10.5,padding:0,
+                cursor:'pointer',fontSize:11,padding:0,
               }}>
                 recalcular a partir do nascimento
               </button>

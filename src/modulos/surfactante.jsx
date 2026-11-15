@@ -179,7 +179,7 @@ export default function Surfactante() {
                     <span style={{ fontSize: '11px', color: "var(--muted)" }}>{t.nome}</span>
                   </div>
                   <p style={{ margin: 0, fontSize: '11px', color: "var(--text-2)" }}>{t.desc}</p>
-                  <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: t.cor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={11} style={{ flexShrink: 0 }} />{t.vant}</p>
+                  <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: t.cor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={11} style={{ flexShrink: 0 }} />{t.vant}</p>
                 </div>
               ))}
             </div>
@@ -288,7 +288,7 @@ export default function Surfactante() {
                           Ampola de <strong>3 mL</strong>: usar <strong>{calcs.cuVol2} mL</strong> de <strong>{calcs.cuAmp3_2} ampola(s)</strong>
                         </p>
                       )}
-                      <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
+                      <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>
                         Dose máxima total: 400 mg/kg (4 mL/kg) = 2 doses de 200 + 0 OU 200 + 100 + 100 mg/kg
                       </p>
                     </div>
@@ -300,7 +300,7 @@ export default function Surfactante() {
                     <div style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', backgroundColor: CLT, padding: '7px 10px' }}>
                         {['Peso', '1ª dose (2 mL/kg)', '2ª dose (1 mL/kg)'].map((h, i) => (
-                          <span key={i} style={{ fontSize: '10px', fontWeight: '700', color: C }}>{h}</span>
+                          <span key={i} style={{ fontSize: '11px', fontWeight: '700', color: C }}>{h}</span>
                         ))}
                       </div>
                       {[[0.6,1.2,0.6],[0.7,1.4,0.7],[0.8,1.6,0.8],[0.9,1.8,0.9],[1.0,2.0,1.0],[1.2,2.4,1.2],[1.5,3.0,1.5],[2.0,4.0,2.0]].map(([w,d1,d2], i) => (
@@ -343,15 +343,15 @@ export default function Surfactante() {
                 <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>Pré-medicação — Atropina (LISA/INSURE)</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>DOSE (20 mcg/kg)</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>DOSE (20 mcg/kg)</p>
                     <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(calcs.atropMg)} mg</p>
                   </div>
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VOLUME (0,25 mg/mL)</p>
+                    <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--muted)" }}>VOLUME (0,25 mg/mL)</p>
                     <p style={{ margin: '4px 0', fontSize: '20px', fontWeight: '800', color: "var(--text-2)", lineHeight: 1 }}>{fmtBR(calcs.atropVol)} mL</p>
                   </div>
                 </div>
-                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Atropina 0,25 mg/mL · dar IV 2-3 min antes do procedimento · previne bradicardia reflexa</p>
+                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>Atropina 0,25 mg/mL · dar IV 2-3 min antes do procedimento · previne bradicardia reflexa</p>
               </div>
             </div>
           ) : (
@@ -386,7 +386,7 @@ export default function Surfactante() {
               'Curosurf: coloração bege/creme normal · Survanta: cor amarelo-pálida normal',
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ backgroundColor: C, color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                 {item}
               </div>
             ))}
@@ -430,7 +430,7 @@ export default function Surfactante() {
                 { titulo: 'CPAP pós-INSURE', desc: 'Manter CPAP 5-6 cmH₂O · reduzir FiO₂ conforme SpO₂ · reintubar se apneia persistente ou falha de CPAP' },
               ].map((step, i) => (
                 <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px', padding: '8px 10px', backgroundColor: "var(--bg)", borderRadius: '8px' }}>
-                  <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                  <span style={{ backgroundColor: '#D97706', color: '#FFF', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                   <div>
                     <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{step.titulo}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{step.desc}</p>
@@ -446,7 +446,7 @@ export default function Surfactante() {
               <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--muted)" }}>Via TOT (RN já intubado e em VM)</p>
               {['Aspirar TOT se necessário · aguardar 5 min antes','Posicionar em decúbito dorsal','Instalar surfactante via TOT em bolus único (Curosurf) ou em 4 alíquotas rotacionando posições (Survanta)','Ventilar manualmente após cada alíquota (4-5 ventilações)','Não aspirar o TOT nas 1-2 horas após administração','Reduzir parâmetros ventilatórios conforme SpO₂ melhora — pode ser rápida!'].map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px', fontSize: '12px', color: "var(--text-2)" }}>
-                  <span style={{ backgroundColor: "var(--muted)", color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
+                  <span style={{ backgroundColor: "var(--muted)", color: '#FFF', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', flexShrink: 0 }}>{i + 1}</span>
                   {item}
                 </div>
               ))}
@@ -476,7 +476,7 @@ export default function Surfactante() {
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '7px 10px', backgroundColor: i % 2 === 0 ? "var(--surface-2)" : "var(--surface)", borderRadius: '6px', marginBottom: '4px' }}>
                 <div>
                   <span style={{ fontSize: '12px', fontWeight: '700', color: "var(--text-2)" }}>{row.param}</span>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{row.meta}</p>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{row.meta}</p>
                 </div>
                 <span style={{ fontSize: '11px', color: C, fontWeight: '600', flexShrink: 0, marginLeft: '8px' }}>{row.freq}</span>
               </div>
