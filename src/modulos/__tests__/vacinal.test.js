@@ -2,7 +2,7 @@
 // Integridade do calendário e das regras de atraso (não testa conteúdo clínico
 // linha a linha — isso é revisão médica; testa o que a engenharia pode quebrar).
 import { describe, it, expect } from 'vitest';
-import { CALENDAR, CATCHUP, getStatus, regraAplicavel } from '../vacinal.jsx';
+import { CALENDAR, CATCHUP, getStatus, regraAplicavel, calcIdadeDias } from '../vacinal.jsx';
 
 const vac = (nome) => CATCHUP.find((v) => v.vacina.startsWith(nome));
 const faixa = (nome) => CALENDAR.find((c) => c.faixa.startsWith(nome));
@@ -94,5 +94,26 @@ describe('CATCHUP — rotavírus (NT nº 193/2024 CGICI/DPNI)', () => {
   it('não restou nenhuma menção aos limites antigos como regra vigente', () => {
     for (const r of rota.regras) expect(r.texto).not.toMatch(/3 meses e 15 dias de idade|7 meses e 29 dias/);
     expect(rota.janelaLimite).toBe('1ª dose até 11m29d · 2ª dose até 23m29d');
+  });
+});
+
+describe('calcIdadeDias — data de nascimento', () => {
+  const anoPassado = new Date().getFullYear() - 1;
+  it('calcula a idade em dias para uma data real', () => {
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const nasc = new Date(hoje); nasc.setDate(nasc.getDate() - 100);
+    const dd = String(nasc.getDate()).padStart(2, '0'), mm = String(nasc.getMonth() + 1).padStart(2, '0');
+    expect(calcIdadeDias(`${dd}/${mm}/${nasc.getFullYear()}`)).toBe(100);
+  });
+  it('recusa data que o calendário não tem', () => {
+    expect(calcIdadeDias(`31/02/${anoPassado}`)).toBeNull();
+    expect(calcIdadeDias(`31/04/${anoPassado}`)).toBeNull();
+    expect(calcIdadeDias(`30/02/${anoPassado}`)).toBeNull();
+  });
+  it('recusa data incompleta, vazia ou no futuro', () => {
+    expect(calcIdadeDias('12/11')).toBeNull();
+    expect(calcIdadeDias('')).toBeNull();
+    expect(calcIdadeDias(null)).toBeNull();
+    expect(calcIdadeDias(`01/01/${new Date().getFullYear() + 1}`)).toBeNull();
   });
 });
