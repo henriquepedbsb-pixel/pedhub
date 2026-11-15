@@ -76,7 +76,7 @@ export const MODULOS = [
   { rota: "/sedacao", label: "Sedação em Procedimentos", desc: "Cetamina · Midazolam · Fentanil · Checklist", Icon: Syringe, cor: "#6366F1", grupo: "Pediatria Geral", secao: "Terapia Intensiva & Procedimentos",
     tags: "sedacao procedimento cetamina midazolam fentanil propofol jejum checklist" },
   /* ── Farmacologia & Imunização ── */
-  { rota: "/pedfarma", label: "PedFarma", desc: "48 medicamentos · dose por peso", Icon: Pill, cor: "#8B5CF6", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
+  { rota: "/pedfarma", label: "PedFarma", desc: "48 medicamentos · dose por peso", descNoCabecalho: true, Icon: Pill, cor: "#8B5CF6", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
     tags: "amoxicilina paracetamol dipirona ibuprofeno azitromicina cefalexina antibiotico corticoide prednisolona dexametasona omeprazol ondansetrona dose bula prescricao medicamento remedio equivalencia hidrocortisona metilprednisolona prednisona salbutamol claritromicina ceftriaxona cefuroxima sulfametoxazol metronidazol clindamicina nitrofurantoina loratadina cetirizina hidroxizina esomeprazol lactulose simeticona fenobarbital levetiracetam carbamazepina valproato diazepam fluconazol nistatina aciclovir oseltamivir montelucaste sulfato ferroso ferro zinco vitamina d vitamina a naloxona difenidramina ipratropio budesonida domperidona" },
   { rota: "/antibioticos", label: "Antibioticoterapia", desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope, cor: "#0D9488", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
     tags: "antibiotico atb empirico pneumonia itu meningite celulite escolha sindrome otite oma faringite amigdalite sepse mastoidite pielonefrite erisipela abscesso" },

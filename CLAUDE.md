@@ -251,7 +251,13 @@ módulo por commit, começando pelos mais acessados:**
   rodapé com `src/components/BarraResultado.jsx` (+ `BotaoCopiar solido`); a
   página reserva `BARRA_RESULTADO_H` de espaço no fim. Rótulo de campo em texto
   normal (não CAIXA ALTA de 11 px), campo com 48 px de altura.
-- **Feito:** os dois hubs e `hidratacao`. Próximos candidatos: `pedfarma`,
+- **Módulos de consulta em lista** (ex.: `pedfarma`): sem faixa de resultado
+  (há um resultado por item); em vez dela, busca + filtros presos no topo ao
+  rolar (`position: sticky`, `top: BARRA_PACIENTE_H + CABECALHO_H` —
+  `CABECALHO_H` em `src/lib/layout.js`; o cabeçalho global tem altura fixa).
+  Filtros/indicações como chips `.ph-chip` + `.is-active` (cor via `--chip-cor`).
+- Texto mínimo de 11 px; `CalcDose` já segue isso (afeta todos os módulos que o embutem).
+- **Feito:** os dois hubs, `hidratacao` e `pedfarma`. Próximos candidatos:
   `urgencias`, `isr`, `dilucao-bic`, `tig-neonatal`.
 - **Mantido de propósito:** cores de identidade dos módulos e a home com os
   dois portais + busca global.
