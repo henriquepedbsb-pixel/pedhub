@@ -110,6 +110,9 @@ const parseFld = v => parseFloat(String(v).replace(',', '.'));
 
 /* Resolve a dose final exibida: usa o valor editado manualmente se for válido,
    caso contrário cai no valor sugerido pelo cálculo automático. */
+// "1 gota" / "2 gotas" — aceita número ou texto com vírgula decimal.
+const unGota = (n) => (Number(String(n).replace(',', '.')) === 1 ? 'gota' : 'gotas');
+
 export function finalDose(manualStr, suggested) {
   const num = parseFld(manualStr);
   return manualStr !== '' && !Number.isNaN(num) && num >= 0 ? num : suggested;
@@ -736,7 +739,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
     const linhaFerro = () =>
       (!res.ferroAtivo && res.preT)
         ? `Ferro (${res.ferroProd.sal}): iniciar no 30.º dia de vida (faltam ${res.ferroDiasRest} dia${res.ferroDiasRest !== 1 ? 's' : ''})`
-        : `${ferroLabel}: ${fmtFerro(ferroFinal)} gotas VO 1×/dia (${fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${fmtBR(res.ferroProd.mgGota)} mg Fe)`;
+        : `${ferroLabel}: ${fmtFerro(ferroFinal)} ${unGota(ferroFinal)} VO 1×/dia (${fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${fmtBR(res.ferroProd.mgGota)} mg Fe)`;
     const linhaFos = () => {
       if (!res.fosIndicado) return "Fosfato tricálcico 12,9%: não indicado (IG ≥ 32s e PN ≥ 1500 g)";
       if (res.fosSuspenso) return "Fosfato tricálcico 12,9%: suspenso (IGPM ≥ 40 sem)";
@@ -753,7 +756,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
     const linhaVitD = () =>
       res.vitDNec <= 0
         ? `Vitamina D: não necessário — dieta (${res.vitDDieta.toFixed(0)} UI) + polivit (${res.polivitVD.toFixed(0)} UI) = alvo ${res.vitDAlvo} UI`
-        : `Vitamina D (colecalciferol): ${res.vitDG200} gotas VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
+        : `Vitamina D (colecalciferol): ${res.vitDG200} ${unGota(res.vitDG200)} VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
 
     const dieta = [
       `Volume total: ${fmtBR(res.volTotal.toFixed(1))} mL/dia`,
@@ -841,7 +844,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               </AguardoBadge>
             ) : (
               <>
-                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} {unGota(ferroFinal)}</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN ·
                   1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
@@ -932,7 +935,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
             ) : (
               <>
                 <div>
-                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <strong>{res.vitDG200} {unGota(res.vitDG200)}</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
@@ -1088,7 +1091,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
               </span>
             ) : (
               <>
-                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} {unGota(ferroFinal)}</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia ·
                   1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
@@ -1170,7 +1173,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
             ) : (
               <>
                 <div>
-                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <strong>{res.vitDG200} {unGota(res.vitDG200)}</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
