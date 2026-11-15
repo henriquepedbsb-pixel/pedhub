@@ -124,16 +124,6 @@ export default function ConvulsaoFebril() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #A21CAF)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Zap size={22} />
-          Convulsão Febril
-        </h1>
-        <p className="text-fuchsia-100 text-xs mt-1">
-          Classificação, avaliação diagnóstica e critérios de internação
-        </p>
-      </div>
 
       {/* Classificador rápido interativo */}
       <div className="px-4 pt-4">

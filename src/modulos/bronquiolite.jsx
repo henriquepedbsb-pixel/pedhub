@@ -102,14 +102,6 @@ export default function Bronquiolite() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #0F766E 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Stethoscope size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Bronquiolite Viral</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>AAP 2023 · SBP 2017 · NICE 2021</p>
-      </div>
 
       {/* Peso persistente */}
       <div style={{ marginBottom: '12px', ...card({ padding: '10px' }) }}>

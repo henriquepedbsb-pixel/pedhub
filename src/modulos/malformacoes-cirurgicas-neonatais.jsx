@@ -81,16 +81,6 @@ export default function MalformacoesCirurgicasNeonatais() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #064E3B)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Wind size={22} />
-          Malformações Cirúrgicas Neonatais
-        </h1>
-        <p className="text-emerald-100 text-xs mt-1">
-          Gastrosquise · Onfalocele · Hérnia diafragmática — conduta pré-transferência
-        </p>
-      </div>
 
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">

@@ -9,7 +9,6 @@ import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
 
-const PRIMARY = "#0D9488";
 
 export function parsePeso(s) {
   const v = parseFloat(String(s).replace(",", "."));
@@ -295,10 +294,6 @@ export default function Neonatologia2() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Neonatologia II</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Hipoglicemia Neonatal</p>
-      </div>
 
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {

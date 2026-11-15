@@ -146,13 +146,6 @@ export default function IdadeGestacional() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
 
-      {/* Header */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Idade Gestacional e Corrigida
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>IGPM até 40 semanas · idade corrigida · cronológica</p>
-      </div>
 
       {/* Entradas */}
       <div style={{ padding: "12px 16px", background: "var(--tint-blue)", borderBottom: "1px solid #BFDBFE" }}>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import CalcDose from "../components/CalcDose";
-import { Stethoscope, AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
+import { AlertTriangle, Info, AlertCircle, Clock, Pill } from "lucide-react";
 
 const CP = '#0D9488';
 const CD = '#0F766E';
@@ -350,16 +350,6 @@ export default function Antibioticos() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-      {/* HEADER */}
-      <div style={{ background: CP, padding: '20px 16px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Stethoscope size={22} color="#fff" />
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Antibioticoterapia</div>
-            <div style={{ fontSize: 12, color: '#fff', opacity: 0.88 }}>Escolha empírica por síndrome clínica · Pediátrica</div>
-          </div>
-        </div>
-      </div>
 
       {/* CHIPS */}
       <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>

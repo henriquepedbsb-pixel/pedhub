@@ -14,7 +14,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Ruler, Info, AlertTriangle } from "lucide-react";
+import { Info, AlertTriangle } from "lucide-react";
 import {
   IGR_PW, IGR_LW, IGR_CW, FEN_PW, FEN_LW, FEN_CW,
   getPretermPercs, percFromBand5, percFromBand3, classify,
@@ -24,7 +24,6 @@ import { avisoPesoG } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
 
 const COR = "#DB2777";
-const COR_LITE = "#FCE7F3";
 
 const parseNum = (s) => {
   if (s === null || s === undefined || s === "") return null;
@@ -285,16 +284,6 @@ export default function ClassificacaoRN() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", padding: 16, backgroundColor: "var(--bg)", minHeight: "100vh" }}>
 
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 12, background: COR_LITE, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Ruler size={24} color={COR} />
-        </div>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>Classificação do RN</h1>
-          <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>Idade gestacional · Peso · Estatura · Perímetro cefálico</p>
-        </div>
-      </div>
 
       <Card>
         <CardTitle>Sexo</CardTitle>

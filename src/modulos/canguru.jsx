@@ -15,7 +15,7 @@ import { montarTextoConduta } from "../lib/exportarTexto";
 import {
   Scale, Calendar, Droplets, Pill,
   Printer, AlertTriangle, CheckCircle,
-  Info, Activity, ClipboardList, RefreshCw, Clock,
+  Info, ClipboardList, RefreshCw, Clock,
 } from 'lucide-react';
 import { fmtBR } from '../lib/numero';
 import { useCampoPeso } from '../lib/paciente';
@@ -302,28 +302,6 @@ export default function Canguru() {
       color: COR.texto,
       paddingBottom: 60,
     }}>
-      <header style={{
-        background: `linear-gradient(135deg,${COR.dark},${COR.mid})`,
-        padding: '28px 20px 20px',
-        color: '#fff',
-        textAlign: 'center',
-      }}>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          background: 'rgba(255,255,255,.18)', fontSize: 10.5, fontWeight: 700,
-          letterSpacing: '.1em', textTransform: 'uppercase',
-          padding: '4px 13px', borderRadius: 999, marginBottom: 12,
-        }}>
-          <Activity size={11} />
-          UCIN · PedHub
-        </div>
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-.3px', margin: 0 }}>
-          Canguru
-        </h1>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,.75)', marginTop: 4, marginBottom: 0 }}>
-          Prescrição e Receituário Neonatal
-        </p>
-      </header>
 
       <div style={{ display: 'flex', background: "var(--surface)", borderBottom: `2px solid ${COR.lite}` }}>
         {['Prescrição', 'Receituário'].map((t, i) => (

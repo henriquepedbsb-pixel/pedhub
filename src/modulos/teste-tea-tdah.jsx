@@ -180,16 +180,6 @@ export default function TesteTeaTdah() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #312E81)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Brain size={22} />
-          Rastreio de TEA e TDAH
-        </h1>
-        <p className="text-indigo-100 text-xs mt-1">
-          Checklist de sinais de alerta e fluxo de encaminhamento
-        </p>
-      </div>
 
       <div className="px-4 pt-4">
         <AlertaBox tone="blue">

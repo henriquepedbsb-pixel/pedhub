@@ -229,15 +229,6 @@ export default function Dnpm() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: FUNDO, paddingBottom: 60 }}>
 
-      {/* ── Header ── */}
-      <div style={{ background: `linear-gradient(135deg, ${VD_E} 0%, ${VD_M} 100%)`, padding: "28px 20px 24px", textAlign: "center", color: "#fff" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.18)", fontSize: 10.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 13px", borderRadius: 999, marginBottom: 12, color: "rgba(255,255,255,0.95)" }}>
-          <Activity size={12} />
-          Desenvolvimento · PedHub
-        </div>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, fontWeight: 800, letterSpacing: -0.3, lineHeight: 1.2, margin: "0 0 4px", color: "#fff" }}>DNPM</h1>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", margin: 0 }}>Marcos do desenvolvimento neuropsicomotor</p>
-      </div>
 
       <div style={{ padding: "16px 16px 0" }}>
 

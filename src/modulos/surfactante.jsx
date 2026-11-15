@@ -98,14 +98,6 @@ export default function Surfactante() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #047857 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <BookOpen size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Surfactante</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Terapia de reposição · Consenso Europeu 2022 · SBP · Bula Curosurf/Survanta</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>

@@ -363,10 +363,6 @@ function TabBIC() {
 export default function DilucaoBic() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Diluição e BIC</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>Drogas de Infusão Contínua · Neonatal</p>
-      </div>
       <div style={{ padding: 16 }}>
         <TabBIC />
       </div>

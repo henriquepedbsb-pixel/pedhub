@@ -247,19 +247,6 @@ export default function Dor() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', backgroundColor: "var(--bg)", minHeight: '100vh', padding: '16px' }}>
 
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div style={{
-        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-        borderRadius: '16px', padding: '20px 20px 18px',
-        marginBottom: '16px', color: 'white',
-      }}>
-        <h1 style={{ fontSize: '22px', fontWeight: '700', margin: 0, lineHeight: 1.2 }}>
-          Dor em Pediatria
-        </h1>
-        <p style={{ fontSize: '13px', margin: '6px 0 0', opacity: 0.9 }}>
-          Avaliação · Escada analgésica · Medidas não farmacológicas
-        </p>
-      </div>
 
       {/* ── Abas principais ────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>

@@ -432,13 +432,6 @@ export default function Vacinal() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
 
-      {/* Header */}
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>
-          Calendário Vacinal
-        </h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>SBIm 2026/2027 · PNI atualizado ago/2026</p>
-      </div>
 
       {/* Abas */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>

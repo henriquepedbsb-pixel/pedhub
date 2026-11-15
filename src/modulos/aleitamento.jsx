@@ -2,7 +2,6 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import {
-  Milk,
   ChevronDown,
   ChevronUp,
   Baby,
@@ -246,15 +245,6 @@ export default function Aleitamento() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #BE123C)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Milk size={22} />
-          Aleitamento Materno
-        </h1>
-        <p className="text-rose-100 text-xs mt-1">
-          Técnica · Frequência · Intercorrências · Introdução Alimentar
-        </p>
-      </div>
 
       <div className="px-4 pt-4">
         <div className="flex gap-2 overflow-x-auto pb-1">

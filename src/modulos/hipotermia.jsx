@@ -115,14 +115,6 @@ export default function Hipotermia() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #3730A3 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Thermometer size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Hipotermia Terapêutica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>EHI Neonatal · ≥ 36 semanas · Janela: 6h · ILCOR 2021 · AAP 2014</p>
-      </div>
 
       {/* Alerta janela terapêutica */}
       <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', gap: '8px' }}>

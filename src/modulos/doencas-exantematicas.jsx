@@ -258,15 +258,6 @@ export default function DoencasExantematicas() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #450A0A)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Thermometer size={22} />
-          Doenças Exantemáticas
-        </h1>
-        <p className="text-red-100 text-xs mt-1">
-          Diagnóstico diferencial dos exantemas na infância
-        </p>
-      </div>
 
       <div className="px-4 pt-4">
         <div className="flex gap-2 overflow-x-auto pb-1">

@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Activity, RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
+import { RotateCcw, AlertTriangle, Info, Flame, Moon } from "lucide-react";
 
 /* ─── Paleta ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -252,23 +252,6 @@ export default function DorNeonatal() {
       background:C.bg, minHeight:"100vh", padding:"12px 0 28px"}}>
       <div style={{maxWidth:480, margin:"0 auto", padding:"0 12px"}}>
 
-        {/* ── Cabeçalho ─────────────────────────────────────────────────── */}
-        <div style={{
-          background:"linear-gradient(135deg,#1E293B 0%,#334155 100%)",
-          borderRadius:16, padding:"16px 20px", marginBottom:14,
-        }}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <Activity size={22} color="#60A5FA"/>
-            <div>
-              <div style={{fontSize:17,fontWeight:800,color:"var(--tint-slate)"}}>
-                Dor Neonatal
-              </div>
-              <div style={{fontSize:11,color:"var(--muted)",marginTop:1}}>
-                NIPS · PIPP-R · N-PASS · CRIES
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* ── Tabs ──────────────────────────────────────────────────────── */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",

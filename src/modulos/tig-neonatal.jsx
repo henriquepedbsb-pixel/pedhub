@@ -9,7 +9,7 @@ import { montarTextoConduta } from "../lib/exportarTexto";
 import { tigGlicoseGramasDia, tigConcentracao } from "../lib/calc/tig";
 import {
   Scale, Calculator, ClipboardList, BarChart2,
-  AlertTriangle, CheckCircle, Info, Activity, ArrowRight,
+  AlertTriangle, CheckCircle, Info, ArrowRight,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
@@ -319,19 +319,6 @@ export default function TigNeonatal() {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: FUNDO, paddingBottom: 60 }}>
 
-      {/* ─ Header ─ */}
-      <div style={{ background: "linear-gradient(135deg, #0d3b6e 0%, #1a6896 100%)", padding: "28px 20px 24px", textAlign: "center", color: "#fff" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.18)", fontSize: 10.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 13px", borderRadius: 999, marginBottom: 12, color: "rgba(255,255,255,0.95)" }}>
-          <Activity size={12} />
-          UCIN · PedHub
-        </div>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, fontWeight: 800, letterSpacing: -0.3, lineHeight: 1.2, margin: "0 0 4px", color: "#fff" }}>
-          Calculadora de TIG
-        </h1>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", margin: 0 }}>
-          Taxa de Infusão de Glicose — Neonatal
-        </p>
-      </div>
 
       <div style={{ padding: "16px 16px 0" }}>
 

@@ -254,7 +254,7 @@ export default function Pedfarma() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      {/* Título e subtítulo ficam no cabeçalho global (descNoCabecalho no catálogo). */}
+      {/* Título e subtítulo ficam no cabeçalho global (desc do catálogo). */}
 
       {/* Peso de referência */}
       <div style={{ padding: "12px 16px 12px" }}>

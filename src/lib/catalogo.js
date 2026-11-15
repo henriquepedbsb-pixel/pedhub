@@ -44,9 +44,8 @@ const SECOES = {
    cor   → cor de identidade do módulo (hex fixo — CLAUDE.md, regra 3).
    tags  → termos de busca que NÃO estão no nome/descrição: sinônimos, siglas,
            fármacos, escalas. Só incluir termo cujo conteúdo existe no módulo.
-   descNoCabecalho → (opcional) true nos módulos que já não repetem o título
-           numa faixa colorida própria: o cabeçalho global mostra a `desc`
-           como subtítulo. Ligar ao migrar o módulo para o cabeçalho único. */
+   O cabeçalho global (App.jsx) mostra `label` como título e `desc` como
+   subtítulo — os módulos não repetem o título numa faixa colorida própria. */
 export const MODULOS = [
   /* ══ Pediatria Geral ══ */
   /* ── Emergências ── */
@@ -76,7 +75,7 @@ export const MODULOS = [
   { rota: "/sedacao", label: "Sedação em Procedimentos", desc: "Cetamina · Midazolam · Fentanil · Checklist", Icon: Syringe, cor: "#6366F1", grupo: "Pediatria Geral", secao: "Terapia Intensiva & Procedimentos",
     tags: "sedacao procedimento cetamina midazolam fentanil propofol jejum checklist" },
   /* ── Farmacologia & Imunização ── */
-  { rota: "/pedfarma", label: "PedFarma", desc: "48 medicamentos · dose por peso", descNoCabecalho: true, Icon: Pill, cor: "#8B5CF6", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
+  { rota: "/pedfarma", label: "PedFarma", desc: "48 medicamentos · dose por peso", Icon: Pill, cor: "#8B5CF6", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
     tags: "amoxicilina paracetamol dipirona ibuprofeno azitromicina cefalexina antibiotico corticoide prednisolona dexametasona omeprazol ondansetrona dose bula prescricao medicamento remedio equivalencia hidrocortisona metilprednisolona prednisona salbutamol claritromicina ceftriaxona cefuroxima sulfametoxazol metronidazol clindamicina nitrofurantoina loratadina cetirizina hidroxizina esomeprazol lactulose simeticona fenobarbital levetiracetam carbamazepina valproato diazepam fluconazol nistatina aciclovir oseltamivir montelucaste sulfato ferroso ferro zinco vitamina d vitamina a naloxona difenidramina ipratropio budesonida domperidona" },
   { rota: "/antibioticos", label: "Antibioticoterapia", desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope, cor: "#0D9488", grupo: "Pediatria Geral", secao: "Farmacologia & Imunização",
     tags: "antibiotico atb empirico pneumonia itu meningite celulite escolha sindrome otite oma faringite amigdalite sepse mastoidite pielonefrite erisipela abscesso" },
@@ -102,7 +101,7 @@ export const MODULOS = [
     tags: "refluxo drge constipacao obstipacao alergia proteina leite vaca aplv omeprazol regurgitacao hepato hepatologia figado colestase colestase neonatal bilirrubina direta conjugada atresia vias biliares kasai ictericia colestatica ursodesoxicolico" },
   { rota: "/formulas", label: "Fórmulas Infantis", desc: "Nestlé × Danone · Escada APLV", Icon: FlaskConical, cor: "#10B981", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "leite formula infantil hidrolisado aminoacido soja aplv alergia proteina leite vaca desmame nan aptamil" },
-  { rota: "/hidratacao", label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", descNoCabecalho: true, Icon: Droplets, cor: "#3B82F6", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
+  { rota: "/hidratacao", label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", Icon: Droplets, cor: "#3B82F6", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "manutencao liquido soro reidratacao tro plano volume holliday segar desidratacao venoso plano a plano b plano c sro expansao glicose sodio potassio" },
   { rota: "/dermato", label: "Dermatologia", desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield, cor: "#EC4899", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "dermatite atopica impetigo escabiose sarna urticaria pele coceira prurido" },
@@ -191,8 +190,8 @@ export function secoesDoHub(rotaHub) {
 
 /* Mapa rota → { label, cor, voltar, sub?, info? } para o cabeçalho global
    (App.jsx). Hubs voltam para a home ("/") e mostram a contagem de ferramentas
-   (`info`); módulos voltam para o hub do seu grupo e, quando marcados com
-   descNoCabecalho, mostram a descrição como subtítulo (`sub`). */
+   (`info`); módulos voltam para o hub do seu grupo e mostram a descrição como
+   subtítulo (`sub`). */
 export const MODULO_MAP = {
   ...Object.fromEntries(Object.entries(HUBS).map(([rota, h]) => [rota, {
     label: h.label, cor: h.cor,
@@ -200,7 +199,7 @@ export const MODULO_MAP = {
   }])),
   ...Object.fromEntries(MODULOS.map((m) => [m.rota, {
     label: m.label, cor: m.cor, voltar: HUB_DO_GRUPO[m.grupo],
-    ...(m.descNoCabecalho ? { sub: m.desc } : {}),
+    sub: m.desc,
   }])),
 };
 

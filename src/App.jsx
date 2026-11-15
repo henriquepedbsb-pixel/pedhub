@@ -132,8 +132,8 @@ function Header() {
           <span style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", lineHeight: 1.25 }}>
             {modulo.label}
           </span>
-          {/* Subtítulo: só nos módulos que já não repetem o título numa faixa
-              própria (campo descNoCabecalho do catálogo). */}
+          {/* Subtítulo: a descrição do módulo no catálogo (os módulos não
+              repetem o título numa faixa própria). */}
           {modulo.sub && (
             <span style={{
               fontSize: 12, color: "var(--muted)", lineHeight: 1.25,

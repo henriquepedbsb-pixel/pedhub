@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { ColestaseConteudo } from "./colestase-neonatal";
 
-const PRIMARY = "#F59E0B";
 
 /* ─── Componentes base ────────────────────────────────────────────────────── */
 function InfoBox({ color, children }) {
@@ -292,10 +291,6 @@ export default function Gastropediatria() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>Gastro e Hepato</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>DRGE · APLV · Constipação · Colestase</p>
-      </div>
 
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "2px solid var(--border)" }}>
         {tabs.map((t, i) => {

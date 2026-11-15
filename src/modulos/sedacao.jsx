@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Syringe, AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, Pill, Shield } from "lucide-react";
 
 const CI = '#6366F1';
 const CD = "var(--tx-blue)";
@@ -85,15 +85,6 @@ export default function Sedacao() {
   return (
     <div style={{ ...F, background: "var(--tint-slate)", minHeight: '100vh', paddingBottom: 80, maxWidth: 420, margin: '0 auto' }}>
 
-      <div style={{ background: CI, padding: '20px 16px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Syringe size={22} color="#fff" />
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Sedação em Procedimentos</div>
-            <div style={{ fontSize: 12, color: '#fff', opacity: 0.88 }}>Fármacos · Classificação · Checklist · Antagonistas</div>
-          </div>
-        </div>
-      </div>
 
       <div style={{ background: "var(--surface)", borderBottom: '1px solid var(--border)', padding: '10px 12px', overflowX: 'auto' }}>
         <div style={{ display: 'flex', gap: 8, minWidth: 'max-content' }}>

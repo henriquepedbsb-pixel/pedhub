@@ -177,14 +177,6 @@ export default function Ventilacao() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #0E7490 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Wind size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Ventilação Mecânica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Pediátrica · PALICC 2023 · ARDSnet adaptado · Harriet Lane 22ª ed.</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>

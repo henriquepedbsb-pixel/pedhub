@@ -5,7 +5,6 @@ import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import {
-  Baby,
   Wind,
   Droplets,
   Syringe,
@@ -136,16 +135,6 @@ export default function SalaDeParto() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #92400E)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Baby size={22} />
-          Sala de Parto — Material por Peso/IG
-        </h1>
-        <p className="text-amber-100 text-xs mt-1">
-          Tubo endotraqueal · sonda gástrica · cateteres umbilicais
-        </p>
-      </div>
 
       {/* Peso e IG — usados em todas as calculadoras */}
       <div className="px-4 pt-4 grid grid-cols-2 gap-3">

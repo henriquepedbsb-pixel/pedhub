@@ -581,12 +581,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 pb-12" style={{ fontFamily: "system-ui, sans-serif", maxWidth: 430, margin: "0 auto" }}>
 
-      {/* CABEÇALHO */}
-      <div style={{ background: BG }} className="px-4 pt-4 pb-5 text-white">
-        <p className="text-xs font-bold uppercase tracking-widest opacity-70">Neonatologia · SBP 2026</p>
-        <h1 className="text-xl font-bold leading-tight mt-0.5">Reanimação RN ≥34 semanas</h1>
-        <p className="text-sm opacity-80 mt-0.5">Sala de Parto — Diretrizes PRN-SBP · Jun/2026</p>
-      </div>
 
       {/* CAMPOS */}
       <div className="bg-white border-b border-gray-100 px-4 py-3 flex gap-3">

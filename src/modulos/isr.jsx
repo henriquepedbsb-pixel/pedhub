@@ -227,14 +227,6 @@ export default function ISR() {
   return (
     <div style={{ fontFamily: 'DM Sans, sans-serif', maxWidth: '480px', margin: '0 auto', padding: '16px', backgroundColor: "var(--bg)", minHeight: '100vh' }}>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #9A3412 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Zap size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>ISR Pediátrica</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Intubação de Sequência Rápida · Harriet Lane 22ª ed. · UpToDate 2024</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>

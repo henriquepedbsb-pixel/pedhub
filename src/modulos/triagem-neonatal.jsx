@@ -88,15 +88,6 @@ export default function TriagemNeonatal() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #0F766E)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Footprints size={22} />
-          Triagem Neonatal
-        </h1>
-        <p className="text-teal-100 text-xs mt-1">
-          Pezinho · Orelhinha · Olhinho · Coraçãozinho · Linguinha
-        </p>
-      </div>
 
       <div className="px-4 pt-4">
         <div className="flex gap-2 overflow-x-auto pb-1">

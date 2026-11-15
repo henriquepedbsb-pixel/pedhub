@@ -283,14 +283,6 @@ export default function AnalgesiaSedacao() {
   return (
     <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
 
-      {/* Header */}
-      <div style={{ background:`linear-gradient(135deg, ${C} 0%, #D97706 100%)`, borderRadius:'14px', padding:'16px', marginBottom:'16px', color:'#FFF' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'4px' }}>
-          <Pill size={22} />
-          <h1 style={{ margin:0, fontSize:'20px', fontWeight:'800' }}>Analgesia e Sedação</h1>
-        </div>
-        <p style={{ margin:0, fontSize:'11px', opacity:0.85 }}>UTI Pediátrica · SCCM 2022 · Harriet Lane 22ª ed. · analgo-sedação guiada por escala</p>
-      </div>
 
       {/* Peso persistente */}
       <div style={{ ...card({ padding:'10px' }), marginBottom:'12px' }}>

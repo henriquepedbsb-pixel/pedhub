@@ -426,16 +426,6 @@ export default function Torchs() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #4F46E5)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <Baby size={22} />
-          TORCHS — Infecções Congênitas
-        </h1>
-        <p className="text-indigo-100 text-xs mt-1">
-          Toxoplasmose · Rubéola · Citomegalovírus · Herpes · Sífilis congênita
-        </p>
-      </div>
 
       {/* Peso do RN — usado nas calculadoras de dose (oculto no diferencial) */}
       {aba !== "diferencial" && (

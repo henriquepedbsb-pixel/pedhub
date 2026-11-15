@@ -165,14 +165,6 @@ export default function NEC() {
   return (
     <div style={{ fontFamily:'DM Sans, sans-serif', maxWidth:'480px', margin:'0 auto', padding:'16px', backgroundColor:"var(--bg)", minHeight:'100vh' }}>
 
-      {/* Header */}
-      <div style={{ background:`linear-gradient(135deg, ${C} 0%, #78350F 100%)`, borderRadius:'14px', padding:'16px', marginBottom:'16px', color:'#FFF' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'4px' }}>
-          <AlertTriangle size={22} />
-          <h1 style={{ margin:0, fontSize:'20px', fontWeight:'800' }}>Enterocolite Necrosante</h1>
-        </div>
-        <p style={{ margin:0, fontSize:'11px', opacity:0.85 }}>NEC · Bell Modified Staging · Vermont Oxford · SBP · NeoFax 2023</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display:'flex', gap:'6px', marginBottom:'16px' }}>

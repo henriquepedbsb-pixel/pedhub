@@ -124,16 +124,6 @@ export default function Rop() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Cabeçalho do módulo */}
-      <div className="px-4 pt-5 pb-4" style={{ background: `linear-gradient(135deg, ${COR}, #075985)` }}>
-        <h1 className="text-white text-lg font-bold flex items-center gap-2">
-          <ScanEye size={22} />
-          ROP — Retinopatia da Prematuridade
-        </h1>
-        <p className="text-sky-100 text-xs mt-1">
-          Critérios de triagem, momento do exame e seguimento
-        </p>
-      </div>
 
       {/* Verificador rápido de indicação de triagem */}
       <div className="px-4 pt-4">

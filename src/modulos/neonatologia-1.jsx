@@ -421,12 +421,6 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "DM Sans, sans-serif", maxWidth: 480, margin: "0 auto", backgroundColor: "var(--tint-slate)", minHeight: "100vh" }}>
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${COR_NEO}, #0891B2)`, padding: "20px 16px 16px" }}>
-        <p style={{ margin: "0 0 2px", fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: "#CCFBF1", textTransform: "uppercase" }}>Neonatologia</p>
-        <h1 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 700, color: "#fff" }}>Reanimação RNPT &lt;34s</h1>
-        <p style={{ margin: 0, fontSize: 12, color: "#A7F3D0" }}>Diretrizes SBP / PRN-SBP 2026 · Sepse Neonatal Precoce</p>
-      </div>
 
       {/* Tabs */}
       <div style={{ display: "flex", background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>

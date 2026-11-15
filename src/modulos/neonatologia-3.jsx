@@ -11,7 +11,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import RodapeModulo from "../components/RodapeModulo";
 import { usePaciente, setPaciente } from "../lib/paciente";
 import {
-  Calculator, ClipboardList, BookOpen, Activity,
+  Calculator, ClipboardList, BookOpen, 
   AlertTriangle, Info, TrendingUp, Printer,
   RefreshCw, ChevronDown, ChevronUp,
   Check,
@@ -549,21 +549,6 @@ export default function IctericiaNeonatal() {
       fontFamily:"'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
       color:C.texto,
     }}>
-      {/* ── Header ── */}
-      <header style={{
-        background:`linear-gradient(135deg,${C.head1},${C.head2})`,
-        color:'#fff', padding:'14px 16px',
-      }}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
-          <Activity size={18}/>
-          <span style={{fontSize:16,fontWeight:800,letterSpacing:'.2px'}}>
-            Icterícia Neonatal
-          </span>
-        </div>
-        <p style={{fontSize:11.5,opacity:.85,marginLeft:26}}>
-          AAP 2022 (≥ 35 sem) &nbsp;·&nbsp; SBP 2021 (&lt; 35 sem) &nbsp;·&nbsp; Interpolação linear automática
-        </p>
-      </header>
 
       {/* ── Tab bar ── */}
       <div style={{display:'flex',background:"var(--surface)",borderBottom:`2px solid ${C.borda}`,position:'sticky',top:0,zIndex:99,overflow:'auto'}}>

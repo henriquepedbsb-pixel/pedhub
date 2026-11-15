@@ -38,7 +38,7 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Scale, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import {
   getPretermPercs, classify, classifyOMS,
   percFromBand3, percFromBand5, percFromBand7, zFromBand,
@@ -664,19 +664,6 @@ export default function Percentis({ somenteOMS = false }) {
     <div style={{ fontFamily:"'DM Sans', sans-serif", maxWidth:"480px", margin:"0 auto",
       padding:"16px", backgroundColor:"var(--bg)", minHeight:"100vh" }}>
 
-      {/* Header */}
-      <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
-        <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"var(--tint-blue)",
-          display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <Scale size={24} color="#3B82F6" />
-        </div>
-        <div>
-          <h1 style={{ margin:0, fontSize:"20px", fontWeight:"800", color:"var(--text)" }}>Curvas de Crescimento</h1>
-          <p style={{ margin:0, fontSize:"12px", color:"var(--muted)" }}>
-            {somenteOMS ? "OMS — Organização Mundial da Saúde · 0–60 meses" : "OMS · Intergrowth-21st · Fenton 2013"}
-          </p>
-        </div>
-      </div>
 
       {/* Tabs (ocultas no modo somente OMS) */}
       {!somenteOMS && (

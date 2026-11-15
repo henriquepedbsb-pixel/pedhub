@@ -301,14 +301,6 @@ export default function Eletrolitos() {
         .eletro-chip.is-on { background-color: #7C3AED !important; color: #FFFFFF !important; border-color: #7C3AED !important; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C} 0%, #5B21B6 100%)`, borderRadius: '14px', padding: '16px', marginBottom: '16px', color: '#FFF' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-          <Droplets size={22} />
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '800' }}>Distúrbios Eletrolíticos</h1>
-        </div>
-        <p style={{ margin: 0, fontSize: '11px', opacity: 0.85 }}>Pediátrico · Harriet Lane 22ª ed. · Nelson Textbook · UpToDate 2024</p>
-      </div>
 
       {/* Peso + Idade persistentes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
