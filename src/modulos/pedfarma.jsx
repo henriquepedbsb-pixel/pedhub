@@ -1,7 +1,7 @@
 // src/modulos/pedfarma.jsx
 import { useState, useMemo, useDeferredValue, memo } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Pill, Search, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
+import { Pill, Search, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind, X } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";
@@ -9,6 +9,9 @@ import CalcDose, { CAT_CORES } from "../components/CalcDose";
 import { fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+import Segmentado from "../components/Segmentado";
+import { BARRA_PACIENTE_H } from "../components/BarraPaciente";
+import { CABECALHO_H } from "../lib/layout";
 
 const PRIMARY = "#8B5CF6";
 
@@ -134,18 +137,14 @@ const temCalculadora = (d) => !!(d.indicacoes && Object.keys(d.indicacoes).lengt
 // Fora do componente principal (regra 4 — sem remount/perda de foco).
 function IndicacaoSelector({ indicacoes, sel, onSel, cor }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+    <div role="group" aria-label="Indicação" style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
       {Object.keys(indicacoes).map((k) => {
         const ativo = k === sel;
         return (
           <button
-            key={k} type="button" onClick={() => onSel(k)}
-            style={{
-              padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, cursor: "pointer",
-              border: "1px solid " + (ativo ? cor : "var(--border)"),
-              background: ativo ? cor : "var(--surface)",
-              color: ativo ? "#fff" : "var(--muted)",
-            }}
+            key={k} type="button" onClick={() => onSel(k)} aria-pressed={ativo}
+            className={"ph-chip" + (ativo ? " is-active" : "")}
+            style={{ "--chip-cor": cor, minHeight: 36, padding: "0 12px", fontSize: 12.5 }}
           >
             {indicacoes[k].label || k}
           </button>
@@ -161,36 +160,24 @@ function JatosSelector({ jatos, cor }) {
   const box = { background: "var(--surface)", borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)" };
   return (
     <div style={{ marginTop: 10, background: cor + "0D", borderRadius: 10, padding: 10, border: "1px solid " + cor + "33" }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: cor, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 5 }}>
-        <Wind size={13} /> Jatos por gravidade da crise
+      <p style={{ fontSize: 12.5, fontWeight: 700, color: "var(--text)", margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}>
+        <Wind size={14} color={cor} /> Jatos por gravidade da crise
       </p>
-      <div style={{ display: "flex", gap: 6, marginBottom: sel ? 8 : 0 }}>
-        {jatos.map((j) => {
-          const ativo = sel === j.grav;
-          return (
-            <button
-              key={j.grav}
-              type="button"
-              onClick={() => setSel(ativo ? null : j.grav)}
-              style={{
-                flex: 1, padding: "8px 6px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
-                border: "1px solid " + (ativo ? cor : "#D1D5DB"),
-                background: ativo ? cor : "var(--surface)",
-                color: ativo ? "#fff" : "var(--muted)",
-              }}
-            >
-              {j.grav}
-            </button>
-          );
-        })}
+      <div style={{ marginBottom: sel ? 8 : 0 }}>
+        <Segmentado
+          rotulo="Gravidade da crise"
+          valor={sel}
+          onChange={(g) => setSel(g === sel ? null : g)}
+          opcoes={jatos.map((j) => ({ valor: j.grav, label: j.grav, cor }))}
+        />
       </div>
       {sel && (() => {
         const j = jatos.find((x) => x.grav === sel);
         return (
           <div style={box}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Crise {sel.toLowerCase()}</p>
-            <p style={{ fontSize: 15, fontWeight: 800, color: cor, margin: "2px 0 0" }}>{j.jatos} jatos</p>
-            <p style={{ fontSize: 11, color: "var(--text-2)", margin: "2px 0 0" }}>{j.freq} · espaçador · 100 mcg/jato</p>
+            <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>Crise {sel.toLowerCase()}</p>
+            <p style={{ fontSize: 17, fontWeight: 800, color: cor, margin: "2px 0 0" }}>{j.jatos} jatos</p>
+            <p style={{ fontSize: 12.5, color: "var(--text-2)", margin: "2px 0 0" }}>{j.freq} · espaçador · 100 mcg/jato</p>
           </div>
         );
       })()}
@@ -210,13 +197,13 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
   // Dose fixa (zinco/vit D) não precisa de peso para exibir.
   const ehFixaAtiva = !!(drug.indicacoes && indAtiva && drug.indicacoes[indAtiva]?.doseFixa);
   return (
-    <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px", marginBottom: 8, borderLeft: "3px solid " + cor }}>
+    <div style={{ background: "var(--bg)", borderRadius: 12, padding: "12px 14px", marginBottom: 10, border: "1px solid var(--border)", borderLeft: "3px solid " + cor }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
         <div>
-          <p style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", margin: "0 0 2px" }}>{drug.nome}</p>
-          <span style={{ fontSize: 10, fontWeight: 700, color: cor, background: cor + "15", padding: "2px 7px", borderRadius: 4 }}>{drug.cat}</span>
+          <p style={{ fontWeight: 700, fontSize: 15, color: "var(--text)", margin: "0 0 4px" }}>{drug.nome}</p>
+          <span style={{ fontSize: 11.5, fontWeight: 700, color: cor, background: cor + "15", padding: "2px 8px", borderRadius: 5 }}>{drug.cat}</span>
         </div>
-        <span style={{ fontSize: 11, color: "var(--muted)", textAlign: "right" }}>{drug.via}</span>
+        <span style={{ fontSize: 12, color: "var(--muted)", textAlign: "right" }}>{drug.via}</span>
       </div>
       <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
         {[
@@ -224,9 +211,9 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
           { label: "Freq.", value: drug.freq },
           { label: "Máx",  value: drug.max },
         ].map(({ label, value }) => (
-          <div key={label} style={{ background: "var(--surface)", borderRadius: 6, padding: "5px 8px", border: "1px solid var(--border)" }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>{label}</p>
-            <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", margin: 0, lineHeight: 1.3 }}>{value}</p>
+          <div key={label} style={{ background: "var(--surface)", borderRadius: 8, padding: "6px 9px", border: "1px solid var(--border)" }}>
+            <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>{label}</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", margin: 0, lineHeight: 1.35 }}>{value}</p>
           </div>
         ))}
       </div>
@@ -236,7 +223,7 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
       {temCalculadora(drug) && (peso || ehFixaAtiva) && <CalcDose farmaco={drug} indicacao={indAtiva} peso={peso} pesoInput={false} cor={cor} />}
       {drug.jatos && <JatosSelector jatos={drug.jatos} cor={cor} />}
       {drug.obs && (
-        <p style={{ fontSize: 11, color: "var(--muted)", margin: "8px 0 0", lineHeight: 1.4, borderTop: "1px solid var(--border)", paddingTop: 6 }}>{drug.obs}</p>
+        <p style={{ fontSize: 12.5, color: "var(--text-2)", margin: "10px 0 0", lineHeight: 1.45, borderTop: "1px solid var(--border)", paddingTop: 8 }}>{drug.obs}</p>
       )}
     </div>
   );
@@ -267,56 +254,73 @@ export default function Pedfarma() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "var(--surface)" }}>
-      <div style={{ background: PRIMARY, padding: "20px 16px 16px", color: "#fff" }}>
-        <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 24, margin: "0 0 4px" }}>PedFarma</h1>
-        <p style={{ fontSize: 13, opacity: 0.9, margin: 0 }}>48 medicamentos · dose por peso</p>
-      </div>
+      {/* Título e subtítulo ficam no cabeçalho global (descNoCabecalho no catálogo). */}
 
-      <div style={{ padding: "12px 16px", background: "var(--tint-purple)", borderBottom: "1px solid #DDD6FE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-purple)", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg) — referência de dose</label>
-        <input type="text" inputMode="decimal" placeholder="Ex: 20,0"
+      {/* Peso de referência */}
+      <div style={{ padding: "12px 16px 12px" }}>
+        <label htmlFor="pf-peso" style={{ fontSize: 12.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 6 }}>Peso (kg) — referência de dose</label>
+        <input id="pf-peso" type="text" inputMode="decimal" placeholder="Ex: 20,0"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
-          style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
+          style={{ width: "100%", height: 48, padding: "0 14px", borderRadius: 12, fontSize: 17, fontWeight: 600, color: "var(--text)", border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box", fontFamily: "inherit" }} />
         <OrigemPeso ativo={pesoDaBarra} />
-        {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {fmtBR(peso)} kg — use a dose como referência para calcular</p>}
+        {!peso && <p style={{ fontSize: 12, color: "var(--muted)", margin: "6px 0 0" }}>Com o peso, cada medicamento mostra a dose calculada.</p>}
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
       </div>
 
       {/* Conversor de equivalência de corticosteroides */}
-      <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ padding: "0 16px 12px" }}>
         <button
+          type="button"
           onClick={() => setMostrarConversor(v => !v)}
+          aria-expanded={mostrarConversor}
           style={{
-            width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-            background: "var(--tint-amber)", border: "1px solid #FED7AA", borderRadius: 10,
-            padding: "10px 12px", cursor: "pointer",
+            width: "100%", minHeight: 44, display: "flex", alignItems: "center", justifyContent: "space-between",
+            background: "var(--tint-amber)", border: "1px solid #FED7AA", borderRadius: 12,
+            padding: "10px 12px", cursor: "pointer", fontFamily: "inherit",
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "var(--tx-amber)" }}>
-            <ArrowLeftRight size={15} />
+          <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 700, color: "var(--tx-amber)" }}>
+            <ArrowLeftRight size={16} />
             Conversor de Corticosteroides
           </span>
-          {mostrarConversor ? <ChevronUp size={16} color="#C2410C" /> : <ChevronDown size={16} color="#C2410C" />}
+          {mostrarConversor ? <ChevronUp size={18} color="#C2410C" /> : <ChevronDown size={18} color="#C2410C" />}
         </button>
         {mostrarConversor && (
-          <div style={{ marginTop: 10, background: "var(--bg)", borderRadius: 10, padding: "12px", border: "1px solid var(--border)" }}>
+          <div style={{ marginTop: 10, background: "var(--bg)", borderRadius: 12, padding: "12px", border: "1px solid var(--border)" }}>
             <CorticoideConversor />
           </div>
         )}
       </div>
 
-      <div style={{ padding: "10px 16px" }}>
-        <div style={{ position: "relative" }}>
-          <Search size={16} color="var(--muted)" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
-          <input type="text" placeholder="Buscar medicamento…" value={busca} onChange={e => setBusca(e.target.value)}
-            style={{ width: "100%", paddingLeft: 36, padding: "9px 12px 9px 36px", borderRadius: 8, fontSize: 14, border: "1.5px solid var(--border)", outline: "none", background: "var(--bg)", boxSizing: "border-box" }} />
+      {/* Busca e categorias: ficam presas no topo ao rolar a lista. */}
+      <div style={{
+        position: "sticky", top: BARRA_PACIENTE_H + CABECALHO_H, zIndex: 5,
+        background: "var(--surface)", padding: "8px 16px 10px",
+        borderBottom: "1px solid var(--border)",
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          height: 44, boxSizing: "border-box", padding: "0 6px 0 14px",
+          background: "var(--surface)", border: "1.5px solid var(--border)", borderRadius: 12,
+        }}>
+          <Search size={18} color="var(--muted)" style={{ flexShrink: 0 }} />
+          <input type="search" placeholder="Buscar medicamento" aria-label="Buscar medicamento" autoComplete="off"
+            value={busca} onChange={e => setBusca(e.target.value)}
+            style={{ flex: 1, minWidth: 0, height: "100%", border: "none", outline: "none", background: "transparent", fontFamily: "inherit", fontSize: 15, color: "var(--text)" }} />
+          {busca && (
+            <button type="button" onClick={() => setBusca("")} aria-label="Limpar busca"
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, flexShrink: 0, borderRadius: 8, background: "transparent", border: "none", cursor: "pointer", color: "var(--muted)" }}>
+              <X size={16} />
+            </button>
+          )}
         </div>
-        <div style={{ display: "flex", gap: 6, overflowX: "auto", marginTop: 10, paddingBottom: 4 }}>
+        <div className="ph-chips" role="group" aria-label="Categoria" style={{ marginTop: 8 }}>
           {CATEGORIAS.map(c => {
             const active = cat === c;
             return (
-              <button key={c} onClick={() => setCat(c)}
-                style={{ flexShrink: 0, padding: "5px 12px", borderRadius: 20, fontSize: 11, fontWeight: active ? 700 : 500, cursor: "pointer", border: "none", background: active ? PRIMARY : "var(--surface-2)", color: active ? "#fff" : "var(--muted)" }}>
+              <button key={c} type="button" onClick={() => setCat(c)} aria-pressed={active}
+                className={"ph-chip" + (active ? " is-active" : "")}
+                style={{ "--chip-cor": PRIMARY, minHeight: 36 }}>
                 {c}
               </button>
             );
@@ -325,12 +329,12 @@ export default function Pedfarma() {
       </div>
 
       <div style={{ padding: "0 16px 8px" }}>
-        <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 8px" }}>{filtered.length} medicamento{filtered.length !== 1 ? "s" : ""}</p>
+        <p style={{ fontSize: 12.5, color: "var(--muted)", margin: "12px 0 8px" }}>{filtered.length} medicamento{filtered.length !== 1 ? "s" : ""}{peso ? ` · dose para ${fmtBR(peso)} kg` : ""}</p>
         {filtered.map(d => <DrugCard key={d.id} drug={d} peso={pesoDiferido} />)}
         {filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "40px 16px", color: "var(--muted)" }}>
             <Pill size={36} color="var(--border)" style={{ display: "block", margin: "0 auto 8px" }} />
-            <p style={{ fontSize: 13 }}>Nenhum resultado para "{busca}"</p>
+            <p style={{ fontSize: 13.5 }}>Nenhum resultado para "{busca}"</p>
           </div>
         )}
       </div>

@@ -8,6 +8,7 @@ import ReloadPrompt from "./ReloadPrompt";
 import ErrorBoundary from "./components/ErrorBoundary";
 import BarraPaciente, { BARRA_PACIENTE_H } from "./components/BarraPaciente";
 import { MODULO_MAP } from "./lib/catalogo";
+import { CABECALHO_H } from "./lib/layout";
 
 /* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
@@ -100,6 +101,9 @@ function Header() {
           maxWidth: ehSubHub ? undefined : 480, margin: "0 auto",
           display: "flex", alignItems: "center",
           padding: "11px 16px", gap: 12,
+          // Altura fixa (com ou sem subtítulo): o que gruda abaixo do cabeçalho
+          // usa CABECALHO_H e não pode deixar fresta nem ficar por baixo.
+          minHeight: CABECALHO_H - 1, boxSizing: "border-box", // −1 = borda inferior
         }}
       >
         <button

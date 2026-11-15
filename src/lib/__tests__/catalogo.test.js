@@ -111,6 +111,7 @@ describe("catálogo — busca compartilhada e cabeçalho", async () => {
 
   it("subtítulo no cabeçalho só nos módulos marcados com descNoCabecalho", () => {
     expect(MODULO_MAP["/hidratacao"].sub).toBe(porRota("/hidratacao").desc);
+    expect(MODULO_MAP["/pedfarma"].sub).toBe(porRota("/pedfarma").desc);
     expect(MODULO_MAP["/urgencias"].sub).toBeUndefined();
     for (const m of MODULOS) expect(Boolean(MODULO_MAP[m.rota].sub), m.rota).toBe(Boolean(m.descNoCabecalho));
   });

@@ -1,6 +1,7 @@
 // src/components/CalcDose.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta CAT_CORES e corCategoria, compartilhados com pedfarma.jsx */
-// Calculadora de dose reutilizável (T3). Embutível em qualquer módulo:
+// Calculadora de dose reutilizável (T3). Texto mínimo de 11 px (legibilidade
+// no celular — padrão de layout de 15/11/2026). Embutível em qualquer módulo:
 //   <CalcDose farmaco="amoxicilina" indicacao="otite_media" />
 // Consome src/lib/farmacos.js (fonte única — zero duplicação de valor) e o
 // peso do paciente via usePaciente() (external store do T1), com input local
@@ -71,10 +72,10 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
     const valor = fmin === fmax ? `${fmtBR(fmin)}` : `${fmtBR(fmin)}–${fmtBR(fmax)}`;
     return (
       <div style={wrap}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: corFinal, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, color: corFinal, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
           <Pill size={13} /> Dose fixa
         </p>
-        <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 6px" }}>
+        <p style={{ fontSize: 11.5, color: "var(--muted)", margin: "0 0 6px" }}>
           {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
         </p>
         <div style={{ ...box, marginBottom: 8 }}>
@@ -104,7 +105,7 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
   const r = peso ? calcularDose(drug, indKey, peso, alvoValido ? alvo : null) : null;
 
   const fmt = (mg) => (mg >= 1000 ? `${fmtBR((mg / 1000).toFixed(mg % 1000 === 0 ? 0 : 2))} g` : `${fmtBR(mg)} mg`);
-  const inpStyle = { flex: 1, padding: "6px 9px", borderRadius: 7, fontSize: 12, border: "1px solid #D1D5DB", outline: "none", boxSizing: "border-box" };
+  const inpStyle = { flex: 1, minHeight: 40, padding: "6px 10px", borderRadius: 8, fontSize: 14, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)", outline: "none", boxSizing: "border-box", fontFamily: "inherit" };
 
   // Monta a conduta em texto plano para copiar (só peso + dose; sem paciente).
   const montarTexto = () => {
@@ -137,10 +138,10 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
 
   return (
     <div style={wrap}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: corFinal, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
+      <p style={{ fontSize: 12, fontWeight: 700, color: corFinal, margin: "0 0 2px", display: "flex", alignItems: "center", gap: 5 }}>
         <Pill size={13} /> {drug.nome}{peso ? ` · ${fmtBR(peso)} kg` : ""}
       </p>
-      <p style={{ fontSize: 10, color: "var(--muted)", margin: "0 0 8px" }}>
+      <p style={{ fontSize: 11.5, color: "var(--muted)", margin: "0 0 8px" }}>
         {ind.label ? `${ind.label} · ` : ""}Fonte: {ind.fonte}
       </p>
 
@@ -153,17 +154,17 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
             placeholder={pesoStore ? `${fmtBR(pesoStore)} kg (paciente)` : "peso (kg)"}
             style={inpStyle}
           />
-          <span style={{ fontSize: 10, color: "var(--muted)", whiteSpace: "nowrap" }}>kg</span>
+          <span style={{ fontSize: 11.5, color: "var(--muted)", whiteSpace: "nowrap" }}>kg</span>
         </div>
       )}
 
       {!peso ? (
-        <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>Informe o peso para calcular a dose.</p>
+        <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>Informe o peso para calcular a dose.</p>
       ) : r && r.modo === "dose" ? (
         <>
           <div style={{ ...box, marginBottom: 6 }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Por dose (faixa)</p>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>
+            <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>Por dose (faixa)</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", margin: 0 }}>
               {fmt(r.doseMin)} – {fmt(r.doseMax)}/dose
               {r.doseAlvo != null && <span style={{ color: corFinal }}> · alvo {fmt(r.doseAlvo)}/dose</span>}
             </p>
@@ -172,16 +173,16 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
             <div style={{ marginBottom: 6 }}>
               {r.volumes.map((v) => (
                 <div key={v.label} style={{ ...box, marginBottom: 4 }}>
-                  <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Volume · {v.label}</p>
+                  <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>Volume · {v.label}</p>
                   {v.gotas ? (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: corFinal, margin: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: corFinal, margin: 0 }}>
                       {r.doseAlvo != null ? `${fmtBR(v.gtMin)} gotas` : `${fmtBR(v.gtMin)} – ${fmtBR(v.gtMax)} gotas`}
-                      <span style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)" }}>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: "var(--muted)" }}>
                         {" "}({r.doseAlvo != null ? `${fmtBR(v.mlMin)} mL` : `${fmtBR(v.mlMin)} – ${fmtBR(v.mlMax)} mL`})
                       </span>
                     </p>
                   ) : (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: corFinal, margin: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: corFinal, margin: 0 }}>
                       {r.doseAlvo != null ? `${fmtBR(v.mlMin)} mL/dose` : `${fmtBR(v.mlMin)} – ${fmtBR(v.mlMax)} mL/dose`}
                     </p>
                   )}
@@ -190,7 +191,7 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
             </div>
           )}
           {r.volumes.some((v) => v.gotas) && (
-            <p style={{ fontSize: 9, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
               Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
             </p>
           )}
@@ -198,8 +199,8 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
       ) : r ? (
         <>
           <div style={{ ...box, marginBottom: 6 }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Total por dia (faixa)</p>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>
+            <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>Total por dia (faixa)</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", margin: 0 }}>
               {fmt(r.diaMin)} – {fmt(r.diaMax)}/dia
               {r.diaAlvo != null && <span style={{ color: corFinal }}> · alvo {fmt(r.diaAlvo)}/dia</span>}
             </p>
@@ -207,8 +208,8 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
           <div style={{ display: "grid", gridTemplateColumns: r.porTomada.length > 1 ? "1fr 1fr" : "1fr", gap: 6, marginBottom: 6 }}>
             {r.porTomada.map((pt) => (
               <div key={pt.tomadas} style={box}>
-                <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>{pt.tomadas === 1 ? "Dose única" : `${pt.tomadas}x/dia (${24 / pt.tomadas}/${24 / pt.tomadas}h)`}</p>
-                <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", margin: 0 }}>
+                <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>{pt.tomadas === 1 ? "Dose única" : `${pt.tomadas}x/dia (${24 / pt.tomadas}/${24 / pt.tomadas}h)`}</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", margin: 0 }}>
                   {pt.alvo != null ? `${fmt(pt.alvo)}/tomada` : `${fmt(pt.min)} – ${fmt(pt.max)}/tomada`}
                 </p>
               </div>
@@ -218,16 +219,16 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
             <div style={{ marginBottom: 6 }}>
               {r.volumes.map((v) => (
                 <div key={v.label} style={{ ...box, marginBottom: 4 }}>
-                  <p style={{ fontSize: 10, color: "var(--muted)", margin: 0 }}>Volume · {v.label}{v.freqLabel ? ` · ${v.freqLabel}` : ""}</p>
+                  <p style={{ fontSize: 11.5, color: "var(--muted)", margin: 0 }}>Volume · {v.label}{v.freqLabel ? ` · ${v.freqLabel}` : ""}</p>
                   {v.gotas ? (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: corFinal, margin: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: corFinal, margin: 0 }}>
                       {r.diaAlvo != null ? `${fmtBR(v.gtMin)} gotas` : `${fmtBR(v.gtMin)} – ${fmtBR(v.gtMax)} gotas`}
-                      <span style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)" }}>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: "var(--muted)" }}>
                         {" "}({r.diaAlvo != null ? `${fmtBR(v.mlMin)} mL` : `${fmtBR(v.mlMin)} – ${fmtBR(v.mlMax)} mL`})
                       </span>
                     </p>
                   ) : (
-                    <p style={{ fontSize: 13, fontWeight: 700, color: corFinal, margin: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: corFinal, margin: 0 }}>
                       {r.diaAlvo != null ? `${fmtBR(v.mlMin)} mL/tomada` : `${fmtBR(v.mlMin)} – ${fmtBR(v.mlMax)} mL/tomada`}
                     </p>
                   )}
@@ -236,7 +237,7 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
             </div>
           )}
           {r.volumes.some((v) => v.gotas) && (
-            <p style={{ fontSize: 9, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>
               Conversão: 1 mL = 20 gotas. Confira o conta-gotas do frasco.
             </p>
           )}
@@ -250,15 +251,15 @@ export default function CalcDose({ farmaco, indicacao, peso: pesoProp, pesoInput
               type="text" inputMode="decimal" value={alvoRaw}
               onChange={(e) => setAlvoRaw(e.target.value)}
               placeholder={`dose-alvo (${fmtBR(doseMinKg)}–${fmtBR(doseMaxKg)} mg/kg)`}
-              style={{ ...inpStyle, border: "1px solid " + (alvoRaw && !alvoValido ? "#DC2626" : "#D1D5DB") }}
+              style={{ ...inpStyle, border: "1px solid " + (alvoRaw && !alvoValido ? "#DC2626" : "var(--border)") }}
             />
-            <span style={{ fontSize: 10, color: "var(--muted)", whiteSpace: "nowrap" }}>{ehDose ? "mg/kg/dose" : "mg/kg/dia"}</span>
+            <span style={{ fontSize: 11.5, color: "var(--muted)", whiteSpace: "nowrap" }}>{ehDose ? "mg/kg/dose" : "mg/kg/dia"}</span>
           </div>
           {alvoRaw && !alvoValido && (
-            <p style={{ fontSize: 10, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({fmtBR(doseMinKg)}–{fmtBR(doseMaxKg)} mg/kg/{ehDose ? "dose" : "dia"}).</p>
+            <p style={{ fontSize: 11.5, color: "#DC2626", margin: "0 0 4px" }}>Fora da faixa recomendada ({fmtBR(doseMinKg)}–{fmtBR(doseMaxKg)} mg/kg/{ehDose ? "dose" : "dia"}).</p>
           )}
           {r.excedeuTeto && (
-            <p style={{ fontSize: 11, color: "#DC2626", fontWeight: 700, margin: 0, display: "flex", alignItems: "center", gap: 4 }}>
+            <p style={{ fontSize: 12, color: "#DC2626", fontWeight: 700, margin: 0, display: "flex", alignItems: "center", gap: 4 }}>
               <AlertTriangle size={12} style={{ flexShrink: 0 }} /> Excede o máximo recomendado — revisar dose.
             </p>
           )}

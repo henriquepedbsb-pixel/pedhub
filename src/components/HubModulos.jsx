@@ -12,10 +12,9 @@ import { Search, X } from "lucide-react";
 import { useFavoritos } from "../lib/favoritos";
 import FavoritoStar from "./FavoritoStar";
 import { BARRA_PACIENTE_H } from "./BarraPaciente";
+import { CABECALHO_H } from "../lib/layout";
 import { HUBS, secoesDoHub, nomeNoHub, termosDaBusca, casaBusca } from "../lib/catalogo";
 
-// Altura do cabeçalho global (App.jsx), para a âncora da seção não parar atrás dele.
-const CABECALHO_H = 62;
 const idSecao = (i) => `hub-secao-${i}`;
 
 /* Altura única dos cards em coluna: cabe ícone + nome em até 2 linhas +
