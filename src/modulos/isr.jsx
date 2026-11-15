@@ -56,8 +56,12 @@ export function calcularISR({ p, id, contexto, usarRocur }) {
   if (p <= 0) return null;
   const ctx = CONTEXTOS.find(c => c.id === contexto);
 
-  // Atropina: 0.02 mg/kg IV · mín 0.1 mg · máx 0.5 mg · conc 0.25 mg/mL
-  const atropDose = parseFloat(Math.min(Math.max(0.02 * p, 0.1), 0.5).toFixed(2));
+  // Atropina pré-intubação: 0,02 mg/kg IV · máx 0,5 mg · conc 0,25 mg/mL.
+  // SEM dose mínima: a AHA retirou o mínimo de 0,1 mg para pré-medicação de
+  // intubação em 2015 (PALS Update, Circulation 2015;132:S526) e manteve isso em
+  // 2025 — o mínimo de 0,1 mg vale só para bradicardia (ver Urgências). Três
+  // casas decimais para não distorcer a dose em RN pequeno (1,2 kg = 0,024 mg).
+  const atropDose = parseFloat(Math.min(0.02 * p, 0.5).toFixed(3));
   const atropVol  = parseFloat((atropDose / 0.25).toFixed(2));
 
   // Fentanil pré-medicação: fenDose mcg/kg · conc 50 mcg/mL
@@ -397,7 +401,7 @@ export default function ISR() {
               <div style={card()}>
                 <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>PRÉ-MEDICAÇÃO</p>
                 <DoseCard
-                  label={`Atropina 0,02 mg/kg${id <= 1 || !usarRocur ? ' ← obrigatória' : ' (se bradicardia prevista)'}`}
+                  label={`Atropina 0,02 mg/kg · máx 0,5 mg${id <= 1 || !usarRocur ? ' ← obrigatória' : ' (se bradicardia prevista)'}`}
                   dose={drugs.atropDose} unit="mg"
                   vol={drugs.atropVol}
                   ampola="Atropina 0,25 mg/mL (1 mL/ampola)"
@@ -716,7 +720,7 @@ export default function ISR() {
       {/* Disclaimer */}
       <RodapeModulo
         revisao="07/2026"
-        fonte="Harriet Lane Handbook 22ª ed. · UpToDate Pediatric RSI 2024 · APLS 2021 · SBP 2024"
+        fonte="Harriet Lane Handbook 22ª ed. · UpToDate Pediatric RSI 2024 · APLS 2021 · SBP 2024 · AHA PALS 2015/2020 (atropina)"
       />
     </div>
   );

@@ -79,10 +79,15 @@ describe('calcularISR — bloqueador neuromuscular', () => {
 });
 
 describe('calcularISR — limites', () => {
-  it('atropina: mínimo de 0,1 mg (3 kg daria 0,06 mg)', () => {
+  it('atropina pré-intubação: sem dose mínima (AHA 2015) — 3 kg = 0,06 mg', () => {
     const d = calcularISR({ ...base, p: 3 });
-    expect(d.atropDose).toBe(0.1);
-    expect(d.atropVol).toBe(0.4);
+    expect(d.atropDose).toBe(0.06);
+    expect(d.atropVol).toBe(0.24);
+  });
+  it('atropina: RN pequeno mantém 0,02 mg/kg sem arredondar para cima', () => {
+    expect(calcularISR({ ...base, p: 1.2 }).atropDose).toBe(0.024);
+    expect(calcularISR({ ...base, p: 0.5 }).atropDose).toBe(0.01);
+    expect(calcularISR({ ...base, p: 5 }).atropDose).toBe(0.1);
   });
   it('atropina: máximo de 0,5 mg (40 kg daria 0,8 mg)', () => {
     const d = calcularISR({ ...base, p: 40 });

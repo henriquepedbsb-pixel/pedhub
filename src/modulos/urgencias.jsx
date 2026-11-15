@@ -62,8 +62,10 @@ export function calcDoses(w) {
     epiIM_mg:        parseFloat(epiIM.toFixed(2)),
     epiIM_mL:        parseFloat(epiIM.toFixed(2)),
     epiET_mg:        parseFloat(clamp(w * 0.1, 0, 2.5).toFixed(2)),
-    atropina_mg:     parseFloat(clamp(Math.max(w * 0.02, 0.1), 0, w >= 30 ? 1 : 0.5).toFixed(2)),
-    atropina_mL:     parseFloat((clamp(Math.max(w * 0.02, 0.1), 0, w >= 30 ? 1 : 0.5) / 0.5).toFixed(1)),
+    // Atropina na bradicardia (AHA PALS 2020, mantido em 2025): 0,02 mg/kg,
+    // mínimo 0,1 mg, máximo 0,5 mg por dose — em qualquer peso.
+    atropina_mg:     parseFloat(clamp(Math.max(w * 0.02, 0.1), 0, 0.5).toFixed(2)),
+    atropina_mL:     parseFloat((clamp(Math.max(w * 0.02, 0.1), 0, 0.5) / 0.5).toFixed(1)),
     adeno1_mg:       parseFloat(clamp(w * 0.1, 0, 6).toFixed(1)),
     adeno1_mL:       parseFloat(clamp(w * 0.1 / 3, 0, 2).toFixed(1)),
     adeno2_mg:       parseFloat(clamp(w * 0.2, 0, 12).toFixed(1)),
@@ -271,9 +273,9 @@ function TabCalculadora({ d }) {
       <DoseCard label="Lidocaína (alternativa)" formula="1 mg/kg · máx 100 mg" color="#DC2626"
         doses={[d.lidocaina_mg + " mg"]}
         note="Alternativa à amiodarona na FV/TVsp refratária" />
-      <DoseCard label="Atropina IV" formula="0,02 mg/kg · mín 0,1 · máx 0,5 mg (< 30 kg) ou 1 mg (≥ 30 kg)" color="#DC2626"
+      <DoseCard label="Atropina IV" formula="0,02 mg/kg · mín 0,1 mg · máx 0,5 mg por dose" color="#DC2626"
         doses={[d.atropina_mg + " mg", d.atropina_mL + " mL"]}
-        note="0,5 mg/mL · Bradicardia por tônus vagal ou bloqueio AV" />
+        note="0,5 mg/mL · Bradicardia por tônus vagal ou bloqueio AV · pode repetir 1× (AHA PALS 2020)" />
       <DoseCard label="Cardioversão sincronizada" formula="1ª: 0,5–1 J/kg · seguinte: 2 J/kg" color="#DC2626"
         doses={[d.cardioSinc1_J + " J", d.cardioSinc2_J + " J"]}
         note="TSV/TV instável com pulso · Sincronizado · Sedação se possível" />
