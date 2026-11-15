@@ -1,3 +1,4 @@
+// src/lib/calc/__tests__/gotejamento.test.js
 import { describe, it, expect } from 'vitest';
 import { rateA, rateB } from '../gotejamento';
 

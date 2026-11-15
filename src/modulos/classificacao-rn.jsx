@@ -1,3 +1,4 @@
+// src/modulos/classificacao-rn.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta os classificadores (classificarIG, classificarPeso, classificarSimetriaPIG) para testes unitários */
 /**
  * classificacao-rn.jsx — PedHub

@@ -1,3 +1,4 @@
+// src/modulos/__tests__/dilucao-bic.test.js
 import { describe, it, expect } from 'vitest';
 import { DROGAS } from '../dilucao-bic.jsx';
 import { rateA, rateB } from '../../lib/calc/gotejamento';

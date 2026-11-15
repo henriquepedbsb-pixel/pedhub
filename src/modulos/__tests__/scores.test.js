@@ -1,3 +1,4 @@
+// src/modulos/__tests__/scores.test.js
 import { describe, it, expect } from 'vitest';
 import { gorelickResult, westleyResult, pewsResult, finneganResult } from '../scores.jsx';
 

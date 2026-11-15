@@ -1,3 +1,4 @@
+// src/modulos/neonatologia-3.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta interpolate (limiares de bilirrubina) e avaliarNascimento (cálculo de idade a partir do nascimento) para testes */
 /**
  * neonatologia-3.jsx — PedHub
@@ -394,6 +395,9 @@ export default function IctericiaNeonatal() {
      digitar um valor manual (ex.: simulação), o app não sobrescreve mais
      até ele pedir explicitamente para recalcular. */
   const lastAutoRef = useRef('');
+  // Espelho em estado do último valor automático, só para o render (um ref não
+  // deve ser lido durante o render). Os effects continuam usando o ref.
+  const [lastAuto, setLastAuto] = useState('');
 
   function aplicarIdadeAutomatica() {
     const { status, horas } = avaliarNascimento(paciente.dataNascimento, paciente.horaNascimento);
@@ -403,6 +407,7 @@ export default function IctericiaNeonatal() {
     if (horas < 48) { val = fmtBR(horas.toFixed(1)); unit = 'h'; }
     else { val = fmtBR((horas / 24).toFixed(2)); unit = 'd'; }
     lastAutoRef.current = val;
+    setLastAuto(val);
     setAgeVal(val);
     setAgeUnit(unit);
     return true;
@@ -433,7 +438,7 @@ export default function IctericiaNeonatal() {
   }
 
   const nascInfo = avaliarNascimento(paciente.dataNascimento, paciente.horaNascimento);
-  const idadeFoiAutoCalculada = nascInfo.status === 'ok' && ageVal !== '' && ageVal === lastAutoRef.current;
+  const idadeFoiAutoCalculada = nascInfo.status === 'ok' && ageVal !== '' && ageVal === lastAuto;
 
   /* ── Valores derivados ── */
   const ig = igSel ? parseInt(igSel) : null;

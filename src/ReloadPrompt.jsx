@@ -1,3 +1,4 @@
+// src/ReloadPrompt.jsx
 // Atualização automática do PWA.
 // Quando um novo service worker está pronto, aplica a nova versão e recarrega
 // sozinho — sem depender de o usuário tocar em nada. Mostra um aviso breve

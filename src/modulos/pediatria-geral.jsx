@@ -5,101 +5,21 @@ import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFavoritos } from "../lib/favoritos";
 import FavoritoStar from "../components/FavoritoStar";
+import { secoesDoHub, nomeNoHub } from "../lib/catalogo";
 import {
   Stethoscope,
-  AlertTriangle,
-  Zap,
-  Pill,
-  Scale,
-  FlaskConical,
-  Thermometer,
-  Brain,
-  Activity,
-  Wind,
-  Droplets,
-  Moon,
-  Syringe,
-  Microscope,
-  ClipboardList,
-  Shield,
-  Baby,
-  Bug,
-  Milk,
-  Eye,
-  Heart,
-  Users,
 } from "lucide-react";
 
 const COR_HUB = "#1E40AF";
 
-/* ─── Seções temáticas ───────────────────────────────────────────────────── */
-const SECOES = [
-  {
-    titulo: "Emergências",
-    Icon: AlertTriangle,
-    mods: [
-      { rota: "/urgencias",      label: "Urgências",         desc: "Anafilaxia · Asma · Convulsão · Choque", Icon: AlertTriangle, cor: "#EF4444" },
-      { rota: "/febre-sem-foco", label: "Febre Sem Foco",    desc: "Fluxo por faixa etária · PECARN",        Icon: Thermometer,   cor: "#EF4444" },
-      { rota: "/convulsao-febril", label: "Convulsão Febril", desc: "Simples × complexa · critérios de PL",  Icon: Zap,           cor: "#D946EF" },
-      { rota: "/tce-leve",       label: "TCE Leve",          desc: "PECARN · TC vs Observação",              Icon: Brain,         cor: "#7C3AED" },
-      { rota: "/sepse",          label: "Sepse Pediátrica",  desc: "SSC 2026 · BIC e diluição · Phoenix",    Icon: Activity,      cor: "#DC2626" },
-      { rota: "/bronquiolite",   label: "Bronquiolite",      desc: "Gravidade · OAF · nirsevimab",           Icon: Stethoscope,   cor: "#0D9488" },
-      { rota: "/intoxicacoes",   label: "Intoxicações",      desc: "Ingestão acidental · CIATOX · antídotos",Icon: AlertTriangle, cor: "#65A30D" },
-    ],
-  },
-  {
-    titulo: "Terapia Intensiva & Procedimentos",
-    Icon: Zap,
-    mods: [
-      { rota: "/isr",              label: "ISR Pediátrica",      desc: "Sequência rápida · doses · via difícil",     Icon: Zap,      cor: "#C2410C" },
-      { rota: "/ventilacao",       label: "Ventilação Mecânica", desc: "VC · FR · PARDS · desmame",                  Icon: Wind,     cor: "#0891B2" },
-      { rota: "/eletrolitos",      label: "Eletrólitos",         desc: "Na · K · Ca · Mg · correções",               Icon: Droplets, cor: "#7C3AED" },
-      { rota: "/analgesia-sedacao",label: "Analgesia e Sedação", desc: "FLACC · BIC · desmame · WAT-1",              Icon: Moon,     cor: "#F59E0B" },
-      { rota: "/sedacao",          label: "Sedação",             desc: "Cetamina · Midazolam · Fentanil · Checklist",Icon: Syringe,  cor: "#6366F1" },
-    ],
-  },
-  {
-    titulo: "Farmacologia & Imunização",
-    Icon: Pill,
-    mods: [
-      { rota: "/pedfarma",     label: "PedFarma",           desc: "48 medicamentos · dose por peso",       Icon: Pill,        cor: "#8B5CF6" },
-      { rota: "/antibioticos", label: "Antibioticoterapia", desc: "Escolha empírica por síndrome clínica", Icon: Stethoscope, cor: "#0D9488" },
-      { rota: "/vacinal",      label: "Vacinal",            desc: "SBIm 2026/2027 · SUS / Privado",        Icon: Syringe,     cor: "#06B6D4" },
-    ],
-  },
-  {
-    titulo: "Crescimento & Avaliação",
-    Icon: Scale,
-    mods: [
-      { rota: "/percentis-oms", label: "Percentis (OMS)",      desc: "OMS · curva 0–60 meses",                Icon: Scale,         cor: "#3B82F6" },
-      { rota: "/dnpm",          label: "DNPM",                 desc: "Marcos do desenvolvimento · Alarmes",   Icon: Baby,          cor: "#8B5CF6" },
-      { rota: "/scores",        label: "Scores",               desc: "Gorelick · Westley · PEWS",             Icon: ClipboardList, cor: "#F97316" },
-      { rota: "/dor",           label: "Escalas de Dor",       desc: "FLACC · Wong-Baker · NRS · Escada",     Icon: Activity,      cor: "#F97316" },
-      { rota: "/exames-lab",    label: "Exames Laboratoriais", desc: "Hemograma · Hormônios · Gastro · Vitaminas", Icon: Microscope, cor: "#0EA5E9" },
-      { rota: "/adolescencia",  label: "Adolescência",         desc: "Tanner · saúde mental · contracepção",  Icon: Users,         cor: "#7E22CE" },
-      { rota: "/teste-tea-tdah", label: "Rastreio TEA/TDAH",   desc: "M-CHAT-R/F · DSM-5 · encaminhamento",   Icon: Brain,         cor: "#3730A3" },
-    ],
-  },
-  {
-    titulo: "Especialidades Pediátricas",
-    Icon: FlaskConical,
-    mods: [
-      { rota: "/gastropediatria", label: "Gastro",     desc: "DRGE · APLV · Constipação",         Icon: Activity,     cor: "#F59E0B" },
-      { rota: "/formulas",        label: "Fórmulas",   desc: "Nestlé × Danone · Escada APLV",     Icon: FlaskConical, cor: "#10B981" },
-      { rota: "/hidratacao",      label: "Hidratação", desc: "Holliday-Segar · Planos A / B / C", Icon: Droplets,     cor: "#3B82F6" },
-      { rota: "/dermato",         label: "Dermato",    desc: "DA · Impetigo · Escabiose · Urticária", Icon: Shield,   cor: "#EC4899" },
-      { rota: "/torchs",          label: "Infecções Congênitas", desc: "TORCHS · sífilis, toxo, CMV, herpes, rubéola", Icon: Bug, cor: "#E11D48" },
-      { rota: "/aleitamento",     label: "Aleitamento", desc: "Amamentação · técnica · introdução alimentar", Icon: Milk, cor: "#F43F5E" },
-      { rota: "/oftalmologia",    label: "Oftalmologia", desc: "Reflexo vermelho · triagem visual", Icon: Eye,        cor: "#1E3A8A" },
-      { rota: "/doencas-exantematicas", label: "Doenças Exantemáticas", desc: "Sarampo · rubéola · exantema súbito e outros", Icon: Thermometer, cor: "#7F1D1D" },
-      { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia", desc: "Sopro inocente × patológico · sinais de alarme", Icon: Heart, cor: "#BE123C" },
-    ],
-  },
-];
+/* ─── Seções temáticas ───────────────────────────────────────────────────────
+   Seções e cards vêm de src/lib/catalogo.js (fonte única do catálogo). */
+const SECOES = secoesDoHub("/pediatria-geral");
 
 /* ─── Card de módulo ─────────────────────────────────────────────────────── */
 function ModuloCard({ modulo, onClick }) {
-  const { label, desc, Icon, cor } = modulo;
+  const { desc, Icon, cor } = modulo;
+  const label = nomeNoHub(modulo);
   return (
     <button
       onClick={onClick}

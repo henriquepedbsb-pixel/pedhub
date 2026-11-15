@@ -1,3 +1,4 @@
+// src/modulos/idade-gestacional.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta helpers de data e calcularIdadesPMA para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

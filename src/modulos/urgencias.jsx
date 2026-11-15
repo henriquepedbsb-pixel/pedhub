@@ -1,3 +1,4 @@
+// src/modulos/urgencias.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcDoses, estimarBroselow, parseAltura) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

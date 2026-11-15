@@ -1,3 +1,4 @@
+// src/modulos/neonatologia-6.jsx
 // Preview — Reanimação RN ≥34 semanas · Diretrizes SBP 2026
 import { useState } from "react";
 import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info, Timer, X } from "lucide-react";

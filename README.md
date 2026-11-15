@@ -1,16 +1,33 @@
-# React + Vite
+# PedHub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicativo web (PWA) de apoio à decisão clínica para pediatras e
+neonatologistas: calculadoras, protocolos, farmacologia e curvas de
+crescimento. Faz parte do ecossistema PedSuite.
 
-Currently, two official plugins are available:
+- **Aplicativo publicado:** https://henriquepedbsb-pixel.github.io/pedhub/
+- **Situação:** em fase de testes.
+- **Responsável médico:** Dr. Henrique Flávio G. Gomes — CRM-DF 14.611.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> Apoio à decisão clínica. Não substitui julgamento médico nem protocolo
+> institucional.
 
-## React Compiler
+## Direitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Todos os direitos reservados. O repositório está público apenas para viabilizar
+a publicação durante os testes; isso não concede licença de uso do código nem
+do conteúdo. Veja [LICENSE](LICENSE).
 
-## Expanding the ESLint configuration
+## Desenvolvimento
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Requer Node 22.
+
+```bash
+npm ci          # instala as dependências
+npm run dev     # servidor local
+npm run lint    # ESLint
+npm test        # testes das calculadoras (Vitest)
+npm run build   # build de produção (Vite)
+```
+
+O deploy é automático: todo push em `main` passa por lint, testes e build e é
+publicado no GitHub Pages. As regras do projeto estão em [CLAUDE.md](CLAUDE.md).

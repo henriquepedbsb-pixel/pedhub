@@ -1,3 +1,4 @@
+// src/modulos/canguru.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcular, finalDose) para testes unitários */
 /**
  * canguru.jsx — PedHub

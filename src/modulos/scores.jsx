@@ -1,3 +1,4 @@
+// src/modulos/scores.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta as funções de interpretação de score para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

@@ -1,3 +1,4 @@
+// src/modulos/__tests__/cardiologia-tratamento.test.js
 import { describe, it, expect } from 'vitest';
 import {
   DOSE_CALC,

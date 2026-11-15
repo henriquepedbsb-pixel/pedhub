@@ -1,3 +1,4 @@
+// src/modulos/surfactante.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcSurfactante) para testes unitários */
 import { useState, useMemo } from 'react';
 import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw, Settings } from 'lucide-react';

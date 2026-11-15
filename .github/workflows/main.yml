@@ -22,10 +22,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - run: npm ci
+
+      - run: npm run lint      # ESLint — erro bloqueia o deploy
 
       - run: npm test          # cálculos verificados — falha bloqueia o deploy
 

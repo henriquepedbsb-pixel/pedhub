@@ -1,3 +1,4 @@
+// src/modulos/__tests__/eletrolitos.test.js
 import { describe, it, expect } from 'vitest';
 import { corrigirPotassio, corrigirCalcio, corrigirMagnesio } from '../eletrolitos.jsx';
 

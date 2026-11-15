@@ -1,3 +1,4 @@
+// src/modulos/cuidados-pele-rn.jsx
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, ChevronDown, ChevronUp, CheckCircle } from "lucide-react";

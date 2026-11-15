@@ -1,3 +1,4 @@
+// src/modulos/febre-sem-foco.jsx
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import { Info, AlertTriangle, ChevronRight, CheckCircle } from "lucide-react";

@@ -1,7 +1,7 @@
+// src/modulos/neonatologia-4.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta scores puros (Apgar/Silverman) para testes */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Info } from "lucide-react";
 import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0891B2";

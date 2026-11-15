@@ -1,3 +1,4 @@
+// src/modulos/__tests__/hipotermia.test.js
 import { describe, it, expect } from 'vitest';
 import { getThompsonClass } from '../hipotermia.jsx';
 

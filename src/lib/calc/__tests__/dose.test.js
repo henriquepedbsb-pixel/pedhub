@@ -1,3 +1,4 @@
+// src/lib/calc/__tests__/dose.test.js
 import { describe, it, expect } from 'vitest';
 import { calcularDose, mlParaGotas } from '../dose';
 import { DRUGS } from '../../farmacos';

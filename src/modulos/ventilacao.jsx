@@ -1,3 +1,4 @@
+// src/modulos/ventilacao.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcVentilacao, getFR, getIOClass) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell, Settings, Timer, XCircle } from 'lucide-react';

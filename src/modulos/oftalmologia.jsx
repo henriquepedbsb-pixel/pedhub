@@ -1,3 +1,4 @@
+// src/modulos/oftalmologia.jsx
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import {

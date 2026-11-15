@@ -1,4 +1,5 @@
 // src/components/CalcDose.jsx
+/* eslint-disable react-refresh/only-export-components -- exporta CAT_CORES e corCategoria, compartilhados com pedfarma.jsx */
 // Calculadora de dose reutilizável (T3). Embutível em qualquer módulo:
 //   <CalcDose farmaco="amoxicilina" indicacao="otite_media" />
 // Consome src/lib/farmacos.js (fonte única — zero duplicação de valor) e o

@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+// src/lib/__tests__/exportarTexto.test.js
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   montarTextoConduta,
   copiarTexto,

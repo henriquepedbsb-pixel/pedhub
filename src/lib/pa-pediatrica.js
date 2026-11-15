@@ -1,3 +1,4 @@
+// src/lib/pa-pediatrica.js
 // ─────────────────────────────────────────────────────────────────────────────
 // PRESSÃO ARTERIAL PEDIÁTRICA — percentis e classificação
 //

@@ -7,6 +7,7 @@ import PedHub from "./PedHub"; // importação direta — não lazy
 import ReloadPrompt from "./ReloadPrompt";
 import ErrorBoundary from "./components/ErrorBoundary";
 import BarraPaciente, { BARRA_PACIENTE_H } from "./components/BarraPaciente";
+import { MODULO_MAP } from "./lib/catalogo";
 
 /* ─── Lazy imports — Pediatria Geral ─────────────────────────────────────── */
 const Percentis        = lazy(() => import("./modulos/percentis"));
@@ -69,72 +70,8 @@ const MalformacoesCirurgicasNeonatais = lazy(() => import("./modulos/malformacoe
 const Rop              = lazy(() => import("./modulos/rop"));
 const SeguimentoPrematuroRisco = lazy(() => import("./modulos/seguimento-prematuro-risco"));
 
-/* ─── Mapa de módulos — label + cor para o Header ───────────────────────── */
-/* Campo opcional "voltar": rota de retorno do botão voltar (default "/")    */
-const MODULO_MAP = {
-  // Pediatria Geral — hub
-  "/pediatria-geral":   { label: "Pediatria Geral",           cor: "#1E40AF" },
-  // Pediatria Geral — módulos (voltam ao hub)
-  "/percentis":         { label: "Percentis",                 cor: "#3B82F6", voltar: "/neonatal" },
-  "/percentis-oms":     { label: "Percentis (OMS)",           cor: "#3B82F6", voltar: "/pediatria-geral" },
-  "/urgencias":         { label: "Urgências",                 cor: "#EF4444", voltar: "/pediatria-geral" },
-  "/formulas":          { label: "Fórmulas Infantis",         cor: "#10B981", voltar: "/pediatria-geral" },
-  "/gastropediatria":   { label: "Gastro e Hepato",           cor: "#F59E0B", voltar: "/pediatria-geral" },
-  "/pedfarma":          { label: "PedFarma",                  cor: "#8B5CF6", voltar: "/pediatria-geral" },
-  "/vacinal":           { label: "Calendário Vacinal",        cor: "#06B6D4", voltar: "/pediatria-geral" },
-  "/hidratacao":        { label: "Hidratação",                cor: "#3B82F6", voltar: "/pediatria-geral" },
-  "/scores":            { label: "Scores Pediátricos",        cor: "#F97316", voltar: "/pediatria-geral" },
-  "/febre-sem-foco":    { label: "Febre Sem Foco",            cor: "#EF4444", voltar: "/pediatria-geral" },
-  "/tce-leve":          { label: "TCE Leve",                  cor: "#7C3AED", voltar: "/pediatria-geral" },
-  "/dnpm":              { label: "DNPM",                      cor: "#8B5CF6", voltar: "/pediatria-geral" },
-  "/dermato":           { label: "Dermatologia",              cor: "#EC4899", voltar: "/pediatria-geral" },
-  "/sepse":             { label: "Sepse Pediátrica",          cor: "#DC2626", voltar: "/pediatria-geral" },
-  "/isr":               { label: "ISR Pediátrica",            cor: "#C2410C", voltar: "/pediatria-geral" },
-  "/ventilacao":        { label: "Ventilação Mecânica",       cor: "#0891B2", voltar: "/pediatria-geral" },
-  "/eletrolitos":       { label: "Distúrbios Eletrolíticos",  cor: "#7C3AED", voltar: "/pediatria-geral" },
-  "/bronquiolite":      { label: "Bronquiolite",              cor: "#0D9488", voltar: "/pediatria-geral" },
-  "/analgesia-sedacao": { label: "Analgesia e Sedação",       cor: "#F59E0B", voltar: "/pediatria-geral" },
-  "/dor":               { label: "Escalas de Dor",            cor: "#F97316", voltar: "/pediatria-geral" },
-  "/antibioticos":      { label: "Antibioticoterapia",        cor: "#0D9488", voltar: "/pediatria-geral" },
-  "/sedacao":           { label: "Sedação em Procedimentos",  cor: "#6366F1", voltar: "/pediatria-geral" },
-  "/exames-lab":        { label: "Exames Laboratoriais",      cor: "#0EA5E9", voltar: "/pediatria-geral" },
-  "/idade-gestacional": { label: "Idade Gestacional",         cor: "#2563EB", voltar: "/neonatal" },
-  "/torchs":            { label: "Infecções Congênitas",      cor: "#E11D48", voltar: "/pediatria-geral" },
-  "/intoxicacoes":      { label: "Intoxicações",              cor: "#65A30D", voltar: "/pediatria-geral" },
-  "/aleitamento":       { label: "Aleitamento Materno",       cor: "#F43F5E", voltar: "/pediatria-geral" },
-  "/oftalmologia":      { label: "Oftalmologia",              cor: "#1E3A8A", voltar: "/pediatria-geral" },
-  "/doencas-exantematicas": { label: "Doenças Exantemáticas", cor: "#7F1D1D", voltar: "/pediatria-geral" },
-  "/convulsao-febril":  { label: "Convulsão Febril",          cor: "#D946EF", voltar: "/pediatria-geral" },
-  "/cardiologia-pediatrica-basica": { label: "Cardiologia Pediátrica", cor: "#BE123C", voltar: "/pediatria-geral" },
-  "/adolescencia":      { label: "Adolescência",              cor: "#7E22CE", voltar: "/pediatria-geral" },
-  "/teste-tea-tdah":    { label: "Rastreio TEA/TDAH",          cor: "#3730A3", voltar: "/pediatria-geral" },
-  // Neonatologia — hub
-  "/neonatal":          { label: "Neonatologia",              cor: "#0E7490" },
-  // Neonatologia — módulos (voltam ao hub)
-  "/classificacao-rn":  { label: "Classificação do RN",       cor: "#DB2777", voltar: "/neonatal" },
-  "/cuidados-pele-rn":  { label: "Pele do RN",                cor: "#0891B2", voltar: "/neonatal" },
-  "/neonatologia-1":    { label: "Reanimação RNPT <34s",      cor: "#0E7490", voltar: "/neonatal" },
-  "/neonatologia-2":    { label: "Hipoglicemia Neonatal",     cor: "#0D9488", voltar: "/neonatal" },
-  "/neonatologia-3":    { label: "Icterícia Neonatal",        cor: "#D97706", voltar: "/neonatal" },
-  "/colestase-neonatal": { label: "Colestase Neonatal",        cor: "#CA8A04", voltar: "/neonatal" },
-  "/neonatologia-4":    { label: "Scores Neonatais",          cor: "#7C3AED", voltar: "/neonatal" },
-  "/neonatologia-5":    { label: "NPT Neonatal",              cor: "#6366F1", voltar: "/neonatal" },
-  "/neonatologia-6":    { label: "Reanimação RN ≥34s",        cor: "#0284C7", voltar: "/neonatal" },
-  "/dilucao-bic":       { label: "Diluição e BIC",            cor: "#F97316", voltar: "/neonatal" },
-  "/tig-neonatal":      { label: "TIG Neonatal",              cor: "#0891B2", voltar: "/neonatal" },
-  "/canguru":           { label: "Canguru",                   cor: "#10B981", voltar: "/neonatal" },
-  "/dexametasona-dbp":  { label: "Dexa DBP",                  cor: "#0891B2", voltar: "/neonatal" },
-  "/dor-neonatal":      { label: "Dor Neonatal",              cor: "#EF4444", voltar: "/neonatal" },
-  "/hipotermia":        { label: "Hipotermia Terapêutica",    cor: "#4F46E5", voltar: "/neonatal" },
-  "/surfactante":       { label: "Surfactante",               cor: "#059669", voltar: "/neonatal" },
-  "/nec":               { label: "Enterocolite Necrosante",   cor: "#92400E", voltar: "/neonatal" },
-  "/sala-de-parto":     { label: "Sala de Parto",             cor: "#B45309", voltar: "/neonatal" },
-  "/triagem-neonatal":  { label: "Triagem Neonatal",          cor: "#14B8A6", voltar: "/neonatal" },
-  "/pca":               { label: "PCA",                       cor: "#BE185D", voltar: "/neonatal" },
-  "/malformacoes-cirurgicas-neonatais": { label: "Malformações Cirúrgicas", cor: "#047857", voltar: "/neonatal" },
-  "/rop":               { label: "Retinopatia da Prematuridade", cor: "#0369A1", voltar: "/neonatal" },
-  "/seguimento-prematuro-risco": { label: "Seguimento do Prematuro", cor: "#15803D", voltar: "/neonatal" },
-};
+/* O mapa rota → { label, cor, voltar } do cabeçalho vem de src/lib/catalogo.js
+   (fonte única do catálogo). "voltar" é o hub do módulo; hubs voltam para "/". */
 
 /* ─── Header global ──────────────────────────────────────────────────────── */
 function Header() {

@@ -1,3 +1,4 @@
+// src/modulos/DorNeonatal.jsx
 // DorNeonatal.jsx — PedHub · Avaliação de Dor Neonatal
 // Escalas: NIPS, PIPP-R, N-PASS, CRIES
 // Convenções PedHub: inline styles, C object, maxWidth 480, Lucide icons, sem CSS vars

@@ -1,3 +1,4 @@
+// src/modulos/isr.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcularISR, calcTubo, calcLamina) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen, Timer } from 'lucide-react';
