@@ -9,7 +9,7 @@
 // --surface-2, --border, --text, --text-2, --muted). Nenhum hex — a regra de
 // hex fixo do CLAUDE.md é para cor de IDENTIDADE de módulo, não para o chrome.
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { UserRound, ChevronDown, ChevronUp, Eraser } from "lucide-react";
 import {
   usePaciente,
@@ -81,9 +81,13 @@ export default function BarraPaciente() {
   const [rascunho, setRascunho] = useState(paciente);
 
   // Resync do rascunho quando o store é zerado externamente (limpar / outra aba).
-  useEffect(() => {
+  // Ajuste durante o render (padrão React) em vez de setState dentro de effect:
+  // mesmo comportamento, sem o render extra em cascata.
+  const [pacienteVisto, setPacienteVisto] = useState(paciente);
+  if (paciente !== pacienteVisto) {
+    setPacienteVisto(paciente);
     if (pacienteVazio(paciente)) setRascunho({ ...VAZIO });
-  }, [paciente]);
+  }
 
   const vazio = pacienteVazio(paciente);
   const setCampo = (campo, v) => setRascunho((r) => ({ ...r, [campo]: v }));

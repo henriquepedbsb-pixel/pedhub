@@ -1,8 +1,7 @@
 // src/modulos/pedfarma.jsx
-/* eslint-disable react-refresh/only-export-components -- reexporta DRUGS (dados puros) para consumidores/testes */
 import { useState, useMemo, useDeferredValue, memo } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Pill, Search, Info, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
+import { Pill, Search, ChevronDown, ChevronUp, ArrowLeftRight, AlertTriangle, Wind } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";

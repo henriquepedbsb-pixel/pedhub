@@ -1,6 +1,6 @@
 name: CI
 
-# Valida testes + build sem publicar. Roda em qualquer PR e pode ser
+# Valida lint + testes + build sem publicar. Roda em qualquer PR e pode ser
 # disparado manualmente (aba Actions → Run workflow) em qualquer branch.
 on:
   pull_request:
@@ -17,10 +17,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - run: npm ci
+
+      - run: npm run lint      # ESLint — erro bloqueia o PR
 
       - run: npm test          # cálculos verificados
 
