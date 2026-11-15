@@ -5,6 +5,8 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -51,7 +53,7 @@ export default function Hipotermia() {
   const [critA,    setCritA]   = useState({});
   const [tempAtual, setTempAtual] = useState('');
   const [taxaReq,  setTaxaReq] = useState('0.3');
-  const [peso,     setPeso]    = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [aberto,   setAberto]  = useState(null);
 
   const p = parseNum(peso);
@@ -391,6 +393,7 @@ export default function Hipotermia() {
                   <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
                   <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 3,2"
                     style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                  <OrigemPeso ativo={pesoDaBarra} />
                   <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
                 </div>
                 <div style={{ backgroundColor: CLT, borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: `3px solid ${C}` }}>

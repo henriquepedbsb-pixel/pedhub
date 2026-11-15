@@ -1,10 +1,15 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcVentilacao, getFR, getIOClass) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell } from 'lucide-react';
+import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell, Settings, Timer, XCircle } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -117,7 +122,7 @@ const MetaRow = ({ label, valor, cor = "var(--text)", bg = "var(--surface-2)" })
 
 export default function Ventilacao() {
   const [tab,      setTab]     = useState('iniciar');
-  const [peso,     setPeso]    = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [idade,    setIdade]   = useState('');
   const [contexto, setContexto]= useState('normal');
   const [fio2,     setFio2]    = useState('');
@@ -195,7 +200,7 @@ export default function Ventilacao() {
 
           {/* Parâmetros iniciais */}
           <div style={card({ border: `1px solid ${CBR}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>⚙️ Parâmetros Iniciais (ventilação protetora)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Settings size={15} style={ICONE_INLINE} />Parâmetros Iniciais (ventilação protetora)</p>
             <MetaRow label="Volume corrente (VC)" valor="6-8 mL/kg (peso real)" cor={C} bg={CLT} />
             <MetaRow label="PEEP inicial"          valor="5 cmH₂O (ajustar)" />
             <MetaRow label="FiO₂ inicial"          valor="1,0 → reduzir p/ SpO₂ 95-99%" />
@@ -292,6 +297,7 @@ export default function Ventilacao() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
                 <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Usar peso ideal se obeso</p>
               </div>
@@ -536,7 +542,7 @@ export default function Ventilacao() {
 
           {/* SBT */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⏱ Teste de Respiração Espontânea (SBT)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Timer size={15} style={ICONE_INLINE} />Teste de Respiração Espontânea (SBT)</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-blue)" }}>Como realizar</p>
@@ -558,7 +564,7 @@ export default function Ventilacao() {
                 ))}
               </div>
               <div style={{ backgroundColor: "var(--tint-red)", borderRadius: '8px', padding: '10px' }}>
-                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}>❌ Interromper SBT se:</p>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: '#DC2626' }}><XCircle size={13} style={ICONE_INLINE} />Interromper SBT se:</p>
                 {['SpO₂ < 92% ou PaO₂ < 60 mmHg',
                   'Taquipneia > 150% do normal para idade',
                   'Uso intenso de musculatura acessória / tiragem / paradoxo',

@@ -1,12 +1,17 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcularISR, calcTubo, calcLamina) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen } from 'lucide-react';
+import { Zap, Syringe, ListChecks, AlertTriangle, ChevronDown, ChevronUp, Wind, Ban, X, Briefcase, BarChart3, ClipboardList, FolderOpen, Timer } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import BotaoCopiar from "../components/BotaoCopiar";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { montarTextoConduta } from "../lib/exportarTexto";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -147,7 +152,7 @@ const TABS = [
 // ─── Componente principal ─────────────────────────────────────────────────────
 export default function ISR() {
   const [tab,       setTab]      = useState('avaliar');
-  const [peso,      setPeso]     = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [idade,     setIdade]    = useState('');
   const [contexto,  setContexto] = useState('normal');
   const [usarRocur, setUsarRocur]= useState(false);
@@ -347,6 +352,7 @@ export default function ISR() {
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>
@@ -556,7 +562,7 @@ export default function ISR() {
 
           <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '10px', border: `1px solid ${CBR}` }}>
             <p style={{ margin: 0, fontSize: '12px', color: C, fontWeight: '700' }}>
-              ⏱ Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
+              <Timer size={13} style={ICONE_INLINE} />Tempo total médio: 8-12 min. Comunicar equipe antes de iniciar. Definir plano de via difícil ANTES.
             </p>
           </div>
 

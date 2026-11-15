@@ -11,6 +11,8 @@ import {
   AlertTriangle, CheckCircle, Info, Activity, ArrowRight,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 /* ── Tokens de cor (hex fixo — sem variáveis CSS) ── */
 const AZ_E    = "#0d3b6e";
@@ -181,7 +183,7 @@ function DoseEdit({ value, onChange, onReset, suggested, unit, decimals = 1, zer
 
 /* ── Componente principal ── */
 export default function TigNeonatal() {
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const [dia,     setDia    ] = useState(1);
   const [diurese, setDiurese] = useState(false);
   const [tigRaw,  setTigRaw ] = useState("");
@@ -345,6 +347,7 @@ export default function TigNeonatal() {
                 value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
                 style={{ flex: 1, minWidth: 0, padding: "13px 12px", border: "none", outline: "none", fontSize: 16, fontWeight: 500, color: TEXTO, background: "transparent" }}
               />
+              <OrigemPeso ativo={pesoDaBarra} />
               <UT text="kg" />
             </IW>
             <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />

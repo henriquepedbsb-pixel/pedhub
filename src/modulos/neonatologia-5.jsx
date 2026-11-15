@@ -11,6 +11,8 @@ import { Info, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY = "#0D9488";
 const C = "#6366F1";
@@ -305,7 +307,7 @@ function ResultNPT({ r }) {
 
 /* ── Tab NPT ─────────────────────────────────────────────────────────────── */
 function TabNPT() {
-  const [pesoG,    setPesoG]    = useState("");
+  const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g");
   const [dataNasc, setDataNasc] = useState("");
   const [acesso,   setAcesso]   = useState("central");
   const [volKgD,   setVolKgD]   = useState("80");
@@ -392,6 +394,7 @@ function TabNPT() {
         <Grid2>
           <Fld label="Peso (g) *">
             <Inp value={pesoG} set={setPesoG} placeholder="Ex: 1450" mode="decimal" />
+            <OrigemPeso ativo={pesoDaBarra} />
             <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoG).replace(',', '.')))} />
           </Fld>
           <Fld label="Volume total (mL/kg/dia) *">

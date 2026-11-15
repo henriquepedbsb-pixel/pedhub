@@ -14,6 +14,8 @@ import {
   Syringe,
 } from "lucide-react";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const COR = "#BE185D"; // pink-700 — cor do módulo PCA (checada contra os módulos existentes — sem colisão)
 
@@ -90,7 +92,7 @@ function FonteTag({ children }) {
 }
 
 export default function Pca() {
-  const [pesoStr, setPesoStr] = useState("");
+  const [pesoStr, setPesoStr, pesoDaBarra] = useCampoPeso();
   const [abertas, setAbertas] = useState({
     quadro: true,
     diagnostico: false,
@@ -137,6 +139,7 @@ export default function Pca() {
           placeholder="Ex: 1,2"
           className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:!ring-2 focus:!ring-pink-400"
         />
+        <OrigemPeso ativo={pesoDaBarra} />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoStr).replace(',', '.')))} />
       </div>
 

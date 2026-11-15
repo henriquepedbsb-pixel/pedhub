@@ -5,6 +5,8 @@ import { Info, AlertTriangle, CheckCircle, Droplets } from "lucide-react";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoKg } from "../lib/sanity";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY = "#0D9488";
 
@@ -56,7 +58,7 @@ function ItemList({ items, color }) {
 /* ─── Tab Hipoglicemia ─────────────────────────────────────────────────────── */
 function TabHipoglicemia() {
   const C = "#D97706";
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const peso = parsePeso(pesoRaw);
 
   const bolus    = peso ? bolusD10mL(peso).toFixed(1) : null;
@@ -82,6 +84,7 @@ function TabHipoglicemia() {
           onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #FDE68A", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
+        <OrigemPeso ativo={pesoDaBarra} />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(',', '.')))} />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
@@ -169,7 +172,7 @@ function TabHipoglicemia() {
 /* ─── Tab Gel de Dextrose ──────────────────────────────────────────────────── */
 function TabGelDextrose() {
   const C = "#0891B2";
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const peso = parsePeso(pesoRaw);
 
   const gVol  = peso ? gelDextroseVolML(peso).toFixed(2) : null;  // 0,5 mL/kg
@@ -194,6 +197,7 @@ function TabGelDextrose() {
           onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "7px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid #A5F3FC", outline: "none", background: "var(--surface)", boxSizing: "border-box" }}
         />
+        <OrigemPeso ativo={pesoDaBarra} />
         {peso && (
           <p style={{ fontSize: 11, color: C, margin: "5px 0 0", fontWeight: 600 }}>
             Gel 40%: {fmtBR(gVol)} mL via oral (mucosa) · {gMg} mg dextrose

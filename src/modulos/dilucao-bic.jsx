@@ -13,6 +13,8 @@ import { avisoPesoG } from "../lib/sanity";
 import { rateA, rateB } from "../lib/calc/gotejamento";
 import { copiarTexto, RODAPE_EXPORT } from "../lib/exportarTexto";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY = "#0D9488";
 const C = "#DC2626";
@@ -165,7 +167,7 @@ function RxRow({ label, children }) {
 
 /* ── Tab BIC ─────────────────────────────────────────────────────────────── */
 function TabBIC() {
-  const [pesoRaw, setPesoRaw]   = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso("g");
   const [drogaSel, setDrogaSel] = useState(null);
   const [doseRaw, setDoseRaw]   = useState("");
   const [grupo, setGrupo]       = useState("Vasoativa");
@@ -234,6 +236,7 @@ function TabBIC() {
         <label style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-2)", display: "block", marginBottom: 6 }}>Peso (g) *</label>
         <input type="text" inputMode="decimal" value={pesoRaw} onChange={e => setPesoRaw(e.target.value)} placeholder="Ex: 1450"
           style={{ width: "100%", padding: "8px 10px", borderRadius: 7, fontSize: 14, border: "1.5px solid var(--border)", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
+        <OrigemPeso ativo={pesoDaBarra} />
         <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoRaw).replace(",", ".")))} />
         {pkKg && <p style={{ fontSize: 11, color: PRIMARY, fontWeight: 600, margin: "5px 0 0" }}>{fmtBR(pkKg.toFixed(3))} kg</p>}
       </div>

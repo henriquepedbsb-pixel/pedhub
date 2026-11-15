@@ -9,6 +9,8 @@ import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -227,7 +229,7 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
 
 export default function AnalgesiaSedacao() {
   const [tab,      setTab]     = useState('avaliar');
-  const [peso,     setPeso]    = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [flacc,    setFlacc]   = useState({});
   const [drugA,    setDrugA]   = useState('morfina');
   const [drugS,    setDrugS]   = useState('midazolam');
@@ -294,6 +296,7 @@ export default function AnalgesiaSedacao() {
         <label style={{ fontSize:'10px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
         <input type="text" inputMode="decimal" value={peso} onChange={e=>setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
           style={{ width:'100%', padding:'6px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
+        <OrigemPeso ativo={pesoDaBarra} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
       </div>
 

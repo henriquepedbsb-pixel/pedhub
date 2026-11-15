@@ -91,6 +91,9 @@ deploy. `@vitest/coverage-v8` pode ser adicionado se for medir cobertura.
    **Saída:** todo número calculado exibido na tela ou em texto copiado passa
    por `fmtBR()` (vírgula decimal). Ambos vivem em `src/lib/numero.js`. Valor
    padrão/sugestão colocado em campo também usa vírgula ("2,5", não "2.5").
+   **Datas:** campo de data digitado usa `mascararData()` (dd/mm/aaaa) e a
+   validação usa `dataExiste()` — ambos em `src/lib/data.js`. Nunca confiar só
+   em `new Date(ano, mes-1, dia)`: 31/02 "rola" para 03/03 em silêncio.
 6. **Lazy loading** em todos os módulos. `PedHub.jsx` importado direto.
 7. Primeira linha de todo arquivo = comentário com o caminho:
    `// src/modulos/nome.jsx`. O protocolo de debug depende disso.
@@ -233,7 +236,7 @@ e nos explícitos `:root[data-theme="dark"]` / `:root[data-theme="light"]`):
 | `--border` | Cor de borda e divisórias |
 | `--text` | Texto primário |
 | `--text-2` | Texto secundário |
-| `--muted` | Texto terciário/apagado (labels, hints) |
+| `--muted` | Texto terciário/apagado (labels, hints). Claro: `#5B6B80` (≥ 4,9:1 sobre branco/`--bg`/`--surface-2`) — não clarear |
 | `--header-bg` | Fundo translúcido de cabeçalhos/barras fixas (rgba p/ blur) |
 | `--tint-blue` / `-red` / `-green` / `-amber` / `-purple` / `-teal` / `-slate` | Fundos suaves (tints) por cor semântica de bloco |
 | `--tx-red` / `-amber` / `-green` / `-blue` / `-purple` / `-teal` | **Texto** semântico que inverte de tom por tema (tom escuro no claro, tom claro no escuro) para manter legibilidade sobre superfície escura |
@@ -282,7 +285,12 @@ Executar **na ordem**. Uma tarefa por PR/commit lógico. Rodar `npm run build`
 - **T1 — FEITO** (external store, sem Context API). `src/lib/paciente.js`
   (`sessionStorage`, chave `pedhub-paciente`, espelha `favoritos.js`) +
   `src/components/BarraPaciente.jsx` (barra fina fixa colapsável no `App.jsx`).
-  Adoção módulo a módulo segue incremental — a infra + a barra estão prontas.
+  **Adoção do peso (14/11/2026):** 23 módulos leem o peso da barra pelo hook
+  `useCampoPeso("kg" | "g")` de `paciente.js` (campo local continua editável;
+  digitar sobrescreve só naquele módulo) e mostram `<OrigemPeso />` quando o
+  valor veio da barra. **Não adotam, de propósito:** campos de peso **de
+  nascimento** (`classificacao-rn`, PN do `canguru`, `neonatologia-1`).
+  Pendente: idade/IG da barra nos módulos e `percentis`.
 - **T2 — FEITO.** `src/lib/farmacos.js` (catálogo fármaco+indicação, cada dose
   com `fonte`) + `src/lib/calc/` (`dose.js`, `tig.js`, `gotejamento.js`,
   `percentis.js`) com testes Vitest e `@vitest/coverage-v8`. `pedfarma.jsx`

@@ -1,10 +1,15 @@
 /* eslint-disable react-refresh/only-export-components -- exporta cálculos de vasoativa/Rodwell para testes */
 import { useState, useMemo } from 'react';
-import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle, ClipboardList, Siren, Zap, BarChart3, CircleAlert, Droplets, FlaskConical, Droplet, Timer, Circle, Check, X, Syringe, Scale, ScanLine, TrendingUp, Hospital } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -167,7 +172,7 @@ const CBORDER = '#FECACA';
 // ─── Componente ──────────────────────────────────────────────────────────────
 export default function Sepse() {
   const [tab,      setTab]     = useState('suspeitar');
-  const [peso,     setPeso]    = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [lactato,  setLactato] = useState('');
   const [fc,       setFc]      = useState('');
   const [fr,       setFr]      = useState('');
@@ -272,7 +277,7 @@ export default function Sepse() {
 
           {/* Definições Phoenix 2024 */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>📋 Definições — Phoenix 2024</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><ClipboardList size={15} style={ICONE_INLINE} />Definições — Phoenix 2024</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `4px solid ${C}` }}>
                 <p style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: C }}>Sepse</p>
@@ -297,7 +302,7 @@ export default function Sepse() {
 
           {/* Sinais de alerta */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🚨 Quando Suspeitar</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Siren size={15} style={ICONE_INLINE} />Quando Suspeitar</p>
             {[
               'Febre ou hipotermia com alteração do estado geral',
               'Taquicardia persistente ou desproporcional',
@@ -318,7 +323,7 @@ export default function Sepse() {
           {/* Fatores de risco — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('risco')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⚠️ Fatores de Risco</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><AlertTriangle size={15} style={ICONE_INLINE} />Fatores de Risco</p>
               {aberto === 'risco' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'risco' && (
@@ -343,7 +348,7 @@ export default function Sepse() {
 
           {/* Primeiros 15 min */}
           <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '12px', padding: '14px', border: '1px solid #6EE7B7' }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>⚡ Primeiros 15 minutos</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}><Zap size={15} style={ICONE_INLINE} />Primeiros 15 minutos</p>
             {[
               'Reconhecer e acionar equipe — avaliar necessidade de UTI precocemente',
               'Acesso venoso calibroso (periférico ou intraósseo)',
@@ -369,11 +374,12 @@ export default function Sepse() {
 
           {/* Parâmetros editáveis */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>📊 Parâmetros do Paciente</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><BarChart3 size={15} style={ICONE_INLINE} />Parâmetros do Paciente</p>
             <div style={{ marginBottom: '10px' }}>
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
               <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 12,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none', border: `2px solid ${p > 0 ? C : '#D1D5DB'}` }} />
+              <OrigemPeso ativo={pesoDaBarra} />
               <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -396,15 +402,15 @@ export default function Sepse() {
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>LACTATO (mmol/L)</label>
               <input type="text" inputMode="decimal" value={lactato} onChange={e => setLactato(limparDecimal(e.target.value))} placeholder="ex: 2,4"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '18px', fontWeight: lac >= 2 ? '700' : '400', border: `2px solid ${lac >= 5 ? C : lac >= 2 ? '#F59E0B' : '#D1D5DB'}`, color: lac >= 5 ? C : lac >= 2 ? '#B45309' : "var(--text)" }} />
-              {lac >= 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: C, fontWeight: '700' }}>🔴 Critério de choque séptico (Phoenix 2024)</p>}
-              {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ Hipoperfusão tecidual — indicação de tratamento imediato</p>}
+              {lac >= 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: C, fontWeight: '700' }}><CircleAlert size={12} style={ICONE_INLINE} />Critério de choque séptico (Phoenix 2024)</p>}
+              {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}><AlertTriangle size={12} style={ICONE_INLINE} />Hipoperfusão tecidual — indicação de tratamento imediato</p>}
             </div>
           </div>
 
           {/* Alertas clínicos */}
           {alertas.length > 0 && (
             <div style={card({ border: `1px solid ${CBORDER}` })}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C }}>🔴 Alertas Clínicos</p>
+              <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '700', color: C }}><CircleAlert size={15} style={ICONE_INLINE} />Alertas Clínicos</p>
               {alertas.map((a, i) => (
                 <div key={i} style={{ borderRadius: '8px', padding: '8px 10px', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#B45309' : '#1D4ED8', backgroundColor: a.tipo === 'critico' ? CLIGHT : a.tipo === 'alerta' ? "var(--tint-amber)" : "var(--tint-blue)", borderLeft: `3px solid ${a.tipo === 'critico' ? C : a.tipo === 'alerta' ? '#F59E0B' : '#3B82F6'}` }}>
                   {a.msg}
@@ -415,7 +421,7 @@ export default function Sepse() {
 
           {/* Calculadora de fluidos */}
           <div style={card()}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>💧 Calculadora de Fluidos</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Droplets size={15} style={ICONE_INLINE} />Calculadora de Fluidos</p>
             <div style={{ marginBottom: '10px' }}>
               <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.04em' }}>VOLUME POR BOLUS</p>
               <div style={{ display: 'flex', gap: '6px' }}>
@@ -458,7 +464,7 @@ export default function Sepse() {
 
           {/* Exames iniciais */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🧪 Exames Iniciais</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><FlaskConical size={15} style={ICONE_INLINE} />Exames Iniciais</p>
             {[
               { urg: true,  txt: 'Hemocultura ≥2 sítios — obter ANTES do ATB (não atrasar >5 min)' },
               { urg: true,  txt: 'Lactato sérico (arterial ou venoso)' },
@@ -480,7 +486,7 @@ export default function Sepse() {
           {/* Score de Rodwell — ferramenta complementar, sepse neonatal precoce */}
           <div style={card({ border: '1px solid #A7F3D0' })}>
             <button style={accordionBtn()} onClick={() => toggle('rodwell')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>🩸 Score de Rodwell — Sepse Neonatal Precoce</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}><Droplet size={15} style={ICONE_INLINE} />Score de Rodwell — Sepse Neonatal Precoce</p>
               {aberto === 'rodwell' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'rodwell' && (
@@ -543,14 +549,14 @@ export default function Sepse() {
 
           {/* Antibióticos */}
           <div style={card({ border: `1px solid ${CBORDER}` })}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}>⏱ Antibióticos — TEMPO CRÍTICO</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: C }}><Timer size={15} style={ICONE_INLINE} />Antibióticos — TEMPO CRÍTICO</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
               <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `4px solid ${C}` }}>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: C }}>🔴 Choque Séptico → ≤ 1 hora</p>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: C }}><Circle size={10} style={ICONE_INLINE} fill="currentColor" />Choque Séptico → ≤ 1 hora</p>
                 <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Iniciar imediatamente após hemocultura · não atrasar para exames · amplo espectro (SSC 2026, rec. 6 — forte)</p>
               </div>
               <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '4px solid #F97316' }}>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: "var(--tx-amber)" }}>🟠 Sepse sem Choque → ≤ 3 horas</p>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: "var(--tx-amber)" }}><Circle size={10} style={ICONE_INLINE} fill="currentColor" />Sepse sem Choque → ≤ 3 horas</p>
                 <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Avaliação rápida e diagnóstico diferencial permitidos · se suspeita sólida, antecipar (recs. 7-8)</p>
               </div>
             </div>
@@ -563,7 +569,7 @@ export default function Sepse() {
                 'PCT NÃO deve guiar desescalonamento rotineiro (rec. 14)',
               ].map((s, i) => (
                 <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '11px', color: "var(--text-2)", marginBottom: '4px', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#10B981', flexShrink: 0 }}>✓</span>{s}
+                  <span style={{ color: '#10B981', flexShrink: 0, lineHeight: 0, marginTop: 2 }}><Check size={12} strokeWidth={3} /></span>{s}
                 </div>
               ))}
             </div>
@@ -571,7 +577,7 @@ export default function Sepse() {
 
           {/* Fluidoterapia */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-blue)" }}>💧 Fluidoterapia</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-blue)" }}><Droplets size={15} style={ICONE_INLINE} />Fluidoterapia</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-blue)" }}>Com UTI (rec. 19)</p>
@@ -588,7 +594,7 @@ export default function Sepse() {
                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '700', color: "var(--text-2)" }}>Suspender fluido se: (rec. 22)</p>
                 {['Choque revertido (TRC, FC, PA normalizaram)', 'Sinais de sobrecarga hídrica (edema pulmonar, hepatomegalia)', 'Volume máximo atingido → escalonar vasoativo'].map((s, i) => (
                   <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginBottom: '3px', alignItems: 'flex-start' }}>
-                    <span style={{ color: C, flexShrink: 0 }}>✗</span>{s}
+                    <span style={{ color: C, flexShrink: 0, lineHeight: 0, marginTop: 2 }}><X size={12} strokeWidth={3} /></span>{s}
                   </div>
                 ))}
               </div>
@@ -597,13 +603,13 @@ export default function Sepse() {
 
           {/* Vasoativos — visão geral */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#7C3AED' }}>💊 Vasoativos — Seleção</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: '#7C3AED' }}><Pill size={15} style={ICONE_INLINE} />Vasoativos — Seleção</p>
             <div style={{ backgroundColor: "var(--tint-purple)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #7C3AED', marginBottom: '8px' }}>
               <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-purple)" }}>1ª linha — Epinefrina OU Norepinefrina (rec. 31)</p>
               <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Sem superioridade definida entre as duas (SSC 2026) · escolha pela fisiologia</p>
               <div style={{ marginTop: '6px', fontSize: '11px', color: "var(--text-2)", display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                <div>🔵 <strong>Epinefrina</strong> — disfunção miocárdica / baixo DC</div>
-                <div>🟣 <strong>Norepinefrina</strong> — vasoplegic shock (RVS baixa)</div>
+                <div><Circle size={9} color="#3B82F6" fill="#3B82F6" style={ICONE_INLINE} /><strong>Epinefrina</strong> — disfunção miocárdica / baixo DC</div>
+                <div><Circle size={9} color="#8B5CF6" fill="#8B5CF6" style={ICONE_INLINE} /><strong>Norepinefrina</strong> — vasoplegic shock (RVS baixa)</div>
               </div>
             </div>
             <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px' }}>
@@ -615,18 +621,19 @@ export default function Sepse() {
 
           {/* ── Diluição e BIC ── */}
           <div style={card({ border: '1px solid #DDD6FE' })}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#7C3AED' }}>💉 Diluição e BIC — Vasoativos</p>
+            <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: '#7C3AED' }}><Syringe size={15} style={ICONE_INLINE} />Diluição e BIC — Vasoativos</p>
 
             {/* Peso indicator / mini input */}
             {p > 0 ? (
               <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '8px 10px', marginBottom: '12px', borderLeft: '3px solid #10B981' }}>
-                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>📍 Peso: {fmtBR(p)} kg — cálculos individualizados abaixo</p>
+                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}><Scale size={12} style={ICONE_INLINE} />Peso: {fmtBR(p)} kg — cálculos individualizados abaixo</p>
               </div>
             ) : (
               <div style={{ marginBottom: '12px' }}>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO PACIENTE (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '16px', fontWeight: '600', color: C, boxSizing: 'border-box', outline: 'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
               </div>
             )}
 
@@ -715,7 +722,7 @@ export default function Sepse() {
                   {/* Drug warning */}
                   {d.alerta && (
                     <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '9px 10px', borderLeft: '3px solid #F97316' }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ {d.alerta}</p>
+                      <p style={{ margin: 0, fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}><AlertTriangle size={12} style={ICONE_INLINE} />{d.alerta}</p>
                     </div>
                   )}
                 </div>
@@ -726,17 +733,17 @@ export default function Sepse() {
           {/* Corticosteroides — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('cortico')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>💊 Corticosteroides (recs. 40-41)</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Pill size={15} style={ICONE_INLINE} />Corticosteroides (recs. 40-41)</p>
               {aberto === 'cortico' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'cortico' && (
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #10B981' }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)" }}>✓ Insuficiência adrenal suspeita ou documentada</p>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: "var(--tx-green)" }}><Check size={13} style={ICONE_INLINE} strokeWidth={3} />Insuficiência adrenal suspeita ou documentada</p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Dose de estresse independente da hemodinâmica</p>
                 </div>
                 <div style={{ backgroundColor: CLIGHT, borderRadius: '8px', padding: '10px', borderLeft: `3px solid ${C}` }}>
-                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}>✗ Não usar rotineiramente (rec. 40)</p>
+                  <p style={{ margin: 0, fontSize: '12px', fontWeight: '700', color: C }}><X size={13} style={ICONE_INLINE} strokeWidth={3} />Não usar rotineiramente (rec. 40)</p>
                   <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Estabilidade com fluido + vasoativo → NÃO usar hidrocortisona IV</p>
                 </div>
                 <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #F97316' }}>
@@ -750,7 +757,7 @@ export default function Sepse() {
           {/* Controle de foco — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('foco')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🎯 Controle de Foco (recs. 17-18)</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Target size={15} style={ICONE_INLINE} />Controle de Foco (recs. 17-18)</p>
               {aberto === 'foco' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'foco' && (
@@ -778,7 +785,7 @@ export default function Sepse() {
 
           {/* Metas de ressuscitação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}>🎯 Metas de Ressuscitação</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--tx-green)" }}><Target size={15} style={ICONE_INLINE} />Metas de Ressuscitação</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {[
                 { param: 'TRC',              meta: '≤ 2 segundos',                                              cor: '#10B981' },
@@ -801,7 +808,7 @@ export default function Sepse() {
 
           {/* POCUS */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🔊 POCUS à Beira do Leito (rec. 29)</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><ScanLine size={15} style={ICONE_INLINE} />POCUS à Beira do Leito (rec. 29)</p>
             <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px', borderLeft: '3px solid #3B82F6', marginBottom: '8px' }}>
               <p style={{ margin: 0, fontSize: '12px', fontWeight: '600', color: "var(--tx-blue)" }}>Recomendação condicional — novo SSC 2026</p>
               <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>Usar POCUS cardíaco e pulmonar para guiar ressuscitação, se treinamento e recursos disponíveis</p>
@@ -822,7 +829,7 @@ export default function Sepse() {
 
           {/* Reavaliação */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>📈 Reavaliação Contínua</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><TrendingUp size={15} style={ICONE_INLINE} />Reavaliação Contínua</p>
             {[
               'Reavaliar após CADA bolus — sinais de sobrecarga hídrica',
               'Lactato seriado — queda indica resposta ao tratamento',
@@ -843,7 +850,7 @@ export default function Sepse() {
           {/* Pós-sepse — accordion */}
           <div style={card()}>
             <button style={accordionBtn()} onClick={() => toggle('posalta')}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>🏥 Seguimento Pós-Sepse (rec. 61, novo 2026)</p>
+              <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Hospital size={15} style={ICONE_INLINE} />Seguimento Pós-Sepse (rec. 61, novo 2026)</p>
               {aberto === 'posalta' ? <ChevronUp size={16} color="var(--muted)" /> : <ChevronDown size={16} color="var(--muted)" />}
             </button>
             {aberto === 'posalta' && (

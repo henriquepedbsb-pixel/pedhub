@@ -17,6 +17,8 @@ import {
   Info, Activity, ClipboardList, RefreshCw, Clock,
 } from 'lucide-react';
 import { fmtBR } from '../lib/numero';
+import { useCampoPeso } from '../lib/paciente';
+import OrigemPeso from '../components/OrigemPeso';
 
 /* ── Paleta ── */
 const COR = {
@@ -25,9 +27,11 @@ const COR = {
   mid:   '#047857',
   lite:  '#D1FAE5',
   fundo: "var(--tint-green)",
-  card:  '#ffffff',
-  borda: '#A7F3D0',
-  texto: '#1A2332',
+  card:  "var(--surface)",   // moldura neutra em token de tema (claro/escuro)
+  borda: 'rgba(16,185,129,0.4)', // verde translúcido: ~#A7F3D0 sobre branco, suave sobre superfície escura
+  texto: "var(--text)",
+  txVerde: "var(--tx-green)", // texto verde que inverte de tom por tema
+  liteBg: "var(--tint-green)", // fundo verde suave que acompanha o tema
   det:   "var(--text-2)",
   muted: "var(--muted)",
   warn:  '#D97706',
@@ -106,6 +110,9 @@ const parseFld = v => parseFloat(String(v).replace(',', '.'));
 
 /* Resolve a dose final exibida: usa o valor editado manualmente se for válido,
    caso contrário cai no valor sugerido pelo cálculo automático. */
+// "1 gota" / "2 gotas" — aceita número ou texto com vírgula decimal.
+const unGota = (n) => (Number(String(n).replace(',', '.')) === 1 ? 'gota' : 'gotas');
+
 export function finalDose(manualStr, suggested) {
   const num = parseFld(manualStr);
   return manualStr !== '' && !Number.isNaN(num) && num >= 0 ? num : suggested;
@@ -262,6 +269,11 @@ function printById(id) {
     '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">' +
     '<style>' +
     '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+    // A impressão é sempre em papel claro: os tokens de tema usados nos estilos
+    // inline do bloco recebem aqui os valores do tema claro.
+    ':root { --bg:#F6F8FB; --surface:#FFFFFF; --surface-2:#F3F4F6; --border:#E5E7EB; --text:#1A2332; --text-2:#374151; --muted:#5B6B80;' +
+    ' --tint-green:#ECFDF5; --tint-amber:#FFF7ED; --tint-red:#FEF2F2; --tint-purple:#F5F3FF; --tint-blue:#EFF6FF; --tint-teal:#F0FDFA; --tint-slate:#F8FAFC;' +
+    ' --tx-green:#047857; --tx-amber:#B45309; --tx-red:#B91C1C; --tx-blue:#1D4ED8; --tx-purple:#6D28D9; --tx-teal:#0F766E; }' +
     'body { font-family: "DM Sans", Arial, sans-serif; padding: 20px; background: #fff; color: #1A2332; }' +
     '.print-hide { display: none !important; }' +
     '@media print { body { padding: 10mm; } button { display: none !important; } }' +
@@ -343,7 +355,7 @@ export default function Canguru() {
 ════════════════════════════════════════════ */
 function TabPrescricao() {
   const [nome,      setNome]      = useState('');
-  const [pesoG,     setPesoG]     = useState('');
+  const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g");
   const [pesornG,   setPesornG]   = useState('');
   const [igSem,     setIgSem]     = useState('');
   const [igDias,    setIgDias]    = useState('');
@@ -409,6 +421,7 @@ function TabPrescricao() {
         <Grid2>
           <Fld label="Peso atual (g) *">
             <Inp value={pesoG} onChange={setPesoG} placeholder="1450" mode="decimal" />
+            <OrigemPeso ativo={pesoDaBarra} />
             <AvisoSanidade msg={avisoPesoG(parseFloat(String(pesoG).replace(',', '.')))} />
           </Fld>
           <Fld label="Peso nasc. (g) *">
@@ -526,7 +539,7 @@ function TabPrescricao() {
 function TabReceituario() {
   const [nomePac,   setNomePac]   = useState('');
   const [nrSES,     setNrSES]     = useState('');
-  const [pesoG,     setPesoG]     = useState('');
+  const [pesoG, setPesoG, pesoDaBarra] = useCampoPeso("g");
   const [pesornG,   setPesornG]   = useState('');
   const [igSem,     setIgSem]     = useState('');
   const [igDias,    setIgDias]    = useState('');
@@ -597,6 +610,7 @@ function TabReceituario() {
         <Grid2>
           <Fld label="Peso atual (g) *">
             <Inp value={pesoG} onChange={setPesoG} placeholder="1450" mode="decimal" />
+            <OrigemPeso ativo={pesoDaBarra} />
           </Fld>
           <Fld label="Peso nasc. (g) *">
             <Inp value={pesornG} onChange={setPesornG} placeholder="1200" mode="decimal" />
@@ -725,7 +739,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
     const linhaFerro = () =>
       (!res.ferroAtivo && res.preT)
         ? `Ferro (${res.ferroProd.sal}): iniciar no 30.º dia de vida (faltam ${res.ferroDiasRest} dia${res.ferroDiasRest !== 1 ? 's' : ''})`
-        : `${ferroLabel}: ${fmtFerro(ferroFinal)} gotas VO 1×/dia (${fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${fmtBR(res.ferroProd.mgGota)} mg Fe)`;
+        : `${ferroLabel}: ${fmtFerro(ferroFinal)} ${unGota(ferroFinal)} VO 1×/dia (${fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · ${res.ferroRate} mg/kg/dia · 1 gota = ${fmtBR(res.ferroProd.mgGota)} mg Fe)`;
     const linhaFos = () => {
       if (!res.fosIndicado) return "Fosfato tricálcico 12,9%: não indicado (IG ≥ 32s e PN ≥ 1500 g)";
       if (res.fosSuspenso) return "Fosfato tricálcico 12,9%: suspenso (IGPM ≥ 40 sem)";
@@ -742,7 +756,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
     const linhaVitD = () =>
       res.vitDNec <= 0
         ? `Vitamina D: não necessário — dieta (${res.vitDDieta.toFixed(0)} UI) + polivit (${res.polivitVD.toFixed(0)} UI) = alvo ${res.vitDAlvo} UI`
-        : `Vitamina D (colecalciferol): ${res.vitDG200} gotas VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
+        : `Vitamina D (colecalciferol): ${res.vitDG200} ${unGota(res.vitDG200)} VO 1×/dia (200 UI/gota) — complemento; alvo ${res.vitDAlvo} UI, faltam ${res.vitDNec.toFixed(0)} UI`;
 
     const dieta = [
       `Volume total: ${fmtBR(res.volTotal.toFixed(1))} mL/dia`,
@@ -793,8 +807,8 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               </div>
             </div>
             <div style={{
-              background: COR.lite, borderRadius: 8, padding: '5px 12px',
-              fontSize: 12, fontWeight: 700, color: COR.dark,
+              background: COR.liteBg, borderRadius: 8, padding: '5px 12px',
+              fontSize: 12, fontWeight: 700, color: COR.txVerde,
             }}>
               {res.dias} dias · IGPM {res.igCorrSem}s{res.igCorrResto > 0 ? `+${res.igCorrResto}d` : ''}
             </div>
@@ -830,7 +844,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
               </AguardoBadge>
             ) : (
               <>
-                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} {unGota(ferroFinal)}</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia por PN ·
                   1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
@@ -921,7 +935,7 @@ function ResultPrescricao({ res, nome, ferroManual, setFerroManual, znManual, se
             ) : (
               <>
                 <div>
-                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <strong>{res.vitDG200} {unGota(res.vitDG200)}</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> (200 UI/gota)</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
@@ -1077,7 +1091,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
               </span>
             ) : (
               <>
-                <strong>{fmtFerro(ferroFinal)} gotas</strong> VO 1×/dia
+                <strong>{fmtFerro(ferroFinal)} {unGota(ferroFinal)}</strong> VO 1×/dia
                 <span className="print-hide" style={{ color: COR.muted, fontSize: 11 }}>
                   {' '}({fmtBR(res.ferroDose.toFixed(2))} mg Fe/dia · {res.ferroRate} mg/kg/dia ·
                   1 gota = {fmtBR(res.ferroProd.mgGota)} mg Fe — {res.ferroProd.sal})
@@ -1159,7 +1173,7 @@ function ResultReceituario({ res, nomePac, nrSES, ferroManual, setFerroManual, z
             ) : (
               <>
                 <div>
-                  <strong>{res.vitDG200} gotas</strong> VO 1×/dia
+                  <strong>{res.vitDG200} {unGota(res.vitDG200)}</strong> VO 1×/dia
                   <span style={{ color: COR.muted, fontSize: 11 }}> — 200 UI/gota</span>
                 </div>
                 <div className="print-hide" style={{ fontSize: 11, color: COR.muted, marginTop: 3 }}>
@@ -1201,8 +1215,8 @@ function Card({ children, className }) {
 function CardHead({ Icon, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: COR.muted, marginBottom: 14 }}>
-      <div style={{ width: 22, height: 22, background: COR.lite, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon size={13} color={COR.mid} />
+      <div style={{ width: 22, height: 22, background: COR.liteBg, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon size={13} color={COR.txVerde} />
       </div>
       {children}
     </div>
@@ -1247,7 +1261,7 @@ function DateInp({ value, onChange }) {
 
 function IdadeBadge({ dias, igpm }) {
   return (
-    <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: COR.mid }}>
+    <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: COR.txVerde }}>
       <CheckCircle size={13} />
       {dias} dias de vida
       {igpm !== null && (
@@ -1363,7 +1377,7 @@ function DoseEditor({ suggested, value, onChange, onReset, unit, decimals = 2 })
           title="Usar valor sugerido"
           style={{
             display: 'flex', alignItems: 'center', gap: 4,
-            border: 'none', background: 'transparent', color: COR.mid,
+            border: 'none', background: 'transparent', color: COR.txVerde,
             fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: '4px 2px',
           }}
         >
@@ -1420,7 +1434,7 @@ function OkBadge({ children }) {
 function RxDocItem({ n, titulo, children }) {
   return (
     <div style={{ paddingBottom: 11, marginBottom: 11, borderBottom: `1px dotted ${COR.borda}` }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: COR.dark, marginBottom: 4 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: COR.txVerde, marginBottom: 4 }}>
         {n}. {titulo}
       </div>
       <div style={{ fontSize: 13, color: COR.texto, lineHeight: 1.55 }}>{children}</div>
@@ -1453,7 +1467,7 @@ function PrintBtn({ targetId }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         width: '100%', padding: '12px 0',
         border: `1.5px solid ${COR.borda}`, borderRadius: R,
-        background: "var(--surface)", color: COR.mid,
+        background: "var(--surface)", color: COR.txVerde,
         fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 4,
       }}
     >

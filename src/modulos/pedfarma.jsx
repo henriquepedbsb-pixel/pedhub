@@ -8,6 +8,8 @@ import { avisoPesoKg } from "../lib/sanity";
 import { DRUGS } from "../lib/farmacos";
 import CalcDose, { CAT_CORES } from "../components/CalcDose";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const PRIMARY = "#8B5CF6";
 
@@ -244,7 +246,7 @@ const DrugCard = memo(function DrugCard({ drug, peso }) {
 export default function Pedfarma() {
   const [busca, setBusca] = useState("");
   const [cat, setCat]     = useState("Todos");
-  const [pesoRaw, setPesoRaw] = useState("");
+  const [pesoRaw, setPesoRaw, pesoDaBarra] = useCampoPeso();
   const [mostrarConversor, setMostrarConversor] = useState(false);
 
   // O input reflete o valor digitado imediatamente (peso/AvisoSanidade abaixo),
@@ -272,10 +274,11 @@ export default function Pedfarma() {
       </div>
 
       <div style={{ padding: "12px 16px", background: "var(--tint-purple)", borderBottom: "1px solid #DDD6FE" }}>
-        <label style={{ fontSize: 11, fontWeight: 700, color: "#6D28D9", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg) — referência de dose</label>
+        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--tx-purple)", display: "block", marginBottom: 4, letterSpacing: "0.05em" }}>PESO (kg) — referência de dose</label>
         <input type="text" inputMode="decimal" placeholder="Ex: 20,0"
           value={pesoRaw} onChange={e => setPesoRaw(e.target.value)}
           style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 15, border: "1.5px solid #C4B5FD", outline: "none", background: "var(--surface)", boxSizing: "border-box" }} />
+        <OrigemPeso ativo={pesoDaBarra} />
         {peso && <p style={{ fontSize: 11, color: "#7C3AED", margin: "4px 0 0" }}>Peso: {fmtBR(peso)} kg — use a dose como referência para calcular</p>}
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(pesoRaw).replace(",", ".")))} />
       </div>

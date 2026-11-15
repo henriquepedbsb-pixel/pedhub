@@ -43,6 +43,8 @@ import {
   calcularDose,
 } from "../lib/pa-tratamento.js";
 import { fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
 
 const COR = "#BE123C"; // rose-700 — cor do módulo Cardiologia Pediátrica Básica
 
@@ -661,7 +663,7 @@ function AbaTratamento() {
   const toggle = (k) => setAbertas((p) => ({ ...p, [k]: !p[k] }));
 
   const [medIdx, setMedIdx] = useState(0);
-  const [peso, setPeso] = useState("");
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const pesoN = parseNum(peso);
   const medSel = DOSE_CALC[medIdx];
   const dose = pesoN != null ? calcularDose(medSel, pesoN) : null;
@@ -711,6 +713,7 @@ function AbaTratamento() {
         </div>
 
         <CampoNum label="Peso" unit="kg" value={peso} onChange={setPeso} placeholder="ex.: 25" />
+        <OrigemPeso ativo={pesoDaBarra} />
 
         {dose && (
           <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">

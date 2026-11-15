@@ -1,10 +1,15 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcSurfactante) para testes unitários */
 import { useState, useMemo } from 'react';
-import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw } from 'lucide-react';
+import { BookOpen, Calculator, Syringe, Activity, ChevronDown, ChevronUp, Wind, ClipboardList, Check, Pill, BarChart3, Thermometer, AlertTriangle, RotateCcw, Settings } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -52,7 +57,7 @@ export function calcSurfactante(p) {
 // ─── Componente ───────────────────────────────────────────────────────────────
 export default function Surfactante() {
   const [tab,     setTab]    = useState('indicacoes');
-  const [peso,    setPeso]   = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [surf,    setSurf]   = useState('curosurf');
   const [dosaC,   setDosaC]  = useState('primeira');
   const [tecnica, setTecnica]= useState('lisa');
@@ -153,7 +158,7 @@ export default function Surfactante() {
 
           {/* Técnicas */}
           <div style={card()}>
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>⚙️ Técnicas de Administração</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}><Settings size={15} style={ICONE_INLINE} />Técnicas de Administração</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
                 {
@@ -224,6 +229,7 @@ export default function Surfactante() {
             <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO RN (kg)</label>
             <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 1,250"
               style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '20px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
+            <OrigemPeso ativo={pesoDaBarra} />
               <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             {p > 0 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--muted)" }}>{p < 1 ? `${Math.round(p * 1000)} g` : `${fmtBR(p)} kg`}</p>}
           </div>

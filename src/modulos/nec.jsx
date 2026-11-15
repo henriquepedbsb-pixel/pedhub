@@ -1,10 +1,15 @@
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (estagioBell, calcATBNec) para testes unitários */
 import { useState, useMemo } from 'react';
-import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield } from 'lucide-react';
+import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield, Radiation } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
+import { useCampoPeso } from "../lib/paciente";
+import OrigemPeso from "../components/OrigemPeso";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -118,7 +123,7 @@ export function calcATBNec({ p, ig, pnDias }) {
 // ─── Componente ───────────────────────────────────────────────────────────────
 export default function NEC() {
   const [tab,      setTab]    = useState('diagnostico');
-  const [peso,     setPeso]   = useState('');
+  const [peso, setPeso, pesoDaBarra] = useCampoPeso();
   const [igVal,    setIgVal]  = useState('');
   const [pnDias,   setPnDias] = useState('0-6');
   const [rx,       setRx]     = useState('');
@@ -218,7 +223,7 @@ export default function NEC() {
           {/* Achados radiológicos */}
           <div style={card()}>
             <button style={accordBtn()} onClick={()=>toggle('rx')}>
-              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}>☢️ Achados Radiológicos (RX Abdome)</p>
+              <p style={{ margin:0, fontSize:'14px', fontWeight:'700', color:"var(--text-2)" }}><Radiation size={15} style={ICONE_INLINE} />Achados Radiológicos (RX Abdome)</p>
               {aberto==='rx'?<ChevronUp size={16} color="var(--muted)"/>:<ChevronDown size={16} color="var(--muted)"/>}
             </button>
             {aberto==='rx' && (
@@ -400,6 +405,7 @@ export default function NEC() {
                 <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>PESO (kg)</label>
                 <input type="text" inputMode="decimal" value={peso} onChange={e=>setPeso(limparDecimal(e.target.value))} placeholder="ex: 1,2"
                   style={{ width:'100%', padding:'8px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
+                <OrigemPeso ativo={pesoDaBarra} />
                   <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>

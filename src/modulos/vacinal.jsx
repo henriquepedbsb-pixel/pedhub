@@ -3,6 +3,7 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import { Calendar, CheckCircle, Info, AlertTriangle, Clock, Syringe } from "lucide-react";
+import { dataExiste } from "../lib/data";
 
 const PRIMARY = "#06B6D4";
 
@@ -341,7 +342,7 @@ function maskDate(v) {
   return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
 }
 
-function calcIdadeDias(dataBR) {
+export function calcIdadeDias(dataBR) {
   if (!dataBR || dataBR.length < 10) return null;
   const parts = dataBR.split("/");
   if (parts.length !== 3) return null;
@@ -349,7 +350,9 @@ function calcIdadeDias(dataBR) {
   const mes = parseInt(parts[1], 10);
   const ano = parseInt(parts[2], 10);
   if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return null;
-  if (dia < 1 || dia > 31 || mes < 1 || mes > 12) return null;
+  // Data inexistente (31/02, 31/04…): `new Date()` rolaria para o mês seguinte
+  // e a idade sairia errada em dias, o que desloca a situação vacinal.
+  if (!dataExiste(dia, mes, ano)) return null;
   const anoAtual = new Date().getFullYear();
   if (ano < anoAtual - 19 || ano > anoAtual) return null;
   const nasc = new Date(ano, mes - 1, dia);

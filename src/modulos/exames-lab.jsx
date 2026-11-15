@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
-import { Microscope, Info, AlertTriangle, AlertCircle } from "lucide-react";
+import { Microscope, Info, AlertTriangle, AlertCircle, Venus, Mars } from "lucide-react";
+
+// Ícone Lucide alinhado à linha de base do texto (substitui emoji — CLAUDE.md, regra 2).
+const ICONE_INLINE = { display: 'inline-block', verticalAlign: '-2px', marginRight: 5, flexShrink: 0 };
 
 const CS = '#0EA5E9';
 const CD = '#0284C7';
@@ -402,7 +405,7 @@ export default function ExamesLab() {
               <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
                 {['F','M'].map(sx => (
                   <button key={sx} onClick={() => setHorSexo(sx)} style={{ flex: 1, padding: '10px', borderRadius: 10, fontSize: 14, fontWeight: horSexo === sx ? 800 : 400, border: `2px solid ${horSexo === sx ? CS : "var(--border)"}`, background: horSexo === sx ? CL : "var(--surface-2)", color: horSexo === sx ? CD : "var(--text-2)", cursor: 'pointer', ...F }}>
-                    {sx === 'F' ? '♀ Feminino' : '♂ Masculino'}
+                    {sx === 'F' ? <><Venus size={14} style={ICONE_INLINE} />Feminino</> : <><Mars size={14} style={ICONE_INLINE} />Masculino</>}
                   </button>
                 ))}
               </div>
@@ -417,7 +420,7 @@ export default function ExamesLab() {
                 </div>
               </div>
               {(horSexo === 'F' ? HOR_PUB_F : HOR_PUB_M).map((h, i) => <VRow key={i} nome={h.nome} und={h.und} valor={h.vals[tannerIdx]} alerta={h.alerta} nota={h.nota} />)}
-              <NotaBox>Interpretação SEMPRE em conjunto com: Tanner físico + velocidade de crescimento + idade óssea + clínica. PPc: início antes dos 8 anos (♀) / 9 anos (♂) → encaminhar Endocrinologia Pediátrica.</NotaBox>
+              <NotaBox>Interpretação SEMPRE em conjunto com: Tanner físico + velocidade de crescimento + idade óssea + clínica. PPc: início antes dos 8 anos (meninas) / 9 anos (meninos) → encaminhar Endocrinologia Pediátrica.</NotaBox>
             </div>
           )}
 
