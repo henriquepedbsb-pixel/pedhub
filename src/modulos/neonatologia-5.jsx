@@ -1,3 +1,4 @@
+// src/modulos/neonatologia-5.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcNPT, sugerirEletro) para testes unitários */
 /**
  * neonatologia-5.jsx — PedHub

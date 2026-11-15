@@ -1,3 +1,4 @@
+// src/modulos/hidratacao.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta holliday/parsePeso (funções puras) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

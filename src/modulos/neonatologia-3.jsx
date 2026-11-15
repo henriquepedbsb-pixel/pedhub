@@ -1,3 +1,4 @@
+// src/modulos/neonatologia-3.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta interpolate (limiares de bilirrubina) e avaliarNascimento (cálculo de idade a partir do nascimento) para testes */
 /**
  * neonatologia-3.jsx — PedHub

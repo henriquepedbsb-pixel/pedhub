@@ -1,3 +1,4 @@
+// src/components/GraficoPercentilPA.jsx
 // Gráfico de curvas de percentil de PA (estilo caderneta de crescimento).
 // Eixo X = idade (1–17 anos), Y = mmHg. Curvas P50/P90/P95/P95+12 a partir das
 // tabelas AAP 2017 (Manual SBP 2019), zonas de status por severidade e o ponto

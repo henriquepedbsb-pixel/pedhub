@@ -1,3 +1,4 @@
+// src/modulos/nec.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (estagioBell, calcATBNec) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield, Radiation } from 'lucide-react';

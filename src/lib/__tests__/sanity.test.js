@@ -1,3 +1,4 @@
+// src/lib/__tests__/sanity.test.js
 import { describe, it, expect } from 'vitest';
 import { avisoPesoKg, avisoPesoG, avisoIdadeAnos } from '../sanity.js';
 

@@ -1,3 +1,4 @@
+// src/modulos/gastropediatria.jsx
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import CalcDose from "../components/CalcDose";

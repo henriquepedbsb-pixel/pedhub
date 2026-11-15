@@ -1,3 +1,4 @@
+// src/modulos/sala-de-parto.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcMaterialSalaParto) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

@@ -1,3 +1,4 @@
+// src/modulos/analgesia-sedacao.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta DROGAS, calcDil e calcVel para testes unitários */
 import { useState, useMemo } from 'react';
 import { Activity, Pill, Moon, TrendingDown, ChevronDown, ChevronUp, RotateCcw, ClipboardList, Check, Search, Brain, AlertTriangle } from 'lucide-react';

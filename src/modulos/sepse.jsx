@@ -1,3 +1,4 @@
+// src/modulos/sepse.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta cálculos de vasoativa/Rodwell para testes */
 import { useState, useMemo } from 'react';
 import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCircle, ClipboardList, Siren, Zap, BarChart3, CircleAlert, Droplets, FlaskConical, Droplet, Timer, Circle, Check, X, Syringe, Scale, ScanLine, TrendingUp, Hospital } from 'lucide-react';

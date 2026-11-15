@@ -1,3 +1,4 @@
+// src/modulos/dilucao-bic.jsx
 /**
  * dilucao-bic.jsx — PedHub
  * BIC Neonatal — Drogas de Infusão Contínua

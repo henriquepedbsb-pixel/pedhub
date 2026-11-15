@@ -1,3 +1,4 @@
+// src/lib/sanity.js
 // Guardas de sanidade para entradas clínicas.
 // Filosofia: AVISAR (não bloquear) quando o valor está fora da faixa plausível
 // em pediatria/neonatologia — pega erro de digitação antes de gerar dose errada.

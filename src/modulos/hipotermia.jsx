@@ -1,3 +1,4 @@
+// src/modulos/hipotermia.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta função pura de cálculo para testes */
 import { useState, useMemo } from 'react';
 import { ClipboardCheck, Calculator, Thermometer, TrendingUp, ChevronDown, ChevronUp, Clock, CheckCircle2, Brain, Ban, ClipboardList, Snowflake, BarChart3, Zap, AlertTriangle, Microscope, Check, X, RotateCcw } from 'lucide-react';

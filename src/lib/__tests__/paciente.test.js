@@ -1,3 +1,4 @@
+// src/lib/__tests__/paciente.test.js
 import { describe, it, expect } from 'vitest';
 import {
   parsePesoKg,

@@ -1,3 +1,4 @@
+// src/modulos/neonatologia-2.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta fórmulas puras (bolus/infusão/gel) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";

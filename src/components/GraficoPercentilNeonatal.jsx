@@ -1,3 +1,4 @@
+// src/components/GraficoPercentilNeonatal.jsx
 // Gráfico de curvas de percentil de PA neonatal (tabela de Dionne).
 // Eixo X = idade pós-concepção (26–44 semanas), Y = mmHg. Curvas P50/P95/P99,
 // zonas de status (Normal < P95 · Hipertensão P95–P99 · Grave ≥ P99) e o ponto

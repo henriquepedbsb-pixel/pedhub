@@ -1,3 +1,4 @@
+// src/modulos/dor.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta helpers/dados compartilhados com outros módulos; Fast Refresh não se aplica a este módulo de rota lazy. */
 import { useState } from 'react';
 import { AlertTriangle, ChevronDown, ChevronUp, Info } from 'lucide-react';

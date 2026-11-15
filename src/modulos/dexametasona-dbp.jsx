@@ -1,3 +1,4 @@
+// src/modulos/dexametasona-dbp.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta função pura de cálculo para testes */
 /**
  * dexametasona-dbp.jsx — PedHub

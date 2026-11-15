@@ -1,3 +1,4 @@
+// src/components/AvisoSanidade.jsx
 import { AlertTriangle } from 'lucide-react';
 
 // Banner de aviso (não bloqueia). Renderiza nada se msg for vazio/null.

@@ -1,3 +1,4 @@
+// src/lib/calc/__tests__/tig.test.js
 import { describe, it, expect } from 'vitest';
 import { tigGlicoseGramasDia, tigConcentracao } from '../tig';
 

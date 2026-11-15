@@ -1,3 +1,4 @@
+// src/modulos/__tests__/idade-gestacional.test.js
 import { describe, it, expect } from 'vitest';
 import { diffDias, addDias, fmtSemDias, parseDateBR, calcularIdadesPMA } from '../idade-gestacional.jsx';
 

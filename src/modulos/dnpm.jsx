@@ -1,3 +1,4 @@
+// src/modulos/dnpm.jsx
 import { useState, useMemo } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import {

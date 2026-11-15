@@ -1,3 +1,4 @@
+// src/modulos/tig-neonatal.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta getNa/getK (helpers puros) para testes unitários */
 import { useState, useMemo } from "react";
 import RodapeModulo from "../components/RodapeModulo";

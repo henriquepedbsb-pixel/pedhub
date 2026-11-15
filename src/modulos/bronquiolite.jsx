@@ -1,3 +1,4 @@
+// src/modulos/bronquiolite.jsx
 /* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (classificarGravidade, calcOAF) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Stethoscope, Pill, Wind, Home, ChevronDown, ChevronUp, ClipboardList, Scale, Ban, Hospital, Shield, Activity, AlertTriangle, CheckCircle2, X, Check } from 'lucide-react';

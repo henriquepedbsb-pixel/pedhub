@@ -1,3 +1,4 @@
+// src/lib/pa-tratamento.js
 // ─────────────────────────────────────────────────────────────────────────────
 // TRATAMENTO DA HIPERTENSÃO ARTERIAL PEDIÁTRICA
 //
