@@ -82,9 +82,9 @@ describe('calcDoses — adolescente de 60 kg (tetos de dose)', () => {
     expect(d.epiIM_mg).toBe(0.5);
     expect(d.epiET_mg).toBe(2.5);
   });
-  it('atropina: teto de 1 mg a partir de 30 kg', () => {
-    expect(d.atropina_mg).toBe(1);
-    expect(d.atropina_mL).toBe(2);
+  it('atropina: teto de 0,5 mg por dose também acima de 30 kg (AHA PALS 2020)', () => {
+    expect(d.atropina_mg).toBe(0.5);
+    expect(d.atropina_mL).toBe(1);
   });
   it('adenosina: tetos de 6 e 12 mg', () => {
     expect(d.adeno1_mg).toBe(6);
@@ -126,12 +126,14 @@ describe('calcDoses — lactente de 3 kg (doses mínimas)', () => {
   it('desfibrilação 2 J/kg = 6 J', () => expect(d.desfib1_J).toBe(6));
 });
 
-describe('calcDoses — atropina no limite de faixa', () => {
-  it('abaixo de 30 kg o teto é 0,5 mg', () => {
-    expect(calcDoses(25).atropina_mg).toBe(0.5);
-    expect(calcDoses(29).atropina_mg).toBe(0.5);
+describe('calcDoses — atropina: teto único de 0,5 mg (AHA PALS 2020)', () => {
+  it('24 kg ainda fica abaixo do teto (0,48 mg)', () => expect(calcDoses(24).atropina_mg).toBe(0.48));
+  it('a partir de 25 kg a dose trava em 0,5 mg, em qualquer peso', () => {
+    for (const kg of [25, 29, 30, 40, 60, 80]) {
+      expect(calcDoses(kg).atropina_mg).toBe(0.5);
+      expect(calcDoses(kg).atropina_mL).toBe(1);
+    }
   });
-  it('a partir de 30 kg o teto passa a 1 mg', () => expect(calcDoses(30).atropina_mg).toBe(0.6));
 });
 
 describe('calcDoses — nenhum campo vaza NaN', () => {
