@@ -2,8 +2,9 @@
 // NPT neonatal — esperados calculados à mão com as concentrações do módulo:
 // AA 10% (0,10 g/mL) · lipídeo 20% (0,20 g/mL) · NaCl 20% (3,423 mEq/mL) ·
 // KCl 10% (1,341 mEq/mL) · gluconato de Ca 10% (0,465 mEq/mL) · MgSO4 50% (4,06 mEq/mL).
-// O fósforo fica em 0 nestes casos de propósito: a fonte/concentração de fósforo
-// da NPT está em revisão clínica e não deve ser "travada" por teste.
+// Fósforo: glicerofosfato de sódio — 1 mmol P/mL e 2 mEq Na/mL (bula Glycophos);
+// 30,97 mg de P por mmol. O caso-base fica com fósforo 0; o bloco
+// "fósforo" abaixo cobre o glicerofosfato e o desconto do sódio.
 import { describe, it, expect } from 'vitest';
 import { calcNPT, sugerirEletro } from '../neonatologia-5.jsx';
 
@@ -93,4 +94,51 @@ describe('sugerirEletro — sugestão por dia de vida', () => {
     expect(sugerirEletro(3)).toMatchObject({ na: '2', k: '1' });
   });
   it('sem data de nascimento não sugere', () => expect(sugerirEletro(null)).toBeNull());
+});
+
+describe('calcNPT — fósforo como glicerofosfato de sódio', () => {
+  // RN de 1.000 g, P 45 mg/kg/dia → 45 mg ÷ 30,97 = 1,4530 mmol → 1,4530 mL;
+  // sódio do glicerofosfato: 2 × 1,4530 = 2,9061 mEq (2,9061 mEq/kg/dia).
+  const kg1 = { ...base, pesoG: '1000', doseP: '45' };
+
+  it('volume: 1 mL de glicerofosfato por mmol de fósforo', () => {
+    const r = calcNPT({ ...kg1, doseNa: '4' });
+    expect(r.mmolP).toBeCloseTo(1.4530, 3);
+    expect(r.volP).toBeCloseTo(1.4530, 3);
+    expect(r.naGlic).toBeCloseTo(2.9061, 3);
+    expect(r.naGlicKg).toBeCloseTo(2.9061, 3);
+  });
+  it('o sódio do glicerofosfato é descontado do NaCl 20%', () => {
+    const r = calcNPT({ ...kg1, doseNa: '4' });
+    expect(r.volNa).toBeCloseTo((4 - 2.9061) / 3.423, 3);   // 0,3196 mL
+    expect(r.naExcesso).toBe(false);
+  });
+  it('se o glicerofosfato passa do sódio prescrito, NaCl zera e o excesso é avisado', () => {
+    const r = calcNPT({ ...kg1, doseNa: '2' });
+    expect(r.volNa).toBe(0);
+    expect(r.naExcesso).toBe(true);
+    const semNa = calcNPT({ ...kg1, doseNa: '0' });
+    expect(semNa.volNa).toBe(0);
+    expect(semNa.naExcesso).toBe(true);
+  });
+  it('sem fósforo, o NaCl não muda e não há aviso', () => {
+    const r = calcNPT({ ...base, pesoG: '1000', doseNa: '2' });
+    expect(r.volP).toBe(0);
+    expect(r.naGlic).toBe(0);
+    expect(r.volNa).toBeCloseTo(2 / 3.423, 4);
+    expect(r.naExcesso).toBe(false);
+  });
+  it('o volume do glicerofosfato entra na conta da bolsa', () => {
+    const com = calcNPT({ ...kg1, doseNa: '4' }), sem = calcNPT({ ...kg1, doseNa: '4', doseP: '0' });
+    // com fósforo: +volP de glicerofosfato e −(naGlic ÷ 3,423) de NaCl
+    expect(sem.volGlucose - com.volGlucose).toBeCloseTo(com.volP - com.naGlic / 3.423, 4);
+  });
+  it('fósforo com vírgula, texto ou negativo não vaza NaN', () => {
+    expect(calcNPT({ ...kg1, doseP: '46,5' }).volP).toBeCloseTo(46.5 / 30.97, 4);
+    for (const p of ['abc', '', '-10', null, undefined]) {
+      const r = calcNPT({ ...kg1, doseP: p });
+      expect(r.volP).toBe(0);
+      expect(Number.isNaN(r.volNa)).toBe(false);
+    }
+  });
 });

@@ -24,9 +24,17 @@ const SOL = {
   NACL20:      3.423,
   KCL10:       1.341,
   GLUCA_CA10:  0.465,
-  FOS:         25,
+  // Fósforo IV: glicerofosfato de sódio 216 mg/mL (fósforo orgânico).
+  // Cada mL = 1 mmol de fosfato + 2 mmol (2 mEq) de sódio — bula profissional
+  // Glycophos, Fresenius Kabi. (O fosfato tricálcico que constava aqui é de uso
+  // ORAL e não entra em NPT — retirado por decisão do responsável médico.)
+  GLICEROFOSF_P:  1,      // mmol de P por mL
+  GLICEROFOSF_NA: 2,      // mEq de Na por mL
   MGSO4_50:    4.06,
 };
+
+// Massa atômica do fósforo: converte a dose prescrita em mg para mmol.
+const MG_POR_MMOL_P = 30.97;
 
 /* ── Data ────────────────────────────────────────────────────────────────── */
 const HOJE_ISO = new Date().toISOString().split("T")[0];
@@ -84,10 +92,20 @@ export function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
   const volAA     = (dAA  * pk) / SOL.AA10;
   const volLip    = (dLip * pk) / SOL.LIP20;
 
-  const volNa  = (dNa * pk) / SOL.NACL20;
+  // Fósforo: mg/kg/dia → mmol/dia → mL de glicerofosfato de sódio.
+  const mmolP  = (dP * pk) / MG_POR_MMOL_P;
+  const volP   = mmolP / SOL.GLICEROFOSF_P;
+  // O glicerofosfato já leva sódio (2 mEq/mL). Esse sódio conta dentro do Na
+  // prescrito: o NaCl 20% completa só o que faltar. Se o glicerofosfato sozinho
+  // passar do Na prescrito, o NaCl zera e o excesso é avisado (não é escondido).
+  const naGlic    = volP * SOL.GLICEROFOSF_NA;          // mEq/dia
+  const naPresc   = dNa * pk;                            // mEq/dia
+  const naGlicKg  = naGlic / pk;                         // mEq/kg/dia
+  const naExcesso = naGlic > naPresc + 1e-9;
+
+  const volNa  = Math.max(0, naPresc - naGlic) / SOL.NACL20;
   const volK   = (dK  * pk) / SOL.KCL10;
   const volCa  = (dCa * pk) / SOL.GLUCA_CA10;
-  const volP   = (dP  * pk) / SOL.FOS;
   const volMg  = (dMg * pk) / SOL.MGSO4_50;
   const volEletro = volNa + volK + volCa + volP + volMg;
 
@@ -112,6 +130,7 @@ export function calcNPT({ pesoG, acesso, volKgD, doseAA, tig, doseLip,
   return {
     pk, vol, volTotal, volBag1, volLip, volAA, volGlucose, volEletro,
     volNa, volK, volCa, volP, volMg,
+    mmolP, naGlic, naGlicKg, naExcesso,
     gGlucose, concGluco, rateBag1, rateLip, vol50, volAgua,
     dAA, dTIG, dLip, dNa, dK, dCa, dP, dMg,
     kcalAA, kcalGlucose, kcalLip, kcalKgD, kcalNPC,
@@ -215,6 +234,7 @@ function ResultNPT({ r }) {
       {r.highTIG   && <Alerta color="#D97706" text={`TIG ${fmtBR(r.dTIG)} mg/kg/min acima de 12 — monitorar glicemia e verificar acesso central.`} />}
       {r.lowKcal   && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia abaixo de 50 — aporte insuficiente.`} />}
       {r.highKcal  && <Alerta color="#D97706" text={`${f1(r.kcalKgD)} kcal/kg/dia acima de 130 — risco de hiperalimentação.`} />}
+      {r.naExcesso && <Alerta color="#D97706" text={`O glicerofosfato de sódio já fornece ${f2(r.naGlicKg)} mEq/kg/dia de sódio, acima do Na prescrito (${fmtBR(r.dNa)} mEq/kg/dia). NaCl 20% zerado — rever a dose de fósforo ou o sódio total.`} />}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
         {[
@@ -244,7 +264,7 @@ function ResultNPT({ r }) {
             r.dNa > 0 && ["NaCl 20%",        f2(r.volNa) + " mL"],
             r.dK  > 0 && ["KCl 10%",         f2(r.volK)  + " mL"],
             r.dCa > 0 && ["Gluconato Ca 10%",f2(r.volCa) + " mL"],
-            r.dP  > 0 && ["Fosfato tricálcico 12,9%", f2(r.volP) + " mL"],
+            r.dP  > 0 && ["Glicerofosfato de sódio (1 mmol P/mL)", f2(r.volP) + " mL"],
             r.dMg > 0 && ["MgSO4 50%",       f2(r.volMg) + " mL"],
           ].filter(Boolean).map(([label, val]) => (
             <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px dotted #E5E7EB", fontSize: 12 }}>
@@ -252,6 +272,11 @@ function ResultNPT({ r }) {
               <span style={{ fontWeight: 600, color: "var(--text-2)" }}>{val}</span>
             </div>
           ))}
+          {r.dP > 0 && (
+            <div style={{ marginTop: 8, fontSize: 11, color: "var(--muted)", lineHeight: 1.45 }}>
+              Fósforo: {f2(r.mmolP)} mmol/dia. O glicerofosfato leva {f2(r.naGlic)} mEq de sódio ({f2(r.naGlicKg)} mEq/kg/dia), já descontado do NaCl 20%.
+            </div>
+          )}
           <div style={{ marginTop: 8, padding: "7px 10px", background: "var(--tint-green)", borderRadius: 7, fontSize: 11, color: "var(--tx-green)" }}>
             <strong>Preparo glicose:</strong>{" "}
             {r.volAgua >= 0
@@ -488,7 +513,7 @@ export default function Neonatologia5() {
       </div>
       <RodapeModulo
         revisao="07/2026"
-        fonte="ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023"
+        fonte="ESPGHAN/ESPEN 2018 (Domellof et al., JPGN) · BRASPEN 2022 · NeoFax 2023 · Glycophos, bula profissional (Fresenius Kabi)"
         nota="Eletrólitos sugeridos automaticamente — ajustar conforme labs e condição clínica. Não substitui prescrição médica individualizada."
       />
     </div>

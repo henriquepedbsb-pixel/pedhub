@@ -163,6 +163,17 @@ Antes de escrever qualquer valor clínico, verificar se o domínio já tem dono:
 **Divergência clínica detectada entre dois módulos → parar e alertar o
 usuário antes de prosseguir. Não escolher um valor por conta própria.**
 
+**Decisões clínicas já tomadas pelo responsável médico (15/11/2026) — não
+reabrir como "divergência":**
+- **Atropina tem duas regras, de propósito.** Bradicardia (`urgencias`):
+  0,02 mg/kg, mín 0,1 mg, máx 0,5 mg por dose em qualquer peso (AHA PALS
+  2020/2025). Pré-medicação de intubação (`isr`): 0,02 mg/kg, máx 0,5 mg,
+  **sem dose mínima** (AHA PALS Update 2015). Não "unificar" as duas.
+- **Fósforo na NPT (`neonatologia-5`) = glicerofosfato de sódio** (1 mmol P +
+  2 mEq Na por mL, bula Glycophos). O sódio que ele leva é descontado do NaCl
+  20%; se passar do Na prescrito, o módulo avisa. Fosfato tricálcico é de uso
+  **oral** (fica em `canguru` / `seguimento-prematuro-risco`), nunca em NPT.
+
 ---
 
 ## 7. Autoridade clínica
