@@ -13,6 +13,7 @@ import {
   TrendingDown,
   CheckCircle2,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const COR = "#F43F5E"; // rose-500 — cor do módulo Aleitamento
 
@@ -205,8 +206,8 @@ function CalcPerdaPeso() {
             </span>
             <span className="text-lg font-extrabold tabular-nums">
               {perdaPct <= 0
-                ? `+${Math.abs(perdaPct).toFixed(1)}%`
-                : `−${perdaPct.toFixed(1)}%`}
+                ? `+${fmtBR(Math.abs(perdaPct).toFixed(1))}%`
+                : `−${fmtBR(perdaPct.toFixed(1))}%`}
             </span>
           </div>
           <p className="text-xs leading-relaxed mt-1.5">{classe.texto}</p>

@@ -4,6 +4,7 @@
 // do paciente plotado. A identidade das curvas é dada por rótulo direto +
 // posição + estilo de linha (não por cor isolada) — seguro para daltonismo.
 import { TAB_PA } from "../lib/pa-pediatrica.js";
+import { fmtBR } from "../lib/numero";
 
 const AGES = Array.from({ length: 17 }, (_, i) => i + 1); // 1..17
 
@@ -130,7 +131,7 @@ export default function GraficoPercentilPA({
             <line x1={px} y1={topY} x2={px} y2={baseY} stroke={corPaciente} strokeWidth="0.5" strokeDasharray="2 2" opacity="0.5" />
             <circle cx={px} cy={py} r="4.5" fill={corPaciente} stroke="#fff" strokeWidth="2" />
             <text x={px} y={py - 7} fontSize="8.5" fontWeight="800" fill={corPaciente} textAnchor="middle">
-              {valorPaciente}
+              {fmtBR(valorPaciente)}
             </text>
           </g>
         )}

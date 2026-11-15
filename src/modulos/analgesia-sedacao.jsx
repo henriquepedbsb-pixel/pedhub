@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta DROGAS, calcDil e calcVel para testes unitários */
 import { useState, useMemo } from 'react';
 import { Activity, Pill, Moon, TrendingDown, ChevronDown, ChevronUp, RotateCcw, ClipboardList, Check, Search, Brain, AlertTriangle } from 'lucide-react';
 // FLACC — fonte única: itens e cortes vêm do módulo Dor (dono do domínio
@@ -7,6 +8,7 @@ import { FLACC_CATS, interpretarDor } from './dor';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -17,7 +19,7 @@ const parseNum = (val) => {
 // BIC: V(mL/h) = dose(unidade/kg/h) × fator
 // fórmula verificada: mg/kg/h → V = dose×peso/concMgMl; mcg/kg/h → V = dose×peso/concMcgMl
 // peso se cancela com a diluição peso-dependente → fator fixo
-const DROGAS = {
+export const DROGAS = {
   analgesia: [
     {
       id:'morfina', nome:'Morfina', tipo:'Opioide', cor:'#DC2626', corBg:"var(--tint-red)", corBd:'#FECACA',
@@ -96,7 +98,7 @@ const DROGAS = {
   ],
 };
 
-const calcDil = (droga, p) => {
+export const calcDil = (droga, p) => {
   if (!droga.mgKgDil || p <= 0) return null;
   const qtd     = droga.mgKgDil * p;
   const volDroga = parseFloat((qtd / droga.concAmpola).toFixed(2));
@@ -105,7 +107,7 @@ const calcDil = (droga, p) => {
   return { qtd: parseFloat(qtd.toFixed(2)), volDroga, volSF, conc };
 };
 
-const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
+export const calcVel = (droga, dose) => parseFloat((dose * droga.fator).toFixed(2));
 
 // ─── Constantes visuais ───────────────────────────────────────────────────────
 const C   = '#F59E0B';
@@ -138,27 +140,27 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
         <p style={{ margin:0, fontSize:'12px', color:"var(--text-2)", fontWeight:'600' }}>{droga.bolus}</p>
         {p > 0 && droga.unidade !== 'mcg/kg/dose' && droga.unidade !== 'mg/kg/dose' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-            Para {p} kg: <strong>{parseFloat((0.075 * p).toFixed(2))}–{parseFloat((0.1 * p).toFixed(2))} {droga.id==='fentanil'?'mcg':'mg'}</strong>
+            Para {fmtBR(p)} kg: <strong>{fmtBR(parseFloat((0.075 * p).toFixed(2)))}–{fmtBR(parseFloat((0.1 * p).toFixed(2)))} {droga.id==='fentanil'?'mcg':'mg'}</strong>
           </p>
         )}
         {p > 0 && droga.id === 'dipirona' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-            Para {p} kg: <strong>{Math.round(15*p)}–{Math.round(Math.min(25*p,1000))} mg</strong> → {parseFloat((Math.min(25*p,1000)/500).toFixed(2))} mL da amp
+            Para {fmtBR(p)} kg: <strong>{Math.round(15*p)}–{Math.round(Math.min(25*p,1000))} mg</strong> → {fmtBR(parseFloat((Math.min(25*p,1000)/500).toFixed(2)))} mL da amp
           </p>
         )}
         {p > 0 && droga.id === 'tramadol' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-            Para {p} kg: <strong>{Math.round(Math.min(p,100))}–{Math.round(Math.min(2*p,100))} mg</strong> IV em 15-20 min
+            Para {fmtBR(p)} kg: <strong>{Math.round(Math.min(p,100))}–{Math.round(Math.min(2*p,100))} mg</strong> IV em 15-20 min
           </p>
         )}
         {p > 0 && droga.id === 'clonidina' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-            Para {p} kg: <strong>{Math.round(2*p)}–{Math.round(5*p)} mcg</strong> VO q6-12h
+            Para {fmtBR(p)} kg: <strong>{Math.round(2*p)}–{Math.round(5*p)} mcg</strong> VO q6-12h
           </p>
         )}
         {p > 0 && droga.id === 'propofol' && (
           <p style={{ margin:'4px 0 0 0', fontSize:'12px', color:droga.cor }}>
-            Para {p} kg: <strong>{parseFloat((1*p).toFixed(1))}–{parseFloat((2*p).toFixed(1))} mg</strong> = {parseFloat((p*1/10).toFixed(2))}–{parseFloat((p*2/10).toFixed(2))} mL (10 mg/mL)
+            Para {fmtBR(p)} kg: <strong>{fmtBR(parseFloat((1*p).toFixed(1)))}–{fmtBR(parseFloat((2*p).toFixed(1)))} mg</strong> = {fmtBR(parseFloat((p*1/10).toFixed(2)))}–{fmtBR(parseFloat((p*2/10).toFixed(2)))} mL (10 mg/mL)
           </p>
         )}
       </div>
@@ -170,17 +172,17 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
 
           {/* Diluição */}
           <div style={{ backgroundColor:"var(--bg)", borderRadius:'8px', padding:'10px', marginBottom:'8px' }}>
-            <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)" }}>DILUIÇÃO · {droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL SF</p>
+            <p style={{ margin:'0 0 4px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)" }}>DILUIÇÃO · {fmtBR(droga.mgKgDil)} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {fmtBR(droga.volDil)} mL SF</p>
             {dil && p > 0 ? (
               <>
                 <p style={{ margin:0, fontSize:'13px', fontWeight:'800', color:droga.cor }}>
-                  {dil.qtd} {droga.unidade.includes('mcg')?'mcg':'mg'} de {droga.nome}
+                  {fmtBR(dil.qtd)} {droga.unidade.includes('mcg')?'mcg':'mg'} de {droga.nome}
                 </p>
                 <p style={{ margin:'3px 0 0 0', fontSize:'12px', color:"var(--text-2)" }}>
-                  Retirar <strong>{dil.volDroga} mL</strong> + <strong>{dil.volSF} mL</strong> SF → {droga.volDil} mL total
+                  Retirar <strong>{fmtBR(dil.volDroga)} mL</strong> + <strong>{fmtBR(dil.volSF)} mL</strong> SF → {fmtBR(droga.volDil)} mL total
                 </p>
                 <p style={{ margin:'2px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
-                  Conc final: {dil.conc} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
+                  Conc final: {fmtBR(dil.conc)} {droga.unidade.includes('mcg')?'mcg':'mg'}/mL
                 </p>
               </>
             ) : (
@@ -200,15 +202,15 @@ const DrugPanel = ({ droga, p, drogaA, drogaS }) => {
               return (
                 <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', backgroundColor: isStart?droga.corBg:(i%2===0?"var(--surface-2)":"var(--surface)"), borderTop:'1px solid var(--border)', padding:'7px 12px' }}>
                   <span style={{ fontSize:'12px', color:"var(--text-2)", fontWeight:isStart?'700':'400' }}>
-                    {dose}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
+                    {fmtBR(dose)}{isStart&&<span style={{ fontSize:'9px', color:droga.cor, marginLeft:'3px' }}>← início</span>}
                   </span>
-                  <span style={{ fontSize:'13px', color:isStart?droga.cor:"var(--text)", fontWeight:'800' }}>{vel}</span>
+                  <span style={{ fontSize:'13px', color:isStart?droga.cor:"var(--text)", fontWeight:'800' }}>{fmtBR(vel)}</span>
                 </div>
               );
             })}
           </div>
           <p style={{ margin:'4px 0 0 0', fontSize:'10px', color:"var(--muted)" }}>
-            Velocidade independente do peso com esta diluição ({droga.mgKgDil} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {droga.volDil} mL)
+            Velocidade independente do peso com esta diluição ({fmtBR(droga.mgKgDil)} {droga.unidade.includes('mcg')?'mcg':'mg'}/kg em {fmtBR(droga.volDil)} mL)
           </p>
         </div>
       ) : null}
@@ -290,7 +292,7 @@ export default function AnalgesiaSedacao() {
       {/* Peso persistente */}
       <div style={{ ...card({ padding:'10px' }), marginBottom:'12px' }}>
         <label style={{ fontSize:'10px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'3px', letterSpacing:'0.04em' }}>PESO (kg) — compartilhado entre abas</label>
-        <input type="number" inputMode="decimal" value={peso} onChange={e=>setPeso(e.target.value)} placeholder="ex: 15"
+        <input type="text" inputMode="decimal" value={peso} onChange={e=>setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
           style={{ width:'100%', padding:'6px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
           <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
       </div>

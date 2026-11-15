@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcMaterialSalaParto) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
@@ -10,6 +11,7 @@ import {
   AlertTriangle,
   Info,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const COR = "#B45309"; // amber-700 — cor do módulo Sala de Parto
 
@@ -36,7 +38,7 @@ function ResultCard({ nome, valor, unidade, obs }) {
       <p className="font-semibold text-gray-800 text-sm">{nome}</p>
       <p className="text-sm" style={{ color: COR }}>
         {valor !== null && valor !== undefined && !Number.isNaN(valor)
-          ? `${valor} ${unidade}`
+          ? `${fmtBR(valor)} ${unidade}`
           : "Informe peso e IG acima"}
       </p>
       {obs && <p className="text-xs text-gray-500 mt-1">{obs}</p>}
@@ -66,16 +68,11 @@ function FonteTag({ children }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// Componente principal
-// ─────────────────────────────────────────────────────────
-
-export default function SalaDeParto() {
-  const [pesoStr, setPesoStr] = useState("");
-  const [igStr, setIgStr] = useState("");
-
-  const peso = parseFloat(pesoStr.replace(",", "."));
-  const ig = parseFloat(igStr.replace(",", "."));
+// ─────────────────────────────────────────────────────────────────────────────
+// Motor de cálculo (puro — exportado para testes)
+// peso em kg · ig em semanas. Entrada inválida (NaN, zero, negativa) → null no item.
+// ─────────────────────────────────────────────────────────────────────────────
+export function calcMaterialSalaParto(peso, ig) {
   const pesoValido = !Number.isNaN(peso) && peso > 0;
   const igValida = !Number.isNaN(ig) && ig > 0;
 
@@ -87,10 +84,10 @@ export default function SalaDeParto() {
   // ── Tubo endotraqueal — diâmetro interno por IG (NRP/SBP) ──
   const diametroTOT = () => {
     if (!igValida) return null;
-    if (ig < 28) return "2.5";
-    if (ig < 34) return "3.0";
-    if (ig < 38) return "3.5";
-    return "3.5–4.0";
+    if (ig < 28) return "2,5";
+    if (ig < 34) return "3,0";
+    if (ig < 38) return "3,5";
+    return "3,5–4,0";
   };
   const profundidadeTOT = pesoValido ? round(peso + 6, 1) : null;
 
@@ -106,11 +103,33 @@ export default function SalaDeParto() {
   // ── Cateteres umbilicais ──
   const calibreCateter = () => {
     if (!pesoValido) return null;
-    return peso < 1.5 ? "3.5" : "5";
+    return peso < 1.5 ? "3,5" : "5";
   };
   const uvcProfundidade = pesoValido ? round(1.5 * peso + 5.5, 1) : null;
   const uacAltaProfundidade = pesoValido ? round(3 * peso + 9, 1) : null;
   const uacBaixaProfundidade = pesoValido ? round(peso + 7, 1) : null;
+
+  return {
+    diametroTOT: diametroTOT(), profundidadeTOT,
+    calibreSonda: calibreSonda(),
+    calibreCateter: calibreCateter(), uvcProfundidade, uacAltaProfundidade, uacBaixaProfundidade,
+  };
+}
+
+// ─────────────────────────────────────────────────────────
+// Componente principal
+// ─────────────────────────────────────────────────────────
+
+export default function SalaDeParto() {
+  const [pesoStr, setPesoStr] = useState("");
+  const [igStr, setIgStr] = useState("");
+
+  const peso = parseFloat(pesoStr.replace(",", "."));
+  const ig = parseFloat(igStr.replace(",", "."));
+  const {
+    diametroTOT, profundidadeTOT, calibreSonda, calibreCateter,
+    uvcProfundidade, uacAltaProfundidade, uacBaixaProfundidade,
+  } = calcMaterialSalaParto(peso, ig);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
@@ -161,7 +180,7 @@ export default function SalaDeParto() {
         <Section title="Tubo Endotraqueal (TOT)" icon={Wind}>
           <ResultCard
             nome="Diâmetro interno"
-            valor={diametroTOT()}
+            valor={diametroTOT}
             unidade="mm"
             obs="Faixa por idade gestacional — ter sempre 1 tamanho acima e 1 abaixo disponíveis à beira do leito."
           />
@@ -177,7 +196,7 @@ export default function SalaDeParto() {
         <Section title="Sonda Orogástrica / Nasogástrica" icon={Droplets}>
           <ResultCard
             nome="Calibre"
-            valor={calibreSonda()}
+            valor={calibreSonda}
             unidade="Fr"
           />
           <p className="text-xs text-gray-500">
@@ -189,7 +208,7 @@ export default function SalaDeParto() {
         <Section title="Cateteres Umbilicais" icon={Syringe}>
           <ResultCard
             nome="Calibre (UVC e UAC)"
-            valor={calibreCateter()}
+            valor={calibreCateter}
             unidade="Fr"
             obs="3,5 Fr para peso < 1500 g · 5 Fr para peso ≥ 1500 g."
           />

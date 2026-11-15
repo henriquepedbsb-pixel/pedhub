@@ -2,6 +2,7 @@
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import { Info } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY = "#0891B2";
 
@@ -181,7 +182,7 @@ function TabCapurro() {
       {ig ? (
         <div style={{ borderRadius: 10, border: "2px solid " + COR_CAP, overflow: "hidden", marginTop: 8 }}>
           <div style={{ background: COR_CAP, padding: "12px 16px" }}>
-            <p style={{ fontWeight: 800, color: "#fff", fontSize: 18, margin: 0 }}>IG estimada: {ig} semanas</p>
+            <p style={{ fontWeight: 800, color: "#fff", fontSize: 18, margin: 0 }}>IG estimada: {fmtBR(ig)} semanas</p>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: "2px 0 0" }}>Soma dos critérios: {total} pontos</p>
           </div>
           <div style={{ padding: "8px 14px", background: COR_CAP + "15" }}>

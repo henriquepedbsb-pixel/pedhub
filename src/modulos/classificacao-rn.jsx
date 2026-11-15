@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta os classificadores (classificarIG, classificarPeso, classificarSimetriaPIG) para testes unitários */
 /**
  * classificacao-rn.jsx — PedHub
  * Classificação do Recém-Nascido · Sala de Parto
@@ -19,6 +20,7 @@ import {
 } from "./percentis";
 import AvisoSanidade from "../components/AvisoSanidade";
 import { avisoPesoG } from "../lib/sanity";
+import { fmtBR } from "../lib/numero";
 
 const COR = "#DB2777";
 const COR_LITE = "#FCE7F3";
@@ -30,7 +32,7 @@ const parseNum = (s) => {
 };
 
 /* ─── Classificação por Idade Gestacional (categórica) ───────────────────── */
-function classificarIG(semanas, dias) {
+export function classificarIG(semanas, dias) {
   const totalDias = semanas * 7 + dias;
   if (totalDias < 196) return { label: "Prematuro Extremo",  desc: "< 28 semanas",     color: "#DC2626", bg: "var(--tint-red)" };
   if (totalDias < 224) return { label: "Muito Prematuro",     desc: "28–31 semanas",    color: "#EA580C", bg: "var(--tint-amber)" };
@@ -43,7 +45,7 @@ function classificarIG(semanas, dias) {
 }
 
 /* ─── Classificação por Peso ao Nascer (categórica, absoluta) ────────────── */
-function classificarPeso(g) {
+export function classificarPeso(g) {
   if (g < 1000)  return { label: "Extremo Baixo Peso", sigla: "EBPN", desc: "< 1.000 g",       color: "#DC2626", bg: "var(--tint-red)" };
   if (g < 1500)  return { label: "Muito Baixo Peso",   sigla: "MBPN", desc: "1.000–1.499 g",    color: "#EA580C", bg: "var(--tint-amber)" };
   if (g < 2500)  return { label: "Baixo Peso",         sigla: "BPN",  desc: "1.500–2.499 g",    color: "#D97706", bg: "var(--tint-amber)" };
@@ -52,7 +54,7 @@ function classificarPeso(g) {
 }
 
 /* ─── PIG Simétrico x Assimétrico — só se aplica quando o peso é PIG ──────── */
-function classificarSimetriaPIG(pesoCl, pcData) {
+export function classificarSimetriaPIG(pesoCl, pcData) {
   if (!pesoCl || pesoCl.label !== "PIG") return null;
   if (!pcData || !pcData.cl) return { indefinido: true };
   const pcReduzido = pcData.perc < 10;
@@ -179,7 +181,7 @@ function ResultPercentil({ label, data }) {
       <div style={{ marginTop: 8, display: "flex", gap: 16, flexWrap: "wrap" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Valor</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>{val} {unidade}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>{fmtBR(val)} {unidade}</div>
         </div>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Percentil</div>

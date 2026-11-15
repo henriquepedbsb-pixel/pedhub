@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (estagioBell, calcATBNec) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Stethoscope, AlertTriangle, Pill, Scissors, ChevronDown, ChevronUp, ClipboardList, Search, FlaskConical, OctagonX, Milk, Scale, TrendingUp, Shield } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -61,13 +63,56 @@ function DoseRow({ label, dose, unit, vol, freq, ampola, cor }) {
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'4px' }}>
         <span style={{ fontSize:'12px', fontWeight:'700', color:"var(--text-2)" }}>{label}</span>
         <div style={{ textAlign:'right' }}>
-          <p style={{ margin:0, fontSize:'18px', fontWeight:'800', color:rowCor, lineHeight:1 }}>{dose} {unit}</p>
-          <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{vol} mL · {freq}</p>
+          <p style={{ margin:0, fontSize:'18px', fontWeight:'800', color:rowCor, lineHeight:1 }}>{fmtBR(dose)} {unit}</p>
+          <p style={{ margin:'1px 0 0 0', fontSize:'11px', color:"var(--muted)" }}>{fmtBR(vol)} mL · {freq}</p>
         </div>
       </div>
       <p style={{ margin:0, fontSize:'10px', color:"var(--muted)" }}>{ampola}</p>
     </div>
   );
+}
+
+// ─── Estadiamento de Bell (puro — exportado para testes) ─────────────────────
+export function estagioBell(rx, sistemic) {
+  if (!rx || !sistemic) return null;
+  if (rx === 'pneumoperitoneum')                                return 'IIIB';
+  if (sistemic === 'choque')                                    return 'IIIA';
+  if (rx === 'portal_gas' || sistemic === 'acidose_thrombo')   return 'IIB';
+  if (rx === 'pneumatose')                                      return 'IIA';
+  return 'I';
+}
+
+// ─── Antibióticos por peso/IG (puro — exportado para testes) ─────────────────
+// p = peso (kg) · ig = idade gestacional (semanas) · pnDias = '7+' quando idade pós-natal ≥ 7 dias
+export function calcATBNec({ p, ig, pnDias }) {
+  if (p <= 0 || ig <= 0) return null;
+  const semanas = ig;
+  const pn7plus = pnDias === '7+';
+
+  // Ampicilina 200 mg/kg/dia (NEC: dose máxima)
+  const ampTotal  = Math.round(200 * p);
+  const ampInt    = pn7plus ? 6 : 8;            // q6h (≥7 dias) ou q8h (<7 dias)
+  const ampDose   = Math.round(ampTotal / (24/ampInt));
+  const ampVol    = parseFloat((ampDose / 100).toFixed(2)); // 100 mg/mL
+
+  // Gentamicina (dose estendida — NeoFax 2023)
+  let gDoseKg, gInt;
+  if (semanas < 29)        { gDoseKg = 5;   gInt = 48; }
+  else if (semanas < 35)   { gDoseKg = 4.5; gInt = 36; }
+  else if (!pn7plus)       { gDoseKg = 4;   gInt = 36; }
+  else                     { gDoseKg = 4;   gInt = 24; }
+  const gDose  = parseFloat((gDoseKg * p).toFixed(1));
+  const gVol   = parseFloat((gDose / 10).toFixed(2)); // 10 mg/mL
+
+  // Metronidazol IV — estágio IIB-IIIB
+  let mInt;
+  if (semanas < 28)        mInt = 48;
+  else if (semanas < 34)   mInt = 24;
+  else                     mInt = 12;
+  const mDose = parseFloat((7.5 * p).toFixed(1));
+  const mVol  = parseFloat((mDose / 5).toFixed(2)); // 5 mg/mL IV
+
+  return { ampDose, ampInt, ampVol, ampTotal, gDoseKg, gDose, gInt, gVol, mDose, mInt, mVol };
 }
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -84,46 +129,10 @@ export default function NEC() {
   const ig = parseNum(igVal);
 
   // ── Bell staging algorithm ───────────────────────────────────────────────────
-  const bellStage = useMemo(() => {
-    if (!rx || !sistemic) return null;
-    if (rx === 'pneumoperitoneum')                                return 'IIIB';
-    if (sistemic === 'choque')                                    return 'IIIA';
-    if (rx === 'portal_gas' || sistemic === 'acidose_thrombo')   return 'IIB';
-    if (rx === 'pneumatose')                                      return 'IIA';
-    return 'I';
-  }, [rx, sistemic]);
+  const bellStage = useMemo(() => estagioBell(rx, sistemic), [rx, sistemic]);
 
   // ── Cálculo de antibióticos ──────────────────────────────────────────────────
-  const atb = useMemo(() => {
-    if (p <= 0 || ig <= 0) return null;
-    const semanas = ig;
-    const pn7plus = pnDias === '7+';
-
-    // Ampicilina 200 mg/kg/dia (NEC: dose máxima)
-    const ampTotal  = Math.round(200 * p);
-    const ampInt    = pn7plus ? 6 : 8;            // q6h (≥7 dias) ou q8h (<7 dias)
-    const ampDose   = Math.round(ampTotal / (24/ampInt));
-    const ampVol    = parseFloat((ampDose / 100).toFixed(2)); // 100 mg/mL
-
-    // Gentamicina (dose estendida — NeoFax 2023)
-    let gDoseKg, gInt;
-    if (semanas < 29)        { gDoseKg = 5;   gInt = 48; }
-    else if (semanas < 35)   { gDoseKg = 4.5; gInt = 36; }
-    else if (!pn7plus)       { gDoseKg = 4;   gInt = 36; }
-    else                     { gDoseKg = 4;   gInt = 24; }
-    const gDose  = parseFloat((gDoseKg * p).toFixed(1));
-    const gVol   = parseFloat((gDose / 10).toFixed(2)); // 10 mg/mL
-
-    // Metronidazol IV — estágio IIB-IIIB
-    let mInt;
-    if (semanas < 28)        mInt = 48;
-    else if (semanas < 34)   mInt = 24;
-    else                     mInt = 12;
-    const mDose = parseFloat((7.5 * p).toFixed(1));
-    const mVol  = parseFloat((mDose / 5).toFixed(2)); // 5 mg/mL IV
-
-    return { ampDose, ampInt, ampVol, ampTotal, gDoseKg, gDose, gInt, gVol, mDose, mInt, mVol };
-  }, [p, ig, pnDias]);
+  const atb = useMemo(() => calcATBNec({ p, ig, pnDias }), [p, ig, pnDias]);
 
   const toggle = (k) => setAberto(aberto === k ? null : k);
 
@@ -389,13 +398,13 @@ export default function NEC() {
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'10px' }}>
               <div>
                 <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>PESO (kg)</label>
-                <input type="number" inputMode="decimal" value={peso} onChange={e=>setPeso(e.target.value)} placeholder="ex: 1,2"
+                <input type="text" inputMode="decimal" value={peso} onChange={e=>setPeso(limparDecimal(e.target.value))} placeholder="ex: 1,2"
                   style={{ width:'100%', padding:'8px 10px', borderRadius:'8px', border:`2px solid ${p>0?C:'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:C, boxSizing:'border-box', outline:'none' }} />
                   <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
               </div>
               <div>
                 <label style={{ fontSize:'11px', fontWeight:'700', color:"var(--muted)", display:'block', marginBottom:'4px', letterSpacing:'0.04em' }}>IG (semanas)</label>
-                <input type="number" inputMode="decimal" step="1" value={igVal} onChange={e=>setIgVal(e.target.value)} placeholder="ex: 28"
+                <input type="text" inputMode="numeric" value={igVal} onChange={e=>setIgVal(limparDecimal(e.target.value))} placeholder="ex: 28"
                   style={{ width:'100%', padding:'8px 10px', borderRadius:'8px', border:`2px solid ${ig>0?'#3B82F6':'#D1D5DB'}`, fontSize:'16px', fontWeight:'700', color:'#3B82F6', boxSizing:'border-box', outline:'none' }} />
               </div>
             </div>
@@ -410,7 +419,7 @@ export default function NEC() {
               <div style={{ display:'flex', flexDirection:'column', gap:'0' }}>
                 <p style={{ margin:'0 0 8px 0', fontSize:'11px', fontWeight:'700', color:"var(--muted)", letterSpacing:'0.04em' }}>1ª LINHA — Estágios I-IIA (Ampicilina + Gentamicina)</p>
                 <DoseRow label="Ampicilina" dose={atb.ampDose} unit="mg" vol={atb.ampVol} freq={`q${atb.ampInt}h IV`} ampola="Ampicilina 100 mg/mL · diluir e infundir em 30 min" cor={C} />
-                <DoseRow label={`Gentamicina (${atb.gDoseKg} mg/kg)`} dose={atb.gDose} unit="mg" vol={atb.gVol} freq={`q${atb.gInt}h IV`} ampola="Gentamicina 10 mg/mL · monitorar nível se uso prolongado" cor="#1D4ED8" />
+                <DoseRow label={`Gentamicina (${fmtBR(atb.gDoseKg)} mg/kg)`} dose={atb.gDose} unit="mg" vol={atb.gVol} freq={`q${atb.gInt}h IV`} ampola="Gentamicina 10 mg/mL · monitorar nível se uso prolongado" cor="#1D4ED8" />
                 <p style={{ margin:'8px 0', fontSize:'11px', fontWeight:'700', color:'#DC2626', letterSpacing:'0.04em' }}>+ Estágios IIB-III — Adicionar Metronidazol (anaeróbios)</p>
                 <DoseRow label="Metronidazol" dose={atb.mDose} unit="mg" vol={atb.mVol} freq={`q${atb.mInt}h IV`} ampola="Metronidazol 5 mg/mL · infundir em 30-60 min" cor="#7C3AED" />
               </div>

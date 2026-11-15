@@ -2,7 +2,7 @@
 
 Repositório: `henriquepedbsb-pixel/pedhub` (privado)
 Responsável médico: Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
-Última atualização deste documento: 23/07/2026
+Última atualização deste documento: 14/11/2026
 
 ---
 
@@ -85,6 +85,12 @@ deploy. `@vitest/coverage-v8` pode ser adicionado se for medir cobertura.
    mobile. (Funções que só retornam objetos de estilo podem ficar dentro.)
 5. **Decimal brasileiro:** sempre `.replace(",", ".")` antes de `parseFloat`,
    em todo input do usuário, inclusive edição de célula de tabela.
+   **Entrada:** nunca `<input type="number">` — em navegador com interface em
+   inglês ele descarta a vírgula ("12,5" vira "125", sem aviso). Usar
+   `type="text" inputMode="decimal"` + `limparDecimal()` no `onChange`.
+   **Saída:** todo número calculado exibido na tela ou em texto copiado passa
+   por `fmtBR()` (vírgula decimal). Ambos vivem em `src/lib/numero.js`. Valor
+   padrão/sugestão colocado em campo também usa vírgula ("2,5", não "2.5").
 6. **Lazy loading** em todos os módulos. `PedHub.jsx` importado direto.
 7. Primeira linha de todo arquivo = comentário com o caminho:
    `// src/modulos/nome.jsx`. O protocolo de debug depende disso.

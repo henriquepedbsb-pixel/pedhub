@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcDoses, estimarBroselow, parseAltura) para testes unitários */
 import { useState } from "react";
 import RodapeModulo from "../components/RodapeModulo";
 import AvisoSanidade from "../components/AvisoSanidade";
@@ -16,6 +17,7 @@ import {
   Wind,
   Zap,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 /* ─── Utilitários ─────────────────────────────────────────────────────────── */
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -41,16 +43,16 @@ const BROSELOW = [
   { nome: "Verde",   hex: "#059669", compMin: 137.8, compMax: 150,  pesoMin: 30, pesoMax: 36, pesoEstimado: 33,   tot: "7,0" },
 ];
 
-function parseAltura(s) {
+export function parseAltura(s) {
   const v = parseFloat(String(s).replace(",", "."));
   return !isNaN(v) && v > 0 && v <= 220 ? v : null;
 }
 
-function estimarBroselow(alturaCm) {
+export function estimarBroselow(alturaCm) {
   return BROSELOW.find((z) => alturaCm >= z.compMin && alturaCm <= z.compMax) || null;
 }
 
-function calcDoses(w) {
+export function calcDoses(w) {
   const epiIM = clamp(w * 0.01, 0, 0.5);
   return {
     epiPCR_mg:       parseFloat(clamp(w * 0.01, 0, 1).toFixed(2)),
@@ -100,6 +102,13 @@ function calcDoses(w) {
     manitol_mllo:    Math.round(w * 2.5),
     manitol_mlhi:    Math.round(w * 5),
   };
+}
+
+/* Doses para EXIBIÇÃO: mesmos valores de calcDoses, só trocando o ponto pela
+   vírgula decimal (padrão brasileiro). Os componentes apenas exibem/concatenam
+   estes campos — nenhum cálculo é feito a partir deles. */
+function dosesBR(doses) {
+  return Object.fromEntries(Object.entries(doses).map(([k, v]) => [k, fmtBR(v)]));
 }
 
 /* ─── Micro-componentes ───────────────────────────────────────────────────── */
@@ -1057,7 +1066,7 @@ export default function Urgencias() {
   const [mostrarBroselow, setMostrarBroselow] = useState(false);
 
   const peso = parsePeso(pesoRaw);
-  const d    = peso ? calcDoses(peso) : null;
+  const d    = peso ? dosesBR(calcDoses(peso)) : null;
 
   const altura = parseAltura(alturaRaw);
   const zonaBroselow = altura ? estimarBroselow(altura) : null;
@@ -1131,7 +1140,7 @@ export default function Urgencias() {
               padding: "10px 16px", fontSize: 15, fontWeight: 700,
               display: "flex", alignItems: "center",
             }}>
-              {peso} kg
+              {fmtBR(peso)} kg
             </div>
           )}
         </div>
@@ -1185,7 +1194,7 @@ export default function Urgencias() {
                   <div style={{ flex: 1 }}>
                     <p style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", margin: 0 }}>Faixa {zonaBroselow.nome}</p>
                     <p style={{ fontSize: 12, color: "var(--text-2)", margin: 0 }}>
-                      {zonaBroselow.pesoMin}–{zonaBroselow.pesoMax} kg · peso estimado {zonaBroselow.pesoEstimado} kg
+                      {fmtBR(zonaBroselow.pesoMin)}–{fmtBR(zonaBroselow.pesoMax)} kg · peso estimado {fmtBR(zonaBroselow.pesoEstimado)} kg
                     </p>
                   </div>
                 </div>
@@ -1200,7 +1209,7 @@ export default function Urgencias() {
                     fontFamily: "'DM Sans', sans-serif",
                   }}
                 >
-                  Usar peso estimado ({zonaBroselow.pesoEstimado} kg) nas calculadoras
+                  Usar peso estimado ({fmtBR(zonaBroselow.pesoEstimado)} kg) nas calculadoras
                 </button>
               </div>
             )}

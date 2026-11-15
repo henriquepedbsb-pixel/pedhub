@@ -12,6 +12,7 @@ import { avisoPesoG } from "../lib/sanity";
 import {
   Info, AlertTriangle, CheckCircle, Copy, ExternalLink,
 } from "lucide-react";
+import { fmtBR } from "../lib/numero";
 
 const PRIMARY   = "#0D9488";
 const C_DART    = "#0891B2";
@@ -19,7 +20,8 @@ const C_HMIB    = "#0D9488";
 
 /* ── Utilidades ─────────────────────────────────────────────────────────── */
 const pPesoG = s => { const v = parseFloat(String(s).replace(",",".")); return !isNaN(v)&&v>0&&v<=10000?v:null; };
-const f3 = n => (Math.round(n*1000)/1000).toFixed(3);
+// Só exibição — saída com vírgula decimal (padrão brasileiro).
+const f3 = n => (Math.round(n*1000)/1000).toFixed(3).replace(".", ",");
 
 /* ── Dados dos esquemas ─────────────────────────────────────────────────── */
 const FASES_DART = [
@@ -56,14 +58,14 @@ function gerarTxt(nome, fases, pk, acum, extras) {
     `Peso: ${pk.toFixed(3).replace(".",",")} kg`,
     "",
     ...fases.flatMap(f => [
-      `${f.label} | Dias ${f.dias} | ${f.doseKgDia.toFixed(2)} mg/kg/dia (12/12h)`,
+      `${f.label} | Dias ${f.dias} | ${fmtBR(f.doseKgDia.toFixed(2))} mg/kg/dia (12/12h)`,
       `  Dose/tomada : ${f3(f.doseDose)} mg`,
       `  Vol [4 mg/mL]: ${f3(f.vol4)} mL`,
       `  Vol [1 mg/mL]: ${f3(f.vol1)} mL`,
       `  Vol [0,1 mg/mL]: ${f3(f.vol01)} mL`,
       "",
     ]),
-    `Dose acumulada: ${f3(acum*pk)} mg (${acum} mg/kg × ${pk.toFixed(3)} kg)`,
+    `Dose acumulada: ${f3(acum*pk)} mg (${fmtBR(acum)} mg/kg × ${fmtBR(pk.toFixed(3))} kg)`,
     ...extras,
     "",
     "Ref: PedHub · Apoio à decisão clínica · Não substitui prescrição médica",
@@ -85,7 +87,7 @@ function FaseCard({ fase, cor }) {
     <div style={{ borderRadius:9, border:`1.5px solid ${cor}`, overflow:"hidden", marginBottom:8 }}>
       <div style={{ background:cor+"18", padding:"7px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
         <span style={{ fontWeight:700, color:cor, fontSize:12 }}>{fase.label} · Dias {fase.dias}</span>
-        <span style={{ fontSize:11, color:cor, fontWeight:600 }}>{fase.doseKgDia.toFixed(2)} mg/kg/dia</span>
+        <span style={{ fontSize:11, color:cor, fontWeight:600 }}>{fmtBR(fase.doseKgDia.toFixed(2))} mg/kg/dia</span>
       </div>
       <div style={{ padding:"10px 14px" }}>
         {/* Dose */}
@@ -118,7 +120,7 @@ function PesoInput({ value, set, cor }) {
       <label style={{ fontSize:11.5, fontWeight:600, color:"var(--text-2)", display:"block", marginBottom:6 }}>Peso (g)</label>
       <input type="text" inputMode="decimal" value={value} onChange={e=>set(e.target.value)} placeholder="Ex: 850"
         style={{ width:"100%", padding:"8px 10px", borderRadius:7, fontSize:14, border:`1.5px solid ${cor}50`, outline:"none", background:"var(--surface)", boxSizing:"border-box" }} />
-      {pk && <p style={{ fontSize:11, color:cor, fontWeight:600, margin:"5px 0 0" }}>{(pk/1000).toFixed(3)} kg</p>}
+      {pk && <p style={{ fontSize:11, color:cor, fontWeight:600, margin:"5px 0 0" }}>{fmtBR((pk/1000).toFixed(3))} kg</p>}
     </div>
   );
 }
@@ -175,7 +177,7 @@ function TabDART() {
             <span style={{ fontSize:15, fontWeight:800, color:C }}>{f3(ACUM_DART*pkKg)} mg</span>
           </div>
           <p style={{ fontSize:10, color:"var(--muted)", textAlign:"right", margin:"0 0 12px" }}>
-            {ACUM_DART} mg/kg × {pkKg.toFixed(3)} kg
+            {fmtBR(ACUM_DART)} mg/kg × {fmtBR(pkKg.toFixed(3))} kg
           </p>
 
           <button onClick={() => copiarTxt(gerarTxt("PROTOCOLO DART (Doyle 2006)", fases, pkKg, ACUM_DART, ["","Ref: Doyle LW et al. Pediatrics 2006;117:75-83"]), setCopied)}
@@ -264,7 +266,7 @@ function TabHMIB() {
             <span style={{ fontSize:15, fontWeight:800, color:C }}>{f3(ACUM_HMIB*pkKg)} mg</span>
           </div>
           <p style={{ fontSize:10, color:"var(--muted)", textAlign:"right", margin:"0 0 10px" }}>
-            {ACUM_HMIB} mg/kg × {pkKg.toFixed(3)} kg
+            {fmtBR(ACUM_HMIB)} mg/kg × {fmtBR(pkKg.toFixed(3))} kg
           </p>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:12 }}>
             {[["Intervalo entre ciclos","14 dias"],["Máx. ciclos","3 ciclos"]].map(([lbl,val])=>(

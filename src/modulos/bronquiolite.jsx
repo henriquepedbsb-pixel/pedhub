@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (classificarGravidade, calcOAF) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Stethoscope, Pill, Wind, Home, ChevronDown, ChevronUp, ClipboardList, Scale, Ban, Hospital, Shield, Activity, AlertTriangle, CheckCircle2, X, Check } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -28,6 +30,25 @@ const OptionChip = ({ label, ativo, onClick, cor = C }) => (
   </button>
 );
 
+// ─── Classificação de gravidade (pura — exportada para testes) ──────────────
+export function classificarGravidade({ spo2C, frC, esforco, alim, apneia }) {
+  if (apneia === 'sim') return 'grave';
+  const vals = [spo2C, frC, esforco, alim].filter(Boolean);
+  if (!vals.length) return null;
+  if (vals.includes('grave')) return 'grave';
+  if (vals.includes('mod'))   return 'moderada';
+  if (vals.every(v => v === 'leve')) return 'leve';
+  return null;
+}
+
+// ─── Fluxo de OAF por peso (puro — exportado para testes) · p = peso em kg ──
+export function calcOAF(p) {
+  if (p <= 0) return null;
+  const inicial = Math.round(p * 1);
+  const maximo  = Math.min(Math.round(p * 2), 60);
+  return { inicial, maximo };
+}
+
 export default function Bronquiolite() {
   const [tab,     setTab]     = useState('avaliar');
   const [peso,    setPeso]    = useState('');
@@ -42,23 +63,10 @@ export default function Bronquiolite() {
   const p = parseNum(peso);
 
   // ── Classificação de gravidade ──────────────────────────────────────────
-  const grav = useMemo(() => {
-    if (apneia === 'sim') return 'grave';
-    const vals = [spo2C, frC, esforco, alim].filter(Boolean);
-    if (!vals.length) return null;
-    if (vals.includes('grave')) return 'grave';
-    if (vals.includes('mod'))   return 'moderada';
-    if (vals.every(v => v === 'leve')) return 'leve';
-    return null;
-  }, [spo2C, frC, esforco, alim, apneia]);
+  const grav = useMemo(() => classificarGravidade({ spo2C, frC, esforco, alim, apneia }), [spo2C, frC, esforco, alim, apneia]);
 
   // ── OAF calculator ──────────────────────────────────────────────────────
-  const oaf = useMemo(() => {
-    if (p <= 0) return null;
-    const inicial = Math.round(p * 1);
-    const maximo  = Math.min(Math.round(p * 2), 60);
-    return { inicial, maximo };
-  }, [p]);
+  const oaf = useMemo(() => calcOAF(p), [p]);
 
   const toggle = (k) => setAberto(aberto === k ? null : k);
 
@@ -103,7 +111,7 @@ export default function Bronquiolite() {
       {/* Peso persistente */}
       <div style={{ marginBottom: '12px', ...card({ padding: '10px' }) }}>
         <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>PESO (kg) — usado na aba OAF</label>
-        <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 6,5"
+        <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 6,5"
           style={{ width: '100%', padding: '6px 10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '16px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
         <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
       </div>
@@ -389,12 +397,12 @@ export default function Bronquiolite() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${CBR}` }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>FLUXO INICIAL</p>
-                    <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: C, lineHeight: 1 }}>{oaf.inicial}</p>
+                    <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(oaf.inicial)}</p>
                     <p style={{ margin: 0, fontSize: '10px', color: C }}>L/min (1 L/kg/min)</p>
                   </div>
                   <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #FED7AA' }}>
                     <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>FLUXO MÁXIMO</p>
-                    <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{oaf.maximo}</p>
+                    <p style={{ margin: '4px 0', fontSize: '28px', fontWeight: '800', color: '#D97706', lineHeight: 1 }}>{fmtBR(oaf.maximo)}</p>
                     <p style={{ margin: 0, fontSize: '10px', color: '#D97706' }}>L/min (2 L/kg · máx 60 L/min)</p>
                   </div>
                 </div>

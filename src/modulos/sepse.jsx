@@ -4,6 +4,7 @@ import { AlertTriangle, Activity, Pill, Target, ChevronDown, ChevronUp, CheckCir
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -201,17 +202,17 @@ export default function Sepse() {
   const alertas = useMemo(() => {
     const lista = [];
     if (lac >= 5)
-      lista.push({ tipo: 'critico', msg: `Lactato ≥5 mmol/L (${lac}) — critério de CHOQUE SÉPTICO (Phoenix 2024)` });
+      lista.push({ tipo: 'critico', msg: `Lactato ≥5 mmol/L (${fmtBR(lac)}) — critério de CHOQUE SÉPTICO (Phoenix 2024)` });
     else if (lac >= 2)
-      lista.push({ tipo: 'alerta',  msg: `Lactato elevado (${lac} mmol/L) — hipoperfusão tecidual; iniciar tratamento` });
+      lista.push({ tipo: 'alerta',  msg: `Lactato elevado (${fmtBR(lac)} mmol/L) — hipoperfusão tecidual; iniciar tratamento` });
     if (trcN > 2)
-      lista.push({ tipo: 'alerta',  msg: `TRC > 2s (${trcN}s) — hipoperfusão periférica` });
+      lista.push({ tipo: 'alerta',  msg: `TRC > 2s (${fmtBR(trcN)}s) — hipoperfusão periférica` });
     if (spo2N > 0 && spo2N < 90)
-      lista.push({ tipo: 'critico', msg: `SpO₂ baixa (${spo2N}%) — hipoxemia grave; suporte imediato` });
+      lista.push({ tipo: 'critico', msg: `SpO₂ baixa (${fmtBR(spo2N)}%) — hipoxemia grave; suporte imediato` });
     if (tempN > 38.5)
-      lista.push({ tipo: 'info',    msg: `Febre (${tempN}°C) — avaliar foco infeccioso` });
+      lista.push({ tipo: 'info',    msg: `Febre (${fmtBR(tempN)}°C) — avaliar foco infeccioso` });
     if (tempN > 0 && tempN < 36)
-      lista.push({ tipo: 'alerta',  msg: `Hipotermia (${tempN}°C) — sinal de sepse grave em lactentes` });
+      lista.push({ tipo: 'alerta',  msg: `Hipotermia (${fmtBR(tempN)}°C) — sinal de sepse grave em lactentes` });
     return lista;
   }, [lac, trcN, spo2N, tempN]);
 
@@ -371,7 +372,7 @@ export default function Sepse() {
             <p style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '700', color: "var(--text-2)" }}>📊 Parâmetros do Paciente</p>
             <div style={{ marginBottom: '10px' }}>
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>PESO (kg)</label>
-              <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 12,5"
+              <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 12,5"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none', border: `2px solid ${p > 0 ? C : '#D1D5DB'}` }} />
               <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
             </div>
@@ -386,14 +387,14 @@ export default function Sepse() {
               ].map((c, i) => (
                 <div key={i}>
                   <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{c.label}</label>
-                  <input type="number" inputMode="decimal" value={c.value} onChange={e => c.set(e.target.value)} placeholder={c.ph}
+                  <input type="text" inputMode="decimal" value={c.value} onChange={e => c.set(limparDecimal(e.target.value))} placeholder={c.ph}
                     style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', outline: 'none', color: "var(--text-2)" }} />
                 </div>
               ))}
             </div>
             <div style={{ marginTop: '10px' }}>
               <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>LACTATO (mmol/L)</label>
-              <input type="number" inputMode="decimal" step="0.1" value={lactato} onChange={e => setLactato(e.target.value)} placeholder="ex: 2,4"
+              <input type="text" inputMode="decimal" value={lactato} onChange={e => setLactato(limparDecimal(e.target.value))} placeholder="ex: 2,4"
                 style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '18px', fontWeight: lac >= 2 ? '700' : '400', border: `2px solid ${lac >= 5 ? C : lac >= 2 ? '#F59E0B' : '#D1D5DB'}`, color: lac >= 5 ? C : lac >= 2 ? '#B45309' : "var(--text)" }} />
               {lac >= 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: C, fontWeight: '700' }}>🔴 Critério de choque séptico (Phoenix 2024)</p>}
               {lac >= 2 && lac < 5 && <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--tx-amber)", fontWeight: '600' }}>⚠ Hipoperfusão tecidual — indicação de tratamento imediato</p>}
@@ -434,18 +435,18 @@ export default function Sepse() {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                   <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calc.bolus}</p>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(calc.bolus)}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL / bolus</p>
-                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>({volBolus} mL/kg)</p>
+                    <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>({fmtBR(volBolus)} mL/kg)</p>
                   </div>
                   <div style={{ backgroundColor: comUTI ? "var(--tint-green)" : CLIGHT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? "var(--tx-green)" : C, lineHeight: 1 }}>{calc.maximo}</p>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: comUTI ? "var(--tx-green)" : C, lineHeight: 1 }}>{fmtBR(calc.maximo)}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL máximo</p>
                     <p style={{ margin: '1px 0 0 0', fontSize: '10px', color: comUTI ? '#6EE7B7' : '#FCA5A5' }}>({comUTI ? 60 : 40} mL/kg · 1ª hora)</p>
                   </div>
                 </div>
                 <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', fontSize: '12px', color: "var(--text-2)", lineHeight: '1.6' }}>
-                  Administrar em bolus de <strong>{calc.bolus} mL</strong> (10-20 min cada) · até <strong>~{calc.nBolus} bolus</strong> na 1ª hora · reavaliar após cada bolus · Ringer Lactato preferível ao SF 0,9%
+                  Administrar em bolus de <strong>{fmtBR(calc.bolus)} mL</strong> (10-20 min cada) · até <strong>~{calc.nBolus} bolus</strong> na 1ª hora · reavaliar após cada bolus · Ringer Lactato preferível ao SF 0,9%
                 </div>
               </>
             ) : (
@@ -619,12 +620,12 @@ export default function Sepse() {
             {/* Peso indicator / mini input */}
             {p > 0 ? (
               <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '8px', padding: '8px 10px', marginBottom: '12px', borderLeft: '3px solid #10B981' }}>
-                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>📍 Peso: {p} kg — cálculos individualizados abaixo</p>
+                <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: "var(--tx-green)" }}>📍 Peso: {fmtBR(p)} kg — cálculos individualizados abaixo</p>
               </div>
             ) : (
               <div style={{ marginBottom: '12px' }}>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO DO PACIENTE (kg)</label>
-                <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
+                <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid var(--border)', fontSize: '16px', fontWeight: '600', color: C, boxSizing: 'border-box', outline: 'none' }} />
               </div>
             )}
@@ -655,7 +656,7 @@ export default function Sepse() {
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>{d.indicacao}</p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>{d.ref} · {d.apresentacao}</p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '11px', fontWeight: '700', color: d.cor }}>
-                      Dose: {d.doseMin}–{d.doseMax} {d.unidade} · início: {d.doseStart} {d.unidade}
+                      Dose: {fmtBR(d.doseMin)}–{fmtBR(d.doseMax)} {d.unidade} · início: {fmtBR(d.doseStart)} {d.unidade}
                     </p>
                   </div>
 
@@ -663,21 +664,21 @@ export default function Sepse() {
                   <div style={{ backgroundColor: "var(--bg)", borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
                     <p style={{ margin: '0 0 6px 0', fontSize: '10px', fontWeight: '700', color: "var(--muted)", letterSpacing: '0.06em' }}>DILUIÇÃO PADRÃO — SERINGA 50 mL</p>
                     <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: "var(--text-2)" }}>
-                      <strong>{d.mgKgDil} {d.tipo}/kg</strong> em <strong>{d.volDil} mL</strong> de SG5%
+                      <strong>{fmtBR(d.mgKgDil)} {d.tipo}/kg</strong> em <strong>{fmtBR(d.volDil)} mL</strong> de SG5%
                     </p>
                     {dil ? (
                       <div style={{ backgroundColor: "var(--surface)", borderRadius: '8px', padding: '10px', border: `1.5px solid ${d.corBorder}` }}>
                         <p style={{ margin: 0, fontSize: '14px', fontWeight: '800', color: d.cor }}>
-                          {dil.qtd.toFixed(1)} {d.tipo} de {d.nome}
+                          {fmtBR(dil.qtd.toFixed(1))} {d.tipo} de {d.nome}
                         </p>
                         <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                          Retirar <strong>{dil.volDroga.toFixed(2)} mL</strong> da ampola
+                          Retirar <strong>{fmtBR(dil.volDroga.toFixed(2))} mL</strong> da ampola
                         </p>
                         <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                          + Completar com <strong>{dil.volSG5.toFixed(2)} mL</strong> de SG5% → 50 mL total
+                          + Completar com <strong>{fmtBR(dil.volSG5.toFixed(2))} mL</strong> de SG5% → 50 mL total
                         </p>
                         <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
-                          Concentração final: {dil.concFinal.toFixed(4)} {d.tipo}/mL
+                          Concentração final: {fmtBR(dil.concFinal.toFixed(4))} {d.tipo}/mL
                         </p>
                       </div>
                     ) : (
@@ -699,15 +700,15 @@ export default function Sepse() {
                         return (
                           <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: isS ? d.corBg : (i % 2 === 0 ? "var(--surface-2)" : "var(--surface)"), borderTop: '1px solid var(--border)', padding: '7px 12px', alignItems: 'center' }}>
                             <span style={{ fontSize: '12px', color: "var(--text-2)", fontWeight: isS ? '700' : '400' }}>
-                              {dose}{isS && <span style={{ fontSize: '9px', color: d.cor, marginLeft: '4px' }}>← início</span>}
+                              {fmtBR(dose)}{isS && <span style={{ fontSize: '9px', color: d.cor, marginLeft: '4px' }}>← início</span>}
                             </span>
-                            <span style={{ fontSize: '14px', color: isS ? d.cor : "var(--text)", fontWeight: '800' }}>{vel}</span>
+                            <span style={{ fontSize: '14px', color: isS ? d.cor : "var(--text)", fontWeight: '800' }}>{fmtBR(vel)}</span>
                           </div>
                         );
                       })}
                     </div>
                     <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>
-                      Velocidade independente do peso com esta diluição ({d.mgKgDil} {d.tipo}/kg em {d.volDil} mL)
+                      Velocidade independente do peso com esta diluição ({fmtBR(d.mgKgDil)} {d.tipo}/kg em {fmtBR(d.volDil)} mL)
                     </p>
                   </div>
 

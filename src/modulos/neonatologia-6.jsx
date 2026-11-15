@@ -4,6 +4,7 @@ import { Heart, Wind, Activity, AlertTriangle, CheckCircle, XCircle, Zap, Info }
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { fmtBR } from "../lib/numero";
 
 const BG  = "#0284C7";
 const BGL = "var(--tint-blue)";
@@ -191,7 +192,7 @@ function TabAvaliacao({ vitaboa, setVitaboa, meconio, setMeconio }) {
             <tbody>
               {SPO2.map((r, i) => (
                 <tr key={r.min} style={{ background: i % 2 === 0 ? "var(--surface)" : BGL }}>
-                  <td className="py-2 px-3 text-gray-700">{r.min} min</td>
+                  <td className="py-2 px-3 text-gray-700">{fmtBR(r.min)} min</td>
                   <td className="py-2 px-3 text-right font-bold" style={{ color: TXT }}>{r.alvo}</td>
                 </tr>
               ))}
@@ -371,9 +372,9 @@ function TabAvancado({ tube, prof, igN }) {
         <h3 className="font-bold text-gray-800 mb-3">Intubação Traqueal</h3>
         {tube && igN > 0 && (
           <div className="rounded-2xl p-3 mb-3 border-2" style={{ background: BGL, borderColor: BRD }}>
-            <p className="text-xs font-bold uppercase mb-1" style={{ color: TXT }}>Para IG {igN} semanas</p>
+            <p className="text-xs font-bold uppercase mb-1" style={{ color: TXT }}>Para IG {fmtBR(igN)} semanas</p>
             <p className="text-lg font-black" style={{ color: BG }}>Cânula: {tube.mm} · Lâmina nº {tube.lamina}</p>
-            {prof && <p className="text-sm font-bold mt-0.5" style={{ color: TXT }}>Lábio superior: {prof} cm</p>}
+            {prof && <p className="text-sm font-bold mt-0.5" style={{ color: TXT }}>Lábio superior: {fmtBR(prof)} cm</p>}
           </div>
         )}
         <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Cânula por IG e peso</p>
@@ -409,7 +410,7 @@ function TabAvancado({ tube, prof, igN }) {
                 <tr key={i} style={{ background: i % 2 === 0 ? "var(--surface)" : "var(--surface-2)" }}>
                   <td className="py-2 px-2 text-gray-700">{r.ig}</td>
                   <td className="py-2 px-2 text-gray-700">{r.peso}</td>
-                  <td className="py-2 px-2 font-bold text-gray-800">{r.cm} cm</td>
+                  <td className="py-2 px-2 font-bold text-gray-800">{fmtBR(r.cm)} cm</td>
                 </tr>
               ))}
             </tbody>
@@ -475,10 +476,10 @@ function TabMeds({ adrIV, adrET, exVol, p }) {
             {temPeso ? (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-700">Volume para {p} kg</p>
+                  <p className="text-sm text-gray-700">Volume para {fmtBR(p)} kg</p>
                   <p className="text-xs text-gray-400">+ flush 3,0 mL SF imediatamente após</p>
                 </div>
-                <p className="text-3xl font-black text-red-600">{adrIV} <span className="text-base font-normal text-gray-500">mL</span></p>
+                <p className="text-3xl font-black text-red-600">{fmtBR(adrIV)} <span className="text-base font-normal text-gray-500">mL</span></p>
               </div>
             ) : <p className="text-sm text-gray-400 italic">Aguardando peso...</p>}
             <p className="text-xs text-red-700 font-semibold mt-2">Repetir a cada 3–5 min se sem melhora da FC</p>
@@ -494,8 +495,8 @@ function TabMeds({ adrIV, adrET, exVol, p }) {
             <p className="text-xs text-gray-600 mb-2">1,0 mL/kg · Seringa 5 mL · Direto na cânula · Ventilar a seguir · SEM flush</p>
             {temPeso ? (
               <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-700">Volume para {p} kg</p>
-                <p className="text-3xl font-black text-amber-700">{adrET} <span className="text-base font-normal text-gray-500">mL</span></p>
+                <p className="text-sm text-gray-700">Volume para {fmtBR(p)} kg</p>
+                <p className="text-3xl font-black text-amber-700">{fmtBR(adrET)} <span className="text-base font-normal text-gray-500">mL</span></p>
               </div>
             ) : <p className="text-sm text-gray-400 italic">Aguardando peso...</p>}
           </div>
@@ -513,10 +514,10 @@ function TabMeds({ adrIV, adrET, exVol, p }) {
           {temPeso ? (
             <div className="flex items-center justify-between mt-2">
               <div>
-                <p className="text-sm text-gray-700">Volume para {p} kg</p>
+                <p className="text-sm text-gray-700">Volume para {fmtBR(p)} kg</p>
                 <p className="text-xs text-gray-400">Dose adicional de 10 mL/kg se sem resposta</p>
               </div>
-              <p className="text-3xl font-black text-blue-700">{exVol} <span className="text-base font-normal text-gray-500">mL</span></p>
+              <p className="text-3xl font-black text-blue-700">{fmtBR(exVol)} <span className="text-base font-normal text-gray-500">mL</span></p>
             </div>
           ) : <p className="text-sm text-gray-400 italic mt-2">Aguardando peso...</p>}
         </div>

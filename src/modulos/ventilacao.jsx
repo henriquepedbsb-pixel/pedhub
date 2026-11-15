@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components -- exporta o motor de cálculo (calcVentilacao, getFR, getIOClass) para testes unitários */
 import { useState, useMemo } from 'react';
 import { Wind, Calculator, Sliders, TrendingUp, ChevronDown, ChevronUp, BarChart3, ClipboardList, Wrench, Ruler, AlertTriangle, Check, CheckCircle, X, Bell } from 'lucide-react';
 import AvisoSanidade from "../components/AvisoSanidade";
 import RodapeModulo from "../components/RodapeModulo";
 import { avisoPesoKg } from "../lib/sanity";
+import { limparDecimal, fmtBR } from "../lib/numero";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const parseNum = (val) => {
@@ -11,7 +13,7 @@ const parseNum = (val) => {
 };
 
 // FR normal por faixa etária — Nelson / Harriet Lane 22ª ed.
-const getFR = (idadeAnos) => {
+export const getFR = (idadeAnos) => {
   if (idadeAnos <= 0)     return null;
   if (idadeAnos < 0.08)  return { min: 40, max: 60, label: 'RN (0-1 mês)' };
   if (idadeAnos < 1)     return { min: 30, max: 40, label: 'Lactente (1-12 m)' };
@@ -21,12 +23,47 @@ const getFR = (idadeAnos) => {
 };
 
 // Classificação PARDS — PALICC 2015 (Índice de Oxigenação)
-const getIOClass = (io) => {
+export const getIOClass = (io) => {
   if (io < 4)  return { label: 'Sem PARDS', cor: '#10B981', bg: "var(--tint-green)" };
   if (io < 8)  return { label: 'PARDS Leve', cor: '#D97706', bg: "var(--tint-amber)" };
   if (io < 16) return { label: 'PARDS Moderado', cor: '#F97316', bg: "var(--tint-amber)", extra: 'considerar iNO, prono, VAFO' };
   return              { label: 'PARDS Grave', cor: '#DC2626', bg: "var(--tint-red)", extra: 'avaliar VAFO / ECMO' };
 };
+
+// ─── Motor de cálculo (puro — exportado para testes) ─────────────────────────
+// p = peso (kg) · id = idade (anos) · f = FiO₂ (fração) · mp = P média · po2 = PaO₂ · pp = Pplatô · pe = PEEP
+export function calcVentilacao({ p, id, f, mp, po2, pp, pe }) {
+  const fr = id > 0 ? getFR(id) : null;
+
+  // Volume corrente (ventilação protetora — peso real se não obeso)
+  const vc6 = p > 0 ? Math.round(6 * p) : null;
+  const vc8 = p > 0 ? Math.round(8 * p) : null;
+  const vc6pards = p > 0 ? Math.round(6 * p) : null; // PARDS: 4-6 mL/kg
+
+  // Volume minuto estimado
+  const vmMin = (vc6 && fr) ? Math.round(vc6 * fr.min) : null;
+  const vmMax = (vc8 && fr) ? Math.round(vc8 * fr.max) : null;
+
+  // Índice de Oxigenação: IO = (FiO₂ × P média × 100) / PaO₂
+  const io = (f > 0 && mp > 0 && po2 > 0)
+    ? parseFloat((f * mp * 100 / po2).toFixed(1))
+    : null;
+  const ioClass = io !== null ? getIOClass(io) : null;
+
+  // Índice de Saturação (ISO) — sem gasometria
+  // ISO = (FiO₂ × P média × 100) / SpO₂ (usa SpO₂ no lugar de PaO₂)
+
+  // Driving Pressure: DP = Pplat - PEEP
+  const dp = (pp > 0 && pe > 0) ? parseFloat((pp - pe).toFixed(1)) : null;
+  const dpAlerta = dp !== null && dp > 15;
+
+  // Compliance estática: Cst = VC / (Pplat - PEEP)
+  const cst = (vc6 && pp > 0 && pe > 0 && pp > pe)
+    ? parseFloat((vc6 / (pp - pe)).toFixed(1))
+    : null;
+
+  return { fr, vc6, vc8, vc6pards, vmMin, vmMax, io, ioClass, dp, dpAlerta, cst };
+}
 
 // ─── Contextos clínicos ───────────────────────────────────────────────────────
 const CONTEXTOS = [
@@ -98,38 +135,7 @@ export default function Ventilacao() {
   const pp  = parseNum(pplat);
   const pe  = parseNum(peepCm);
 
-  const calcs = useMemo(() => {
-    const fr = id > 0 ? getFR(id) : null;
-
-    // Volume corrente (ventilação protetora — peso real se não obeso)
-    const vc6 = p > 0 ? Math.round(6 * p) : null;
-    const vc8 = p > 0 ? Math.round(8 * p) : null;
-    const vc6pards = p > 0 ? Math.round(6 * p) : null; // PARDS: 4-6 mL/kg
-
-    // Volume minuto estimado
-    const vmMin = (vc6 && fr) ? Math.round(vc6 * fr.min) : null;
-    const vmMax = (vc8 && fr) ? Math.round(vc8 * fr.max) : null;
-
-    // Índice de Oxigenação: IO = (FiO₂ × P média × 100) / PaO₂
-    const io = (f > 0 && mp > 0 && po2 > 0)
-      ? parseFloat((f * mp * 100 / po2).toFixed(1))
-      : null;
-    const ioClass = io !== null ? getIOClass(io) : null;
-
-    // Índice de Saturação (ISO) — sem gasometria
-    // ISO = (FiO₂ × P média × 100) / SpO₂ (usa SpO₂ no lugar de PaO₂)
-
-    // Driving Pressure: DP = Pplat - PEEP
-    const dp = (pp > 0 && pe > 0) ? parseFloat((pp - pe).toFixed(1)) : null;
-    const dpAlerta = dp !== null && dp > 15;
-
-    // Compliance estática: Cst = VC / (Pplat - PEEP)
-    const cst = (vc6 && pp > 0 && pe > 0 && pp > pe)
-      ? parseFloat((vc6 / (pp - pe)).toFixed(1))
-      : null;
-
-    return { fr, vc6, vc8, vc6pards, vmMin, vmMax, io, ioClass, dp, dpAlerta, cst };
-  }, [p, id, f, mp, po2, pp, pe]);
+  const calcs = useMemo(() => calcVentilacao({ p, id, f, mp, po2, pp, pe }), [p, id, f, mp, po2, pp, pe]);
 
   const toggle = (key) => setAberto(aberto === key ? null : key);
   const ctx = CONTEXTOS.find(c => c.id === contexto);
@@ -156,7 +162,7 @@ export default function Ventilacao() {
   const inputField = (label, val, set, ph, unit = '') => (
     <div>
       <label style={{ fontSize: '10px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '3px', letterSpacing: '0.04em' }}>{label}{unit ? ` (${unit})` : ''}</label>
-      <input type="number" inputMode="decimal" value={val} onChange={e => set(e.target.value)} placeholder={ph}
+      <input type="text" inputMode="decimal" value={val} onChange={e => set(limparDecimal(e.target.value))} placeholder={ph}
         style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: `1.5px solid ${parseNum(val) > 0 ? C : '#D1D5DB'}`, fontSize: '14px', fontWeight: parseNum(val) > 0 ? '700' : '400', color: parseNum(val) > 0 ? C : "var(--text-2)", boxSizing: 'border-box', outline: 'none' }} />
     </div>
   );
@@ -284,14 +290,14 @@ export default function Ventilacao() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>PESO (kg)</label>
-                <input type="number" inputMode="decimal" value={peso} onChange={e => setPeso(e.target.value)} placeholder="ex: 15"
+                <input type="text" inputMode="decimal" value={peso} onChange={e => setPeso(limparDecimal(e.target.value))} placeholder="ex: 15"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${p > 0 ? C : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: C, boxSizing: 'border-box', outline: 'none' }} />
                 <AvisoSanidade msg={avisoPesoKg(parseFloat(String(peso).replace(',', '.')))} />
                 <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Usar peso ideal se obeso</p>
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: "var(--muted)", display: 'block', marginBottom: '4px', letterSpacing: '0.04em' }}>IDADE (anos)</label>
-                <input type="number" inputMode="decimal" step="0.1" value={idade} onChange={e => setIdade(e.target.value)} placeholder="ex: 4"
+                <input type="text" inputMode="decimal" value={idade} onChange={e => setIdade(limparDecimal(e.target.value))} placeholder="ex: 4"
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `2px solid ${id > 0 ? '#3B82F6' : '#D1D5DB'}`, fontSize: '18px', fontWeight: '700', color: '#3B82F6', boxSizing: 'border-box', outline: 'none' }} />
                 <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Para FR por faixa etária</p>
               </div>
@@ -316,12 +322,12 @@ export default function Ventilacao() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
                 <div style={{ backgroundColor: CLT, borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                   <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÍNIMO (6 mL/kg)</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{calcs.vc6}</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: C, lineHeight: 1 }}>{fmtBR(calcs.vc6)}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: C }}>mL</p>
                 </div>
                 <div style={{ backgroundColor: "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                   <p style={{ margin: 0, fontSize: '10px', fontWeight: '700', color: "var(--muted)" }}>VC MÁXIMO (8 mL/kg)</p>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{calcs.vc8}</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '26px', fontWeight: '800', color: "var(--tx-green)", lineHeight: 1 }}>{fmtBR(calcs.vc8)}</p>
                   <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#6EE7B7' }}>mL</p>
                 </div>
               </div>
@@ -337,11 +343,11 @@ export default function Ventilacao() {
               {id > 0 && calcs.fr && (
                 <div style={{ marginTop: '8px', backgroundColor: "var(--tint-blue)", borderRadius: '8px', padding: '10px' }}>
                   <p style={{ margin: 0, fontSize: '12px', color: "var(--tx-blue)", fontWeight: '700' }}>
-                    FR alvo ({calcs.fr.label}): {calcs.fr.min}–{calcs.fr.max} irpm
+                    FR alvo ({calcs.fr.label}): {fmtBR(calcs.fr.min)}–{fmtBR(calcs.fr.max)} irpm
                   </p>
                   {calcs.vmMin && (
                     <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: "var(--text-2)" }}>
-                      Volume minuto estimado: {calcs.vmMin}–{calcs.vmMax} mL/min
+                      Volume minuto estimado: {fmtBR(calcs.vmMin)}–{fmtBR(calcs.vmMax)} mL/min
                     </p>
                   )}
                 </div>
@@ -363,7 +369,7 @@ export default function Ventilacao() {
               <div style={{ backgroundColor: calcs.ioClass.bg, borderRadius: '10px', padding: '12px', borderLeft: `4px solid ${calcs.ioClass.cor}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <p style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: calcs.ioClass.cor, lineHeight: 1 }}>{calcs.io}</p>
+                    <p style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: calcs.ioClass.cor, lineHeight: 1 }}>{fmtBR(calcs.io)}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: "var(--muted)" }}>Índice de Oxigenação</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
@@ -400,13 +406,13 @@ export default function Ventilacao() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div style={{ backgroundColor: calcs.dpAlerta ? "var(--tint-red)" : "var(--tint-green)", borderRadius: '10px', padding: '12px', textAlign: 'center', borderLeft: `4px solid ${calcs.dpAlerta ? '#DC2626' : '#10B981'}` }}>
-                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : "var(--tx-green)", lineHeight: 1 }}>{calcs.dp}</p>
+                    <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: calcs.dpAlerta ? '#DC2626' : "var(--tx-green)", lineHeight: 1 }}>{fmtBR(calcs.dp)}</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>cmH₂O (DP)</p>
                     <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: calcs.dpAlerta ? '#DC2626' : '#10B981', fontWeight: '700' }}>{calcs.dpAlerta ? '> 15 cmH₂O' : '≤ 15 cmH₂O'}</p>
                   </div>
                   {calcs.cst && (
                     <div style={{ backgroundColor: "var(--tint-blue)", borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{calcs.cst}</p>
+                      <p style={{ margin: 0, fontSize: '26px', fontWeight: '800', color: "var(--tx-blue)", lineHeight: 1 }}>{fmtBR(calcs.cst)}</p>
                       <p style={{ margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: "var(--muted)" }}>mL/cmH₂O</p>
                       <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#93C5FD' }}>Compliance estática</p>
                     </div>

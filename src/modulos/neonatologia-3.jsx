@@ -14,6 +14,7 @@ import {
   AlertTriangle, Info, TrendingUp, Printer,
   RefreshCw, ChevronDown, ChevronUp,
 } from 'lucide-react';
+import { limparDecimal, fmtBR } from '../lib/numero';
 
 /* ── Paleta ── */
 const C = {
@@ -312,7 +313,6 @@ ${[
     body: `<ul style="padding-left:18px;margin-top:8px;line-height:1.7">
 <li><strong>Bilirrubina direta > 1 mg/dL é sempre patológico</strong></li>
 <li>Icterícia persistindo após 14 dias → investigar colestase obrigatoriamente</li>
-<li>BD > 20% do TSB → suspeitar colestase neonatal</li>
 <li>Causas: atresia de vias biliares, PFIC, galactosemia, hipotireoidismo, TORCH, nutrição parenteral prolongada</li>
 <li>Encaminhamento urgente a gastroenterologista/hepatologista pediátrico se BD > 1 mg/dL</li>
 </ul>`,
@@ -384,8 +384,9 @@ export default function IctericiaNeonatal() {
     const { status, horas } = avaliarNascimento(paciente.dataNascimento, paciente.horaNascimento);
     if (status !== 'ok' || horas === null) return false;
     let val, unit;
-    if (horas < 48) { val = horas.toFixed(1); unit = 'h'; }
-    else { val = (horas / 24).toFixed(2); unit = 'd'; }
+    // Vírgula decimal no campo (padrão brasileiro); parseFld aceita vírgula e ponto.
+    if (horas < 48) { val = fmtBR(horas.toFixed(1)); unit = 'h'; }
+    else { val = fmtBR((horas / 24).toFixed(2)); unit = 'd'; }
     lastAutoRef.current = val;
     setAgeVal(val);
     setAgeUnit(unit);
@@ -636,15 +637,15 @@ export default function IctericiaNeonatal() {
               </select>
             </Fld>
             <Fld label="Bilirrubina medida (mg/dL)">
-              <input type="number" step="0.1" placeholder="Ex: 12,5"
-                value={bili} onChange={e=>setBili(e.target.value)} style={inpStyle} />
+              <input type="text" inputMode="decimal" placeholder="Ex: 12,5"
+                value={bili} onChange={e=>setBili(limparDecimal(e.target.value))} style={inpStyle} />
             </Fld>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
             <Fld label="Idade de vida">
               <div style={{display:'flex',gap:6}}>
-                <input type="number" step="0.5" placeholder="Ex: 36"
-                  value={ageVal} onChange={e=>setAgeVal(e.target.value)}
+                <input type="text" inputMode="decimal" placeholder="Ex: 36"
+                  value={ageVal} onChange={e=>setAgeVal(limparDecimal(e.target.value))}
                   style={{...inpStyle,flex:1,minWidth:0}}/>
                 <select value={ageUnit} onChange={e=>setAgeUnit(e.target.value)}
                   style={{...selStyle,flex:'0 0 80px'}}>
@@ -681,23 +682,23 @@ export default function IctericiaNeonatal() {
             <p style={{fontSize:11.5,color:C.muted,fontStyle:'italic',marginBottom:8}}>Campos opcionais:</p>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
               <Fld label="Bilirrubina direta (mg/dL)">
-                <input type="number" step="0.1" placeholder="se disponível"
-                  value={bd} onChange={e=>setBd(e.target.value)} style={inpStyle}/>
+                <input type="text" inputMode="decimal" placeholder="se disponível"
+                  value={bd} onChange={e=>setBd(limparDecimal(e.target.value))} style={inpStyle}/>
               </Fld>
               <Fld label="Albumina (g/dL)">
-                <input type="number" step="0.1" placeholder="se disponível"
-                  value={albumin} onChange={e=>setAlbumin(e.target.value)} style={inpStyle}/>
+                <input type="text" inputMode="decimal" placeholder="se disponível"
+                  value={albumin} onChange={e=>setAlbumin(limparDecimal(e.target.value))} style={inpStyle}/>
               </Fld>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
               <Fld label="Bili anterior (mg/dL)">
-                <input type="number" step="0.1" placeholder=""
-                  value={prevBili} onChange={e=>setPrevBili(e.target.value)} style={inpStyle}/>
+                <input type="text" inputMode="decimal" placeholder=""
+                  value={prevBili} onChange={e=>setPrevBili(limparDecimal(e.target.value))} style={inpStyle}/>
               </Fld>
               <Fld label="Hora da medida anterior">
                 <div style={{display:'flex',gap:6}}>
-                  <input type="number" step="0.5" placeholder="valor"
-                    value={prevAgeVal} onChange={e=>setPrevAgeVal(e.target.value)}
+                  <input type="text" inputMode="decimal" placeholder="valor"
+                    value={prevAgeVal} onChange={e=>setPrevAgeVal(limparDecimal(e.target.value))}
                     style={{...inpStyle,flex:1,minWidth:0}}/>
                   <select value={prevAgeUnit} onChange={e=>setPrevAgeUnit(e.target.value)}
                     style={{...selStyle,flex:'0 0 80px'}}>
@@ -810,16 +811,16 @@ export default function IctericiaNeonatal() {
 
         {/* Limiares */}
         <Card>
-          <CardTitle>Limiares calculados — IG {ig} sem, {hours.toFixed(1)}h de vida{hasNeuro ? ' (com fator de risco)':''}</CardTitle>
+          <CardTitle>Limiares calculados — IG {ig} sem, {fmtBR(hours.toFixed(1))}h de vida{hasNeuro ? ' (com fator de risco)':''}</CardTitle>
           <div style={{display:'flex',flexWrap:'wrap',gap:7,marginBottom:10}}>
-            <Pill color={C.aap}>Fototerapia: {photoThresh.toFixed(1)} mg/dL</Pill>
-            <Pill color="#ff9800">Escalonamento: {escalThresh.toFixed(1)} mg/dL</Pill>
-            <Pill color="#b71c1c">Exsanguinotransfusão: {exsangThresh.toFixed(1)} mg/dL</Pill>
+            <Pill color={C.aap}>Fototerapia: {fmtBR(photoThresh.toFixed(1))} mg/dL</Pill>
+            <Pill color="#ff9800">Escalonamento: {fmtBR(escalThresh.toFixed(1))} mg/dL</Pill>
+            <Pill color="#b71c1c">Exsanguinotransfusão: {fmtBR(exsangThresh.toFixed(1))} mg/dL</Pill>
           </div>
           <p style={{fontSize:12,color:C.det}}>
-            Bili atual ({biliType}): <strong>{biliN.toFixed(1)} mg/dL</strong>
+            Bili atual ({biliType}): <strong>{fmtBR(biliN.toFixed(1))} mg/dL</strong>
             &nbsp;·&nbsp; Diferença ao limiar de fototerapia:{' '}
-            <strong>{diff>=0?'+':''}{diff.toFixed(1)} mg/dL</strong>
+            <strong>{diff>=0?'+':''}{fmtBR(diff.toFixed(1))} mg/dL</strong>
           </p>
           {/* Alertas */}
           {biliType==='TcB' && (biliN>=15||Math.abs(diff)<=3) && (
@@ -856,7 +857,7 @@ export default function IctericiaNeonatal() {
               )}
               {riseRate > 0 && (
                 <ABox type="info"><TrendingUp size={13}/>
-                  Velocidade de ascensão: {riseRate.toFixed(2)} mg/dL/h
+                  Velocidade de ascensão: {fmtBR(riseRate.toFixed(2))} mg/dL/h
                 </ABox>
               )}
             </>
@@ -864,14 +865,14 @@ export default function IctericiaNeonatal() {
           {baRatio !== null && (
             <ABox type={baAlarm?'danger':'info'}>
               {baAlarm ? <AlertTriangle size={13}/> : <Info size={13}/>}
-              Razão B/A: {baRatio.toFixed(2)} (limite: {baLimit}) {baAlarm?'— ACIMA DO LIMITE':'— dentro do limite'}
+              Razão B/A: {fmtBR(baRatio.toFixed(2))} (limite: {baLimit}) {baAlarm?'— ACIMA DO LIMITE':'— dentro do limite'}
             </ABox>
           )}
         </Card>
 
         {/* Zona clínica */}
         {zone === '5x' && <ZoneBox z="5" title="ZONA DE ESCALONAMENTO DE CUIDADOS — EXSANGUINOTRANSFUSÃO"
-          subtitle={`TSB ≥ limiar de exsanguinotransfusão (${exsangThresh.toFixed(1)} mg/dL)`}
+          subtitle={`TSB ≥ limiar de exsanguinotransfusão (${fmtBR(exsangThresh.toFixed(1))} mg/dL)`}
           items={[
             'EMERGÊNCIA MÉDICA',
             'STAT: bilirrubina total + direta, hemograma, albumina, eletrólitos, tipo sanguíneo e prova cruzada',
@@ -884,7 +885,7 @@ export default function IctericiaNeonatal() {
           ]}/>}
 
         {zone === '5e' && <ZoneBox z="5" title="ZONA DE ESCALONAMENTO DE CUIDADOS"
-          subtitle={`TSB ≥ limiar de escalonamento (exsanguino − 2,0 mg/dL = ${escalThresh.toFixed(1)} mg/dL)`}
+          subtitle={`TSB ≥ limiar de escalonamento (exsanguino − 2,0 mg/dL = ${fmtBR(escalThresh.toFixed(1))} mg/dL)`}
           items={[
             'RISCO IMINENTE — Preparar para exsanguinotransfusão',
             'STAT: bilirrubina total + direta, hemograma, albumina, eletrólitos, tipo sanguíneo e prova cruzada',
@@ -893,11 +894,11 @@ export default function IctericiaNeonatal() {
             'Consultar neonatologista — considerar transferência urgente',
             'Se DAT positivo: considerar IVIG 0,5–1 g/kg EV em 2h',
             'Medir TSB a cada 2 horas',
-            `Se TSB ≥ ${exsangThresh.toFixed(1)} mg/dL → exsanguinotransfusão urgente`,
+            `Se TSB ≥ ${fmtBR(exsangThresh.toFixed(1))} mg/dL → exsanguinotransfusão urgente`,
           ]}/>}
 
         {zone === '4' && <ZoneBox z="4" title="ACIMA DO LIMIAR — FOTOTERAPIA INDICADA"
-          subtitle={`TSB/TcB ≥ limiar de fototerapia (${photoThresh.toFixed(1)} mg/dL)`}
+          subtitle={`TSB/TcB ≥ limiar de fototerapia (${fmtBR(photoThresh.toFixed(1))} mg/dL)`}
           items={[
             'Iniciar fototerapia intensiva (LED azul, ≥ 30 mW/cm²/nm, ~475 nm, dupla face)',
             biliType==='TcB' ? 'Confirmar com TSB antes de iniciar' : '',
@@ -957,11 +958,11 @@ export default function IctericiaNeonatal() {
         <Card>
           <CardTitle>Limiares calculados — {row.label}{hasSBPNeuro ? ' (valores inferiores — fator de risco)':''}</CardTitle>
           <div style={{display:'flex',flexWrap:'wrap',gap:7,marginBottom:10}}>
-            <Pill color={C.aap}>Fototerapia: {row.photoL}–{row.photoH} mg/dL{hasSBPNeuro ? ` → usar ${row.photoL}`:''}</Pill>
-            <Pill color="#b71c1c">Exsanguinotransfusão: {row.estL}–{row.estH} mg/dL{hasSBPNeuro ? ` → usar ${row.estL}`:''}</Pill>
+            <Pill color={C.aap}>Fototerapia: {fmtBR(row.photoL)}–{fmtBR(row.photoH)} mg/dL{hasSBPNeuro ? ` → usar ${fmtBR(row.photoL)}`:''}</Pill>
+            <Pill color="#b71c1c">Exsanguinotransfusão: {fmtBR(row.estL)}–{fmtBR(row.estH)} mg/dL{hasSBPNeuro ? ` → usar ${fmtBR(row.estL)}`:''}</Pill>
           </div>
           <p style={{fontSize:12,color:C.det}}>
-            Bili atual ({biliType}): <strong>{biliN.toFixed(1)} mg/dL</strong>
+            Bili atual ({biliType}): <strong>{fmtBR(biliN.toFixed(1))} mg/dL</strong>
           </p>
           {!isNaN(bdN) && bdN > 1 && (
             <ABox type="danger"><AlertTriangle size={13}/>
@@ -980,7 +981,7 @@ export default function IctericiaNeonatal() {
           )}
           {riseRate !== null && riseRate > 0 && (
             <ABox type="info"><TrendingUp size={13}/>
-              Velocidade de ascensão: {riseRate.toFixed(2)} mg/dL/h
+              Velocidade de ascensão: {fmtBR(riseRate.toFixed(2))} mg/dL/h
             </ABox>
           )}
           {riseRate !== null && riseRate >= 0.3 && (
@@ -996,7 +997,7 @@ export default function IctericiaNeonatal() {
         </Card>
 
         {zone === 'C' && <ZoneBox z="C" title="LIMIAR DE EXSANGUINOTRANSFUSÃO ATINGIDO"
-          subtitle={`BT ≥ ${estThresh} mg/dL (limiar EST${hasSBPNeuro?' — valor inferior':''})`}
+          subtitle={`BT ≥ ${fmtBR(estThresh)} mg/dL (limiar EST${hasSBPNeuro?' — valor inferior':''})`}
           items={[
             'Exsanguinotransfusão indicada',
             'Se doença hemolítica imune: IVIG 0,5–1,0 g/kg EV em 2h se BT se aproximar 2–3 mg/dL do limiar',
@@ -1006,7 +1007,7 @@ export default function IctericiaNeonatal() {
           ]}/>}
 
         {zone === 'B' && <ZoneBox z="B" title="FOTOTERAPIA INDICADA"
-          subtitle={`BT ≥ ${photoThresh} mg/dL (limiar fototerapia${hasSBPNeuro?' — valor inferior':''})`}
+          subtitle={`BT ≥ ${fmtBR(photoThresh)} mg/dL (limiar fototerapia${hasSBPNeuro?' — valor inferior':''})`}
           items={[
             'Iniciar fototerapia (irradiância padrão 8–10 μW/cm²/nm)',
             'Se BT próxima à EST: aumentar superfície corporal + irradiância ≥ 30 μW/cm²/nm',
@@ -1016,7 +1017,7 @@ export default function IctericiaNeonatal() {
           ].filter(x=>x)}/>}
 
         {zone === 'A' && <ZoneBox z="A" title="ABAIXO DO LIMIAR DE FOTOTERAPIA"
-          subtitle={`BT < ${photoThresh} mg/dL`}
+          subtitle={`BT < ${fmtBR(photoThresh)} mg/dL`}
           items={[
             'Monitorar BT a cada 24h',
             'Primeira dosagem: entre 24–36h de vida',
@@ -1086,8 +1087,8 @@ export default function IctericiaNeonatal() {
                         if (isEdit) {
                           return (
                             <td key={ci} style={{...tdStyle,padding:0}}>
-                              <input type="number" step="0.1" autoFocus
-                                defaultValue={val.toFixed(1)}
+                              <input type="text" inputMode="decimal" autoFocus
+                                defaultValue={fmtBR(val.toFixed(1))}
                                 onBlur={e=>commitEdit(key,ri,ci,e.target.value)}
                                 onKeyDown={e=>e.key==='Enter'&&e.target.blur()}
                                 style={{width:'100%',border:'none',outline:`2px solid ${C.aap}`,
@@ -1103,7 +1104,7 @@ export default function IctericiaNeonatal() {
                               fontWeight: isHl ? 700 : 400,
                               outline: isHl ? `2px solid #ffc107` : 'none',
                             }}>
-                            {val.toFixed(1)}
+                            {fmtBR(val.toFixed(1))}
                           </td>
                         );
                       })}
@@ -1147,8 +1148,8 @@ export default function IctericiaNeonatal() {
                   function eCell(field) {
                     const isEdit = editCell && editCell.key==='E' && editCell.ri===ri && editCell.field===field;
                     if (isEdit) return (
-                      <input type="number" step="0.5" autoFocus
-                        defaultValue={row[field]}
+                      <input type="text" inputMode="decimal" autoFocus
+                        defaultValue={fmtBR(row[field])}
                         onBlur={e=>commitEdit('E',ri,null,e.target.value,field)}
                         onKeyDown={e=>e.key==='Enter'&&e.target.blur()}
                         style={{width:50,border:'none',outline:`2px solid ${C.aap}`,padding:'2px 4px',fontSize:13,textAlign:'center',borderRadius:4,background:"var(--surface)",color:"var(--text)"}}
@@ -1156,7 +1157,7 @@ export default function IctericiaNeonatal() {
                     );
                     return (
                       <span onClick={()=>setEditCell({key:'E',ri,field})}
-                        style={{cursor:'pointer',fontWeight:600}}>{row[field]}</span>
+                        style={{cursor:'pointer',fontWeight:600}}>{fmtBR(row[field])}</span>
                     );
                   }
                   return (
