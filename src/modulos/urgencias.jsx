@@ -1276,7 +1276,7 @@ export default function Urgencias() {
 
       {/* ── Disclaimer ── */}
       <RodapeModulo
-        revisao="07/2026"
+        revisao="11/2026"
         fonte="WAO 2020 · GINA 2024 · ILAE 2015 · SBP · AHA PALS 2020 · Surviving Sepsis Campaign 2020 · ISPAD 2022"
         nota="Confirme com peso atual, função renal e protocolo institucional."
       />

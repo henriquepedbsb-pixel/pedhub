@@ -542,7 +542,7 @@ export default function Hipotermia() {
 
       {/* Disclaimer */}
       <RodapeModulo
-        revisao="07/2026"
+        revisao="11/2026"
         fonte="ILAE 2023 — Pressler RM et al., Epilepsia 2023;64:2550 (anticrise) · Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
       />
 

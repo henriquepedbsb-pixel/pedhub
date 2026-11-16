@@ -653,6 +653,9 @@ referências das escalas).
 - Aplicar módulo a módulo, agrupado por lotes pequenos de commit
 - Data e fonte de cada módulo vêm do usuário quando não forem óbvias pelo
   conteúdo do arquivo — **não inventar data de revisão**
+- **Regra permanente (16/11/2026, decisão do responsável):** sempre que o
+  conteúdo de um módulo for alterado, atualizar `revisao` do `RodapeModulo`
+  para o mês/ano da alteração (MM/AAAA).
 
 ---
 

@@ -502,7 +502,7 @@ export default function Antibioticos() {
       </div>
 
       <RodapeModulo
-        revisao="07/2026"
+        revisao="11/2026"
         fonte="SBP 2018 (Pneumonia PAC) · SBP 2023 / AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS)"
         nota="Adequar ao perfil de resistência local e ao antibiograma quando disponível."
       />
