@@ -8,7 +8,7 @@
 // Criar módulo = 1 entrada aqui + lazy import e <Route> em App.jsx + o arquivo
 // em src/modulos/. A ordem das entradas é a ordem dos cards no hub.
 import {
-  Activity, AlertTriangle, Baby, BookOpen, Brain, Bug, Calculator, CalendarClock, ClipboardList, Droplets, Eye, FlaskConical, Footprints, Heart, Leaf, Microscope, Milk, Moon, Pill, Ruler, Scale, ScanEye, Shield, Stethoscope, Syringe, Thermometer, Users, Waves, Wind, Zap,
+  Activity, AlertTriangle, Baby, BedDouble, Biohazard, BookOpen, Brain, BrainCircuit, Bug, Calculator, CalendarClock, ClipboardList, Droplets, Eye, FlaskConical, Footprints, Gauge, Heart, Leaf, Microscope, Milk, Moon, Pill, Ruler, Scale, ScanEye, Shield, ShieldAlert, Stethoscope, Syringe, TestTube, Thermometer, Users, Waves, Wind, Zap,
 } from "lucide-react";
 
 /* ─── Hubs (portais) ─────────────────────────────────────────────────────── */
@@ -63,6 +63,10 @@ export const MODULOS = [
     tags: "vsr sibilancia oxigenio alto fluxo oaf nirsevimab lactente chiado nirsevimabe palivizumab palivizumabe salina hipertonica cpap apneia" },
   { rota: "/intoxicacoes", label: "Intoxicações", desc: "Ingestão acidental · CIATOX · antídotos", Icon: AlertTriangle, cor: "#65A30D", grupo: "Pediatria Geral", secao: "Emergências",
     tags: "intoxicacao envenenamento ingestao acidental antidoto ciatox acetilcisteina naloxona paracetamol ferro carvao ativado flumazenil benzodiazepinico rumack deferoxamina caustico monoxido" },
+  { rota: "/cetoacidose-diabetica", label: "Cetoacidose Diabética", desc: "CAD · ISPAD 2022 · fluidos, insulina e potássio", Icon: Gauge, cor: "#9F1239", grupo: "Pediatria Geral", secao: "Emergências",
+    tags: "cad cetoacidose diabetes dm1 debut insulina bic hiperglicemia cetonemia beta-hidroxibutirato cetonuria anion gap edema cerebral manitol salina hipertonica potassio ispad deficit desidratacao" },
+  { rota: "/animais-peconhentos", label: "Animais Peçonhentos", desc: "Escorpião · serpentes · aranhas · lagarta · soro", Icon: Biohazard, cor: "#4D7C0F", grupo: "Pediatria Geral", secao: "Emergências",
+    tags: "escorpiao escorpionismo tityus serpente cobra ofidico jararaca botropico cascavel crotalico surucucu laquetico coral elapidico aranha marrom loxosceles armadeira phoneutria lonomia taturana soro antiveneno antiescorpionico antibotropico ampolas ciatox picada" },
   /* ── Terapia Intensiva & Procedimentos ── */
   { rota: "/isr", label: "ISR Pediátrica", desc: "Sequência rápida · doses · via difícil", Icon: Zap, cor: "#C2410C", grupo: "Pediatria Geral", secao: "Terapia Intensiva & Procedimentos",
     tags: "intubacao sequencia rapida via aerea dificil cetamina rocuronio succinilcolina laringoscopia tubo lamina atropina fentanil propofol midazolam pre-oxigenacao tot" },
@@ -115,6 +119,10 @@ export const MODULOS = [
     tags: "sarampo rubeola exantema subito escarlatina eritema infeccioso mao pe boca varicela" },
   { rota: "/cardiologia-pediatrica-basica", label: "Cardiologia Pediátrica", desc: "Sopro inocente × patológico · hipertensão arterial", Icon: Heart, cor: "#BE123C", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
     tags: "sopro cardiaco coracao cardiopatia inocente patologico hipertensao arterial pressao pa percentil has normotenso pressao alta tratamento anti-hipertensivo dose recem nascido neonatal dionne rn lactente" },
+  { rota: "/itu-pediatrica", label: "ITU Pediátrica", desc: "Coleta · urocultura por método · imagem · profilaxia", Icon: TestTube, cor: "#A16207", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
+    tags: "itu infeccao urinaria pielonefrite cistite urocultura ufc sondagem cateterismo puncao suprapubica jato medio saco coletor clean catch eas nitrito esterase leucocituria uretrocistografia ucm usg refluxo vesicoureteral rvu profilaxia nefrologia" },
+  { rota: "/enurese-noturna", label: "Enurese Noturna", desc: "ICCS · mono × não monossintomática · alarme e desmopressina", Icon: BedDouble, cor: "#475569", grupo: "Pediatria Geral", secao: "Especialidades Pediátricas",
+    tags: "enurese xixi na cama perda urinaria noturna iccs monossintomatica poliuria noturna capacidade vesical diario miccional alarme desmopressina oxibutinina imipramina nefrologia urologia" },
   /* ══ Neonatologia ══ */
   /* ── Sala de Parto ── */
   { rota: "/neonatologia-1", label: "Reanimação RNPT <34s", desc: "Sala de parto · SBP 2026", Icon: Zap, cor: "#0E7490", grupo: "Neonatologia", secao: "Sala de Parto",
@@ -142,6 +150,10 @@ export const MODULOS = [
     tags: "pca canal arterial persistente hspda ibuprofeno paracetamol indometacina" },
   { rota: "/dilucao-bic", label: "Diluição e BIC", desc: "Vasoativas · Sedoanalgesia · PGE1", Icon: Activity, cor: "#F97316", grupo: "Neonatologia", secao: "Cuidados Intensivos",
     tags: "bomba infusao bic vasoativa dopamina dobutamina adrenalina noradrenalina milrinona pge1 dose prostaglandina alprostadil fentanil midazolam morfina insulina gotejamento diluicao" },
+  { rota: "/convulsao-neonatal", label: "Convulsão Neonatal", desc: "ILAE · tipos de crise · causas · fenobarbital", Icon: BrainCircuit, cor: "#6D28D9", grupo: "Neonatologia", secao: "Cuidados Intensivos",
+    tags: "convulsao crise neonatal epileptica ilae eeg aeeg fenobarbital levetiracetam fenitoina fosfenitoina midazolam lidocaina piridoxina b6 ehi canalopatia kcnq2 tremor clonica tonica" },
+  { rota: "/sepse-neonatal", label: "Sepse Neonatal", desc: "Precoce × tardia · risco · conduta", Icon: ShieldAlert, cor: "#9A3412", grupo: "Neonatologia", secao: "Cuidados Intensivos",
+    tags: "sepse neonatal precoce tardia eos infeccao gbs estreptococo grupo b corioamnionite bolsa rota profilaxia intraparto hemocultura ampicilina gentamicina kaiser calculadora iras anvisa" },
   /* ── Metabólico & Nutrição ── */
   { rota: "/neonatologia-2", label: "Hipoglicemia Neonatal", desc: "Hipoglicemia · Gel de Dextrose", Icon: Heart, cor: "#0D9488", grupo: "Neonatologia", secao: "Metabólico & Nutrição",
     tags: "hipoglicemia glicemia gel dextrose glicose neonatal diazoxido hiperinsulinismo bolus filho de mae diabetica" },

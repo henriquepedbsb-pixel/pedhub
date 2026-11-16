@@ -9,6 +9,7 @@ import { avisoPesoKg } from "../lib/sanity";
 import { limparDecimal, fmtBR } from "../lib/numero";
 import { useCampoPeso } from "../lib/paciente";
 import OrigemPeso from "../components/OrigemPeso";
+import { dosesAnticriseRN } from "../lib/calc/convulsaoNeonatal";
 
 const parseNum = (val) => {
   const n = parseFloat(String(val).replace(',', '.'));
@@ -82,14 +83,9 @@ export default function Hipotermia() {
     return { deltaT, horas };
   }, [tempAtual, taxaReq]);
 
-  // ── Fenobarbital (convulsão neonatal) ────────────────────────────────────────
-  const fenoCalc = useMemo(() => {
-    if (p <= 0) return null;
-    const loading  = Math.round(20 * p);
-    const adicional = Math.round(10 * p);
-    const manutencao = parseFloat((4 * p).toFixed(0)); // 3-5 mg/kg/dia, usar 4
-    return { loading, adicional, manutencao };
-  }, [p]);
+  // ── Anticrise neonatal — ILAE 2023, Tabela 2 (fonte única em
+  //    src/lib/calc/convulsaoNeonatal.js, compartilhada com Convulsão Neonatal)
+  const fenoCalc = useMemo(() => (p > 0 ? dosesAnticriseRN(p) : null), [p]);
 
   const toggle = (k) => setAberto(aberto === k ? null : k);
 
@@ -394,13 +390,13 @@ export default function Hipotermia() {
                   {p > 0 && fenoCalc ? (
                     <>
                       <p style={{ margin: 0, fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Ataque:</strong> {fmtBR(fenoCalc.loading)} mg IV em 15-20 min (20 mg/kg)
+                        <strong>Ataque:</strong> {fmtBR(fenoCalc.fenobarbital.ataque)} mg IV em 15-20 min (20 mg/kg)
                       </p>
                       <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Se persistir:</strong> +{fmtBR(fenoCalc.adicional)} mg IV (10 mg/kg) · máx total 40 mg/kg
+                        <strong>Se persistir:</strong> 2ª dose de {fmtBR(fenoCalc.fenobarbital.segundaMin)}–{fmtBR(fenoCalc.fenobarbital.segundaMax)} mg IV (10–20 mg/kg), com suporte ventilatório disponível
                       </p>
                       <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: "var(--text-2)" }}>
-                        <strong>Manutenção (após 24h):</strong> {fmtBR(fenoCalc.manutencao)} mg/dia IV ou VO (4 mg/kg/dia)
+                        <strong>Manutenção, se usada:</strong> {fmtBR(fenoCalc.fenobarbital.manutencao)} mg/dia IV ou VO em 1 dose (5 mg/kg/dia); considerar nível sérico
                       </p>
                     </>
                   ) : (
@@ -409,9 +405,11 @@ export default function Hipotermia() {
                 </div>
                 <div style={{ backgroundColor: "var(--tint-amber)", borderRadius: '8px', padding: '10px', marginBottom: '8px', borderLeft: '3px solid #D97706' }}>
                   <p style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '700', color: "var(--tx-amber)" }}>2ª linha — se falha do fenobarb:</p>
-                  {['Levetiracetam: 40-60 mg/kg IV em 15 min (crescente evidência neonatal)',
-                    'Midazolam: 0,15 mg/kg IV bolus → infusão 0,1-0,4 mg/kg/h',
-                    'Lidocaína: protocolo específico — consultar neurologista neonatal',
+                  {[(fenoCalc ? 'Levetiracetam: 40 mg/kg IV (' + fmtBR(fenoCalc.levetiracetam.ataque) + ' mg); 2ª dose de 20 mg/kg (' + fmtBR(fenoCalc.levetiracetam.segunda) + ' mg) se necessário' : 'Levetiracetam: 40 mg/kg IV; 2ª dose de 20 mg/kg se necessário') + ' · preferido em cardiopatia',
+                    'Fenitoína/fosfenitoína: 20 mg/kg EF IV em 30 min' + (fenoCalc ? ' (' + fmtBR(fenoCalc.fenitoina.ataque) + ' mg EF)' : '') + ' · monitor cardíaco',
+                    'Midazolam: bolus 0,05–0,15 mg/kg' + (fenoCalc ? ' (' + fmtBR(fenoCalc.midazolam.bolusMin) + '–' + fmtBR(fenoCalc.midazolam.bolusMax) + ' mg)' : '') + ' → infusão 1–5 µg/kg/min',
+                    'Lidocaína: 2 mg/kg em 10 min → esquema decrescente · AJUSTAR NA HIPOTERMIA · não usar em cardiopatia congênita nem com fenitoína',
+                    'Doses completas (ILAE 2023): módulo Convulsão Neonatal',
                   ].map((item, i) => (
                     <div key={i} style={{ display: 'flex', gap: '5px', fontSize: '11px', color: "var(--text-2)", marginTop: '3px', alignItems: 'flex-start' }}>
                       <span style={{ color: '#D97706', flexShrink: 0 }}>→</span>{item}
@@ -544,8 +542,8 @@ export default function Hipotermia() {
 
       {/* Disclaimer */}
       <RodapeModulo
-        revisao="07/2026"
-        fonte="Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
+        revisao="11/2026"
+        fonte="ILAE 2023 — Pressler RM et al., Epilepsia 2023;64:2550 (anticrise) · Thompson CM et al. The value of a scoring system for hypoxic ischaemic encephalopathy in predicting neurodevelopmental outcome, Acta Paediatr 1997 · ILCOR 2021 · AAP 2014 · Shankaran S et al. NEJM 2005"
       />
 
       {/* Escore de Thompson sempre à vista enquanto se marcam os itens. */}

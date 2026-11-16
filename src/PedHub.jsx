@@ -14,12 +14,12 @@ import {
   Star,
   Stethoscope,
   Sun,
-  TestTube,
-  Gauge,
-  Biohazard,
-  BedDouble,
-  BrainCircuit,
-  ShieldAlert,
+  Flame,
+  Filter,
+  HeartPulse,
+  Wind,
+  AirVent,
+  Droplet,
 } from "lucide-react";
 
 /* O catálogo de módulos (nome, descrição, ícone, cor, grupo e termos de busca)
@@ -32,12 +32,12 @@ import {
    não competir visualmente com os módulos que já estão no ar. A cor própria
    de cada um é definida quando o módulo for de fato construído.            */
 const EM_BREVE = [
-  { label: "ITU Pediátrica",        desc: "Coleta · UFC por método · imagem · ATB",     Icon: TestTube },
-  { label: "Cetoacidose Diabética", desc: "CAD · debut DM1 · hidratação e insulina",    Icon: Gauge },
-  { label: "Animais Peçonhentos",   desc: "Escorpião · serpentes · aranhas · soro",     Icon: Biohazard },
-  { label: "Enurese Noturna",       desc: "ICCS · mono × não-monossintomática",         Icon: BedDouble },
-  { label: "Convulsão Neonatal",    desc: "Etiologias · tipos de crise · fenobarbital", Icon: BrainCircuit },
-  { label: "Sepse Neonatal",        desc: "Precoce × tardia · fatores de risco · ATB",  Icon: ShieldAlert },
+  { label: "Queimaduras",                   desc: "Superfície queimada · Parkland · analgesia",     Icon: Flame },
+  { label: "Síndrome Nefrótica",            desc: "Corticoide · recidiva · edema e complicações",   Icon: Filter },
+  { label: "Doença de Kawasaki",            desc: "Critérios · ecocardiograma · imunoglobulina",    Icon: HeartPulse },
+  { label: "Apneia da Prematuridade",       desc: "Cafeína · monitorização · critérios de alta",    Icon: Wind },
+  { label: "Desconforto Respiratório do RN", desc: "TTRN · SAM · pneumonia · CPAP",                 Icon: AirVent },
+  { label: "Transfusão Neonatal",           desc: "Hemácias · plaquetas · plasma · limiares",       Icon: Droplet },
 ];
 
 /* ─── Estilos de interação (hover/toque/entrada) — injetados uma vez ───────── */
@@ -134,6 +134,10 @@ function ModuloCard({ modulo, onClick }) {
 }
 
 /* ─── Card compacto (ícone + rótulo, sem descrição) — usado nos favoritos ─── */
+/* Altura única: ícone no topo + rótulo numa caixa fixa de 2 linhas, centrada.
+   Sem isso, um nome de 1 linha ("Canguru", "TIG Neonatal") deixava o card mais
+   baixo que o vizinho de 2 linhas e a grade ficava desalinhada. */
+const QUICK_H = 112;
 function QuickCard({ modulo, onClick }) {
   const { label, Icon, cor } = modulo;
   return (
@@ -154,6 +158,8 @@ function QuickCard({ modulo, onClick }) {
         alignItems: "center",
         gap: 8,
         width: "100%",
+        height: QUICK_H,
+        boxSizing: "border-box",
       }}
     >
       <div style={{
@@ -165,12 +171,19 @@ function QuickCard({ modulo, onClick }) {
       }}>
         <Icon size={20} color={cor} />
       </div>
-      <p style={{
-        fontWeight: 700, fontSize: 12.5,
-        color: "var(--text)", margin: 0,
-        lineHeight: 1.25,
-        wordBreak: "break-word", hyphens: "auto",
-      }}>{label}</p>
+      <div style={{
+        flex: 1, width: "100%", minHeight: 0,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <p style={{
+          fontWeight: 700, fontSize: 12.5,
+          color: "var(--text)", margin: 0,
+          lineHeight: 1.25,
+          overflowWrap: "anywhere", hyphens: "auto",
+          // No máximo 2 linhas: garante que nenhum card passe de QUICK_H.
+          display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
+        }}>{label}</p>
+      </div>
     </button>
   );
 }

@@ -3,7 +3,7 @@
 // peso, idade, IG e idade corrigida derivada. Colapsável; o painel abre em
 // overlay (absolute) para NÃO mudar a altura sticky da faixa. Estado do input
 // é local (rascunho) e só é gravado no store no blur — assim digitar aqui não
-// re-renderiza os 56 módulos.
+// re-renderiza os módulos.
 //
 // TEMA: usa exclusivamente as CSS custom properties do chrome (var(--surface),
 // --surface-2, --border, --text, --text-2, --muted). Nenhum hex — a regra de

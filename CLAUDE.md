@@ -4,7 +4,7 @@ Repositório: `henriquepedbsb-pixel/pedhub` (**público durante a fase de testes
 todos os direitos reservados, ver `LICENSE`; no plano gratuito do GitHub, tornar
 o repositório privado tira o site do GitHub Pages do ar)
 Responsável médico: Dr. Henrique Flávio G. Gomes — CRM-DF 14.611
-Última atualização deste documento: 15/11/2026
+Última atualização deste documento: 16/11/2026
 
 ---
 
@@ -14,30 +14,63 @@ PedHub é uma PWA React de apoio à decisão clínica para pediatras e
 neonatologistas brasileiros: calculadoras, protocolos, farmacologia e curvas
 de crescimento. É o núcleo clínico do ecossistema PedSuite.
 
-Estado atual: **56 módulos ativos no catálogo** (31 Pediatria Geral +
-25 Neonatologia) + 6 módulos "EM BREVE" (placeholders, sem rota) + 2 hubs.
-Fase 1 concluída. Nenhum módulo novo está planejado agora — o trabalho atual
-é de **plataforma, UX e segurança de cálculo**.
+Estado atual: **62 módulos ativos no catálogo** (35 Pediatria Geral +
+27 Neonatologia) + 6 módulos "EM BREVE" (placeholders, sem rota) + 2 hubs.
+Fase 1 concluída. Em 16/11/2026 a fila "EM BREVE" anterior virou módulo (ITU,
+CAD, Animais Peçonhentos, Enurese, Convulsão Neonatal, Sepse Neonatal) e foi
+substituída por uma nova fila.
 
 **Reconciliação catálogo × arquivos (não é bug, é intencional):**
-- `src/modulos/` contém **57 arquivos `.jsx`** (+ o diretório `__tests__/`).
-- Desses 57: **55 são módulos-spoke** + **2 são os hubs** (`pediatria-geral.jsx`
+- `src/modulos/` contém **63 arquivos `.jsx`** (+ o diretório `__tests__/`).
+- Desses 63: **61 são módulos-spoke** + **2 são os hubs** (`pediatria-geral.jsx`
   e `neonatal.jsx`).
-- O catálogo `MODULOS` tem **56 entradas**, uma a mais que os 55 arquivos-spoke
+- O catálogo `MODULOS` tem **62 entradas**, uma a mais que os 61 arquivos-spoke
   porque **`percentis.jsx` serve 2 rotas**: `/percentis` (completo) e
   `/percentis-oms` (com a prop `somenteOMS`). Um arquivo, dois módulos no
   catálogo. Confira em `App.jsx` (`<Route path="/percentis-oms" element={<Percentis somenteOMS />} />`).
 
-Portanto: 55 arquivos-spoke + 1 rota extra (percentis-oms) = 56 catálogo.
+Portanto: 61 arquivos-spoke + 1 rota extra (percentis-oms) = 62 catálogo.
 
 **Os 6 módulos "EM BREVE"** (array `EM_BREVE` em `PedHub.jsx` — placeholders,
 sem rota, aparecem só como "em breve" na home):
-1. ITU Pediátrica — Coleta · UFC por método · imagem · ATB
-2. Cetoacidose Diabética — CAD · debut DM1 · hidratação e insulina
-3. Animais Peçonhentos — Escorpião · serpentes · aranhas · soro
-4. Enurese Noturna — ICCS · mono × não-monossintomática
-5. Convulsão Neonatal — Etiologias · tipos de crise · fenobarbital
-6. Sepse Neonatal — Precoce × tardia · fatores de risco · ATB
+1. Queimaduras — Superfície queimada · Parkland · analgesia
+2. Síndrome Nefrótica — Corticoide · recidiva · edema e complicações
+3. Doença de Kawasaki — Critérios · ecocardiograma · imunoglobulina
+4. Apneia da Prematuridade — Cafeína · monitorização · critérios de alta
+5. Desconforto Respiratório do RN — TTRN · SAM · pneumonia · CPAP
+6. Transfusão Neonatal — Hemácias · plaquetas · plasma · limiares
+
+**Módulos criados em 16/11/2026** (rota → fonte principal; contas puras em
+`src/lib/calc/` com testes em `novos-modulos.test.js`; blocos visuais
+compartilhados em `src/components/BlocosModulo.jsx`):
+- `/itu-pediatrica` → SBP DC Nefrologia nº 101 (2023) + AAP 2011/2016
+  (`calc/itu.js`). Escolha do ATB continua em `antibioticos`.
+- `/cetoacidose-diabetica` → ISPAD 2022 (`calc/cad.js`). Manutenção usa
+  `holliday()` exportado de `hidratacao.jsx` (dono de fluidos). A aba CAD de
+  `urgencias` segue como resumo.
+- `/animais-peconhentos` → MS PCDT Acidentes Escorpiônicos (2026) + Guia de
+  Vigilância em Saúde 6ª ed. rev. (2024). Nº de ampolas não depende de peso.
+- `/enurese-noturna` → ICCS 2020 (Nevéus) + terminologia ICCS 2016
+  (`calc/enurese.js`).
+- `/convulsao-neonatal` → ILAE 2021 (classificação) + ILAE 2023 Tabela 2
+  (`calc/convulsaoNeonatal.js`).
+- `/sepse-neonatal` → AAP 2018 (≥ 35 e ≤ 34 6/7 sem) + AAP 2019 (GBS) +
+  ANVISA (`calc/sepseNeonatal.js`). Não calcula doses neonatais (ampicilina e
+  gentamicina neonatais ainda não estão em `farmacos.js`). Rodwell fica em `sepse`.
+
+**Alinhamentos decididos pelo responsável (16/11/2026) — não reabrir:**
+- `antibioticos` (ITU) segue a **SBP 2023** (DC Nefrologia nº 101): USG após a
+  1ª pielonefrite em menores de 2 anos; uretrocistografia NÃO é rotina após a
+  1ª ITU febril (só USG alterada ou ITU recorrente); pielonefrite 10 dias
+  (AAP aceita 7–14).
+- `urgencias` (aba CAD) segue a **ISPAD 2022**: gravidade pH < 7,3 / < 7,2 /
+  < 7,1 ou HCO₃ < 18 / 10 / 5; déficit 5/7/10%; bolus 10–20 mL/kg em
+  20–30 min; insulina 0,05–0,1 U/kg/h ≥ 1 h após os fluidos; K⁺ 40 mmol/L;
+  glicose a 5% em 250–300 mg/dL. Protocolo completo em `cetoacidose-diabetica`.
+- `hipotermia` (convulsão) segue a **ILAE 2023, Tabela 2**, lendo as doses de
+  `src/lib/calc/convulsaoNeonatal.js` — a mesma fonte de `convulsao-neonatal`
+  (fenobarbital 20 mg/kg + 2ª dose 10–20 mg/kg, manutenção 5 mg/kg/dia;
+  levetiracetam 40 + 20 mg/kg; midazolam 0,05–0,15 mg/kg e 1–5 µg/kg/min).
 
 A contagem exibida na home é derivada do array `MODULOS` de
 `src/lib/catalogo.js` (`MODULOS.length` + filtro por `grupo`). Ao criar/remover
@@ -620,6 +653,9 @@ referências das escalas).
 - Aplicar módulo a módulo, agrupado por lotes pequenos de commit
 - Data e fonte de cada módulo vêm do usuário quando não forem óbvias pelo
   conteúdo do arquivo — **não inventar data de revisão**
+- **Regra permanente (16/11/2026, decisão do responsável):** sempre que o
+  conteúdo de um módulo for alterado, atualizar `revisao` do `RodapeModulo`
+  para o mês/ano da alteração (MM/AAAA).
 
 ---
 

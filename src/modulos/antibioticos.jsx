@@ -74,7 +74,7 @@ const DADOS = {
   },
   itu: {
     titulo: 'Infecção do Trato Urinário',
-    fonte: 'AAP 2011 · SBP',
+    fonte: 'SBP 2023 · AAP 2011',
     selectorLabel: 'Faixa etária',
     grupos: [
       {
@@ -84,7 +84,7 @@ const DADOS = {
         agentes: ['Escherichia coli (80–85%)', 'Klebsiella pneumoniae', 'Enterococcus spp.', 'Streptococcus agalactiae'],
         primeiraLinha: [{ rotulo: null, farmacos: ['Ampicilina IV', 'Gentamicina IV'], obs: 'Cobertura ampla de gram-negativos e Enterococcus. Dose → Pedfarma' }],
         alternativa: [{ farmacos: ['Ampicilina IV', 'Cefotaxima IV'], obs: 'Quando gentamicina contraindicada. Dose → Pedfarma' }],
-        duracao: '10–14 dias IV',
+        duracao: '10 dias (ITU febril — SBP 2023) · início IV: a via oral só é a preferencial acima de 3 meses',
         notas: ['Urocultura e hemocultura obrigatórias antes de iniciar ATB', 'Ajustar conforme antibiograma assim que disponível', 'Ceftriaxona: evitar em < 28 dias — risco de kernicterus'],
         alerta: null,
       },
@@ -101,8 +101,8 @@ const DADOS = {
           { farmacos: ['Amoxicilina-clavulanato VO'], obs: 'Somente se sensível no antibiograma — alta resistência de E. coli no Brasil' },
           { farmacos: ['Gentamicina IV'], obs: 'ITU hospitalar ou resistência a cefalosporinas. Dose → Pedfarma' },
         ],
-        duracao: 'Pielonefrite: 10–14 dias · Cistite (rara < 2 anos): 3–5 dias',
-        notas: ['Urocultura obrigatória antes de iniciar ATB — coleta por sonda ou punção suprapúbica em < 2 anos', 'TMP-SMX VO: alta resistência de E. coli no Brasil (> 20%) — usar somente com antibiograma sensível', 'Investigar malformação urinária (USG renal + uretrocistografia) após 1º episódio de pielonefrite em < 2 anos'],
+        duracao: 'Pielonefrite: 10 dias (SBP 2023; AAP aceita 7–14) · Cistite (rara < 2 anos): 3–5 dias',
+        notas: ['Urocultura obrigatória antes de iniciar ATB — coleta por sonda ou punção suprapúbica em < 2 anos', 'TMP-SMX VO: alta resistência de E. coli no Brasil (> 20%) — usar somente com antibiograma sensível', 'USG de rins e vias urinárias após o 1º episódio de pielonefrite em < 2 anos · Uretrocistografia NÃO é rotina após a 1ª ITU febril — indicar se USG alterada ou ITU recorrente (SBP 2023 · AAP)'],
         alerta: null,
       },
       {
@@ -118,8 +118,8 @@ const DADOS = {
           { farmacos: ['Cefalexina VO', 'Amoxicilina-clavulanato VO'], obs: 'Cistite — conforme antibiograma' },
           { farmacos: ['Ceftriaxona IV ou IM', 'Gentamicina IV'], obs: 'Pielonefrite grave, internação ou falha VO. Dose → Pedfarma' },
         ],
-        duracao: 'Cistite: 3–5 dias · Pielonefrite: 10–14 dias',
-        notas: ['Nitrofurantoína CONTRAINDICADA em pielonefrite — não atinge concentração terapêutica no parênquima renal', 'Urocultura e antibiograma fundamentais — guiam tratamento e detectam resistência local', 'Investigar causa predisponente em ITUs de repetição (malformação, disfunção miccional)'],
+        duracao: 'Cistite: 3–5 dias · Pielonefrite: 10 dias (SBP 2023; AAP aceita 7–14)',
+        notas: ['Nitrofurantoína CONTRAINDICADA em pielonefrite — não atinge concentração terapêutica no parênquima renal', 'Urocultura e antibiograma fundamentais — guiam tratamento e detectam resistência local', 'Investigar causa predisponente em ITUs de repetição (malformação, disfunção do trato urinário inferior e intestinal) — investigação completa no módulo ITU Pediátrica'],
         alerta: null,
       },
     ],
@@ -502,8 +502,8 @@ export default function Antibioticos() {
       </div>
 
       <RodapeModulo
-        revisao="07/2026"
-        fonte="SBP 2018 (Pneumonia PAC) · AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS)"
+        revisao="11/2026"
+        fonte="SBP 2018 (Pneumonia PAC) · SBP 2023 / AAP 2011 (ITU) · IDSA SSTI 2014 (Celulite) · IDSA 2004 / AAP Red Book 2021 (Meningite) · AAP 2013/2022 (OMA) · IDSA 2012 (Faringite GABHS)"
         nota="Adequar ao perfil de resistência local e ao antibiograma quando disponível."
       />
     </div>
