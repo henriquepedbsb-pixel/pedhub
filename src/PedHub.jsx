@@ -134,6 +134,10 @@ function ModuloCard({ modulo, onClick }) {
 }
 
 /* ─── Card compacto (ícone + rótulo, sem descrição) — usado nos favoritos ─── */
+/* Altura única: ícone no topo + rótulo numa caixa fixa de 2 linhas, centrada.
+   Sem isso, um nome de 1 linha ("Canguru", "TIG Neonatal") deixava o card mais
+   baixo que o vizinho de 2 linhas e a grade ficava desalinhada. */
+const QUICK_H = 112;
 function QuickCard({ modulo, onClick }) {
   const { label, Icon, cor } = modulo;
   return (
@@ -154,6 +158,8 @@ function QuickCard({ modulo, onClick }) {
         alignItems: "center",
         gap: 8,
         width: "100%",
+        height: QUICK_H,
+        boxSizing: "border-box",
       }}
     >
       <div style={{
@@ -165,12 +171,19 @@ function QuickCard({ modulo, onClick }) {
       }}>
         <Icon size={20} color={cor} />
       </div>
-      <p style={{
-        fontWeight: 700, fontSize: 12.5,
-        color: "var(--text)", margin: 0,
-        lineHeight: 1.25,
-        wordBreak: "break-word", hyphens: "auto",
-      }}>{label}</p>
+      <div style={{
+        flex: 1, width: "100%", minHeight: 0,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <p style={{
+          fontWeight: 700, fontSize: 12.5,
+          color: "var(--text)", margin: 0,
+          lineHeight: 1.25,
+          overflowWrap: "anywhere", hyphens: "auto",
+          // No máximo 2 linhas: garante que nenhum card passe de QUICK_H.
+          display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
+        }}>{label}</p>
+      </div>
     </button>
   );
 }
