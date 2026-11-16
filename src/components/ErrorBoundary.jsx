@@ -81,7 +81,7 @@ class ErrorBoundaryInner extends Component {
             <RotateCcw size={15} /> Recarregar
           </button>
           <a
-            href="/pedhub/"
+            href={import.meta.env.BASE_URL}
             style={{
               display: "flex", alignItems: "center", gap: 7,
               background: "var(--surface)", color: "var(--text)",
