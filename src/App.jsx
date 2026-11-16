@@ -43,6 +43,10 @@ const ConvulsaoFebril  = lazy(() => import("./modulos/convulsao-febril"));
 const CardiologiaPediatricaBasica = lazy(() => import("./modulos/cardiologia-pediatrica-basica"));
 const Adolescencia     = lazy(() => import("./modulos/adolescencia"));
 const TesteTeaTdah     = lazy(() => import("./modulos/teste-tea-tdah"));
+const ItuPediatrica    = lazy(() => import("./modulos/itu-pediatrica"));
+const CetoacidoseDiabetica = lazy(() => import("./modulos/cetoacidose-diabetica"));
+const AnimaisPeconhentos = lazy(() => import("./modulos/animais-peconhentos"));
+const EnureseNoturna   = lazy(() => import("./modulos/enurese-noturna"));
 const PediatriaGeral   = lazy(() => import("./modulos/pediatria-geral"));
 
 /* ─── Lazy imports — Neonatologia ────────────────────────────────────────── */
@@ -70,6 +74,8 @@ const Pca              = lazy(() => import("./modulos/pca"));
 const MalformacoesCirurgicasNeonatais = lazy(() => import("./modulos/malformacoes-cirurgicas-neonatais"));
 const Rop              = lazy(() => import("./modulos/rop"));
 const SeguimentoPrematuroRisco = lazy(() => import("./modulos/seguimento-prematuro-risco"));
+const ConvulsaoNeonatal = lazy(() => import("./modulos/convulsao-neonatal"));
+const SepseNeonatal    = lazy(() => import("./modulos/sepse-neonatal"));
 
 /* O mapa rota → { label, cor, voltar } do cabeçalho vem de src/lib/catalogo.js
    (fonte única do catálogo). "voltar" é o hub do módulo; hubs voltam para "/". */
@@ -254,6 +260,10 @@ export default function App() {
           <Route path="/cardiologia-pediatrica-basica" element={<CardiologiaPediatricaBasica />} />
           <Route path="/adolescencia"      element={<Adolescencia />} />
           <Route path="/teste-tea-tdah"    element={<TesteTeaTdah />} />
+          <Route path="/itu-pediatrica"    element={<ItuPediatrica />} />
+          <Route path="/cetoacidose-diabetica" element={<CetoacidoseDiabetica />} />
+          <Route path="/animais-peconhentos" element={<AnimaisPeconhentos />} />
+          <Route path="/enurese-noturna"   element={<EnureseNoturna />} />
 
           {/* ─── Neonatologia ─── */}
           <Route path="/neonatal"          element={<Neonatal />} />
@@ -280,6 +290,8 @@ export default function App() {
           <Route path="/malformacoes-cirurgicas-neonatais" element={<MalformacoesCirurgicasNeonatais />} />
           <Route path="/rop"               element={<Rop />} />
           <Route path="/seguimento-prematuro-risco" element={<SeguimentoPrematuroRisco />} />
+          <Route path="/convulsao-neonatal" element={<ConvulsaoNeonatal />} />
+          <Route path="/sepse-neonatal"    element={<SepseNeonatal />} />
 
           {/* Fallback */}
           <Route path="*"                  element={<PedHub />} />

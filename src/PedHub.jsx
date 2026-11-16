@@ -14,12 +14,12 @@ import {
   Star,
   Stethoscope,
   Sun,
-  TestTube,
-  Gauge,
-  Biohazard,
-  BedDouble,
-  BrainCircuit,
-  ShieldAlert,
+  Flame,
+  Filter,
+  HeartPulse,
+  Wind,
+  AirVent,
+  Droplet,
 } from "lucide-react";
 
 /* O catálogo de módulos (nome, descrição, ícone, cor, grupo e termos de busca)
@@ -32,12 +32,12 @@ import {
    não competir visualmente com os módulos que já estão no ar. A cor própria
    de cada um é definida quando o módulo for de fato construído.            */
 const EM_BREVE = [
-  { label: "ITU Pediátrica",        desc: "Coleta · UFC por método · imagem · ATB",     Icon: TestTube },
-  { label: "Cetoacidose Diabética", desc: "CAD · debut DM1 · hidratação e insulina",    Icon: Gauge },
-  { label: "Animais Peçonhentos",   desc: "Escorpião · serpentes · aranhas · soro",     Icon: Biohazard },
-  { label: "Enurese Noturna",       desc: "ICCS · mono × não-monossintomática",         Icon: BedDouble },
-  { label: "Convulsão Neonatal",    desc: "Etiologias · tipos de crise · fenobarbital", Icon: BrainCircuit },
-  { label: "Sepse Neonatal",        desc: "Precoce × tardia · fatores de risco · ATB",  Icon: ShieldAlert },
+  { label: "Queimaduras",                   desc: "Superfície queimada · Parkland · analgesia",     Icon: Flame },
+  { label: "Síndrome Nefrótica",            desc: "Corticoide · recidiva · edema e complicações",   Icon: Filter },
+  { label: "Doença de Kawasaki",            desc: "Critérios · ecocardiograma · imunoglobulina",    Icon: HeartPulse },
+  { label: "Apneia da Prematuridade",       desc: "Cafeína · monitorização · critérios de alta",    Icon: Wind },
+  { label: "Desconforto Respiratório do RN", desc: "TTRN · SAM · pneumonia · CPAP",                 Icon: AirVent },
+  { label: "Transfusão Neonatal",           desc: "Hemácias · plaquetas · plasma · limiares",       Icon: Droplet },
 ];
 
 /* ─── Estilos de interação (hover/toque/entrada) — injetados uma vez ───────── */

@@ -11,10 +11,10 @@ const app = fs.readFileSync(path.join(raiz, "App.jsx"), "utf8");
 const rotasDoApp = [...app.matchAll(/<Route path="([^"]+)"/g)].map((m) => m[1]).filter((r) => r !== "/" && r !== "*");
 
 describe("catálogo de módulos — fonte única", () => {
-  it("tem 56 módulos: 31 de Pediatria Geral e 25 de Neonatologia", () => {
-    expect(MODULOS).toHaveLength(56);
-    expect(MODULOS.filter((m) => m.grupo === "Pediatria Geral")).toHaveLength(31);
-    expect(MODULOS.filter((m) => m.grupo === "Neonatologia")).toHaveLength(25);
+  it("tem 62 módulos: 35 de Pediatria Geral e 27 de Neonatologia", () => {
+    expect(MODULOS).toHaveLength(62);
+    expect(MODULOS.filter((m) => m.grupo === "Pediatria Geral")).toHaveLength(35);
+    expect(MODULOS.filter((m) => m.grupo === "Neonatologia")).toHaveLength(27);
   });
 
   it("não repete rota", () => {
@@ -55,7 +55,7 @@ describe("catálogo de módulos — fonte única", () => {
     expect(MODULO_MAP["/percentis"].voltar).toBe("/neonatal");
     expect(MODULO_MAP["/neonatal"].voltar).toBeUndefined();
     expect(MODULO_MAP["/pediatria-geral"].voltar).toBeUndefined();
-    expect(Object.keys(MODULO_MAP)).toHaveLength(58);
+    expect(Object.keys(MODULO_MAP)).toHaveLength(64);
   });
 
   it("nome curto só substitui o nome completo no card do hub", () => {
@@ -105,8 +105,8 @@ describe("catálogo — busca compartilhada e cabeçalho", async () => {
   });
 
   it("hubs mostram a contagem de ferramentas no cabeçalho", () => {
-    expect(MODULO_MAP["/pediatria-geral"].info).toBe("31 ferramentas");
-    expect(MODULO_MAP["/neonatal"].info).toBe("25 ferramentas");
+    expect(MODULO_MAP["/pediatria-geral"].info).toBe("35 ferramentas");
+    expect(MODULO_MAP["/neonatal"].info).toBe("27 ferramentas");
   });
 
   it("todo módulo mostra a descrição como subtítulo no cabeçalho; hubs não", () => {
