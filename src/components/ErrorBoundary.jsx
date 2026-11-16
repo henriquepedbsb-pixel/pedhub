@@ -95,7 +95,7 @@ class ErrorBoundaryInner extends Component {
         </div>
 
         <a
-          href={`mailto:henriquepedbsb@gmail.com?subject=${assunto}&body=${corpo}`}
+          href={`mailto:henrique.pedhub@gmail.com?subject=${assunto}&body=${corpo}`}
           style={{
             fontSize: 11, color: "var(--muted)", textDecoration: "underline",
             marginTop: 4,
