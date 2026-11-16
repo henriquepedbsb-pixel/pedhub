@@ -198,7 +198,7 @@ function RodapeGlobal() {
       background: "var(--surface)",
     }}>
       <a
-        href="mailto:henriquepedbsb@gmail.com?subject=Sugest%C3%A3o%20ou%20reclama%C3%A7%C3%A3o%20-%20PedHub"
+        href="mailto:henrique.pedhub@gmail.com?subject=Sugest%C3%A3o%20ou%20reclama%C3%A7%C3%A3o%20-%20PedHub"
         style={{
           fontSize: 11,
           color: "var(--muted)",
