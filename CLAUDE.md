@@ -58,19 +58,19 @@ compartilhados em `src/components/BlocosModulo.jsx`):
   ANVISA (`calc/sepseNeonatal.js`). Não calcula doses neonatais (ampicilina e
   gentamicina neonatais ainda não estão em `farmacos.js`). Rodwell fica em `sepse`.
 
-**Divergências abertas com módulos antigos (16/11/2026 — aguardam decisão do
-responsável; os módulos novos seguem a diretriz citada):**
-- `antibioticos` (ITU): nota "USG + uretrocistografia após 1º episódio de
-  pielonefrite em menores de 2 anos" × SBP 2023/AAP (UCM não é rotina após a
-  1ª ITU febril). Duração "10–14 dias" × SBP 2023 (10 dias; AAP 7–14).
-- `urgencias` (aba CAD): faixas de gravidade (7,25–7,30 / 7,10–7,24) × ISPAD
-  2022 (pH < 7,3 / < 7,2 / < 7,1 ou HCO₃ < 18 / 10 / 5); bolus "só se choque"
-  × ISPAD (10–20 mL/kg em 20–30 min); déficit 5–7/7–10% × 5/7/10%; glicose
-  "abaixo de 250" × 250–300; queda 50–100 × 36–90 mg/dL/h.
-- `hipotermia` (convulsão): 2ª dose de fenobarbital 10 mg/kg com teto total
-  de 40 mg/kg × ILAE 2023 (10–20 mg/kg, sem teto); manutenção 4 mg/kg/dia ×
-  5 mg/kg/dia; levetiracetam 40–60 × 40 (+20); midazolam bolus 0,15 e infusão
-  0,1–0,4 mg/kg/h × 0,05–0,15 e 1–5 µg/kg/min (0,06–0,3 mg/kg/h).
+**Alinhamentos decididos pelo responsável (16/11/2026) — não reabrir:**
+- `antibioticos` (ITU) segue a **SBP 2023** (DC Nefrologia nº 101): USG após a
+  1ª pielonefrite em menores de 2 anos; uretrocistografia NÃO é rotina após a
+  1ª ITU febril (só USG alterada ou ITU recorrente); pielonefrite 10 dias
+  (AAP aceita 7–14).
+- `urgencias` (aba CAD) segue a **ISPAD 2022**: gravidade pH < 7,3 / < 7,2 /
+  < 7,1 ou HCO₃ < 18 / 10 / 5; déficit 5/7/10%; bolus 10–20 mL/kg em
+  20–30 min; insulina 0,05–0,1 U/kg/h ≥ 1 h após os fluidos; K⁺ 40 mmol/L;
+  glicose a 5% em 250–300 mg/dL. Protocolo completo em `cetoacidose-diabetica`.
+- `hipotermia` (convulsão) segue a **ILAE 2023, Tabela 2**, lendo as doses de
+  `src/lib/calc/convulsaoNeonatal.js` — a mesma fonte de `convulsao-neonatal`
+  (fenobarbital 20 mg/kg + 2ª dose 10–20 mg/kg, manutenção 5 mg/kg/dia;
+  levetiracetam 40 + 20 mg/kg; midazolam 0,05–0,15 mg/kg e 1–5 µg/kg/min).
 
 A contagem exibida na home é derivada do array `MODULOS` de
 `src/lib/catalogo.js` (`MODULOS.length` + filtro por `grupo`). Ao criar/remover

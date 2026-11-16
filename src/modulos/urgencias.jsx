@@ -102,6 +102,7 @@ export function calcDoses(w) {
     glicose10:       Math.round(w * 2),
     ceftri_mg:       Math.round(clamp(w * 100, 0, 4000)),
     insulina_uh:     parseFloat((w * 0.05).toFixed(2)),
+    insulina_uh_hi:  parseFloat((w * 0.1).toFixed(2)),
     manitol_glo:     parseFloat((w * 0.5).toFixed(1)),
     manitol_ghi:     Math.round(w),
     manitol_mllo:    Math.round(w * 2.5),
@@ -628,19 +629,19 @@ function TabCAD({ d }) {
   return (
     <div>
       <InfoBox color={C}>
-        <strong>ISPAD 2022.</strong> CAD pediátrica: hiperglicemia + acidose metabólica + cetonemia. Principal causa de morte: edema cerebral — risco maior em crianças pequenas e DM tipo 1 inaugural.
+        <strong>ISPAD 2022.</strong> CAD pediátrica = glicemia acima de 200 mg/dL + pH venoso abaixo de 7,3 ou HCO₃ abaixo de 18 mmol/L + β-OH-butirato ≥ 3 mmol/L (ou cetonúria moderada/intensa). Principal causa de morte: edema cerebral — risco maior em crianças pequenas e DM tipo 1 inaugural. Protocolo completo, com calculadora de fluidos: módulo Cetoacidose Diabética.
       </InfoBox>
 
       <SectionTitle icon={AlertTriangle} color={C} text="Classificação da Gravidade" />
       <div style={{ borderRadius: 10, border: "1px solid var(--border)", marginBottom: 16, overflow: "hidden" }}>
         {[
-          { nivel: "Leve",     cor: "#10B981", pH: "7,25–7,30", hco: "15–18", desc: "Consciente, hidratado" },
-          { nivel: "Moderada", cor: "#D97706", pH: "7,10–7,24", hco: "5–14",  desc: "Vômito, dor abdominal" },
-          { nivel: "Grave",    cor: "#EF4444", pH: "< 7,10",    hco: "< 5",   desc: "Kussmaul, alt. consciência" },
+          { nivel: "Leve",     cor: "#10B981", pH: "< 7,3", hco: "< 18", deficit: "5%" },
+          { nivel: "Moderada", cor: "#D97706", pH: "< 7,2", hco: "< 10", deficit: "7%" },
+          { nivel: "Grave",    cor: "#EF4444", pH: "< 7,1", hco: "< 5",  deficit: "10%" },
         ].map((item) => (
           <div key={item.nivel} style={{ display: "flex", padding: "10px 14px", borderBottom: "1px solid #F9FAFB", gap: 8 }}>
             <span style={{ fontWeight: 700, color: item.cor, minWidth: 64, fontSize: 12, flexShrink: 0 }}>{item.nivel}</span>
-            <span style={{ fontSize: 12, color: "var(--text-2)" }}>pH {item.pH} · HCO₃ {item.hco} mEq/L · {item.desc}</span>
+            <span style={{ fontSize: 12, color: "var(--text-2)" }}>pH {item.pH} ou HCO₃ {item.hco} mmol/L · déficit presumido {item.deficit}</span>
           </div>
         ))}
       </div>
@@ -655,44 +656,44 @@ function TabCAD({ d }) {
         },
         {
           step: "2",
-          title: "Fluidos — Fase 1 (somente se choque)",
+          title: "Fluidos — bolus inicial",
           content: d
-            ? "SF 0,9% " + d.bolus10 + " mL IV em 15–30 min (máx 20 mL/kg) · SOMENTE se instabilidade hemodinâmica / choque"
-            : "SF 0,9% 10 mL/kg em 15–30 min · SOMENTE se instabilidade / choque",
+            ? "SF 0,9% 10–20 mL/kg = " + d.bolus10 + "–" + d.bolus20 + " mL IV em 20–30 min · 20 mL/kg se má perfusão · repetir se necessário para restaurar a perfusão"
+            : "SF 0,9% 10–20 mL/kg IV em 20–30 min · 20 mL/kg se má perfusão · repetir se necessário",
           highlight: false,
         },
         {
           step: "3",
-          title: "Fluidos — Fase 2 (reidratação lenta)",
-          content: "Déficit: 5–7% (leve/moderada) ou 7–10% (grave) do peso · SF 0,9% nas 1ªs 4–8h → trocar para NaCl 0,45% + KCl · Repor em 24–48 h (descontar fase 1)",
+          title: "Fluidos — reposição",
+          content: "Déficit presumido: 5% (leve), 7% (moderada), 10% (grave) do peso · Repor o déficit (menos o bolus) + manutenção em 24–48 h · NaCl 0,45–0,9% ou solução balanceada (Ringer lactato, Plasma-Lyte)",
           highlight: false,
         },
         {
           step: "4",
           title: "Potássio",
-          content: "Iniciar KCl mesmo se K⁺ normal/alto (depleção total sempre presente) · 3–5 mEq/kg/dia · Suspender se K⁺ > 5,5 mEq/L ou oligúria · ECG e ionograma 2/2h",
+          content: "40 mmol/L no soro · K⁺ normal: iniciar após o bolus, junto com a insulina · K⁺ > 5,5: adiar até documentar diurese, dosar de hora em hora · K⁺ < 3,0: repor já na expansão, adiar a insulina e dar K⁺ com monitor (máx 0,5 mEq/kg/h) · eletrólitos a cada 2–4 h",
           highlight: false,
         },
         {
           step: "5",
           title: "Insulina",
           content: d
-            ? "Insulina Regular BIC: " + d.insulina_uh + " U/h (0,05 U/kg/h) · NUNCA bolus · Iniciar após 1–2h de reidratação e K⁺ > 3,5 mEq/L · Meta: ↓ 50–100 mg/dL/h · Adicionar SG5% quando glicemia < 250 mg/dL"
-            : "Insulina Regular BIC 0,05–0,1 U/kg/h · NUNCA bolus (risco edema cerebral) · Iniciar após reidratação e K⁺ > 3,5 mEq/L",
+            ? "Insulina Regular BIC: " + fmtBR(d.insulina_uh) + "–" + fmtBR(d.insulina_uh_hi) + " U/h (0,05–0,1 U/kg/h; 0,05 se pH > 7,15) · NUNCA bolus · Iniciar pelo menos 1 h após o início dos fluidos · Queda esperada da glicemia: 36–90 mg/dL/h · Glicose a 5% no soro quando a glicemia chegar a 250–300 mg/dL"
+            : "Insulina Regular BIC 0,05–0,1 U/kg/h · NUNCA bolus · Iniciar pelo menos 1 h após o início dos fluidos · Glicose a 5% quando a glicemia chegar a 250–300 mg/dL",
           highlight: true,
         },
         {
           step: "6",
           title: "Bicarbonato",
-          content: "NÃO usar de rotina · Considerar apenas se pH < 6,9 + instabilidade cardiovascular · NaHCO₃ 8,4%: 1–2 mEq/kg em 60 min (máx 100 mEq) · Risco de acidose paradoxal do SNC e hipopotassemia",
+          content: "NÃO usar de rotina · Considerar apenas se pH < 6,9 com contratilidade cardíaca comprometida, ou hipercalemia com risco de vida · NaHCO₃ 8,4%: 1–2 mEq/kg em 60 min (máx 100 mEq) · Risco de acidose paradoxal do SNC e hipopotassemia",
           highlight: false,
         },
         {
           step: "7",
           title: "Edema Cerebral — EMERGÊNCIA",
           content: d
-            ? "Sinais: cefaleia + vômito + alt. consciência · Manitol 20%: " + d.manitol_glo + "–" + d.manitol_ghi + " g (" + d.manitol_mllo + "–" + d.manitol_mlhi + " mL) IV bolus · OU NaCl 3% 2,5–5 mL/kg em 15 min · Elevar cabeceira 30° · Reduzir infusão"
-            : "Manitol 20% 0,5–1 g/kg IV bolus · OU NaCl 3% 2,5–5 mL/kg em 15 min · Elevar cabeceira 30°",
+            ? "Sinais: cefaleia + vômito + alt. consciência · Manitol 20%: " + fmtBR(d.manitol_glo) + "–" + d.manitol_ghi + " g (" + d.manitol_mllo + "–" + d.manitol_mlhi + " mL) IV em 10–15 min, repetir em 30 min se necessário · OU NaCl 3% 2,5–5 mL/kg em 10–15 min · Elevar cabeceira · Reduzir infusão · Critérios clínicos completos: módulo Cetoacidose Diabética"
+            : "Manitol 20% 0,5–1 g/kg IV em 10–15 min · OU NaCl 3% 2,5–5 mL/kg em 10–15 min · Elevar cabeceira",
           highlight: true,
         },
       ].map((item) => (
@@ -921,14 +922,14 @@ const CRISES = [
     id: "cad", label: "CAD", sub: "Fluidos + Insulina", cor: "#D97706", Icon: Droplets, tab: 5,
     acao: (d) => ({
       titulo: "Fluidos primeiro · Insulina depois",
-      dose: d ? "Insulina BIC " + d.insulina_uh + " U/h (NUNCA bolus)" : "Insulina 0,05–0,1 U/kg/h (NUNCA bolus)",
-      detalhe: "Iniciar 1–2 h após início dos fluidos e K⁺ acima de 3,5",
+      dose: d ? "Insulina BIC " + fmtBR(d.insulina_uh) + "–" + fmtBR(d.insulina_uh_hi) + " U/h (NUNCA bolus)" : "Insulina 0,05–0,1 U/kg/h (NUNCA bolus)",
+      detalhe: "Iniciar pelo menos 1 h após o início dos fluidos · K⁺ abaixo de 3,0: adiar e repor K⁺",
     }),
     passos: (d) => [
       "Gasometria venosa + eletrólitos + glicemia + cetonemia · ECG",
-      d ? "Se choque: SF 0,9% " + d.bolus10 + " mL em 15–30 min (máx 20 mL/kg)" : "Se choque: SF 0,9% 10 mL/kg (máx 20 mL/kg)",
-      "Reidratação lenta em 24–48 h · iniciar KCl mesmo com K⁺ normal",
-      d ? "Insulina Regular BIC " + d.insulina_uh + " U/h · após reidratação e K⁺ acima de 3,5" : "Insulina Regular 0,05–0,1 U/kg/h · NUNCA bolus",
+      d ? "Bolus: SF 0,9% " + d.bolus10 + "–" + d.bolus20 + " mL em 20–30 min (10–20 mL/kg)" : "Bolus: SF 0,9% 10–20 mL/kg em 20–30 min",
+      "Repor déficit (5/7/10% conforme gravidade) menos o bolus + manutenção em 24–48 h · KCl 40 mmol/L após o bolus",
+      d ? "Insulina Regular BIC " + fmtBR(d.insulina_uh) + "–" + fmtBR(d.insulina_uh_hi) + " U/h · ≥ 1 h após o início dos fluidos" : "Insulina Regular 0,05–0,1 U/kg/h · NUNCA bolus",
       d ? "Edema cerebral: Manitol 20% " + d.manitol_glo + "–" + d.manitol_ghi + " g IV ou NaCl 3%" : "Edema cerebral: Manitol 0,5–1 g/kg IV ou NaCl 3%",
     ],
   },
