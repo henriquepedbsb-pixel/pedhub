@@ -4,14 +4,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/pedhub/',
+  base: '/',   // app servido na raiz de app.pedhub.app.br
   build: {
     rollupOptions: {
       output: {
-        // React/ReactDOM/Router num chunk "vendor" — raramente mudam, então
-        // ficam em cache entre atualizações (só o código do app é rebaixado).
-        // lucide-react NÃO entra aqui de propósito: seus ícones já são
-        // divididos por módulo lazy; agrupá-los carregaria todos de uma vez.
+        // React/ReactDOM/Router num chunk "vendor" - raramente mudam, entao
+        // ficam em cache entre atualizacoes (so o codigo do app e rebaixado).
+        // lucide-react NAO entra aqui de proposito: seus icones ja sao
+        // divididos por modulo lazy; agrupa-los carregaria todos de uma vez.
         manualChunks(id) {
           if (
             id.includes('node_modules/react/') ||
@@ -28,18 +28,18 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',      // atualiza sozinho: ao abrir, se houver versão nova, aplica e recarrega
+      registerType: 'autoUpdate',      // atualiza sozinho: ao abrir, se houver versao nova, aplica e recarrega
       injectRegister: 'auto',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        id: '/pedhub/',
-        name: 'PedHub — Ferramentas Clínicas',
+        id: '/',
+        name: 'PedHub \u2014 Ferramentas Cl\u00ednicas',
         short_name: 'PedHub',
-        description: 'Ferramentas clínicas de apoio à decisão para pediatras e neonatologistas.',
+        description: 'Ferramentas cl\u00ednicas de apoio \u00e0 decis\u00e3o para pediatras e neonatologistas.',
         lang: 'pt-BR',
         dir: 'ltr',
-        start_url: '/pedhub/',
-        scope: '/pedhub/',
+        start_url: '/',
+        scope: '/',
         display: 'standalone',
         orientation: 'portrait',
         theme_color: '#1D4ED8',
@@ -55,10 +55,10 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        navigateFallback: '/pedhub/index.html',
+        navigateFallback: '/index.html',
       },
       devOptions: {
-        enabled: false,  // SW só no build de produção; não interfere no `npm run dev`
+        enabled: false,  // SW so no build de producao; nao interfere no `npm run dev`
       },
     }),
   ],
