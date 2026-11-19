@@ -15,7 +15,3 @@
 //     com esse valor, editável.
 //   - Fonte com faixa (ex.: 80–90): o campo começa vazio — o app não escolhe
 //     um ponto da faixa pelo médico (o máximo seria inadequado, por exemplo,
-//     em anticonvulsivantes de titulação, como valproato 15–60).
-//   - Dose fora da faixa da fonte: calcula mesmo assim, com alerta vermelho
-//     e resultado em vermelho (mesma lógica do teto: avisa, não trava).
-//   - Dose acima de 2× o máximo da fonte: tratada como erro de digitação
